@@ -15,6 +15,7 @@ query Activities($input: TxActivitiesInput) {
             nftContract
             nftId
             status
+            read
             order {
                 chainId
                 exchange
@@ -185,6 +186,46 @@ query Activities($input: TxActivitiesInput) {
                     orderSalt
                     settleSalt
                 }
+                ... on TxNFTCOMProtocolData {
+                        makeAsset {
+                        standard {
+                            assetClass
+                            bytes
+                            contractAddress
+                            tokenId
+                            allowAll
+                        }
+                        nftId
+                        bytes
+                        value
+                        minimumBid
+                        }
+                        takeAsset {
+                        standard {
+                            assetClass
+                            bytes
+                            contractAddress
+                            tokenId
+                            allowAll
+                        }
+                        nftId
+                        bytes
+                        value
+                        minimumBid
+                        }
+                        swapTransactionId
+                        acceptedAt
+                        rejectedAt
+                        listingId
+                        buyNowTaker
+                        auctionType
+                        salt
+                        start
+                        end
+                        private
+                        listingOrderId
+                        bidOrderId
+                    }
                 ... on TxSeaportProtocolData {
                     offer {
                     itemType
@@ -204,8 +245,6 @@ query Activities($input: TxActivitiesInput) {
                 }
                 }
             }
-
-            
         }
     }
 }

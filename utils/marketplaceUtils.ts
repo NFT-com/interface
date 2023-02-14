@@ -2,6 +2,7 @@ import { ListingTarget, StagedListing } from 'components/modules/Checkout/NFTLis
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { PurchaseErrorResponse } from 'hooks/useNFTPurchaseError';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 
@@ -32,11 +33,17 @@ export const convertDurationToSecForNumbersOnly = (d: number) => {
   return 60 * 60 * 24 * d;
 };
 
-export function needsApprovals(stagedPurchases: StagedPurchase[]): boolean {
+export function needsERC20Approvals(stagedPurchases: StagedPurchase[]): boolean {
+  if(stagedPurchases.length === 1) {
+    return filterDuplicates(
+      stagedPurchases?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+      (first, second) => first?.currency === second?.currency
+    ).some(purchase => !purchase?.isERC20ApprovedForProtocol);
+  }
   return filterDuplicates(
     stagedPurchases?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
     (first, second) => first?.currency === second?.currency
-  ).some(purchase => !purchase?.isApproved);
+  ).some(purchase => !purchase?.isERC20ApprovedForAggregator);
 }
 
 export function hasSufficientBalances(
@@ -132,7 +139,7 @@ export function getTotalRoyaltiesUSD(
     } else if (stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
       const NFTCOMRoyaltyFee = nftComRoyaltyFees?.[index];
       
-      const royalty = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
+      const royalty = Number(NFTCOMRoyaltyFee ?? 0);
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(
         royalty,
@@ -265,5 +272,20 @@ export function getAuctionTypeDisplayName(auctionType: AuctionType): string {
     return 'Decreasing Price';
   case AuctionType.English:
     return 'English Auction';
+  }
+}
+
+export function getErrorText(error: PurchaseErrorResponse['error']): string {
+  switch(error) {
+  case 'PurchaseBalanceError':
+    return 'The purchase failed because your token balance is too low.';
+  case 'ConnectionError':
+    return 'Your wallet is not connected. Please connect your wallet and try again.';
+  case 'ApprovalError':
+    return 'The approval was not accepted in your wallet. If you would like to continue your purchase, please try again.';
+  case 'ListingExpiredError':
+    return 'The transaction failed due to an expired listing. Please verify that your cart is valid and try again.';
+  case 'PurchaseUnknownError':
+    return 'The transaction failed for an unknown reason. Please verify that your cart is valid and try again.';
   }
 }

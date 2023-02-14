@@ -1,22 +1,32 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
+import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { ActivityStatus, Maybe } from 'graphql/generated/types';
+import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
+import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useSaveUserActionForBuyNFTsMutation } from 'graphql/hooks/useSaveUserActionForBuyNFTs';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useUser } from 'hooks/state/useUser';
+import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
+import useNFTPurchaseError, { PurchaseErrorResponse } from 'hooks/useNFTPurchaseError';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { Doppler, getEnv } from 'utils/env';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { useBuyNow } from 'utils/marketplaceHelpers';
-import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsApprovals } from 'utils/marketplaceUtils';
+import { getErrorText, getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, needsERC20Approvals } from 'utils/marketplaceUtils';
 
 import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
+import { useRouter } from 'next/router';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import { useCallback, useContext, useState } from 'react';
 import useSWR from 'swr';
@@ -40,6 +50,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
+  const router = useRouter();
   const { data: signer } = useSigner();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
   const provider = useProvider();
@@ -48,11 +59,20 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const { buyNow } = useBuyNow(signer);
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const hasGk = useHasGk();
-  const { getByContractAddress, getBalanceMap } = useSupportedCurrencies();
+  const purchaseError = useNFTPurchaseError();
+  const { getByContractAddress } = useSupportedCurrencies();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseUnknownError' | 'PurchaseBalanceError' | 'ConnectionError'>>(null);
-  
+  const [error, setError] = useState<Maybe<PurchaseErrorResponse['error']>>(null);
+  const { saveUserActionForBuyNFTs } = useSaveUserActionForBuyNFTsMutation();
+
+  const { user } = useUser();
+  const { profileData } = useProfileQuery(user.currentProfileUrl);
+  const {
+    purchasedNfts,
+    setPurchasedNfts
+  } = useContext(NotificationContext);
+
   const { data: looksrareProtocolFeeBps } = useSWR(
     'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
     async () => {
@@ -63,16 +83,20 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       revalidateOnFocus: false,
     });
 
+  const {
+    mutate: mutatePublicProfileNfts,
+  } = useProfileNFTsQuery(profileData?.profile?.id,String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),8);
+  
+  const {
+    mutate: mutateAllOwnerNfts,
+  } = useMyNFTsQuery(8, profileData?.profile?.id, '', null, true);
+    
   const nftsToBuy = buyNowActive ? toBuyNow : toBuy;
+  const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
 
   const getNeedsApprovals = useCallback(() => {
-    return needsApprovals(nftsToBuy);
+    return needsERC20Approvals(nftsToBuy);
   }, [nftsToBuy]);
-
-  const getHasSufficientBalance = useCallback(async () => {
-    const balances = await getBalanceMap(currentAddress, ['WETH', 'ETH', 'USDC', 'DAI']);
-    return hasSufficientBalances(nftsToBuy, balances);
-  }, [currentAddress, getBalanceMap, nftsToBuy]);
     
   const getTotalPriceUSD = useCallback(() => {
     return getTotalFormattedPriceUSD(nftsToBuy, getByContractAddress);
@@ -106,10 +130,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
           {error === 'ApprovalError' ? 'Approval' : 'Transaction'} Failed
           <div className='w-full my-8'>
             <span className='font-medium text-[#6F6F6F] text-base'>
-              {error === 'ConnectionError' && 'Your wallet is not connected. Please connect your wallet and try again.'}
-              {error === 'ApprovalError' && 'The approval was not accepted in your wallet. If you would like to continue your purchase, please try again.'}
-              {error === 'PurchaseBalanceError' && 'The purchase failed because your token balance is too low.'}
-              {error === 'PurchaseUnknownError' && 'The transaction failed for an unknown reason. Please verify that your cart is valid and try again.'}
+              {error && getErrorText(error)}
             </span>
           </div>
         </div>
@@ -138,7 +159,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                     const currencyData = getByContractAddress(purchase?.currency);
                     return {
                       label: 'Approve ' + currencyData.name,
-                      endIcon: purchase?.isApproved ?
+                      endIcon: purchase?.isERC20ApprovedForAggregator ?
                         <CheckCircle size={16} className="text-green-500 mx-2" /> :
                         error === 'ApprovalError' ?
                           <X size={16} className="text-red-400 mx-2" /> :
@@ -220,10 +241,14 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       loading={false}
       title={''}
       onClose={() => {
+        if (success && !router.pathname.includes('/nft/')) router.push(`/app/nft/${nftsToBuy?.[0]?.nft?.contract}/${nftsToBuy?.[0]?.nft?.tokenId}`);
         setSuccess(false);
         setLoading(false);
         setError(null);
+        clear();
         clearBuyNow();
+        mutatePublicProfileNfts();
+        mutateAllOwnerNfts();
         props.onClose();
       }}
       bgColor='white'
@@ -234,9 +259,12 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       <div className={`max-w-full overflow-hidden ${success ? myOwnedProfileTokens?.length == 0 ? 'minlg:max-w-[458px]' : 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 py-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
         <div className={`font-noi-grotesk ${success ? myOwnedProfileTokens?.length == 0 ? 'lg:max-w-md max-w-lg' : 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
           <X onClick={() => {
+            // non NFT routes
+            if (success && !router.pathname.includes('/nft/')) router.push(`/app/nft/${nftsToBuy?.[0]?.nft?.contract}/${nftsToBuy?.[0]?.nft?.tokenId}`);
             setSuccess(false);
             setLoading(false);
             setError(null);
+            clear();
             clearBuyNow();
             props.onClose();
           }} className='absolute top-5 right-5 z-50 hover:cursor-pointer closeButton' size={20} color="black" weight="fill" />
@@ -251,6 +279,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                 clear();
                 setSuccess(false);
                 clearBuyNow();
+                mutatePublicProfileNfts();
+                mutateAllOwnerNfts();
                 props.onClose();
                 return;
               }
@@ -265,14 +295,19 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               }
 
               if (getNeedsApprovals()) {
-                const missingApprovals = filterDuplicates(
-                  toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
-                  (first, second) => first?.currency === second?.currency
-                ).filter(purchase => !purchase?.isApproved);
+                const missingApprovals = nftsToBuy.length > 1 ?
+                  filterDuplicates(
+                    nftsToBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+                    (first, second) => first?.currency === second?.currency
+                  ).filter(purchase => !purchase?.isERC20ApprovedForAggregator) :
+                  filterDuplicates(
+                    nftsToBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+                    (first, second) => first?.currency === second?.currency
+                  ).filter(purchase => !purchase?.isERC20ApprovedForProtocol);
                 for (let i = 0; i < missingApprovals.length; i++) {
                   const purchase = missingApprovals[i];
                   const currencyData = getByContractAddress(purchase?.currency);
-                  await currencyData?.setAllowance(currentAddress, getAddressForChain(nftAggregator, chain?.id))
+                  await currencyData?.setAllowance(currentAddress, nftsToBuy.length > 1 ? getAddressForChain(nftAggregator, chain?.id) : getERC20ProtocolApprovalAddress(nftsToBuy[0].protocol))
                     .then((result: boolean) => {
                       if (!result) {
                         setError('ApprovalError');
@@ -290,14 +325,18 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
               if (result) {
                 setSuccess(true);
+                setPurchasedNfts(buyNowActive ? [...purchasedNfts, toBuyNow[0]] : [...purchasedNfts, ...toBuy]);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
+                clear();
+                clearBuyNow();
+                saveUserActionForBuyNFTs(user?.currentProfileUrl);
+                mutatePublicProfileNfts();
+                mutateAllOwnerNfts();
               } else {
-                const hasSuffictientBalance = await getHasSufficientBalance();
-                if (!hasSuffictientBalance) {
-                  setError('PurchaseBalanceError');
-                } else {
-                  setError('PurchaseUnknownError');
+                purchaseError().then((res) => {
+                  setError(res);
                 }
+                );
               }
             }}
             type={ButtonType.PRIMARY} />}

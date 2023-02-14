@@ -66,12 +66,29 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       const feeData = await provider.getFeeData();
       return feeData;
     });
+    
   const { data } = usePrepareContractWrite({
     address: contractAddress as `0x${string}`,
     abi: maxProfilesABI,
     functionName: type === 'mint' ? 'publicMint' : 'extendLicense',
-    args: [type === 'mint' ? input[0]?.profileURI : profile, yearValue * 60 * 60 * 24 * 365, 0 , '0x0000000000000000000000000000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000000000000000000000000000', input[0]?.hash, input[0]?.signature],
-    onSuccess(){
+    args: type === 'mint' ?
+      [
+        input[0]?.profileURI,
+        yearValue * 60 * 60 * 24 * 365,
+        0,
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+        input[0]?.hash,
+        input[0]?.signature
+      ] :
+      [
+        profile,
+        yearValue * 60 * 60 * 24 * 365,
+        0,
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+      ],
+    onSuccess() {
       setError(null);
     },
     onError(err){
@@ -85,12 +102,11 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
   });
   
   const getMintCost = useCallback(() => {
-    if(feeData?.gasPrice){
-      if(data?.request.gasLimit && registrationFee) {
+    if (feeData?.gasPrice){
+      if (data?.request.gasLimit && registrationFee) {
         const gasFee = BigNumber.from(data?.request?.gasLimit.toString()).mul(BigNumber.from(feeData?.gasPrice.toString()));
         return utils.formatEther(BigNumber.from(registrationFee).add(gasFee));
-      }
-      else {
+      } else {
         return 0;
       }
     } else {
@@ -238,7 +254,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
                 'focus:outline-none focus-visible:bg-[#E4BA18]',
                 'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
               )}
-              disabled={ type === 'mint' ? input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') || !isNullOrEmpty(error) : false }
+              disabled={ type === 'mint' ? input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') || !isNullOrEmpty(error) : !isNullOrEmpty(error) }
               onClick={async () => {
                 if (
                   minting

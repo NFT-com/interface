@@ -44,7 +44,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
   const { profileData: nftProfileData } = useProfileQuery(props.nft?.contract === getAddressForChain(nftProfile, defaultChainId) ? props.nft?.metadata?.name : null);
 
-  const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
+  const { profileTokens } = useNftProfileTokens(props.nft?.owner ?? props.nft?.wallet?.address);
   const { profileTokens: creatorTokens } = useNftProfileTokens(collection?.collection?.deployer);
   const { address: currentAddress } = useAccount();
 
@@ -225,14 +225,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     >
                       <span className="text-base font-medium leading-5 font-noi-grotesk text-link">
                         {!profileOwnerToShow?.url == null ?
-                          shortenAddress(props.nft?.wallet?.address, 0) :
+                          shortenAddress(props.nft?.owner ?? props.nft?.wallet?.address, 0) :
                           profileOwnerToShow?.url
                         }
                       </span>
                     </div> :
-                    <Link href={getEtherscanLink(Number(defaultChainId), props.nft?.wallet?.address, 'address')}>
+                    <Link href={getEtherscanLink(Number(defaultChainId), props.nft?.owner ?? props.nft?.wallet?.address, 'address')}>
                       <span className="text-[#1F2127] text-base cursor-pointer hover:underline font-medium leading-5 font-noi-grotesk pl-3">
-                        {shortenAddress(props.nft?.wallet?.address, isMobile ? 4 : 6) ?? 'Unknown'}
+                        {shortenAddress(props.nft?.owner ?? props.nft?.wallet?.address, isMobile ? 4 : 6) ?? 'Unknown'}
                       </span>
                     </Link>
                 }
