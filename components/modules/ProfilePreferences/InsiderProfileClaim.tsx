@@ -41,7 +41,6 @@ export function InsiderProfileClaim() {
   const mintProfile = useCallback((profileURIToMint: string) => {
     (async () => {
       try {
-        console.log('profileURIToMint: ', profileURIToMint);
         const tx = await profileAuctionSigner.genesisKeyBatchClaimProfile([
           {
             profileUrl: profileURIToMint,
