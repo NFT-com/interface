@@ -1,6 +1,7 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
+import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
@@ -40,12 +41,13 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
     return await getContractMetadata(nft?.contract, defaultChainId);
   });
-
+  const { refreshNft } = useRefreshNftMutation();
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
 
   useEffect(() => {
     refreshNftOrders(nft?.id);
-  }, [refreshNftOrders, nft]);
+    refreshNft(nft?.id);
+  }, [refreshNftOrders, nft, refreshNft]);
 
   const [selectedDetailTab, setSelectedDetailTab] = useState(0);
 
