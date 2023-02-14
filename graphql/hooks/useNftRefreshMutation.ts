@@ -1,5 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe } from 'graphql/generated/types';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import delay from 'delay';
 import { useCallback, useState } from 'react';
@@ -20,6 +21,9 @@ export function useRefreshNftMutation(): RefreshNftResult {
 
   const refreshNft = useCallback(
     async (nftId: string) => {
+      if(isNullOrEmpty(nftId)){
+        return null;
+      }
       setLoading(true);
       try {
         await delay(1000); // give more UI time for user
