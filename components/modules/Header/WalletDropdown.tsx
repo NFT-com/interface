@@ -3,6 +3,7 @@ import NotificationsModal from 'components/modules/Notifications/NotificationsMo
 import { useChangeWallet } from 'hooks/state/useChangeWallet';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { utils } from 'ethers';
@@ -112,16 +113,18 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
             Assets
           </div>
 
-          <div
-            style={{ height: '10%' }}
-            className={'flex flex-row w-full py-2 items-center hover:cursor-pointer text-primary-txt font-medium'}
-            onClick={() => {
-              router.push('/app/activity');
-              setExpanded(false);
-            }}
-          >
+          {getEnvBool(Doppler.NEXT_PUBLIC_ACTIVITY_PAGE_ENABLED) &&
+            <div
+              style={{ height: '10%' }}
+              className={'flex flex-row w-full py-2 items-center hover:cursor-pointer text-primary-txt font-medium'}
+              onClick={() => {
+                router.push('/app/activity');
+                setExpanded(false);
+              }}
+            >
             Activity
-          </div>
+            </div>
+          }
 
           <div
             style={{ height: '10%' }}

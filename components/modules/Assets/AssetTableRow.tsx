@@ -147,16 +147,21 @@ export default function AssetTableRow({
           {!isNullOrEmpty(filterValidListings(item?.listings?.items)) ? <p>Listed</p> : <p>—</p>}
         </div>
       </td>
-      <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
-        <div >
-          {nftSaleHistory?.data?.items[0]?.priceDetails ? <p>{nftSaleHistory?.data?.items[0]?.priceDetails?.price}</p> : <p>—</p>}
-        </div>
-      </td>
-      <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
-        <div >
-          {nftSaleHistory?.data?.items[0]?.priceDetails?.priceUSD ? <p>${Number(nftSaleHistory?.data?.items[0]?.priceDetails?.priceUSD).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
-        </div>
-      </td>
+      {getEnvBool(Doppler.NEXT_PUBLIC_ASSETS_PRICE_ENABLED) && (
+        <>
+          <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
+            <div >
+              {nftSaleHistory?.data?.items[0]?.priceDetails ? <p>{nftSaleHistory?.data?.items[0]?.priceDetails?.price}</p> : <p>—</p>}
+            </div>
+          </td>
+          <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
+            <div >
+              {nftSaleHistory?.data?.items[0]?.priceDetails?.priceUSD ? <p>${Number(nftSaleHistory?.data?.items[0]?.priceDetails?.priceUSD).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+            </div>
+          </td>
+        </>
+      )}
+      
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4 -mt-1" >
         <div>
           {getDisplayedProfiles()}
