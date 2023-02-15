@@ -9,7 +9,6 @@ import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
-import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
@@ -42,7 +41,7 @@ export default function MintGKProfileCard() {
   const { profileClaimHash } = useGetProfileClaimHash(currentValue && currentValue[0]);
   const { profileTokenId } = useProfileTokenQuery(currentValue && currentValue[0]);
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
-  const hasMintsAvailable = getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ? claimable.some(key => key.claimable > 0) : true;
+  const hasMintsAvailable = !isNullOrEmpty(claimable) ? claimable.some(key => key.claimable > 0) : false;
 
   const resetInputs = useCallback(() => {
     const inputArr = [];
