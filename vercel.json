@@ -1,1 +1,23 @@
-{}
+{
+    "redirects": [
+      {
+        "source": "/whitelist",
+        "destination": "https://whitelist.nft.com",
+        "statusCode": 200,
+        "force": true
+      },
+      {
+        "source": "/discord",
+        "destination": "https://discord.gg/nftdotcom",
+        "statusCode": 200,
+        "force": true
+      },
+      {
+        "source": "/you",
+        "destination": "https://www.nft.com/app/mint-profiles",
+        "statusCode": 200,
+        "force": true
+      }
+    ]
+  }
+  
