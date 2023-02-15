@@ -1,9 +1,11 @@
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { TxActivity, TxLooksrareProtocolData, TxSeaportProtocolData, TxX2Y2ProtocolData } from 'graphql/generated/types';
+import { useUpdateReadByIdsMutation } from 'graphql/hooks/useUpdateReadByIdsMutation';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
+import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 
 import { NotificationButton } from './NotificationButton';
@@ -12,8 +14,9 @@ import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import NoActivityIcon from 'public/no_activity.svg';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
+import { useAccount } from 'wagmi';
 
 type NotificationsProps = {
   setVisible: (input:boolean) => void;
@@ -38,6 +41,8 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
   const router = useRouter();
   const { setSidebarOpen } = useSidebar();
   const { getByContractAddress } = useSupportedCurrencies();
+  const { address: currentAddress } = useAccount();
+  const { updateReadbyIds } = useUpdateReadByIdsMutation();
 
   const getPriceFields = useCallback((item: PartialObjectDeep<TxActivity, unknown>, type: 'price' | 'currency') => {
     const sale = item.transaction;
@@ -103,17 +108,20 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     : [];
 
   const soldNotifications = !isNullOrEmpty(soldNfts) ?
-    soldNfts.map((nft) => (
-      {
-        text: `Your NFT sold for ${getPriceFields(nft, 'price')} ${getPriceFields(nft, 'currency')}.`,
-        onClick: () => {
-          setVisible(false);
-          setSidebarOpen(false);
-          router.push('/app/activity');
-        },
-        date: nft.timestamp
-      }
-    ))
+    soldNfts.map((nft) => {
+      const nftId = nft?.nftId[0]?.split('/')[2] ? BigNumber.from(nft?.nftId[0]?.split('/')[2]).toString() : null;
+      return(
+        {
+          text: `Your NFT sold for ${getPriceFields(nft, 'price')} ${getPriceFields(nft, 'currency')}.`,
+          onClick: () => {
+            setVisible(false);
+            setSidebarOpen(false);
+            !isNullOrEmpty(nftId) && router.push(`/app/nft/${nft.nftContract}/${nftId}`);
+          },
+          date: nft.timestamp
+        }
+      );
+    })
     : [];
 
   const notificationData = [
@@ -130,11 +138,11 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
       : null,
     activeNotifications.hasExpiredListings ?
       {
-        text: 'Listing Expired. View My Activity',
+        text: getEnvBool(Doppler.NEXT_PUBLIC_ACTIVITY_PAGE_ENABLED) ? 'Listing Expired. View My Activity' : 'Listing Expired.',
         onClick: () => {
           setVisible(false);
           setSidebarOpen(false);
-          router.push('/app/activity');
+          getEnvBool(Doppler.NEXT_PUBLIC_ACTIVITY_PAGE_ENABLED) && router.push('/app/activity');
         },
         date:  expiredActivityDate
       }
@@ -193,6 +201,13 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
       : null,
   ];
 
+  //Sets activities to read
+  useEffect(() => {
+    if(soldNfts.length || purchasedNfts?.length || activeNotifications.hasExpiredListings) {
+      updateReadbyIds({ ids: [] });
+    }
+  }, [updateReadbyIds, soldNfts.length, purchasedNfts?.length, activeNotifications.hasExpiredListings, currentAddress]);
+
   return (
     <>
       <div className='w-full text-3xl font-noi-grotesk mb-5'>
@@ -213,7 +228,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
           </button>
         </div>
         :
-        <div className='flex flex-col w-full items-center'>
+        <div className='flex flex-col w-full items-center max-h-screen minlg:max-h-[350px] overflow-auto'>
           {filterNulls([...notificationData, ...purchaseNotifications, ...soldNotifications]).sort((a, b) => moment(b.date, 'MM-DD-YYYY').diff(moment(a.date, 'MM-DD-YYYY'))).map((item, index) => (
             <NotificationButton
               key={index}

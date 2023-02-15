@@ -274,7 +274,7 @@ export function ProfileContextProvider(
       });
 
       // Edit mode NFTS rendering for the first time
-      if (isNullOrEmpty(editModeNfts) && afterCursorEditMode === '') {
+      if (isNullOrEmpty(editModeNfts) && afterCursorEditMode === '' && allOwnerNfts.length > 0) {
         setPubliclyVisibleNfts([...allOwnerNftsWithHiddenValue.filter(nft => !nft.isHide)]);
         const paginatedNotPubliclyVisibleNftsLast = paginatedAllOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [];
         setPaginatedAllOwnerNfts([...allOwnerNftsWithHiddenValue]);
