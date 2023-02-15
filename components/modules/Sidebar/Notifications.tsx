@@ -108,17 +108,20 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     : [];
 
   const soldNotifications = !isNullOrEmpty(soldNfts) ?
-    soldNfts.map((nft) => (
-      {
-        text: `Your NFT sold for ${getPriceFields(nft, 'price')} ${getPriceFields(nft, 'currency')}.`,
-        onClick: () => {
-          setVisible(false);
-          setSidebarOpen(false);
-          router.push(`/app/nft/${nft.nftContract}/${nft.nftId}`);
-        },
-        date: nft.timestamp
-      }
-    ))
+    soldNfts.map((nft) => {
+      const nftId = nft?.nftId[0]?.split('/')[2] ? BigNumber.from(nft?.nftId[0]?.split('/')[2]).toString() : null;
+      return(
+        {
+          text: `Your NFT sold for ${getPriceFields(nft, 'price')} ${getPriceFields(nft, 'currency')}.`,
+          onClick: () => {
+            setVisible(false);
+            setSidebarOpen(false);
+            !isNullOrEmpty(nftId) && router.push(`/app/nft/${nft.nftContract}/${nftId}`);
+          },
+          date: nft.timestamp
+        }
+      );
+    })
     : [];
 
   const notificationData = [
