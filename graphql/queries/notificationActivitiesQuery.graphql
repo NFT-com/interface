@@ -17,6 +17,7 @@ query NotificationActivities($input: TxActivitiesInput) {
             nftId
             status
             transaction {
+              transactionHash
                 protocol
         protocolData {
          ... on TxSeaportProtocolData {

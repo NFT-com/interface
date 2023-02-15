@@ -79,7 +79,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
       const ethAmount = ethers.utils.formatEther(protocolData?.takeAsset[0]?.value ?? 0);
       const currencyData = getByContractAddress(protocolData?.takeAsset[0]?.standard?.contractAddress);
       if(type === 'price'){
-        return ethAmount;
+        return Number(ethAmount) > 0 ? ethAmount : '';
       } else {
         return currencyData?.name ?? '';
       }
@@ -112,11 +112,16 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
       const nftId = nft?.nftId[0]?.split('/')[2] ? BigNumber.from(nft?.nftId[0]?.split('/')[2]).toString() : null;
       return(
         {
-          text: `Your NFT sold for ${getPriceFields(nft, 'price')} ${getPriceFields(nft, 'currency')}.`,
+          text: `Your NFT sold ${!isNullOrEmpty(nftId) ? 'for': ''} ${getPriceFields(nft, 'price')} ${getPriceFields(nft, 'currency')} ${!isNullOrEmpty(nftId) ? '.': ''}`,
           onClick: () => {
             setVisible(false);
             setSidebarOpen(false);
-            !isNullOrEmpty(nftId) && router.push(`/app/nft/${nft.nftContract}/${nftId}`);
+            !isNullOrEmpty(nftId)
+              ? router.push(`/app/nft/${nft.nftContract}/${nftId}`)
+              : window.open(
+                `https://etherscan.io/tx/${nft.transaction.transactionHash?.split(':')?.[0]}`,
+                '_blank'
+              );
           },
           date: nft.timestamp
         }
