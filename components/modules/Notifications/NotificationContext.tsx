@@ -10,7 +10,6 @@ import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useProfileExpiryDate } from 'hooks/useProfileExpiryDate';
 import { UserNotifications } from 'types';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import moment from 'moment';
@@ -90,7 +89,7 @@ export function NotificationContextProvider(
     defaultChainId
   );
   const hasUnclaimedProfiles = totalClaimableForThisAddress > 0;
-  const { expiry } = useProfileExpiryDate(getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ? user?.currentProfileUrl : null);
+  const { expiry } = useProfileExpiryDate(user?.currentProfileUrl);
   const now = moment();
   const eightWeeksBeforeExpiry = moment(expiry).subtract(56, 'days');
 
@@ -195,10 +194,10 @@ export function NotificationContextProvider(
       setExpiredActivityDate(null);
     }
 
-    if(getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) && expiry && moment(now).isAfter(eightWeeksBeforeExpiry)){
+    if(expiry && moment(now).isAfter(eightWeeksBeforeExpiry)){
       setProfileExpiringSoon(true);
     }
-    if(getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) && profileExpiringSoon && !moment(now).isAfter(eightWeeksBeforeExpiry)){
+    if(profileExpiringSoon && !moment(now).isAfter(eightWeeksBeforeExpiry)){
       setProfileExpiringSoon(false);
     }
     if(!isNullOrEmpty(purchasedNfts) && !notifications.nftPurchase) {

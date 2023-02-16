@@ -1,5 +1,4 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
-import { Doppler, getEnvBool } from 'utils/env';
 
 import { Info } from 'phosphor-react';
 import { Link as ScrollLink } from 'react-scroll';
@@ -41,11 +40,9 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
             <ScrollLink activeClass='font-bold' to='display' spy={true} smooth={true} duration={500} offset={-100}>
               <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Select Display Mode</p>
             </ScrollLink>
-            {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) &&
-              <ScrollLink activeClass='font-bold' to='licensing' spy={true} smooth={true} duration={500} offset={-100}>
-                <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Profile Licensing</p>
-              </ScrollLink>
-            }
+            <ScrollLink activeClass='font-bold' to='licensing' spy={true} smooth={true} duration={500} offset={-100}>
+              <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Profile Licensing</p>
+            </ScrollLink>
             <ScrollLink to='transfer' activeClass='font-bold' spy={true} smooth={true} duration={500} offset={-100}>
               <p className='text-[#D40909] hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Transfer Profile</p>
             </ScrollLink>

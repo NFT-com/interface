@@ -6,7 +6,6 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useProfileExpiryDate } from 'hooks/useProfileExpiryDate';
-import { Doppler, getEnvBool } from 'utils/env';
 import { getAddress } from 'utils/httpHooks';
 
 import { Dialog, Transition } from '@headlessui/react';
@@ -115,7 +114,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   });
 
   const submitHandler = async () => {
-    if(type === 'Free' && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)){
+    if(type === 'Free'){
       try {
         const tx = await (await (maxProfilesSigner)).publicClaim(
           profileToMint?.profileURI,
@@ -136,7 +135,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
       } catch (err) {
         setMinting(false);
       }
-    } else if (type === 'Paid' && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)){
+    } else if (type === 'Paid'){
       try {
         const tx = await (await (maxProfilesSigner)).publicMint(
           profileToMint?.profileURI,
@@ -165,7 +164,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
       } catch (err) {
         setMinting(false);
       }
-    } else if (type === 'Renew' && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)){
+    } else if (type === 'Renew'){
       try {
         const tx = await (await (maxProfilesSigner)).extendLicense(
           profileToMint?.profileURI,

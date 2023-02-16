@@ -2,7 +2,6 @@ import { WETH } from 'constants/tokens';
 import { Nft, TxActivity } from 'graphql/generated/types';
 import { useHasGk } from 'hooks/useHasGk';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
-import { Doppler, getEnvBool } from 'utils/env';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 
 import { NFTCardAddToCartButton as StaticNFTCardAddToCartButton } from './NFTCardAddToCartButton';
@@ -38,7 +37,7 @@ export const NFTCardListingIcons = (props: {
         </p>
       </div>
       <div>
-        {hasGk || getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) && <DynamicNFTCardAddToCartButton lowestListing={props.lowestListing} nft={props.nft}/>}
+        {hasGk && <DynamicNFTCardAddToCartButton lowestListing={props.lowestListing} nft={props.nft}/>}
       </div>
     </div>
   );
