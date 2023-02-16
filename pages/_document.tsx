@@ -45,6 +45,10 @@ class MyDocument extends Document {
           <div id="root"></div>
           <Main />
           <NextScript />
+          {/* <!-- Start of immutableholdings Zendesk Widget script --> */}
+          {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+          <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=8c1725fb-0d37-458a-a99c-a478716e0aa4"> </script>
+          {/* <!-- End of immutableholdings Zendesk Widget script --> */}
         </body>
       </Html>
     );}

@@ -2368,6 +2368,18 @@ input[type="range"]::-moz-range-thumb {
   z-index: 99 !important;
 }
 
+
+iframe[id*="launcher"]{
+  display: block !important;
+  vertical-align: middle !important;
+  width: 120px !important;
+} 
+iframe[id*="webWidget"]{
+  display: block !important;
+  vertical-align: middle !important;
+}
+
+
 @keyframes animDecorLeaderboard {
   0% {
     transform: translateX(-50%);
