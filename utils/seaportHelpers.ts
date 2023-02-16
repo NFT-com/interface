@@ -19,7 +19,7 @@ import {
   SeaportOrderComponents,
   SeaportOrderParameters } from 'types/seaport';
 
-import { getBaseUrl, isNullOrEmpty } from './helpers';
+import { filterNulls, getBaseUrl } from './helpers';
 import { libraryCall, seaportLib } from './marketplaceHelpers';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';
