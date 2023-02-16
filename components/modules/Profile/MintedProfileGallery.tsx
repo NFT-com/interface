@@ -1,11 +1,7 @@
-import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
-import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { createNftOwnerMap } from 'utils/createNftOwnerMap';
-import { Doppler, getEnvBool } from 'utils/env';
-import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { CollectionGallery } from './CollectionGallery';
@@ -15,12 +11,7 @@ import { ProfileContext } from './ProfileContext';
 import { ProfileLayoutEditorModalContent } from './ProfileLayoutEditorModalContent';
 
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import { CircleWavy, Gear, Layout, Tag, Wrench } from 'phosphor-react';
-import EyeIcon from 'public/eye.svg';
-import EyeOffIcon from 'public/eye_off.svg';
 import { useContext, useEffect, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
 
 export interface MintedProfileGalleryProps {
@@ -34,22 +25,13 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const {
     editMode,
     draftDisplayType,
-    setDraftDisplayType,
-    selectedCollection,
-    draftGkIconVisible,
-    setDraftGkIconVisible,
-    draftNftsDescriptionsVisible,
-    setDraftNftsDescriptionsVisible,
     publiclyVisibleNftCount,
     showNftIds,
     hideNftIds,
-    allOwnerNfts,
-    draftDeployedContractsVisible,
-    setDraftDeployedContractsVisible
+    allOwnerNfts
   } = useContext(ProfileContext);
 
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
-  const router = useRouter();
   const { address: currentAddress } = useAccount();
 
   const { profileData } = useProfileQuery(props.profileURI);

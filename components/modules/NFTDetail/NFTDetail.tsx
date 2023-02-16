@@ -83,7 +83,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
       <div className={tw(
         'flex minmd:items-center w-full mt-8 py-4 px-4 justify-between',
       )}>
-        <div className='flex flex-col'>
+        <div className='flex flex-col whitespace-nowrap text-ellipsis overflow-hidden'>
           <Link href={`/app/collection/${collection?.collection?.contract}`}>
             <div className="text-[18px] font-medium font-noi-grotesk mb-2 tracking-wide text-[#6A6A6A] cursor-pointer">
               {isNullOrEmpty(collectionName) ?
@@ -107,7 +107,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
               )
               : (
                 <>
-                  {props.nft?.metadata?.name}
+                  <div className='whitespace-nowrap text-ellipsis overflow-hidden'>{props.nft?.metadata?.name}</div>
                   {nftProfileData?.profile?.isGKMinted && <div className='h-5 w-5 minlg:h-6 minlg:w-6 ml-2'>
                     <GK />
                   </div>

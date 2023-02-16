@@ -2,6 +2,7 @@ import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { IExecutionStrategy, LooksRareExchange, RoyaltyFeeManager, RoyaltyFeeRegistry } from 'constants/typechain/looksrare';
 import { LooksrareProtocolData, Nft } from 'graphql/generated/types';
 import { AggregatorResponse } from 'types';
+import { getBaseUrl } from 'utils/helpers';
 
 import { libraryCall, looksrareLib } from './marketplaceHelpers';
 
@@ -208,6 +209,8 @@ export const looksrareBuyNow = async (
       txHash: tx.hash,
       orderHash: order.orderHash,
     });
+
+    fetch(`${getBaseUrl('https://www.nft.com/')}api/message?text=Buy Now on ${order.protocol} by ${executorAddress} for ${order.nft?.contract} ${order.nft?.tokenId}: https://etherscan.io/tx/${tx.hash}`);
 
     if (tx) {
       return await tx.wait(1).then(() => true).catch(() => false);

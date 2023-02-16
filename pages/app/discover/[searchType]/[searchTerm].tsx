@@ -170,7 +170,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         exhaustive_search: true,
       }] })
         .then((resp) => {
-          filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+          filters.length < 1 && !isNullOrEmpty(resp.results[0]?.facet_counts) && setFilters([...resp.results[0].facet_counts]);
           results.current = [...resp.results[0].hits];
           found.current = resp.results[0].found;
           setSearchedData(resp.results[0].hits);
@@ -195,7 +195,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         .then((resp) => {
           results.current = [...results.current,...resp.results[0].hits];
           found.current = resp.results[0].found;
-          filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+          filters.length < 1 && !isNullOrEmpty(resp.results[0]?.facet_counts) && setFilters([...resp.results[0].facet_counts]);
           setSearchedData([...searchedData,...resp.results[0].hits]);
           addressesList.current = searchedData?.map((nft) => {
             return nft.document?.contractAddr;
@@ -207,14 +207,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     <div className="p-1 mt-7 minlg:p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
       <div className="w-full min-h-disc px-2 minlg:px-0">
         <div className="px-0 flex mt-0 mb-2 justify-between minlg:hidden">
-          <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer'}>
+          <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-full text-lg cursor-pointer'}>
             <SlidersHorizontal size={22}/>
           </div>
-          <div className={'hidden relative flex items-center justify-center bg-white border-[#ECECEC] border-[1px] text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer z-5'}>
-
-          </div>
         </div>
-        <div className='hidden minlg:block flex justify-between mt-6 mb-10'>
+        <div className='hidden minlg:flex justify-between mt-6 mb-10'>
           <div className='flex justify-between items-center'>
             <div className={`${sideNavOpen ? 'w-[19rem]' : 'w-[auto] mr-6'}`}>
               <div
@@ -244,7 +241,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
               {searchType?.toString() === 'allResults' && !isNullOrEmpty(collectionsSliderData) &&
                 <CollectionsResults sideNavOpen={sideNavOpen} searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />}
               <div className="flex justify-between items-center font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
-                <div className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium">
+                <div className="text-lg text-blog-text-reskin font-medium">
                   {found.current + ' ' + (searchType?.toString() !== 'collections' ? 'NFT' : 'Collection') + `${found.current === 1 ? '' : 's'}`}
                 </div>
                 {searchType?.toString() === 'allResults' && <span

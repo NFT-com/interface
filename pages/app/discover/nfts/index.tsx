@@ -5,6 +5,7 @@ import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
@@ -109,7 +110,7 @@ export default function CollectionsPage() {
                       }
                     </div>
                     <div className="px-0 flex mt-0 mr-4 justify-between minlg:hidden">
-                      <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer'}>
+                      <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-full text-lg  cursor-pointer'}>
                         <SlidersHorizontal size={22}/>
                       </div>
                     </div>

@@ -1,5 +1,3 @@
-
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
@@ -7,7 +5,6 @@ import { ProfileContext } from './ProfileContext';
 import Hidden from 'public/Hidden.svg';
 import Visible from 'public/Visible.svg';
 import { useContext } from 'react';
-import { Eye, EyeOff } from 'react-feather';
 
 export interface GalleryToggleAllButtonsProps {
   onShowAll: () => void;

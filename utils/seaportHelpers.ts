@@ -19,7 +19,7 @@ import {
   SeaportOrderComponents,
   SeaportOrderParameters } from 'types/seaport';
 
-import { filterNulls } from './helpers';
+import { filterNulls, getBaseUrl } from './helpers';
 import { libraryCall, seaportLib } from './marketplaceHelpers';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';
@@ -331,6 +331,8 @@ export const seaportBuyNow = async (
       txHash: tx.hash,
       orderHash: order.orderHash,
     });
+
+    fetch(`${getBaseUrl('https://www.nft.com/')}api/message?text=Buy Now on ${order.protocol} by ${executorAddress} for ${order.nft?.contract} ${order.nft?.tokenId}: https://etherscan.io/tx/${tx.hash}`);
 
     if (tx) {
       return await tx.wait(1).then(() => true).catch(() => false);

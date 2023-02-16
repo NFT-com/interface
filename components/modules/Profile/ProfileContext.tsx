@@ -9,7 +9,7 @@ import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation
 import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileImagesMutation';
 import useDebounce from 'hooks/useDebounce';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { Doppler,getEnv } from 'utils/env';
 import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
 
 import { DetailedNft } from './NftGrid';
@@ -172,7 +172,7 @@ export function ProfileContextProvider(
     totalItems: allOwnerNftCount,
     mutate: mutateAllOwnerNfts,
     pageInfo: allOwnerNftsPageInfo,
-  } = useMyNFTsQuery(PUBLIC_PROFILE_LOAD_COUNT, profileData?.profile?.id, afterCursorEditMode, getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ? debouncedSearch : null);
+  } = useMyNFTsQuery(PUBLIC_PROFILE_LOAD_COUNT, profileData?.profile?.id, afterCursorEditMode, debouncedSearch);
   /**
    * Profile v2 instant update state
    */

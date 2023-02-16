@@ -16,7 +16,7 @@ import {
 import { AggregatorResponse } from 'types';
 import { AssetStruct, AssetTypeStruct, MarketAsk, OrderStruct } from 'types/nativeMarketplace';
 
-import { isNullOrEmpty } from './helpers';
+import { getBaseUrl, isNullOrEmpty } from './helpers';
 import { libraryCall, NFTCOMLib } from './marketplaceHelpers';
 import { encodeAssetClass, getAssetBytes, getAssetTypeBytes } from './signatureUtils';
 
@@ -620,6 +620,8 @@ export const nftcomBuyNow = async (
       txHash: tx.hash,
       orderHash: order.orderHash,
     });
+
+    fetch(`${getBaseUrl('https://www.nft.com/')}api/message?text=Buy Now on ${order.protocol} by ${executorAddress} for ${order.nft?.contract} ${order.nft?.tokenId}: https://etherscan.io/tx/${tx.hash}`);
 
     if (tx) {
       return await tx.wait(1).then(() => true).catch(() => false);
