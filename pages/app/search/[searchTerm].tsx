@@ -119,7 +119,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           results.current = [...resp.results[0].hits];
           found.current = resp.results[0].found;
           setSearchedData(resp.results[0].hits);
-          filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+          filters.length < 1 && !isNullOrEmpty(resp.results[0]?.facet_counts) && setFilters([...resp.results[0].facet_counts]);
         });
     }
   },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, sideNavOpen, prevFilters]);
@@ -144,7 +144,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         .then((resp) => {
           results.current = [...results.current,...resp.results[0].hits];
           found.current = resp.results[0].found;
-          filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+          filters.length < 1 && !isNullOrEmpty(resp.results[0]?.facet_counts) && setFilters([...resp.results[0].facet_counts]);
           setSearchedData([...searchedData,...resp.results[0].hits]);
           addressesList.current = searchedData?.map((nft) => {
             return nft.document?.contractAddr;
@@ -171,11 +171,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
             }
           </div>
           <div className="px-0 flex mt-0 mr-4 justify-between minlg:hidden">
-            <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer'}>
+            <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-full text-lg  cursor-pointer'}>
               <SlidersHorizontal size={22}/>
-            </div>
-            <div className={'hidden relative flex items-center justify-center bg-white border-[#ECECEC] border-[1px] text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer z-5'}>
-
             </div>
           </div>
         </div>
@@ -189,7 +186,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
               {!isNullOrEmpty(collectionsSliderData) &&
                 <CollectionsResults sideNavOpen={sideNavOpen} searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} typesenseCollections={collectionsSliderData?.hits}/>}
               <div className="flex justify-between items-center mt-12 font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
-                <div className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium">
+                <div className="text-lg text-blog-text-reskin font-medium">
                   {found.current + ' ' + 'NFT' + `${found.current === 1 ? '' : 's'}`}
                 </div>
                 {<span

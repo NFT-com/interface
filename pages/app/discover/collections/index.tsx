@@ -8,6 +8,7 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeaderBoardQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
@@ -49,7 +50,7 @@ export default function CollectionsPage() {
         page: page,
       }).then((results) => {
         setLoading(false);
-        filters.length < 1 && setFilters([...results.facet_counts]);
+        filters.length < 1 && !isNullOrEmpty(results?.facet_counts) && setFilters([...results.facet_counts]);
         setTotalFound(results.found);
         page > 1 ? setCollectionData([...collections,...results.hits]) : setCollectionData(results.hits);
       });
@@ -141,11 +142,8 @@ export default function CollectionsPage() {
                           }
                         </div>
                         <div className="px-0 flex mt-0 mr-4 justify-between minlg:hidden">
-                          <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer'}>
+                          <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10  text-lg rounded-full cursor-pointer'}>
                             <SlidersHorizontal size={22}/>
-                          </div>
-                          <div className={'hidden relative flex items-center justify-center bg-white border-[#ECECEC] border-[1px] text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer z-5'}>
-
                           </div>
                         </div>
                       </div>
