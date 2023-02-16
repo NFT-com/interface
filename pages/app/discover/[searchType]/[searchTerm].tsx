@@ -170,7 +170,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         exhaustive_search: true,
       }] })
         .then((resp) => {
-          filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+          filters.length < 1 && !isNullOrEmpty(resp.results[0]?.facet_counts) && setFilters([...resp.results[0].facet_counts]);
           results.current = [...resp.results[0].hits];
           found.current = resp.results[0].found;
           setSearchedData(resp.results[0].hits);
@@ -195,7 +195,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         .then((resp) => {
           results.current = [...results.current,...resp.results[0].hits];
           found.current = resp.results[0].found;
-          filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+          filters.length < 1 && !isNullOrEmpty(resp.results[0]?.facet_counts) && setFilters([...resp.results[0].facet_counts]);
           setSearchedData([...searchedData,...resp.results[0].hits]);
           addressesList.current = searchedData?.map((nft) => {
             return nft.document?.contractAddr;

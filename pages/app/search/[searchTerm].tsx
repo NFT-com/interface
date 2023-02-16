@@ -119,7 +119,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           results.current = [...resp.results[0].hits];
           found.current = resp.results[0].found;
           setSearchedData(resp.results[0].hits);
-          filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+          filters.length < 1 && !isNullOrEmpty(resp.results[0]?.facet_counts) && setFilters([...resp.results[0].facet_counts]);
         });
     }
   },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, sideNavOpen, prevFilters]);
@@ -144,7 +144,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         .then((resp) => {
           results.current = [...results.current,...resp.results[0].hits];
           found.current = resp.results[0].found;
-          filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+          filters.length < 1 && !isNullOrEmpty(resp.results[0]?.facet_counts) && setFilters([...resp.results[0].facet_counts]);
           setSearchedData([...searchedData,...resp.results[0].hits]);
           addressesList.current = searchedData?.map((nft) => {
             return nft.document?.contractAddr;

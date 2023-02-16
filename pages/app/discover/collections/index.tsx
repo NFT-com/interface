@@ -8,6 +8,7 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeaderBoardQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
@@ -49,7 +50,7 @@ export default function CollectionsPage() {
         page: page,
       }).then((results) => {
         setLoading(false);
-        filters.length < 1 && setFilters([...results.facet_counts]);
+        filters.length < 1 && !isNullOrEmpty(results?.facet_counts) && setFilters([...results.facet_counts]);
         setTotalFound(results.found);
         page > 1 ? setCollectionData([...collections,...results.hits]) : setCollectionData(results.hits);
       });

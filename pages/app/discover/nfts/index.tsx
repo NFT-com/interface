@@ -5,6 +5,7 @@ import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
@@ -47,7 +48,7 @@ export default function CollectionsPage() {
         setLoading(false);
         setTotalFound(results.found);
         page > 1 ? setNftsData([...nftSData,...results.hits]) : setNftsData(results.hits);
-        filters.length < 1 && setFilters([...results.facet_counts]);
+        filters.length < 1 && !isNullOrEmpty(results?.facet_counts) && setFilters([...results.facet_counts]);
       });
     }
     return () => {
