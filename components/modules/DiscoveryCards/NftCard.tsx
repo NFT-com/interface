@@ -14,7 +14,6 @@ import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApp
 import { useHasGk } from 'hooks/useHasGk';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getListingCurrencyAddress, getListingEndDate, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
@@ -179,7 +178,7 @@ export function NftCard(props: NftCardProps) {
               />
               <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
                 <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
-                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe && (hasGk || getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) ?
+                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe && hasGk ?
                     <>
                       <button
                         onClick={async (e) => {

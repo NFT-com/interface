@@ -5,7 +5,6 @@ import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfi
 import { useHasGk } from 'hooks/useHasGk';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNull } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -96,34 +95,30 @@ export default function MintProfilesPage() {
         
         <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
           <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
-            {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
-              <>
-                <h2 className='text-[32px] font-medium'>{mintType === 'gk' ? 'Claim your free NFT Profile' : <p>Create your <span className='font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>NFT Profile</span> to trade with lower fees</p>}</h2>
-                {hasGk && <div className='justify-start items-center flex mt-5'>
-                  <Tab.Group onChange={(index) => {setMintType(mintProfileTabs[index].tabName);}}>
-                    <Tab.List className="w-full flex rounded-3xl z-10 bg-[#F6F6F6]">
-                      {Object.keys(mintProfileTabs).map((chartType, index) => (
-                        <Tab
-                          key={chartType}
-                          className={({ selected }) =>
-                            tw(
-                              'w-1/2 rounded-3xl font-medium py-2.5 md:px-5 px-8 font-noi-grotesk text-[16px] leading-5 text-[#6A6A6A]',
-                              selected && 'bg-black text-[#FFFFFF]'
-                            )
-                          }
-                        >
-                          {mintProfileTabs[index].displayName}
-                        </Tab>
-                      ))}
-                    </Tab.List>
-                  </Tab.Group>
-                </div>
-                }
-                {isNull(ownedGenesisKeyTokens) ? <MintProfileCardSkeleton /> : mintType === 'paid' ? <MintPaidProfileCard type='mint' /> : <MintGKProfileCard />}
-              </>
-              :
-              <MintGKProfileCard />
-            }
+            <>
+              <h2 className='text-[32px] font-medium'>{mintType === 'gk' ? 'Claim your free NFT Profile' : <p>Create your <span className='font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>NFT Profile</span> to trade with lower fees</p>}</h2>
+              {hasGk && <div className='justify-start items-center flex mt-5'>
+                <Tab.Group onChange={(index) => {setMintType(mintProfileTabs[index].tabName);}}>
+                  <Tab.List className="w-full flex rounded-3xl z-10 bg-[#F6F6F6]">
+                    {Object.keys(mintProfileTabs).map((chartType, index) => (
+                      <Tab
+                        key={chartType}
+                        className={({ selected }) =>
+                          tw(
+                            'w-1/2 rounded-3xl font-medium py-2.5 md:px-5 px-8 font-noi-grotesk text-[16px] leading-5 text-[#6A6A6A]',
+                            selected && 'bg-black text-[#FFFFFF]'
+                          )
+                        }
+                      >
+                        {mintProfileTabs[index].displayName}
+                      </Tab>
+                    ))}
+                  </Tab.List>
+                </Tab.Group>
+              </div>
+              }
+              {isNull(ownedGenesisKeyTokens) ? <MintProfileCardSkeleton /> : mintType === 'paid' ? <MintPaidProfileCard type='mint' /> : <MintGKProfileCard />}
+            </>
           </div>
         </div>
         

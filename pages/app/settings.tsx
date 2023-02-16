@@ -136,13 +136,11 @@ export default function Settings() {
                     <h3 className='mt-10 minlg:mt-24 mb-4 text-xs uppercase font-extrabold font-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>Profile Settings for {selectedProfile}</h3>
                     <ConnectedAccounts associatedAddresses={associatedAddresses} selectedProfile={selectedProfile} />
                     <DisplayMode selectedProfile={selectedProfile}/>
-                    {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) &&
-                      <div className='mt-10 font-grotesk' id="licensing">
-                        <h2 className='text-black mb-2 font-bold text-2xl tracking-wide font-grotesk'>Profile Licensing</h2>
-                        {expiry && <p>{selectedProfile} expires: {expiry}</p>}
-                        <MintPaidProfileCard profile={selectedProfile} type='renew' />
-                      </div>
-                    }
+                    <div className='mt-10 font-grotesk' id="licensing">
+                      <h2 className='text-black mb-2 font-bold text-2xl tracking-wide font-grotesk'>Profile Licensing</h2>
+                      {expiry && <p>{selectedProfile} expires: {expiry}</p>}
+                      <MintPaidProfileCard profile={selectedProfile} type='renew' />
+                    </div>
                     <TransferProfile selectedProfile={selectedProfile} />
                   </>
                 )
