@@ -48,13 +48,12 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
   const sidebarRef = useRef();
   useOutsideClickAlerter(sidebarRef, () => toggleCartSidebar());
 
+  const initialHeight = stagedNFTs.length < 4 ? 'min-h-fit' : 'min-h-[19rem]';
+  
   return (
     <>
       <div className='fixed inset-0 z-[105] w-screen h-screen backdrop-blur bg-gray-900 bg-opacity-20 '></div>
-      <div ref={sidebarRef} className={tw(
-        'z-[106] fixed pt-20 right-0 w-full h-full minmd:max-w-sm bg-white flex flex-col grow drop-shadow-md',
-        !showAll ? 'overflow-y-scroll' : ''
-      )}>
+      <div ref={sidebarRef} className='z-[106] fixed pt-20 right-0 w-full h-full minmd:max-w-sm bg-white flex flex-col grow drop-shadow-md overflow-y-scroll'>
         <div className='flex items-center justify-between w-full px-5 py-9'>
           <span className="text-xl font-semibold font-noi-grotesk">My Cart</span>
           <div className='w-6'>
@@ -106,7 +105,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
         </div>
         <div className={tw(
           'pr-2',
-          !showAll ? 'max-h-[30rem] min-h-[24rem] overflow-y-scroll hideScroll' : 'max-h-[17.3rem] overflow-y-hidden')}>
+          !showAll ? 'max-h-[30rem] min-h-[24rem] overflow-y-scroll hideScroll' : `${initialHeight} ${stagedNFTs.length > 3 && 'overflow-y-hidden'}`)}>
           {stagedNFTs.map((stagedItem, index) => {
             return <CartSidebarNft
               item={stagedItem}

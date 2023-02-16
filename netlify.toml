@@ -17,3 +17,9 @@ publish = ".next"
   status = 200
   force = true
 
+[[redirects]]
+  from = "/you"
+  to = "https://www.nft.com/app/mint-profiles"
+  status = 200
+  force = true
+
