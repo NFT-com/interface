@@ -4,7 +4,7 @@ import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { ExternalProtocol } from 'types';
-import { filterDuplicates, filterNulls, sameAddress } from 'utils/helpers';
+import { filterDuplicates, filterNulls, getBaseUrl, sameAddress } from 'utils/helpers';
 import { getLooksrareHex } from 'utils/looksrareHelpers';
 import { getNftcomHex } from 'utils/nativeMarketplaceHelpers';
 import { getSeaportHex } from 'utils/seaportHelpers';
@@ -248,6 +248,7 @@ export function NFTPurchaseContextProvider(
       return null;
     });
     if (tx) {
+      fetch(`${getBaseUrl('https://www.nft.com/')}api/message?text=Aggregator Purchase from ${currentAddress} https://www.etherscan.io/tx/${tx.hash}`);
       return await tx.wait(1).then(() => true).catch(() => false);
     }
     return false;
