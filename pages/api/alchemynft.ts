@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const ALCHEMY_KEYS = {
   '1': process.env.ALCHEMY_MAINNET_KEY,
-  '5': process.env.ALCHEMY_GOERLI_KEY,
+  '5': '1Q6b1EbpBwWKyY3F0fblI6yQnDBMLlL0',
 };
 
 export const ALCHEMY_PREFIXES = {
