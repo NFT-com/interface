@@ -317,7 +317,7 @@ const Filter = (props: any) => {
 
 export const NFTsFiltersContent = () => {
   const router = useRouter();
-  const { setSearchModalOpen, searchFilters, searchModalOpen, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray, collectionsFilter, nftSFilters } = useSearchModal();
+  const { setSearchModalOpen, searchFilters, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray, collectionsFilter, nftSFilters } = useSearchModal();
   const [sortBy,] = useState(nftsPageSortyBy);
   const [clearedFilters, setClearedFilters] = useState(false);
   const dateFilterPeriod = [

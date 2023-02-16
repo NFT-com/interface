@@ -18,7 +18,6 @@ import { getEtherscanLink, isNullOrEmpty, sameAddress, shortenAddress } from 'ut
 import { tw } from 'utils/tw';
 
 import { ClaimProfileCard } from './ClaimProfileCard';
-import { DeployedCollectionsGallery } from './DeployedCollectionsGallery';
 import { LinksToSection } from './LinksToSection';
 import { MintedProfileGallery } from './MintedProfileGallery';
 import { MintedProfileInfo } from './MintedProfileInfo';
@@ -30,8 +29,7 @@ import { BigNumber } from 'ethers';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
 import CameraIconEdit from 'public/camera_icon.svg';
-import PencilIconRounded from 'public/pencil-icon-rounded.svg';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import useSWR from 'swr';
@@ -44,8 +42,6 @@ export interface MintedProfileProps {
 
 export function MintedProfile(props: MintedProfileProps) {
   const { profileURI, addressOwner } = props;
-  const [isPicturedHovered, setIsPicturedHovered] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<'nfts' | 'deployed'>('nfts');
   const defaultChainId = useDefaultChainId();
   const {
     editMode,
@@ -192,10 +188,7 @@ export function MintedProfile(props: MintedProfileProps) {
               zIndex: 103,
             }}
           >
-            <div
-              className="block minmd:flex items-end"
-              onMouseEnter={() => setIsPicturedHovered(true)}
-              onMouseLeave={() => setIsPicturedHovered(false)}>
+            <div className="block minmd:flex items-end">
               <Dropzone
                 accept={'image/*' ['.*']}
                 disabled={!userIsAdmin && !editMode || !editMode}
@@ -289,7 +282,7 @@ export function MintedProfile(props: MintedProfileProps) {
               'mt-5 minmd:mt-0',
               'mt-6',
               'w-full justify-start space-y-4 flex flex-col',
-              selectedTab === 'nfts' ? 'flex' : 'hidden'
+              'flex'
             )}
           >
             {user?.currentProfileUrl === props.profileURI && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
@@ -354,18 +347,8 @@ export function MintedProfile(props: MintedProfileProps) {
                   </>
             }
           </div>
-          <div
-            className={tw(
-              'h-full sm:mt-5',
-              'w-full justify-start space-y-4 flex flex-col',
-              selectedTab === 'deployed' ? 'flex' : 'hidden'
-            )}
-          >
-            <DeployedCollectionsGallery address={addressOwner} />
-          </div>
         </div>
       </ProfileScrollContextProvider>
-
       {addressOwner === currentAddress && user.currentProfileUrl === profileURI && !editMode &&
         <OnboardingModal profileURI={profileURI} />
       }

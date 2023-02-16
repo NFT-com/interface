@@ -16,7 +16,7 @@ import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useProfileExpiryDate } from 'hooks/useProfileExpiryDate';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnv } from 'utils/env';
 import { filterNulls, getChainIdString, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 
 import { useRouter } from 'next/router';

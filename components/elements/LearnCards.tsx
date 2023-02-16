@@ -4,7 +4,6 @@ import 'swiper/swiper.min.css';
 import 'swiper/components/pagination/pagination.min.css';
 import 'swiper/components/navigation/navigation.min.css';
 
-import { Doppler, getEnvBool } from 'utils/env';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
