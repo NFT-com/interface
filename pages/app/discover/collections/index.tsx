@@ -142,11 +142,8 @@ export default function CollectionsPage() {
                           }
                         </div>
                         <div className="px-0 flex mt-0 mr-4 justify-between minlg:hidden">
-                          <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer'}>
+                          <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10  text-lg rounded-full cursor-pointer'}>
                             <SlidersHorizontal size={22}/>
-                          </div>
-                          <div className={'hidden relative flex items-center justify-center bg-white border-[#ECECEC] border-[1px] text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer z-5'}>
-
                           </div>
                         </div>
                       </div>
