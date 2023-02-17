@@ -256,11 +256,6 @@ export type ContractSalesStatisticsInput = {
   contractAddress: Scalars['String'];
 };
 
-export type ConvertEnsToEthAddress = {
-  __typename?: 'ConvertEnsToEthAddress';
-  ethAddresses: Array<Scalars['String']>;
-};
-
 export type CreateBidInput = {
   auctionType: AuctionType;
   chainId: Scalars['String'];
@@ -425,21 +420,6 @@ export type FulfillActivitiesNftIdOutput = {
 export type FullFillEventTokenIdsOutput = {
   __typename?: 'FullFillEventTokenIdsOutput';
   message?: Maybe<Scalars['String']>;
-};
-
-export type GetContracts = {
-  __typename?: 'GetContracts';
-  genesisKey: Scalars['String'];
-  genesisKeyDistributor: Scalars['String'];
-  genesisKeyStake: Scalars['String'];
-  genesisKeyTeamClaim: Scalars['String'];
-  genesisKeyTeamMerkle: Scalars['String'];
-  marketplace: Scalars['String'];
-  marketplaceEvent: Scalars['String'];
-  nftProfile: Scalars['String'];
-  nftToken: Scalars['String'];
-  profileAuction: Scalars['String'];
-  validationLogic: Scalars['String'];
 };
 
 export type GetGkNftsOutput = {
@@ -1628,8 +1608,8 @@ export type Query = {
   collectionNFTs: NfTsOutput;
   collectionTraits?: Maybe<CollectionTraitsSummary>;
   collectionsByDeployer?: Maybe<Array<Maybe<Collection>>>;
-  convertEnsToEthAddress: ConvertEnsToEthAddress;
   curationNFTs: CurationNfTsOutput;
+  fetchEthUsd: Scalars['Float'];
   filterListings: GetOrders;
   getActivities: TxActivitiesOutput;
   getActivitiesByType?: Maybe<Array<Maybe<TxActivity>>>;
@@ -1641,7 +1621,6 @@ export type Query = {
   getApprovedAssociations: Array<Maybe<ApprovedAssociationOutput>>;
   getBids: GetOrders;
   getContractSalesStatistics?: Maybe<ContractSalesStatistics>;
-  getContracts: GetContracts;
   getListings: GetOrders;
   /** AUTHENTICATED */
   getMyGenesisKeys: Array<Maybe<GkOutput>>;
@@ -1743,11 +1722,6 @@ export type QueryCollectionsByDeployerArgs = {
 };
 
 
-export type QueryConvertEnsToEthAddressArgs = {
-  input: ConvertEnsToEthAddressInput;
-};
-
-
 export type QueryCurationNfTsArgs = {
   input: CurationInput;
 };
@@ -1792,11 +1766,6 @@ export type QueryGetBidsArgs = {
 
 export type QueryGetContractSalesStatisticsArgs = {
   input?: InputMaybe<ContractSalesStatisticsInput>;
-};
-
-
-export type QueryGetContractsArgs = {
-  input: GetContractsInput;
 };
 
 
@@ -2731,14 +2700,6 @@ export type X2Y2ProtocolData = {
   updated_at?: Maybe<Scalars['Int']>;
 };
 
-export type ConvertEnsToEthAddressInput = {
-  ensAddresses: Array<Scalars['String']>;
-};
-
-export type GetContractsInput = {
-  chainId: Scalars['String'];
-};
-
 export type SaveCollectionForContractOutput = {
   __typename?: 'saveCollectionForContractOutput';
   message?: Maybe<Scalars['String']>;
@@ -3044,6 +3005,11 @@ export type DeployedCollectionsQueryVariables = Exact<{
 
 
 export type DeployedCollectionsQuery = { __typename?: 'Query', collectionsByDeployer?: Array<{ __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null } | null> | null };
+
+export type FetchEthUsdQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FetchEthUsdQuery = { __typename?: 'Query', fetchEthUsd: number };
 
 export type GetApprovedAssociationsQueryVariables = Exact<{
   profileUrl: Scalars['String'];
@@ -4253,6 +4219,11 @@ export const DeployedCollectionsDocument = gql`
     contract
     name
   }
+}
+    `;
+export const FetchEthUsdDocument = gql`
+    query FetchEthUsd {
+  fetchEthUsd
 }
     `;
 export const GetApprovedAssociationsDocument = gql`
@@ -5953,6 +5924,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     DeployedCollections(variables: DeployedCollectionsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeployedCollectionsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeployedCollectionsQuery>(DeployedCollectionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeployedCollections', 'query');
+    },
+    FetchEthUsd(variables?: FetchEthUsdQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FetchEthUsdQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FetchEthUsdQuery>(FetchEthUsdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FetchEthUsd', 'query');
     },
     getApprovedAssociations(variables: GetApprovedAssociationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetApprovedAssociationsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetApprovedAssociationsQuery>(GetApprovedAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getApprovedAssociations', 'query');
