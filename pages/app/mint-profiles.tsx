@@ -96,7 +96,7 @@ export default function MintProfilesPage() {
         <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
           <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
             <>
-              <h2 className='text-[32px] font-medium'>{mintType === 'gk' ? 'Claim your free NFT Profile' : <p>Create your <span className='font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>NFT.com</span> Profile</p>}</h2>
+              <h2 className='text-[32px] font-medium'>{mintType === 'gk' ? 'Claim your free NFT Profile' : <p>Create Your <span className='font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>NFT.com</span> Profile</p>}</h2>
               {hasGk && <div className='justify-start items-center flex mt-5'>
                 <Tab.Group onChange={(index) => {setMintType(mintProfileTabs[index].tabName);}}>
                   <Tab.List className="w-full flex rounded-3xl z-10 bg-[#F6F6F6]">

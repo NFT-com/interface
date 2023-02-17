@@ -161,24 +161,28 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       <>
         {type === 'mint' &&
           <>
-            <p className='mt-9 mb-4 text-xl '>Choose your Profile name</p>
-            <span className='text-[#707070] font-normal mb-2 relative'>
-            Specify your name and profile duration. Don’t worry, you can extend the duration at any time through the settings page.
-              <div className='w-max inline-block absolute pl-1 bottom-.5'>
-                <CustomTooltip2
-                  orientation='top'
-                  tooltipComponent={
-                    <div
-                      className="rounded-xl w-max"
-                    >
-                      <p className='max-w-[150px]'>An annual fee is required to register a NFT Profile. The fee is based on the length of the domain. You can pre-pay this fee at creation of the NFT Profile and extend it at any time.</p>
-                    </div>
-                  }
-                >
-                  <Info size={25} color="#969696" weight="fill" />
-                </CustomTooltip2>
-              </div>
-            </span>
+            <div className='mt-9 mb-4 text-xl'>
+              <span >
+              Choose Your Profile Name
+                <div className='w-max inline-block absolute pl-1 bottom-.5'>
+                  <CustomTooltip2
+                    orientation='top'
+                    tooltipComponent={
+                      <div
+                        className="rounded-xl w-max"
+                      >
+                        <p className='max-w-[150px]'>An annual fee is required to register a NFT Profile. The fee is based on the length of the domain. You can pre-pay this fee at creation of the NFT Profile and extend it at any time.</p>
+                      </div>
+                    }
+                  >
+                    <Info size={25} color="#969696" weight="fill" />
+                  </CustomTooltip2>
+                </div>
+              </span>
+            </div>
+            <p className='text-[#707070] font-normal mb-2 relative'>
+              Specify your profile name and duration. Don’t worry, you can extend the duration at any time through the settings page.
+            </p>
             
             <MintProfileInputField
               minting={minting}
