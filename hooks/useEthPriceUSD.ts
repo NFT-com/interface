@@ -1,8 +1,8 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 
-export function useEthPriceUSD(): number {
+export function useEthPriceUSD() {
   const sdk = useGraphQLSDK();
   const keyString = 'ETH_USD';
 
@@ -12,11 +12,5 @@ export function useEthPriceUSD(): number {
     return result?.fetchEthUsd ?? 0;
   });
 
-  return {
-    data: data ?? [],
-    loading: data == null,
-    mutate: () => {
-      mutate(keyString);
-    },
-  };
+  return data as number;
 }
