@@ -63,6 +63,7 @@ const getCreatorFeeFromListing = (
       return { royalty: 0, marketplace: item.protocol };
     }
   } else {
+    const item = itemParam as StagedListing;
     return { royalty: 0, marketplace: item.targets[0].protocol };
   }
 };
