@@ -161,23 +161,10 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       <>
         {type === 'mint' &&
           <>
-            <p className='mt-9 mb-4 text-xl '>Select your NFT Profile name</p>
-            <p className='text-[#707070] font-normal mb-2'>Create your NFT Profile to build your social identity</p>
-            <MintProfileInputField
-              minting={minting}
-              setFreeProfile={updateProfileValue}
-              name={'input-Paid'}
-              type="Free"
-            />
-          </>
-        }
-        <div className={tw(
-          type === 'mint' ? 'mt-8' : 'mt-4'
-        )}>
-          <div className='mb-10 font-noi-grotesk'>
-            <div className='flex items-center space-x-1 mb-3'>
-              <h3 className='text-[22px] font-medium'>{type === 'mint' ? 'License': 'Renew'}</h3>
-              <div className='w-max'>
+            <p className='mt-9 mb-4 text-xl '>Choose your Profile name</p>
+            <span className='text-[#707070] font-normal mb-2 relative'>
+            Specify your name and profile duration. Don’t worry, you can extend the duration at any time through the settings page.
+              <div className='w-max inline-block absolute pl-1 bottom-.5'>
                 <CustomTooltip2
                   orientation='top'
                   tooltipComponent={
@@ -191,8 +178,26 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
                   <Info size={25} color="#969696" weight="fill" />
                 </CustomTooltip2>
               </div>
-              
-            </div>
+            </span>
+            
+            <MintProfileInputField
+              minting={minting}
+              setFreeProfile={updateProfileValue}
+              name={'input-Paid'}
+              type="Free"
+            />
+          </>
+        }
+        <div className={tw(
+          type === 'mint' ? 'mt-8' : 'mt-4'
+        )}>
+          <div className='mb-10 font-noi-grotesk'>
+            {type === 'renew' &&
+              <div className='flex items-center space-x-1 mb-3'>
+                <h3 className='text-[22px] font-medium'>Renew</h3>
+              </div>
+            }
+            
             <p className='text-[#707070] font-normal'>Pre-pay your annual license to maintain ownership of your NFT Profile</p>
             <div className='mt-10 flex justify-between items-center pr-0 pl-0 minmd:pr-14 minmd:pl-8'>
               <div className='rounded-full w-max py-1 px-4 flex space-x-3 border border-[#B2B2B2] items-center'>
