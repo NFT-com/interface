@@ -2,7 +2,7 @@ import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 
 import useSWR, { mutate } from 'swr';
 
-export function useEthPriceUSD() {
+export function useEthPriceUSD(): number {
   const sdk = useGraphQLSDK();
   const keyString = 'ETH_USD';
 
