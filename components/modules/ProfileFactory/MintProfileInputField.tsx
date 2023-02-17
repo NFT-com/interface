@@ -32,6 +32,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
   const { blocked: currentURIBlocked } = useProfileBlocked(inputValue, true);
   const { profileTokenId, loading: loadingTokenId } = useProfileTokenQuery(inputValue);
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
+  const [error, setError] = useState(null);
 
   const listings = filterDuplicates(
     filterValidListings(nft?.listings?.items),
@@ -151,7 +152,10 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
                     e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
               ) {
                 setInputValue(e.target.value.toLowerCase());
+                setError(null);
               } else {
+                !validReg.test(e.target.value.toLowerCase()) && setError('Special characters are not allowed');
+                setTimeout(() => setError(null), 1000);
                 e.preventDefault();
               }
             }
@@ -169,6 +173,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
       </div>
         
       {getProfileStatusText(getProfileStatus(), profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(inputValue))}
+      {error && <p className='text-[#F02D21] mb-3'>{error}</p>}
     </>
   );
 }
