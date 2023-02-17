@@ -3,6 +3,7 @@ import { POST_LIST_GRAPHQL_FIELDS } from 'lib/contentful/schemas';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const contentfulPaginationHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  res.setHeader('Cache-Control', 's-maxage=600'); // 10 min cache
   const skip = req.query['skip'];
   const pageSize = req.query['pageSize'];
   const preview = req.query['preview'];

@@ -14,6 +14,7 @@ export const ALCHEMY_PREFIXES = {
 };
 
 const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  res.setHeader('Cache-Control', 's-maxage=10'); // 10 seconds cache
   const action = req.query['action'];
   let chainId = req.query['chainId'];
   if (isNullOrEmpty(chainId) || Number.isNaN(Number(chainId)) || !(String(chainId) in ALCHEMY_KEYS)) {

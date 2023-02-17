@@ -4,6 +4,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import fetch from 'node-fetch';
 
 const imageFetcher = async (req: NextApiRequest, res: NextApiResponse) => {
+  res.setHeader('Cache-Control', 's-maxage=600'); // 10 min cache
+
   const fallBackImage = 'https://cdn.nft.com/optimizedLoader2.webp';
   try {
     if (!req.query.url) throw new Error('no url provided');
