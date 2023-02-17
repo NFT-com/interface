@@ -197,8 +197,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
                 <h3 className='text-[22px] font-medium'>Renew</h3>
               </div>
             }
-            
-            <p className='text-[#707070] font-normal'>Pre-pay your annual license to maintain ownership of your NFT Profile</p>
+            {type ==='renew' && <p className='text-[#707070] font-normal'>Pre-pay your annual license to maintain ownership of your NFT Profile</p>}
             <div className='mt-10 flex justify-between items-center pr-0 pl-0 minmd:pr-14 minmd:pl-8'>
               <div className='rounded-full w-max py-1 px-4 flex space-x-3 border border-[#B2B2B2] items-center'>
                 <div className='relative'>
@@ -216,8 +215,8 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
               <p className='text-xl'>{registrationFee && utils.formatEther(BigNumber.from(registrationFee))} ETH</p>
             </div>
             <div className='flex items-center justify-between pr-0 pl-2 minmd:pr-12 minmd:pl-14'>
-              <p className='text-[#B2B2B2] font-normal'>License Period</p>
-              <p className='text-[#B2B2B2] font-normal'>License Price</p>
+              <p className='text-[#B2B2B2] font-normal'>Profile Duration</p>
+              <p className='text-[#B2B2B2] font-normal'>Duration Price</p>
             </div>
             <div className='rounded-2xl bg-[#F2F2F2] px-7 py-5 flex items-center justify-between mt-8 font-noi-grotesk'>
               {isNullOrEmpty(error) ?
