@@ -184,7 +184,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
                     <div
                       className="rounded-xl w-max"
                     >
-                      <p className='max-w-[150px]'>An annual fee is required to register a NFT Profile. The fee is based on the length of the domain. You can pre-pay this fee at creation of the NFT Profile and extend it at anytime.</p>
+                      <p className='max-w-[150px]'>An annual fee is required to register a NFT Profile. The fee is based on the length of the domain. You can pre-pay this fee at creation of the NFT Profile and extend it at any time.</p>
                     </div>
                   }
                 >

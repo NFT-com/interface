@@ -140,9 +140,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   }, []);
 
   const getListingSummaryButtons = useCallback((orderHash: string) => {
-    if (!hasGk) {
-      return 'You must have a Genesis Key to purchase';
-    } else if (currentAddress === (props.nft?.owner ?? props.nft?.wallet?.address)) {
+    if (currentAddress === (props.nft?.owner ?? props.nft?.wallet?.address)) {
       return <Button
         stretch
         label={'Edit Listing'}
@@ -199,7 +197,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         type={ButtonType.PRIMARY}
       />;
     }
-  }, [hasGk, currentAddress, props.nft, props.collectionName, nftInPurchaseCart, getByContractAddress, chainId, getERC20ProtocolApprovalAddress, currentDate, stagePurchase, toggleCartSidebar]);
+  }, [currentAddress, props.nft, props.collectionName, nftInPurchaseCart, getByContractAddress, chainId, getERC20ProtocolApprovalAddress, currentDate, stagePurchase, toggleCartSidebar]);
 
   if (isNullOrEmpty(filterValidListings(props.nft?.listings?.items))) {
     return (
