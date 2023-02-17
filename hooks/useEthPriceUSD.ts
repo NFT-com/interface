@@ -1,9 +1,22 @@
-import axios from 'axios';
-import useSWR from 'swr';
+import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
+
+import useSWR, { mutate } from 'swr';
 
 export function useEthPriceUSD() {
-  const { data } = useSWR('ethUSD', () =>
-    axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
-  );
-  return data?.data?.['ethereum']?.['usd'];
+  const sdk = useGraphQLSDK();
+  const keyString = 'ETH_USD';
+
+  const { data } = useSWR(keyString, async () => {
+    const result = await sdk.FetchEthUsd();
+
+    return result?.fetchEthUsd ?? 0;
+  });
+
+  return {
+    data: data ?? [],
+    loading: data == null,
+    mutate: () => {
+      mutate(keyString);
+    },
+  };
 }
