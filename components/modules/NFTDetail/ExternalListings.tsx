@@ -195,7 +195,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         type={ButtonType.PRIMARY}
       />;
     }
-  }, [hasGk, currentAddress, props.nft, props.collectionName, nftInPurchaseCart, getByContractAddress, chainId, getERC20ProtocolApprovalAddress, currentDate, stagePurchase, toggleCartSidebar]);
+  }, [currentAddress, props.nft, props.collectionName, nftInPurchaseCart, getByContractAddress, chainId, getERC20ProtocolApprovalAddress, currentDate, stagePurchase, toggleCartSidebar]);
 
   if (isNullOrEmpty(filterValidListings(props.nft?.listings?.items))) {
     return (
