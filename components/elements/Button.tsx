@@ -17,28 +17,30 @@ export enum ButtonType {
 }
 
 export enum ButtonSize {
+  DEFAULT = 'DEFAULT',
   SMALL = 'SMALL',
 }
 
 export interface ButtonProps {
-  stretch?: boolean;
+  /** Button type */
+  type: ButtonType;
+  /** Button label */
   label: string;
+  /** Button action */
+  onClick: () => void;
+  stretch?: boolean;
   icon?: React.ReactElement;
   accent?: AccentType;
-  onClick: () => void;
   loading?: boolean;
   loadingText?: string;
   disabled?: boolean;
-  type: ButtonType;
   color?: string;
   size?: ButtonSize;
   bgColor?: string;
   outline?: string;
 }
 
-/**
- * Renders a blue button with the input label as white text.
- */
+/** Renders a yellow button with the input label as black text. */
 export function Button(props: ButtonProps) {
   const {
     primaryButtonBackground_rebrand,

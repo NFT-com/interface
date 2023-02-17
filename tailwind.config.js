@@ -3,7 +3,7 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
   ],
-  darkMode: 'class', // or 'media' or 'class'
+  darkMode: ['class', '[data-mode="dark"]'],
   theme: {
     screens: {
       // everything above 1200 is XL, but content should be constrained to 1200px
