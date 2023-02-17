@@ -144,15 +144,16 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
             if (minting) {
               e.preventDefault();
               return;
-            }
-            const validReg = /^[a-z0-9_]*$/;
-            if (
-              validReg.test(e.target.value.toLowerCase()) &&
-                    e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
-            ) {
-              setInputValue(e.target.value.toLowerCase());
             } else {
-              e.preventDefault();
+              const validReg = /^[a-z0-9_]*$/;
+              if (
+                validReg.test(e.target.value.toLowerCase()) &&
+                    e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
+              ) {
+                setInputValue(e.target.value.toLowerCase());
+              } else {
+                e.preventDefault();
+              }
             }
           }}
         />
