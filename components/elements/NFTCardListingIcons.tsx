@@ -18,8 +18,6 @@ export const NFTCardListingIcons = (props: {
   nft: PartialObjectDeep<Nft, unknown>
 }) => {
   const { getByContractAddress } = useSupportedCurrencies();
-  const hasGk = useHasGk();
-  
   return (
     <div className='flex flex-col minmd:flex-row flex-wrap mt-3 justify-between'>
       <div className='flex flex-col pr-2'>
@@ -37,7 +35,7 @@ export const NFTCardListingIcons = (props: {
         </p>
       </div>
       <div>
-        {hasGk && <DynamicNFTCardAddToCartButton lowestListing={props.lowestListing} nft={props.nft}/>}
+        <DynamicNFTCardAddToCartButton lowestListing={props.lowestListing} nft={props.nft}/>
       </div>
     </div>
   );
