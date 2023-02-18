@@ -1,0 +1,6 @@
+mutation RefreshMyNFTs {
+  refreshMyNFTs {
+    status
+    message
+  }
+}

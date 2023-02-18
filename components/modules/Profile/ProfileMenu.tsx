@@ -4,6 +4,7 @@ import { ProfileLayoutType } from 'graphql/generated/types';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useRefreshMyNftsMutation } from 'graphql/hooks/useRefreshMyNFTsMutation';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useIsOwnerAndSignedIn } from 'hooks/useIsOwnerAndSignedIn';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
@@ -35,6 +36,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const { address: currentAddress } = useAccount();
   const router = useRouter();
   const [, staticCopy] = useCopyClipboard();
+  const { refreshMyNFTs } = useRefreshMyNftsMutation();
   const { profileData, mutate: mutateProfileData } = useProfileQuery(profileURI);
   const [selectedLayout, setSelectedLayout] = useState(null);
   const [showDescriptions, setShowDescriptions] = useState(null);
@@ -183,6 +185,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
           <div
             onClick={() => {
               setLoading(true);
+              refreshMyNFTs();
               mutateProfileData();
               mutatePublicProfileNfts();
               mutateAllOwnerNfts();

@@ -2799,6 +2799,11 @@ export type ProfileClaimedMutationVariables = Exact<{
 
 export type ProfileClaimedMutation = { __typename?: 'Mutation', profileClaimed: { __typename?: 'Profile', status?: ProfileStatus | null, url: string, id: string } };
 
+export type RefreshMyNfTsMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RefreshMyNfTsMutation = { __typename?: 'Mutation', refreshMyNFTs: { __typename?: 'RefreshMyNFTsOutput', status: boolean, message?: string | null } };
+
 export type RefreshNftMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -3402,6 +3407,14 @@ export const ProfileClaimedDocument = gql`
     status
     url
     id
+  }
+}
+    `;
+export const RefreshMyNfTsDocument = gql`
+    mutation RefreshMyNFTs {
+  refreshMyNFTs {
+    status
+    message
   }
 }
     `;
@@ -5837,6 +5850,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     ProfileClaimed(variables: ProfileClaimedMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileClaimedMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileClaimedMutation>(ProfileClaimedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileClaimed', 'mutation');
+    },
+    RefreshMyNFTs(variables?: RefreshMyNfTsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RefreshMyNfTsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<RefreshMyNfTsMutation>(RefreshMyNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RefreshMyNFTs', 'mutation');
     },
     RefreshNft(variables: RefreshNftMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RefreshNftMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<RefreshNftMutation>(RefreshNftDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RefreshNft', 'mutation');
