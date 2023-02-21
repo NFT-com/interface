@@ -44,7 +44,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
   const { profileTokenId } = useProfileTokenQuery(profileURI || '');
   const defaultChainId = useDefaultChainId();
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
-  const { profileClaimHash } = useGetProfileClaimHash(profileURI);
+  const { profileClaimHash, mutate: mutateProfileClaimHash } = useGetProfileClaimHash(profileURI);
   const [yearValue, setYearValue] = useState(1);
   const contractAddress = getAddress('maxProfiles', defaultChainId);
   const provider = useProvider();
@@ -100,8 +100,14 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       from: currentAddress,
       value: registrationFee && registrationFee,
     },
-    enabled: type === 'mint' ? !isNullOrEmpty(profileURI) : true
+    enabled:  type === 'mint' ? !isNullOrEmpty(profileURI) && !isNullOrEmpty(currentAddress) : true
   });
+
+  useEffect(() => {
+    if(!isNullOrEmpty(currentAddress)){
+      mutateProfileClaimHash();
+    }
+  }, [currentAddress, mutateProfileClaimHash]);
   
   const getMintCost = useCallback(() => {
     if (feeData?.gasPrice){
