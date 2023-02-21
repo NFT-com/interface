@@ -101,7 +101,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                   )}>
                     <div className='w-[85%] h-3 bg-[#E6E6E6] rounded-full'>
                       <div
-                        style={{ width: `${totalPoints ? Math.floor(((profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5) / totalPoints) * 100) : 0}%` }}
+                        style={{ width: `${totalPoints ? Math.floor(((profileData?.profile?.usersActionsWithPoints[0].action.length || 5) / onboardingItems.length) * 100) : 0}%` }}
                         className={tw(
                           'h-3 bg-[#26AA73] rounded-full',
                         )}></div>
