@@ -161,8 +161,29 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       <>
         {type === 'mint' &&
           <>
-            <p className='mt-9 mb-4 text-xl '>Select your NFT Profile name</p>
-            <p className='text-[#707070] font-normal mb-2'>Create your NFT Profile to build your social identity</p>
+            <div className='mt-9 mb-4 text-xl'>
+              <span >
+              Choose Your Profile Name
+                <div className='w-max inline-block absolute pl-1 bottom-.5'>
+                  <CustomTooltip2
+                    orientation='top'
+                    tooltipComponent={
+                      <div
+                        className="rounded-xl w-max"
+                      >
+                        <p className='max-w-[150px]'>An annual fee is required to register a NFT Profile. The fee is based on the length of the domain. You can pre-pay this fee at creation of the NFT Profile and extend it at any time.</p>
+                      </div>
+                    }
+                  >
+                    <Info size={25} color="#969696" weight="fill" />
+                  </CustomTooltip2>
+                </div>
+              </span>
+            </div>
+            <p className='text-[#707070] font-normal mb-2 relative'>
+              Specify your profile name and duration. Don’t worry, you can extend the duration at any time through the settings page.
+            </p>
+            
             <MintProfileInputField
               minting={minting}
               setFreeProfile={updateProfileValue}
@@ -175,25 +196,12 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
           type === 'mint' ? 'mt-8' : 'mt-4'
         )}>
           <div className='mb-10 font-noi-grotesk'>
-            <div className='flex items-center space-x-1 mb-3'>
-              <h3 className='text-[22px] font-medium'>{type === 'mint' ? 'License': 'Renew'}</h3>
-              <div className='w-max'>
-                <CustomTooltip2
-                  orientation='top'
-                  tooltipComponent={
-                    <div
-                      className="rounded-xl w-max"
-                    >
-                      <p className='max-w-[150px]'>An annual fee is required to register a NFT Profile. The fee is based on the length of the domain. You can pre-pay this fee at creation of the NFT Profile and extend it at anytime.</p>
-                    </div>
-                  }
-                >
-                  <Info size={25} color="#969696" weight="fill" />
-                </CustomTooltip2>
+            {type === 'renew' &&
+              <div className='flex items-center space-x-1 mb-3'>
+                <h3 className='text-[22px] font-medium'>Renew</h3>
               </div>
-              
-            </div>
-            <p className='text-[#707070] font-normal'>Pre-pay your annual license to maintain ownership of your NFT Profile</p>
+            }
+            {type ==='renew' && <p className='text-[#707070] font-normal'>Pre-pay your annual license to maintain ownership of your NFT Profile</p>}
             <div className='mt-10 flex justify-between items-center pr-0 pl-0 minmd:pr-14 minmd:pl-8'>
               <div className='rounded-full w-max py-1 px-4 flex space-x-3 border border-[#B2B2B2] items-center'>
                 <div className='relative'>
@@ -211,8 +219,8 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
               <p className='text-xl'>{registrationFee && utils.formatEther(BigNumber.from(registrationFee))} ETH</p>
             </div>
             <div className='flex items-center justify-between pr-0 pl-2 minmd:pr-12 minmd:pl-14'>
-              <p className='text-[#B2B2B2] font-normal'>License Period</p>
-              <p className='text-[#B2B2B2] font-normal'>License Price</p>
+              <p className='text-[#B2B2B2] font-normal'>Profile Duration</p>
+              <p className='text-[#B2B2B2] font-normal'>Duration Price</p>
             </div>
             <div className='rounded-2xl bg-[#F2F2F2] px-7 py-5 flex items-center justify-between mt-8 font-noi-grotesk'>
               {isNullOrEmpty(error) ?

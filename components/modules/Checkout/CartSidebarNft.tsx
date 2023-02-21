@@ -1,4 +1,5 @@
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
+import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useGetCreatorFee } from 'hooks/useGetCreatorFee';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getContractMetadata } from 'utils/alchemyNFT';
@@ -13,7 +14,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useContext } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
-import { useNetwork } from 'wagmi';
+import { useNetwork, useProvider } from 'wagmi';
 
 export interface CartSidebarNftProps {
   item: PartialDeep<StagedListing | StagedPurchase>;
@@ -23,7 +24,9 @@ export interface CartSidebarNftProps {
 
 export function CartSidebarNft(props: CartSidebarNftProps) {
   const { chain } = useNetwork();
+  const provider = useProvider();
   const router = useRouter();
+  const looksrareStrategy = useLooksrareStrategyContract(provider);
   const nft = props.item?.nft;
   const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
     return await getContractMetadata(nft?.contract, chain?.id);
@@ -32,6 +35,16 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
   const { getByContractAddress } = useSupportedCurrencies();
   const { toggleCartSidebar } = useContext(NFTListingsContext);
 
+  const { data: looksrareProtocolFeeBps } = useSWR(
+    'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
+    async () => {
+      return await looksrareStrategy.viewProtocolFee();
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+
   const formatCurrency = useCallback((item: StagedPurchase) => {
     const currency = getByContractAddress((item as StagedPurchase).currency);
     if(currency.name === 'USDC'){
@@ -39,9 +52,9 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
     } else {
       return ethers.utils.formatEther((item as StagedPurchase)?.price ?? 0);
     }
-  },[getByContractAddress]);
+  }, [getByContractAddress]);
 
-  const { data: creatorFee, loading } = useGetCreatorFee(nft?.contract, nft?.tokenId);
+  const { data: creatorFee, loading } = useGetCreatorFee(nft?.contract, nft?.tokenId, looksrareProtocolFeeBps, props.item, props.selectedTab === 'Buy');
 
   const getRoyalty = useCallback(() => {
     if (loading) {
@@ -53,7 +66,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
       const stagedPurchase = props.item as StagedPurchase;
       switch (stagedPurchase?.protocol) {
       case 'Seaport':
-        return `${creatorFee?.royalty?.opensea ? Number(creatorFee?.royalty?.opensea).toFixed(2) : 0}%`;
+        return `${creatorFee?.royalty?.seaport ? Number(creatorFee?.royalty?.seaport).toFixed(2) : 0}%`;
       case 'LooksRare':
         return `${creatorFee?.royalty?.looksrare ? Number(creatorFee?.royalty?.looksrare).toFixed(2) : 0}%`;
       case 'X2Y2':
@@ -71,7 +84,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
     } else {
       return `${creatorFee?.min?.toFixed(2)}% - ${creatorFee?.max?.toFixed(2)}%`;
     }
-  }, [creatorFee?.max, creatorFee?.min, creatorFee?.royalty?.looksrare, creatorFee?.royalty?.nftcom, creatorFee?.royalty?.opensea, creatorFee?.royalty?.x2y2, loading, props.item, props.selectedTab]);
+  }, [creatorFee?.max, creatorFee?.min, creatorFee?.royalty?.looksrare, creatorFee?.royalty?.nftcom, creatorFee?.royalty?.seaport, creatorFee?.royalty?.x2y2, loading, props.item, props.selectedTab]);
 
   return <div className='flex items-start w-full px-5 mb-4'>
     <div className='flex w-2/3'>
@@ -111,13 +124,6 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
             </div>
             : null
         }
-        {/* <span className='font-medium text-base text-[#6F6F6F] line-clamp-1'>
-        ${getByContractAddress((props.item as StagedPurchase).currency).name === 'USDC'
-          ? formatCurrency(props.item as StagedPurchase) :
-          getByContractAddress((props.item as StagedPurchase).currency)?.usd(
-            Number(ethers.utils.formatEther((props.item as StagedPurchase)?.price))
-          ) ?? 0}
-      </span> */}
       </div>
       <span
         onClick={props.onRemove}
