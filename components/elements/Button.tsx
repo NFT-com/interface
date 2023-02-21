@@ -17,7 +17,6 @@ export enum ButtonType {
 }
 
 export enum ButtonSize {
-  DEFAULT = 'DEFAULT',
   SMALL = 'SMALL',
 }
 
