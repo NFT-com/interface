@@ -207,7 +207,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
               </div>
             }
 
-            <div className=''>
+            <div className='overflow-hidden'>
               <div className='flex flex-col h-full'>
                 {
                   profileTokens?.length > 0 ?
@@ -223,7 +223,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                         router.push('/' + profileOwnerToShow?.url);
                       }}
                     >
-                      <span className="text-base font-medium leading-5 font-noi-grotesk text-link">
+                      <span className="text-ellipsis overflow-hidden text-base font-medium leading-5 font-noi-grotesk text-link">
                         {!profileOwnerToShow?.url == null ?
                           shortenAddress(props.nft?.owner ?? props.nft?.wallet?.address, 0) :
                           profileOwnerToShow?.url
