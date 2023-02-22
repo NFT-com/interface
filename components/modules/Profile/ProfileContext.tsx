@@ -417,10 +417,10 @@ export function ProfileContextProvider(
     try {
       if (draftProfileImg?.raw?.size > 2000000) { // 2MB
         alert('Profile image is too large (> 2MB). Please upload a smaller image.');
-        clearDrafts();
+        setDraftProfileImg({ preview: '', raw: null });
       } else if (draftHeaderImg?.raw?.size > 2000000) { // 2MB
         alert('Header image is too large (> 2MB). Please upload a smaller image.');
-        clearDrafts();
+        setDraftHeaderImg({ preview: '', raw: null });
       } else {
         setSaving(true);
         const imageUploadResult = await uploadProfileImages({
@@ -487,10 +487,9 @@ export function ProfileContextProvider(
     } catch (err) {
       console.log('error while saving profile: ', err);
       toast.error('Error while saving profile.');
-      clearDrafts();
       setSaving(false);
     }
-  }, [clearDrafts, draftBio, draftDeployedContractsVisible, draftGkIconVisible, draftHeaderImg, draftLayoutType, draftNftsDescriptionsVisible, draftProfileImg, editModeNfts, fileUpload, hideAllNFTsValue, mutateAllOwnerNfts, mutateProfileData, mutatePublicProfileNfts, profileData?.profile?.description, profileData?.profile?.id, props.profileURI, publiclyVisibleNfts, savedCount, setSavedCount, showAllNFTsValue, updateOrder, updateProfile, uploadProfileImages]);
+  }, [draftBio, draftDeployedContractsVisible, draftGkIconVisible, draftHeaderImg, draftLayoutType, draftNftsDescriptionsVisible, draftProfileImg, editModeNfts, fileUpload, hideAllNFTsValue, mutateAllOwnerNfts, mutateProfileData, mutatePublicProfileNfts, profileData?.profile?.description, profileData?.profile?.id, props.profileURI, publiclyVisibleNfts, savedCount, setSavedCount, showAllNFTsValue, updateOrder, updateProfile, uploadProfileImages]);
 
   const setLayoutType = useCallback(async (type: ProfileLayoutType) => {
     try {
