@@ -35,7 +35,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
       name: 'Refer Network',
       isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ReferNetwork),
       coins: 10,
-      description: 'Refer friends to join you on NFT.com',
+      description: 'Refer friends to join you on NFT.com. Once your referral creates a profile, this step will be marked as completed.',
       buttonText: 'Continue'
     },
     {
