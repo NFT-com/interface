@@ -417,10 +417,10 @@ export function ProfileContextProvider(
     try {
       if (draftProfileImg?.raw?.size > 2000000) { // 2MB
         alert('Profile image is too large (> 2MB). Please upload a smaller image.');
-        clearDrafts();
+        setDraftProfileImg({ preview: '', raw: null });
       } else if (draftHeaderImg?.raw?.size > 2000000) { // 2MB
         alert('Header image is too large (> 2MB). Please upload a smaller image.');
-        clearDrafts();
+        setDraftHeaderImg({ preview: '', raw: null });
       } else {
         setSaving(true);
         const imageUploadResult = await uploadProfileImages({
