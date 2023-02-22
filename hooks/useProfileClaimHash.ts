@@ -23,7 +23,7 @@ export function useGetProfileClaimHash(profileUrl: string) {
   const keyString = 'useGetProfileClaimHash' + currentAddress + profileUrl;
 
   const { data } = useSWR(
-    keyString,
+    isNullOrEmpty(currentAddress) || isNullOrEmpty(profileUrl) ? null : keyString,
     async () => {
       if (isNullOrEmpty(currentAddress) || !signed || isNullOrEmpty(profileUrl)) {
         return null;

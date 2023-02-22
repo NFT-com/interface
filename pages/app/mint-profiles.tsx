@@ -1,11 +1,8 @@
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
 import MintPaidProfileCard from 'components/modules/ProfileFactory/MintPaidProfileCard';
-import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfileCardSkeleton';
 import { useHasGk } from 'hooks/useHasGk';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
-import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { isNull } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
@@ -36,7 +33,6 @@ export default function MintProfilesPage() {
   const { openConnectModal } = useConnectModal();
   const { address: currentAddress } = useAccount();
   const [mintType, setMintType] = useState('paid');
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGk = useHasGk();
   
   useMaybeCreateUser();
@@ -117,7 +113,7 @@ export default function MintProfilesPage() {
                 </Tab.Group>
               </div>
               }
-              {isNull(ownedGenesisKeyTokens) ? <MintProfileCardSkeleton /> : mintType === 'paid' ? <MintPaidProfileCard type='mint' /> : <MintGKProfileCard />}
+              {mintType === 'paid' ? <MintPaidProfileCard type='mint' /> : <MintGKProfileCard />}
             </>
           </div>
         </div>

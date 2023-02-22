@@ -13,6 +13,7 @@ import { tw } from 'utils/tw';
 
 import MintProfileInputField from './MintProfileInputField';
 
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { BigNumber, utils } from 'ethers';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -43,12 +44,13 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
   const { profileTokenId } = useProfileTokenQuery(profileURI || '');
   const defaultChainId = useDefaultChainId();
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
-  const { profileClaimHash } = useGetProfileClaimHash(profileURI);
+  const { profileClaimHash, mutate: mutateProfileClaimHash } = useGetProfileClaimHash(profileURI);
   const [yearValue, setYearValue] = useState(1);
   const contractAddress = getAddress('maxProfiles', defaultChainId);
   const provider = useProvider();
   const ethPriceUSD = useEthPriceUSD();
   const { profileAuction } = useAllContracts();
+  const { openConnectModal } = useConnectModal();
 
   const setMintingModal = useCallback((isOpen) => {
     if(isOpen){
@@ -98,8 +100,14 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       from: currentAddress,
       value: registrationFee && registrationFee,
     },
-    enabled: type === 'mint' ? !isNullOrEmpty(profileURI) : true
+    enabled:  type === 'mint' ? !isNullOrEmpty(profileURI) && !isNullOrEmpty(currentAddress) : true
   });
+
+  useEffect(() => {
+    if(!isNullOrEmpty(currentAddress)){
+      mutateProfileClaimHash();
+    }
+  }, [currentAddress, mutateProfileClaimHash]);
   
   const getMintCost = useCallback(() => {
     if (feeData?.gasPrice){
@@ -269,13 +277,23 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
                 ) {
                   return;
                 }
+                if(isNullOrEmpty(currentAddress)){
+                  openConnectModal();
+                  return;
+                }
                 setModalOpen(true);
               }}
             >
-              {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : type === 'mint' ? <span>Purchase</span> : <span>Renew License</span>}
+              {isNullOrEmpty(currentAddress)
+                ? 'Connect Wallet' :
+                minting ?
+                  <ReactLoading type='spin' color='#707070' height={28} width={28} /> :
+                  type === 'mint' ?
+                    <span>Purchase</span> :
+                    <span>Renew License</span>
+              }
             </button>
           }
-              
         </div>
         <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4'>
           <a target="_blank" >
