@@ -16,8 +16,8 @@ export function LinksToSection(props: LinksToSectionParams) {
       image: '/link-to-nftcom.png',
       section: 'DOCUMENT',
       title: 'NFT.COM Summary',
-      description: 'Learn more about Genesis Keys and Profiles in this PDF.',
-      linkTo: '/about'
+      description: 'Learn more about NFT.com at our docs page.',
+      linkTo: 'https://docs.nft.com'
     },
     // {
     //   image: LinkToWhitePaper,
