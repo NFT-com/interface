@@ -5,6 +5,7 @@ import { tw } from 'utils/tw';
 export interface NftDetailCardProps {
   type: string;
   value: string;
+  highlighted?: boolean;
   subtitle?: string;
   valueClasses?: string;
   center?: boolean;
@@ -20,6 +21,7 @@ export function NftDetailCard(props: NftDetailCardProps) {
       className={tw(
         'NftDetailCard',
         'flex w-full',
+        props?.highlighted && 'bg-[#FFF4CA] border border-[#F9D54C]',
         'bg-white px-3 py-4 shadow-xl rounded-[18px]',
         'overflow-hidden cursor-pointer',
         props.onClick &&
@@ -37,7 +39,10 @@ export function NftDetailCard(props: NftDetailCardProps) {
         props.center ? 'items-center' : null,
         'overflow-hidden'
       )}>
-        <span className='font-noi-grotesk text-[#6A6A6A] text-[16px] capitalize font-medium mb-4 leading-5 tracking-[10%]'>
+        <span className={tw(
+          'font-noi-grotesk  text-[16px] capitalize font-medium mb-4 leading-5 tracking-[10%]',
+          props?.highlighted ? 'text-[#E4BA18]' : 'text-[#6A6A6A]'
+        )}>
           {props?.type?.toLowerCase()}
         </span>
         <span className={tw(
