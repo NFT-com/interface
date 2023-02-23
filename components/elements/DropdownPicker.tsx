@@ -1,8 +1,8 @@
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
+import KeyIcon from 'public/mint-key.svg';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -121,8 +121,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
       >
         {props.showKeyIcon &&
         <div className='w-6'>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={getStaticAsset('public/mint-key.svg')} alt='mint-key' className='inline mr-1' stroke="black" />
+          <KeyIcon className='inline mr-1' stroke="black" />
         </div>
         }
         <div className='flex items-center w-full'>
