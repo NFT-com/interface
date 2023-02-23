@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { WalletDropdown } from 'components/modules/Header/WalletDropdown';
@@ -8,7 +9,7 @@ import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
-import { filterNulls } from 'utils/helpers';
+import { filterNulls, getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { DropdownPickerModal } from './DropdownPickerModal';
@@ -23,11 +24,6 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { CaretDown, List, X } from 'phosphor-react';
-import Beta from 'public/beta-icon.svg';
-import ShoppingCartSimple from 'public/cart.svg';
-import WalletSimple from 'public/header_wallet.svg';
-import NavLogo from 'public/Logo.svg';
-import LightNavLogo from 'public/LogoLight.svg';
 import React, { useContext, useEffect } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -94,7 +90,10 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                       <p className='font-medium'>MENU</p>
                       :
                       <div className='w-10 h-10'>
-                        {useDarkMode ? <LightNavLogo className='justify-start' /> : <NavLogo className='justify-start' />}
+                        {useDarkMode ?
+                          <img src={getStaticAsset('public/LogoLight.svg')} alt='public/LogoLight.svg' className='justify-start' /> :
+                          <img src={getStaticAsset('public/Logo.svg')} alt='public/Logo.svg' className='justify-start' />
+                        }
                       </div>
                     }
                     <svg className='ml-3 hidden minlg:block' width="63" height="18" viewBox="0 0 63 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,7 +102,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                       <path d="M54.6126 4.12529V17.125H51.028V4.12529H43.1409V0.875H62.4996V4.12529H54.6126Z" fill="black" />
                     </svg>
                     <div className='w-9 h-4 ml-2'>
-                      <Beta />
+                      <img src={getStaticAsset('public/beta-icon.svg')} alt='public/beta-icon.svg' />
                     </div>
                   </div>
                 </Link>
@@ -214,7 +213,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <WalletSimple size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -237,7 +236,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     'flex items-center justify-center cursor-pointer'
                   )}
                 >
-                  <ShoppingCartSimple size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                  <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
                 </button>
               </div>
               <WalletRainbowKitButton header bgLight={!useDarkMode} showWhenConnected signInButton={true} headerButtonColor />
@@ -260,7 +259,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <WalletSimple size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -284,7 +283,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     'flex items-center justify-center cursor-pointer'
                   )}
                 >
-                  <ShoppingCartSimple size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                  <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
                 </button>
               </div>
             </div>
@@ -327,7 +326,10 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     <p className='font-medium'>MENU</p>
                     :
                     <div className='w-10 h-10'>
-                      {useDarkMode ? <LightNavLogo className='justify-start' /> : <NavLogo className='justify-start' />}
+                      {useDarkMode ?
+                        <img src={getStaticAsset('public/LogoLight.svg')} alt='public/LogoLight.svg' className='justify-start' /> :
+                        <img src={getStaticAsset('public/Logo.svg')} alt='public/Logo.svg' className='justify-start' />
+                      }
                     </div>
                   }
                   <svg className='ml-3 hidden minlg:block' width="63" height="18" viewBox="0 0 63 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -336,7 +338,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     <path d="M54.6126 4.12529V17.125H51.028V4.12529H43.1409V0.875H62.4996V4.12529H54.6126Z" fill="black" />
                   </svg>
                   <div className='w-9 h-4 ml-2'>
-                    <Beta />
+                    <img src={getStaticAsset('public/beta-icon.svg')} alt='public/beta-icon.svg' />
                   </div>
                 </div>
               </Link>
@@ -460,7 +462,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <WalletSimple size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -483,7 +485,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   'flex items-center justify-center cursor-pointer'
                 )}
               >
-                <ShoppingCartSimple size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
               </button>
             </div>
             <WalletRainbowKitButton header bgLight={!useDarkMode} showWhenConnected signInButton={true} headerButtonColor />
@@ -506,7 +508,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <WalletSimple size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -530,7 +532,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   'flex items-center justify-center cursor-pointer'
                 )}
               >
-                <ShoppingCartSimple size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
               </button>
             </div>
           </div>

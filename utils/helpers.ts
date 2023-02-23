@@ -112,6 +112,12 @@ export const filterDuplicates = <T>(items: T[], isSame: (first: T, second: T) =>
   return items.filter((item, index) => items.findIndex((element) => isSame(item, element)) === index);
 };
 
+/* ------------ helper function with option of overriding cdn use ----------- */
+export const getStaticAsset = (imagePath: string, cdn = true): string => {
+  if (cdn) return `https://cdn.nft.com/client/${imagePath}`;
+  return imagePath;
+};
+
 export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
   const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
   if (image == null) {

@@ -1,7 +1,6 @@
 import useCopyClipboard from 'hooks/useCopyClipboard';
-import { joinClasses } from 'utils/helpers';
+import { getStaticAsset, joinClasses } from 'utils/helpers';
 
-import Copy from 'public/copy.svg';
 import React from 'react';
 import { CheckCircle } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -60,7 +59,8 @@ export default function CopyHelper(props: {
           )
           : (
             <TransactionStatusText>
-              <Copy className='ml-1' style={{ height: props.size ?? '16px', width: props.size ?? '16px' }} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={getStaticAsset('public/copy.svg')} alt='copy' className='ml-1' style={{ height: props.size ?? '16px', width: props.size ?? '16px' }} />
             </TransactionStatusText>
           )}
         {props.after !== true && (props.keepContent !== true && isCopied ? '' : props.children)}
