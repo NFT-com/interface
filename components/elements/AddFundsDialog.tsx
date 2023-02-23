@@ -2,10 +2,9 @@ import { Button, ButtonType } from 'components/elements/Button';
 import Copy from 'components/elements/Copy';
 import { Modal } from 'components/elements/Modal';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
-import { shorten } from 'utils/helpers';
+import { getStaticAsset, shorten } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import FiatBlack from 'public/fiat.svg';
 import QRCode from 'qrcode.react';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
@@ -89,7 +88,11 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
     </div>
     <div className="font-hero-heading1 minlg:mx-[18%] mx-0 minlg:mb-5 mb-0">
       <Button
-        icon={!showWyreDisclaimer ? FiatBlack : null}
+        icon={!showWyreDisclaimer ?
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={getStaticAsset('public/fiat.svg')} alt='fiat' /> :
+          null
+        }
         type={ButtonType.PRIMARY}
         color={'black'}
         label={showWyreDisclaimer ? 'GO TO WYRE' : 'FUND WITH FIAT'}

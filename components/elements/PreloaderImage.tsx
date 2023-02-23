@@ -1,25 +1,20 @@
-import { genereteRandomPreloader } from 'utils/helpers';
-
-import Preloader_1 from 'public/preloaderImg-1.svg';
-import Preloader_2 from 'public/preloaderImg-2.svg';
-import Preloader_3 from 'public/preloaderImg-3.svg';
-import Preloader_4 from 'public/preloaderImg-4.svg';
-import Preloader_5 from 'public/preloaderImg-5.svg';
+/* eslint-disable @next/next/no-img-element */
+import { genereteRandomPreloader, getStaticAsset } from 'utils/helpers';
 
 export default function PreloaderImage() {
   const getPreloader = () => {
     const index = genereteRandomPreloader();
     switch (index) {
     case 0:
-      return <Preloader_1/>;
+      return <img src={getStaticAsset('public/preloaderImg-1.svg')} alt='public/preloaderImg-1.svg'/>;
     case 1:
-      return <Preloader_2/>;
+      return <img src={getStaticAsset('public/preloaderImg-2.svg')} alt='public/preloaderImg-2.svg'/>;
     case 2:
-      return <Preloader_3/>;
+      return <img src={getStaticAsset('public/preloaderImg-3.svg')} alt='public/preloaderImg-3.svg'/>;
     case 3:
-      return <Preloader_4/>;
+      return <img src={getStaticAsset('public/preloaderImg-4.svg')} alt='public/preloaderImg-4.svg'/>;
     case 4:
-      return <Preloader_5/>;
+      return <img src={getStaticAsset('public/preloaderImg-5.svg')} alt='public/preloaderImg-5.svg'/>;
     default:
       return 0;
     }

@@ -3,7 +3,7 @@ import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { getAddressForChain, nftProfile } from 'constants/contracts';
-import { Nft, Profile } from 'graphql/generated/types';
+import { Nft, NftType, Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -20,6 +20,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import GK from 'public/Badge_Key.svg';
+import MultipleOwners from 'public/multiple_owners.svg';
+import Owner from 'public/owner.svg';
 import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import useSWR from 'swr';
@@ -194,17 +196,27 @@ export const NFTDetail = (props: NFTDetailProps) => {
           </div>
 
           <div className='flex items-center'>
-            {profileOwnerToShow?.photoURL ?
-              <RoundedCornerMedia
-                containerClasses='w-[42px] shadow-xl border-2 border-white h-[42px] aspect-square'
-                variant={RoundedCornerVariant.Full}
-                amount={RoundedCornerAmount.Medium}
-                src={profileOwnerToShow?.photoURL}
-              />
+            {isNullOrEmpty(props.nft?.owner) && isNullOrEmpty(props.nft?.wallet?.address) ?
+              props?.nft?.type === NftType.Erc1155 ?
+                <div className='w-9 h-9 rounded-full'>
+                  <MultipleOwners className='rounded-full shadow-lg' />
+                </div>
+                :
+                <div className='w-9 h-9 rounded-full'>
+                  <Owner className='rounded-full shadow-lg' />
+                </div>
               :
-              <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
-                <LoggedInIdenticon customSize={36} round border />
-              </div>
+              profileOwnerToShow?.photoURL ?
+                <RoundedCornerMedia
+                  containerClasses='w-[42px] shadow-xl border-2 border-white h-[42px] aspect-square'
+                  variant={RoundedCornerVariant.Full}
+                  amount={RoundedCornerAmount.Medium}
+                  src={profileOwnerToShow?.photoURL}
+                />
+                :
+                <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
+                  <LoggedInIdenticon customSize={36} round border />
+                </div>
             }
 
             <div className='overflow-hidden'>
@@ -232,7 +244,11 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     </div> :
                     <Link href={getEtherscanLink(Number(defaultChainId), props.nft?.owner ?? props.nft?.wallet?.address, 'address')}>
                       <span className="text-[#1F2127] text-base cursor-pointer hover:underline font-medium leading-5 font-noi-grotesk pl-3">
-                        {shortenAddress(props.nft?.owner ?? props.nft?.wallet?.address, isMobile ? 4 : 6) ?? 'Unknown'}
+                        {!isNullOrEmpty(props.nft?.owner) || !isNullOrEmpty(props.nft?.wallet?.address) ?
+                          shortenAddress(props.nft?.owner ?? props.nft?.wallet?.address, isMobile ? 4 : 6) ?? 'Unknown' :
+                          <div className='bg-[#E6E6E6] h-3 w-20 rounded-full animate-pulse'>
+                          </div>
+                        }
                       </span>
                     </Link>
                 }

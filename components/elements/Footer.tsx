@@ -1,8 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 import Toast from 'components/elements/Toast';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnv } from 'utils/env';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { filterNulls, getStaticAsset, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import AOS from 'aos';
@@ -11,7 +12,6 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import DiscordLogo from 'public/discord.svg';
-import Logo from 'public/LogoFooterWhite.svg';
 import TwitterLogo from 'public/twitter.svg';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -171,7 +171,7 @@ export const Footer = () => {
             <div data-aos="fade-right" data-aos-delay="100" className='flex items-center mb-[2.625rem] minlg:mb-0'>
               <Link href='/' passHref>
                 <div className='w-[3.8rem] h-[3.8rem]'>
-                  <Logo className='w-[3.8rem] h-[3.8rem] justify-start' />
+                  <img src={getStaticAsset('public/LogoFooterWhite.svg')} alt='public/LogoFooterWhite.svg' className='w-[3.8rem] h-[3.8rem] justify-start' />
                 </div>
               </Link>
 

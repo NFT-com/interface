@@ -1,20 +1,16 @@
+/* eslint-disable @next/next/no-img-element */
 import { NftPortTxByContractTransactions } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useERC20Symbol } from 'hooks/useERC20Symbol';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
-import { shorten, shortenAddress } from 'utils/helpers';
+import { getStaticAsset, shorten, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ethers } from 'ethers';
 import moment from 'moment';
 import Link from 'next/link';
-import DAI from 'public/dai.svg';
-import ETH from 'public/eth.svg';
-import LarvaLabsIcon from 'public/larva_labs.png';
 import LooksrareIcon from 'public/looksrare-icon.svg';
-import NFTCOMIcon from 'public/nft_logo_yellow.webp';
 import OpenseaIcon from 'public/opensea-icon.svg';
-import USDC from 'public/usdc.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useCallback } from 'react';
 
@@ -33,11 +29,11 @@ type GetAssetProps = {
 const getSymbol = (contract_address: string, symbol: string, price: string) => {
   switch (symbol) {
   case 'USDC':
-    return <div className='flex items-center'><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USDC</div>;
+    return <div className='flex items-center'><img src={getStaticAsset('public/usdc.svg')} alt='public/usdc.svg' className='mr-1.5 h-5 w-5 relative shrink-0' />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USDC</div>;
   case 'DAI':
-    return <div className='flex items-center'><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} DAI</div>;
+    return <div className='flex items-center'><img src={getStaticAsset('public/dai.svg')} alt='public/dai.svg' className='mr-1.5 h-5 w-5 relative shrink-0' />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} DAI</div>;
   case 'ETH':
-    return <div className='flex items-center'><ETH className='mr-1.5 h-5 w-5 relative shrink-0' /> {Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ETH</div>;
+    return <div className='flex items-center'><img src={getStaticAsset('public/eth.svg')} alt='public/eth.svg' className='mr-1.5 h-5 w-5 relative shrink-0' /> {Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ETH</div>;
   default:
     if (!contract_address) {
       return <div>{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} {symbol}</div>;
@@ -57,7 +53,7 @@ function GetAsset({ price, asset_type, contract_address }: GetAssetProps) {
 
   switch (asset_type) {
   case 'ETH':
-    return <div className='flex items-center'><ETH className='mr-1.5 h-5 w-5 relative shrink-0' /> {Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ETH</div>;
+    return <div className='flex items-center'><img src={getStaticAsset('public/eth.svg')} alt='public/eth.svg' className='mr-1.5 h-5 w-5 relative shrink-0' /> {Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ETH</div>;
   case 'ERC20':
     return <div className='flex items-center'>{getSymbol(contract_address, symbol, price)}</div>;
   default:
@@ -88,13 +84,13 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
     } else if (name == 'cryptopunks') {
       return <div className='flex items-center'>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={LarvaLabsIcon.src} className='h-5 w-5 rounded-full relative shrink-0 hover:opacity-70' alt="Larva labs logo" />
+        <img src={getStaticAsset('public/larva_labs.png')} className='h-5 w-5 rounded-full relative shrink-0 hover:opacity-70' alt="Larva labs logo" />
         <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-2'>CryptoPunks</div>
       </div>;
     } else if (name == 'nftcom') {
       return <div className='flex items-center'>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={NFTCOMIcon.src} className='h-5 w-5 relative shrink-0 hover:opacity-70' alt="NFT.com logo" />
+        <img src={getStaticAsset('public/nft_logo_yellow.webp')} className='h-5 w-5 relative shrink-0 hover:opacity-70' alt="NFT.com logo" />
         <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-2'>NFT.com</div>
       </div>;
     } else if (name == 'x2y2') {
