@@ -213,7 +213,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -236,7 +236,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     'flex items-center justify-center cursor-pointer'
                   )}
                 >
-                  <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                  <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                 </button>
               </div>
               <WalletRainbowKitButton header bgLight={!useDarkMode} showWhenConnected signInButton={true} headerButtonColor />
@@ -259,7 +259,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -283,7 +283,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     'flex items-center justify-center cursor-pointer'
                   )}
                 >
-                  <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                  <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                 </button>
               </div>
             </div>
@@ -462,7 +462,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -485,7 +485,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   'flex items-center justify-center cursor-pointer'
                 )}
               >
-                <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
               </button>
             </div>
             <WalletRainbowKitButton header bgLight={!useDarkMode} showWhenConnected signInButton={true} headerButtonColor />
@@ -508,7 +508,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -532,7 +532,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   'flex items-center justify-center cursor-pointer'
                 )}
               >
-                <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' size={24} color={useDarkMode ? primaryIcon : 'black'} />
+                <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
               </button>
             </div>
           </div>
