@@ -113,7 +113,10 @@ module.exports = {
         'alert-yellow-bg': '#FFF0CB',
         'alert-yellow-bg-light': '#FFF9ED',
         'alert-grey': '#6A6A6A',
-        'alert-grey-bg': '#F2F2F2'
+        'alert-grey-bg': '#F2F2F2',
+        'button-bg-disabled': '#E6E6E6',
+        'button-text-disabled': '#969696',
+        'button-tertiary-hover': '#4D4D4D'
       },
       fontFamily: {
         'rubik': ['Rubik'],

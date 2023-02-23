@@ -12,6 +12,11 @@ export default {
   title: 'elements/Button',
   component: Button,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
+  args: {
+    size: ButtonSize.LARGE,
+    type: ButtonType.PRIMARY,
+    label: 'Button'
+  },
   argTypes: {
     icon: {
       options: ['', Object.keys(icons)],
@@ -42,16 +47,51 @@ Secondary.args = {
   label: 'Button',
 };
 
+export const Tertiary = Template.bind({});
+Tertiary.args = {
+  type: ButtonType.TERTIARY,
+  label: 'Button',
+};
+
 export const WithIcon = Template.bind({});
 WithIcon.args = {
   type: ButtonType.PRIMARY,
   label: 'Button',
-  icon: <PlusCircle />
+  icon: <PlusCircle size={32} />
 };
 
 export const Small = Template.bind({});
 Small.args = {
-  type: ButtonType.PRIMARY,
-  label: 'Button',
+  label: 'Small',
   size: ButtonSize.SMALL
+};
+
+export const Medium = Template.bind({});
+Medium.args = {
+  label: 'Medium',
+  size: ButtonSize.MEDIUM
+};
+
+export const Large = Template.bind({});
+Large.args = {
+  label: 'Large',
+  size: ButtonSize.LARGE
+};
+
+export const XLarge = Template.bind({});
+XLarge.args = {
+  label: 'XLarge',
+  size: ButtonSize.XLARGE
+};
+
+export const IconOnly = Template.bind({});
+IconOnly.args = {
+  label: '',
+  icon: <PlusCircle size={32} />
+};
+
+export const Loading = Template.bind({});
+Loading.args = {
+  loading:'true',
+  loadingText: 'Loading...'
 };

@@ -19,22 +19,22 @@ export interface ThemeColors {
   tileBackgroundSecondary: string;
   inputBackground: string;
   inputBorder: string;
-  primaryButtonText: string;
-  primaryButtonText_rebrand: string;
-  primaryButtonTextDisabled: string;
-  primaryButtonTextDisabled_rebrand: string;
-  primaryButtonBackground: string;
-  primaryButtonBackground_rebrand: string;
-  primaryButtonBackgroundDisabled: string;
-  secondaryButtonBackgroundEnabled: string;
-  secondaryButtonBorderEnabled: string;
-  secondaryButtonBorderDisabled: string;
-  secondaryButtonBackground: string,
-  secondaryButtonBackgroundDisabled: string,
-  secondaryButtonText: string,
-  secondaryButtonTextDisabled: string,
-  errorButtonBackground: string;
-  disabledButtonBackground: string;
+  // primaryButtonText: string;
+  // // primaryButtonText_rebrand: string;
+  // primaryButtonTextDisabled: string;
+  // primaryButtonTextDisabled_rebrand: string;
+  // primaryButtonBackground: string;
+  // primaryButtonBackground_rebrand: string;
+  // primaryButtonBackgroundDisabled: string;
+  // secondaryButtonBackgroundEnabled: string;
+  // secondaryButtonBorderEnabled: string;
+  // secondaryButtonBorderDisabled: string;
+  // secondaryButtonBackground: string,
+  // secondaryButtonBackgroundDisabled: string,
+  // secondaryButtonText: string,
+  // secondaryButtonTextDisabled: string,
+  // errorButtonBackground: string;
+  // disabledButtonBackground: string;
   modalOverlay: string;
   modalBackground: string;
   primaryText: string;
@@ -48,6 +48,23 @@ export interface ThemeColors {
   // tailwind css classNames (should control colors)
   dividerColorClass: string;
   primaryTextClass: string;
+
+  buttonBackgroundDisabled: string;
+  buttonTextDisabled: string;
+
+  primaryButtonBackground: string;
+  primaryButtonBackgroundHover: string;
+  primaryButtonBackgroundFocus: string;
+  primaryButtonText: string;
+
+  secondaryButtonBackground: string;
+  secondaryButtonBackgroundHover: string;
+  secondaryButtonBackgroundFocus: string;
+  secondaryButtonText: string;
+
+  tertiaryButtonBackground: string;
+  tertiaryHover: string;
+  tertiaryFocus: string;
 }
 
 export function useThemeColors(): ThemeColors {
@@ -70,23 +87,26 @@ export function useThemeColors(): ThemeColors {
     tileBackgroundSecondary: user?.isDarkMode ? '#303030' : '#FFFFFF',
     inputBackground: user?.isDarkMode ? '#111520' : rgba(202, 210, 234, 0.2),
     inputBorder: user?.isDarkMode ? '#37425C' : '#CAD2EA',
-    primaryButtonBackground: '#00A4FF',
-    primaryButtonBackground_rebrand: '#F9D963',
-    primaryButtonBackgroundDisabled: '#E1E1E1',
-    secondaryButtonBackgroundDisabled: '#000000',
-    secondaryButtonBackgroundEnabled: '#F2358E',
-    secondaryButtonBorderEnabled: '#F2358E',
-    secondaryButtonBorderDisabled: '#37425C',
-    secondaryButtonText: '#7C8294',
-    secondaryButtonTextDisabled: '#FFFFFF',
-    secondaryButtonBackground: '#FFFFFF',
     link: '#00A4FF',
-    primaryButtonText: '#FFFFFF',
-    primaryButtonText_rebrand: '#4D4412',
-    primaryButtonTextDisabled: '#6F6F6F',
-    primaryButtonTextDisabled_rebrand: '#4D4412',
-    errorButtonBackground: '#E8006F',
-    disabledButtonBackground: '#6B7280',
+
+    //Button colors
+    buttonBackgroundDisabled: '#E6E6E6',
+    buttonTextDisabled: '#969696',
+
+    primaryButtonBackground: '#F9D54C',
+    primaryButtonBackgroundHover: '#EFC71E',
+    primaryButtonBackgroundFocus: '#E4BA18',
+    primaryButtonText: '#000000',
+
+    secondaryButtonBackground: '#000000',
+    secondaryButtonBackgroundHover: '#282828',
+    secondaryButtonBackgroundFocus: '#414141',
+    secondaryButtonText: '#FFFFFF',
+
+    tertiaryButtonBackground: '#FFFFFF',
+    tertiaryHover: '#4D4D4D',
+    tertiaryFocus: '#4D4D4D',
+
     modalOverlay: user?.isDarkMode ? rgba(23, 27, 39, 0.5) : rgba(240, 245, 255, 0.5),
     modalBackground: user?.isDarkMode ? '#22293B' : '#FFFFFF',
     primaryText: user?.isDarkMode ? '#FFFFFF' : '#000000',
