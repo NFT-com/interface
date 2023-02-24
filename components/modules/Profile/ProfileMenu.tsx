@@ -6,7 +6,6 @@ import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import useCopyClipboard from 'hooks/useCopyClipboard';
-import { useIsOwnerAndSignedIn } from 'hooks/useIsOwnerAndSignedIn';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv,getEnvBool } from 'utils/env';
 import { filterNulls, getBaseUrl } from 'utils/helpers';
@@ -43,7 +42,6 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const inputRef = useRef();
-  const isOwnerAndSignedIn = useIsOwnerAndSignedIn(profileURI);
   const { chain } = useNetwork();
 
   useOutsideClickAlerter(inputRef, () => {
@@ -71,7 +69,8 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
     draftBio,
     clearDrafts,
     draftNftsDescriptionsVisible,
-    setDraftNftsDescriptionsVisible
+    setDraftNftsDescriptionsVisible,
+    userIsAdmin
   } = useContext(ProfileContext);
 
   const setLayout = useCallback((type: ProfileLayoutType) => {
@@ -134,7 +133,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
       )}>
         <input
           type="text"
-          placeholder={isOwnerAndSignedIn ? 'Search your NFTs..' : 'Search NFTs...'}
+          placeholder={userIsAdmin ? 'Search your NFTs..' : 'Search NFTs...'}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -169,7 +168,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             <SearchIcon className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
           </div>
         }
-        {isOwnerAndSignedIn &&<CustomTooltip2
+        {userIsAdmin &&<CustomTooltip2
           orientation='custom'
           customFullLeftPosition='left-6'
           hidden={false}
@@ -209,7 +208,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             }
           </div>
         </CustomTooltip2>}
-        {isOwnerAndSignedIn &&
+        {userIsAdmin &&
             <>
               {getEnvBool(Doppler.NEXT_PUBLIC_MOSAIC_LAYOUT_ENABLED) &&
                 <DropdownPickerModal
@@ -263,7 +262,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                 </div>
               </DropdownPickerModal>
 
-              {editMode && isOwnerAndSignedIn &&
+              {editMode && userIsAdmin &&
               <div className='fixed minlg:relative bottom-0 left-0 bg-white minlg:bg-transparent flex w-full py-5 px-3 space-x-4 shadow-[0_-16px_32px_rgba(0,0,0,0.08)] minlg:shadow-none z-50'
               >
                 <Button
@@ -296,7 +295,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
               }
             </>
         }
-        {(!editMode || editMode && !isOwnerAndSignedIn) &&
+        {(!editMode || editMode && !userIsAdmin) &&
         <DropdownPickerModal
           pointer
           constrain

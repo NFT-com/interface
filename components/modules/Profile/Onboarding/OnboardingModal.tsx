@@ -35,7 +35,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
       name: 'Refer Network',
       isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ReferNetwork),
       coins: 10,
-      description: 'Refer friends to join you on NFT.com',
+      description: 'Refer friends to join you on NFT.com. Once your referral creates a profile, this step will be marked as completed.',
       buttonText: 'Continue'
     },
     {
@@ -67,7 +67,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
         )}
       />
       <div className={tw(
-        'fixed min-h-max minlg:absolute bottom-0 right-[50%] min-w-[375px] translate-x-1/2 minlg:translate-x-0 minlg:top-20 minlg:right-4 overflow-y-auto z-[105] minlg:z-[103]',
+        'fixed min-h-max h-max minlg:absolute bottom-0 right-[50%] min-w-[375px] translate-x-1/2 minlg:translate-x-0 minlg:top-20 minlg:right-4 overflow-y-auto z-[105] minlg:z-[103]',
         expanded && 'top-[10%] minlg:top-20 minlg:right-4'
       )}>
         <div className="flex min-h-max items-start justify-end p-4 text-center">
@@ -101,7 +101,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                   )}>
                     <div className='w-[85%] h-3 bg-[#E6E6E6] rounded-full'>
                       <div
-                        style={{ width: `${totalPoints ? Math.floor(((profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5) / totalPoints) * 100) : 0}%` }}
+                        style={{ width: `${totalPoints ? Math.floor(((profileData?.profile?.usersActionsWithPoints[0]?.action.length || 5) / onboardingItems.length) * 100) : 0}%` }}
                         className={tw(
                           'h-3 bg-[#26AA73] rounded-full',
                         )}></div>

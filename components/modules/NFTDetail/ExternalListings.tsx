@@ -10,7 +10,6 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
-import { useHasGk } from 'hooks/useHasGk';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { isNullOrEmpty } from 'utils/helpers';
@@ -49,7 +48,6 @@ export function ExternalListings(props: ExternalListingsProps) {
   const currentDate = useGetCurrentDate();
   const [editListingsModalOpen, setEditListingsModalOpen] = useState(false);
   const [selectListingModalOpen, setSelectListingModalOpen] = useState(false);
-  const hasGk = useHasGk();
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
 
   const {
@@ -140,9 +138,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   }, []);
 
   const getListingSummaryButtons = useCallback((orderHash: string) => {
-    if (!hasGk) {
-      return 'You must have a Genesis Key to purchase';
-    } else if (currentAddress === (props.nft?.owner ?? props.nft?.wallet?.address)) {
+    if (currentAddress === (props.nft?.owner ?? props.nft?.wallet?.address)) {
       return <Button
         size={ButtonSize.LARGE}
         stretch
@@ -202,11 +198,11 @@ export function ExternalListings(props: ExternalListingsProps) {
         type={ButtonType.PRIMARY}
       />;
     }
-  }, [hasGk, currentAddress, props.nft, props.collectionName, nftInPurchaseCart, getByContractAddress, chainId, getERC20ProtocolApprovalAddress, currentDate, stagePurchase, toggleCartSidebar]);
+  }, [currentAddress, props.nft, props.collectionName, nftInPurchaseCart, getByContractAddress, chainId, getERC20ProtocolApprovalAddress, currentDate, stagePurchase, toggleCartSidebar]);
 
   if (isNullOrEmpty(filterValidListings(props.nft?.listings?.items))) {
     return (
-      currentAddress === (props.nft?.owner ?? props.nft?.wallet?.address) && hasGk &&
+      currentAddress === (props.nft?.owner ?? props.nft?.wallet?.address) &&
         <div className={tw(
           'w-full flex mb-5',
         )}>

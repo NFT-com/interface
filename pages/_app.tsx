@@ -12,6 +12,7 @@ import { getBaseUrl, getChainIdString } from 'utils/helpers';
 import {
   AvatarComponent,
   connectorsForWallets,
+  DisclaimerComponent,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import {
@@ -29,7 +30,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import { DefaultSeo } from 'next-seo';
-import { ReactElement, ReactNode, useMemo } from 'react';
+import { FunctionComponent, ReactElement, ReactNode, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -129,6 +130,22 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
     return <LoggedInIdenticon />;
   };
 
+  type DisclaimerProps = {
+    Text: FunctionComponent<{
+      children: ReactNode
+    }>
+    Link: any
+  }
+
+  const Disclaimer: DisclaimerComponent = ({ Text, Link }: DisclaimerProps) => (
+    <Text>
+      By connecting my wallet, I agree to the{' '}
+      <Link href='https://cdn.nft.com/nft_com_terms_of_service.pdf'>{' '}Terms of Service{' '}</Link>
+      and acknowledge the
+      <Link href="https://cdn.nft.com/nft_com_privacy_policy.pdf">{' '}Privacy Policy</Link>.
+    </Text>
+  );
+
   return (
     <>
       <Head>
@@ -162,6 +179,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
           appInfo={{
             appName: 'NFT.com',
             learnMoreUrl: 'https://docs.nft.com/what-is-a-wallet',
+            disclaimer: Disclaimer
           }}
           theme={rainbowLight}
           chains={chains}

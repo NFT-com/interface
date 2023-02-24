@@ -1,11 +1,8 @@
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
 import MintPaidProfileCard from 'components/modules/ProfileFactory/MintPaidProfileCard';
-import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfileCardSkeleton';
 import { useHasGk } from 'hooks/useHasGk';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
-import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { isNull } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
@@ -36,7 +33,6 @@ export default function MintProfilesPage() {
   const { openConnectModal } = useConnectModal();
   const { address: currentAddress } = useAccount();
   const [mintType, setMintType] = useState('paid');
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGk = useHasGk();
   
   useMaybeCreateUser();
@@ -96,7 +92,7 @@ export default function MintProfilesPage() {
         <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
           <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
             <>
-              <h2 className='text-[32px] font-medium'>{mintType === 'gk' ? 'Claim your free NFT Profile' : <p>Create your <span className='font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>NFT Profile</span> to trade with lower fees</p>}</h2>
+              <h2 className='text-[32px] font-medium'>{mintType === 'gk' ? 'Claim your free NFT Profile' : <p>Create Your <span className='font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>NFT.com</span> Profile</p>}</h2>
               {hasGk && <div className='justify-start items-center flex mt-5'>
                 <Tab.Group onChange={(index) => {setMintType(mintProfileTabs[index].tabName);}}>
                   <Tab.List className="w-full flex rounded-3xl z-10 bg-[#F6F6F6]">
@@ -117,7 +113,7 @@ export default function MintProfilesPage() {
                 </Tab.Group>
               </div>
               }
-              {isNull(ownedGenesisKeyTokens) ? <MintProfileCardSkeleton /> : mintType === 'paid' ? <MintPaidProfileCard type='mint' /> : <MintGKProfileCard />}
+              {mintType === 'paid' ? <MintPaidProfileCard type='mint' /> : <MintGKProfileCard />}
             </>
           </div>
         </div>

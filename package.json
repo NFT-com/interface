@@ -96,6 +96,7 @@
     "react-dropzone": "^14.2.1",
     "react-identicons": "^1.2.5",
     "react-instantsearch-dom": "^6.26.0",
+    "react-lazy-load": "^4.0.1",
     "react-loading": "^2.0.3",
     "react-markdown": "^8.0.3",
     "react-medium-image-zoom": "^4.4.3",
