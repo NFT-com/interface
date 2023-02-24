@@ -1,9 +1,8 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { HeroTitle } from 'components/modules/Hero/HeroTitle';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
-import { useThemeColors } from 'styles/theme/useThemeColors';
 
 export interface GenesisKeyPostClaimViewProps {
   onBack: () => void
@@ -11,7 +10,6 @@ export interface GenesisKeyPostClaimViewProps {
 
 export function GenesisKeyPostClaimView(props: GenesisKeyPostClaimViewProps) {
   const router = useRouter();
-  const { alwaysBlack } = useThemeColors();
   return (
     <div className='flex flex-col items-center text-primary-txt dark:text-primary-txt-dk'>
       <HeroTitle items={['WELCOME TO THE']} />
@@ -37,7 +35,7 @@ export function GenesisKeyPostClaimView(props: GenesisKeyPostClaimViewProps) {
             <div className='w-2/4 deprecated_sm:w-3/4 deprecated_sm:mb-4 mr-2 deprecated_sm:mr-0 text-center'>
               <Button
                 stretch
-                color={alwaysBlack}
+                size={ButtonSize.LARGE}
                 onClick={props.onBack}
                 label="Buy Another Key"
                 type={ButtonType.PRIMARY}
@@ -46,7 +44,7 @@ export function GenesisKeyPostClaimView(props: GenesisKeyPostClaimViewProps) {
             <div className='w-2/4 deprecated_sm:w-3/4 ml-2 deprecated_sm:ml-0 text-center'>
               <Button
                 stretch
-                color={alwaysBlack}
+                size={ButtonSize.LARGE}
                 onClick={() => {
                   router.push('/app/mint-profiles');
                 }}

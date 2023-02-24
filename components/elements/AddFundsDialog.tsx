@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Copy from 'components/elements/Copy';
 import { Modal } from 'components/elements/Modal';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
@@ -91,7 +91,7 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
       <Button
         icon={!showWyreDisclaimer ? FiatBlack : null}
         type={ButtonType.PRIMARY}
-        color={'black'}
+        size={ButtonSize.LARGE}
         label={showWyreDisclaimer ? 'GO TO WYRE' : 'FUND WITH FIAT'}
         stretch
         onClick={() => {

@@ -1,4 +1,4 @@
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
 import { CollectionActivity } from 'components/modules/Analytics/CollectionActivity';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
@@ -371,9 +371,9 @@ export function Collection(props: CollectionProps) {
                   </div>
                   {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
                     <Button
-                      color={'black'}
-                      accent={AccentType.SCALE}
-                      stretch={true}
+                      size={ButtonSize.LARGE}
+                      scaleOnHover
+                      stretch
                       label={'Load More'}
                       onClick={ () => {
                         setCurrentPage(currentPage + 1);

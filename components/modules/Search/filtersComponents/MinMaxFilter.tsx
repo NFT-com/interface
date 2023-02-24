@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { tw } from 'utils/tw';
 
 import ArrowDown from 'public/arrow-down-black.svg';
@@ -87,6 +87,7 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
       </div>
       <Button
         disabled={isError}
+        size={ButtonSize.LARGE}
         stretch
         label={'Apply'}
         type={ButtonType.PRIMARY}

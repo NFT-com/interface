@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
@@ -144,6 +144,7 @@ export function ExternalListings(props: ExternalListingsProps) {
       return 'You must have a Genesis Key to purchase';
     } else if (currentAddress === (props.nft?.owner ?? props.nft?.wallet?.address)) {
       return <Button
+        size={ButtonSize.LARGE}
         stretch
         label={'Edit Listing'}
         onClick={() => {
@@ -153,6 +154,7 @@ export function ExternalListings(props: ExternalListingsProps) {
       />;
     } else if (filterValidListings(props.nft?.listings?.items).length > 1) {
       return <Button
+        size={ButtonSize.LARGE}
         stretch
         disabled={nftInPurchaseCart(orderHash)}
         label={nftInPurchaseCart(orderHash) ? 'In Cart' : 'Select Listing'}
@@ -164,6 +166,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     } else {
       const listing = filterValidListings(props.nft?.listings?.items)[0];
       return <Button
+        size={ButtonSize.LARGE}
         stretch
         disabled={nftInPurchaseCart(orderHash)}
         label={nftInPurchaseCart(orderHash) ? 'In Cart' : 'Add to Cart'}
@@ -215,6 +218,7 @@ export function ExternalListings(props: ExternalListingsProps) {
             </div>
             <span className='font-grotesk text-base items-center text-[#1F2127] mb-4'>You own this NFT</span>
             <Button
+              size={ButtonSize.LARGE}
               stretch
               label={'List NFT'}
               onClick={() => {

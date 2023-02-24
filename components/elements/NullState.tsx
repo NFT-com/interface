@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useUser } from 'hooks/state/useUser';
 import { tw } from 'utils/tw';
 
@@ -64,7 +64,7 @@ export function NullState(props: NullStateProps) {
             <Link href={props.href}>
               <a>
                 <div className='drop-shadow-md'>
-                  <Button type={ButtonType.PRIMARY} onClick={() => null} label={props.buttonLabel} />
+                  <Button size={ButtonSize.LARGE} type={ButtonType.PRIMARY} onClick={() => null} label={props.buttonLabel} />
                 </div>
               </a>
             </Link>
@@ -73,7 +73,7 @@ export function NullState(props: NullStateProps) {
             <Link href={props.secondaryHref}>
               <a>
                 <div className='drop-shadow-md'>
-                  <Button type={ButtonType.PRIMARY} onClick={() => null} label={props.secondaryBtnLabel} />
+                  <Button size={ButtonSize.LARGE} type={ButtonType.PRIMARY} onClick={() => null} label={props.secondaryBtnLabel} />
                 </div>
               </a>
             </Link>

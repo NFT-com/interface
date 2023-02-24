@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { Maybe, NftType } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
@@ -330,6 +330,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
           {getSummaryContent()}
           {!success && !partialError && <div className="my-4 mt-8 flex">
             <Button
+              size={ButtonSize.LARGE}
               stretch
               loading={showProgressBar && !error && !success && !partialError}
               disabled={!allListingsConfigured() || (showProgressBar && !error && !success && !partialError)}
@@ -472,6 +473,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
             !isNullOrEmpty(error) &&
             <div className='w-full mt-4'>
               <Button
+                size={ButtonSize.LARGE}
                 stretch
                 label={'Cancel'}
                 onClick={() => {

@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
@@ -80,30 +81,19 @@ export default function MintFreeProfileCard() {
         <div className='mt-12 minlg:mt-[59px]'>
           {hasListings ?
             <Link href={`/app/nft/0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D/${profileTokenId?.toNumber()}`}>
-              <button
-                type="button"
-                className={tw(
-                  'inline-flex w-full justify-center',
-                  'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                  'px-4 py-4 text-lg font-medium text-black',
-                  'focus:outline-none focus-visible:bg-[#E4BA18]',
-                  'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-                )}
-              >
-                  View NFT.com listing
-              </button>
+              <Button
+                type={ButtonType.PRIMARY}
+                size={ButtonSize.LARGE}
+                label='View NFT.com listing'
+              />
             </Link>
             :
-            <button
-              type="button"
-              className={tw(
-                'inline-flex w-full justify-center',
-                'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                'px-4 py-4 text-lg font-medium text-black',
-                'focus:outline-none focus-visible:bg-[#E4BA18]',
-                'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-              )}
+            <Button
+              type={ButtonType.PRIMARY}
+              size={ButtonSize.LARGE}
               disabled={input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') }
+              loading={minting}
+              label='Mint your NFT Profile'
               onClick={async () => {
                 if (
                   minting
@@ -112,11 +102,8 @@ export default function MintFreeProfileCard() {
                 }
                 setModalOpen(true);
               }}
-            >
-              {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span> }
-            </button>
+            />
           }
-              
         </div>
         <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4'>
           <a target="_blank" >

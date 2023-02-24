@@ -1,9 +1,9 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useGetSentReferralEmailsQuery } from 'graphql/hooks/useGetSentReferralEmailsQuery';
 import { useSendReferEmailMutation } from 'graphql/hooks/useSendReferEmailMutation';
 import { useUser } from 'hooks/state/useUser';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
-import { tw } from 'utils/tw';
 
 import OnboardingInput from './OnboardingInput';
 
@@ -115,19 +115,15 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
                       </div>
                     }
 
-                    <button
-                      onClick={() => !isNullOrEmpty(selectedItem?.href) ? router.push(selectedItem?.href) : setModalOpen(false) }
-                      type="button"
-                      className={tw(
-                        'inline-flex w-1/3 mx-auto justify-center items-center',
-                        'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                        'font-medium text-black py-2 px-4',
-                        'focus:outline-none focus-visible:bg-[#E4BA18]',
-                        'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C] mb-10'
-                      )}
-                    >
-                      {selectedItem?.buttonText ? selectedItem.buttonText : selectedItem?.name}
-                    </button>
+                    <div className='mb-10 px-7'>
+                      <Button
+                        onClick={() => !isNullOrEmpty(selectedItem?.href) ? router.push(selectedItem?.href) : setModalOpen(false) }
+                        label={selectedItem?.buttonText ? selectedItem.buttonText : selectedItem?.name}
+                        type={ButtonType.PRIMARY}
+                        size={ButtonSize.LARGE}
+                        stretch
+                      />
+                    </div>
                   </div>
                 </div>
               </Dialog.Panel>

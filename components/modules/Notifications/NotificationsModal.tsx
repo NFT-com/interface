@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { Notifications } from 'components/modules/Sidebar/Notifications';
@@ -34,9 +35,15 @@ export default function NotificationsModal({ visible, setVisible }: Notification
           <Notifications setVisible={setVisible} />
           {/* only show when notifications exist for better UI */}
           {count ?
-            <button onClick={() => setVisible(false)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-              Close
-            </button> :
+            <div className='mt-4'>
+              <Button
+                size={ButtonSize.LARGE}
+                type={ButtonType.PRIMARY}
+                stretch
+                label='Close'
+                onClick={() => setVisible(false)} />
+            </div>
+            :
             null
           }
         </div>

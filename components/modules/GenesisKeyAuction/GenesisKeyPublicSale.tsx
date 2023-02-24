@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { KeyClaimVideo } from 'components/modules/GenesisKeyAuction/KeyClaimVideo';
 import { useEthBalance } from 'hooks/balances/useEthBalance';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
@@ -20,7 +20,6 @@ import Image from 'next/image';
 import truststamps from 'public/trust_stamps.png';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useSigner } from 'wagmi';
 
 export interface GenesisKeyPublicSaleProps {
@@ -28,7 +27,6 @@ export interface GenesisKeyPublicSaleProps {
 }
 
 export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
-  const { alwaysBlack } = useThemeColors();
   const ethPriceUSD = useEthPriceUSD();
   const { genesisKey } = useAllContracts();
   const { address: currentAddress } = useAccount();
@@ -131,8 +129,8 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
                     submitting ? 'opacity-50' : ''
                   )}>
                     <Button
-                      color={alwaysBlack}
-                      type={error ? ButtonType.ERROR : ButtonType.PRIMARY}
+                      size={ButtonSize.LARGE}
+                      type={ButtonType.PRIMARY}
                       loading={submitting}
                       loadingText={'Minting...'}
                       label={error
@@ -209,8 +207,8 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
                   </div>
                   <div className="font-hero-heading1">
                     <Button
+                      size={ButtonSize.LARGE}
                       type={ButtonType.PRIMARY}
-                      color={'black'}
                       stretch
                       label={'VISIT NFT.COM'}
                       onClick={async () => null}

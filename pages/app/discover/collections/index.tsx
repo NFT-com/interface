@@ -1,4 +1,4 @@
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
@@ -211,8 +211,8 @@ export default function CollectionsPage() {
                   { !isLeaderBoard && collections && collections.length < found && collections?.length > 0 &&
                     <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
                       <Button
-                        color={'black'}
-                        accent={AccentType.SCALE}
+                        size={ButtonSize.LARGE}
+                        scaleOnHover
                         stretch={true}
                         label={'Load More'}
                         onClick={() => {

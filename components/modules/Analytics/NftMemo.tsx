@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Toast from 'components/elements/Toast';
 import { NFTDetailContext } from 'components/modules/NFTDetail/NFTDetailContext';
 import { Nft } from 'graphql/generated/types';
@@ -66,6 +66,7 @@ export const NftMemo = (props: NftMemoProps) => {
             <div className='flex flex-row w-full justify-center items-center py-2 minxl:float-right minxl:flex-row-reverse minxl:w-1/4 minxl:-mb-12'>
               {currentAddress === (nft?.wallet?.address ?? props.nft?.owner) && !editMemo &&
             <Button
+              size={ButtonSize.LARGE}
               type={ButtonType.PRIMARY}
               stretch
               label={'Edit'}
@@ -78,6 +79,7 @@ export const NftMemo = (props: NftMemoProps) => {
               {currentAddress === (nft?.wallet?.address ?? props.nft?.owner) && editMemo &&
             <div className='inline-flex space-x-4'>
               <Button
+                size={ButtonSize.LARGE}
                 type={ButtonType.PRIMARY}
                 label={'Save'}
                 onClick={() => {
@@ -86,6 +88,7 @@ export const NftMemo = (props: NftMemoProps) => {
                 } }
               />
               <Button
+                size={ButtonSize.LARGE}
                 type={ButtonType.SECONDARY}
                 label={'Clear'}
                 onClick={() => {

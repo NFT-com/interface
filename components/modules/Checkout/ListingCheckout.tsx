@@ -1,6 +1,6 @@
 import 'rc-slider/assets/index.css';
 
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Switch } from 'components/elements/Switch';
@@ -362,19 +362,21 @@ export function ListingCheckout() {
             <span className='text-lg font-medium font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]'>You haven’t added any listings yet</span>
           </div>
         }
-        {(!showSummary || allListingsFail) && toList.length > 0 && <div className='w-full pb-8 mt-[10%]'><Button
-          label={'Start Listing'}
-          disabled={!allListingsConfigured()}
-          onClick={async () => {
-            await prepareListings();
-            if(allListingsFail){
-              setAllListingsFail(false);
-            }
-            setShowSummary(true);
-          }}
-          type={ButtonType.PRIMARY}
-          stretch
-        /></div>}
+        {(!showSummary || allListingsFail) && toList.length > 0 && <div className='w-full pb-8 mt-[10%]'>
+          <Button
+            size={ButtonSize.LARGE}
+            label={'Start Listing'}
+            disabled={!allListingsConfigured()}
+            onClick={async () => {
+              await prepareListings();
+              if(allListingsFail){
+                setAllListingsFail(false);
+              }
+              setShowSummary(true);
+            }}
+            type={ButtonType.PRIMARY}
+            stretch
+          /></div>}
       </div>
       {showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0 && !allListingsFail} onClose={() => setShowSummary(false)} />}
     </div>;

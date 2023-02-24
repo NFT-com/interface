@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { NULL_ADDRESS } from 'constants/addresses';
@@ -269,7 +269,9 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
             props.onClose();
           }} className='absolute top-5 right-5 z-50 hover:cursor-pointer closeButton' size={20} color="black" weight="fill" />
           {getSummaryContent()}
-          {!success && <Button
+          {!success &&
+          <Button
+            size={ButtonSize.LARGE}
             stretch
             disabled={loading && !error && !success}
             loading={loading && !error && !success}
@@ -344,6 +346,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
             !isNullOrEmpty(error) &&
             <div className='w-full mt-4'>
               <Button
+                size={ButtonSize.LARGE}
                 stretch
                 label={'Cancel'}
                 onClick={() => {

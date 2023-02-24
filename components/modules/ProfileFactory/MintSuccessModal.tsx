@@ -1,8 +1,8 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useMeQuery } from 'graphql/hooks/useMeQuery';
 import { useEmailCaptureModal } from 'hooks/state/useEmailCaptureModal';
 import { useMintSuccessModal } from 'hooks/state/useMintSuccessModal';
 import { isNullOrEmpty } from 'utils/helpers';
-import { tw } from 'utils/tw';
 
 import { Dialog, Transition } from '@headlessui/react';
 import Image from 'next/image';
@@ -76,22 +76,16 @@ export default function MintProfileSuccessModal() {
 
                     <p className='mt-9 minmd:mt-20 font-normal text-xl'>Let’s continue your Web3 journey</p>
 
-                    <div className='px-[47px] minmd:px-0'>
-                      <button
-                        type="button"
-                        className={tw(
-                          'inline-flex w-full minmd:max-w-[277px] justify-center',
-                          'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                          'px-4 py-4 mt-9 minmd:mt-8 text-lg font-medium text-black',
-                          'focus:outline-none focus-visible:bg-[#E4BA18]'
-                        )}
+                    <div className='px-[47px] minmd:px-0 mt-2 flex justify-center'>
+                      <Button
+                        type={ButtonType.PRIMARY}
+                        size={ButtonSize.LARGE}
+                        label='Customize your profile'
                         onClick={() => {
                           setMintSuccessModalOpen(false);
                           isNullOrEmpty(me?.email) && setEmailCaptureModalOpen(true);
                         }}
-                      >
-                      Customize your profile
-                      </button>
+                      />
                     </div>
 
                     <Link href='/app/mint-profiles' passHref>

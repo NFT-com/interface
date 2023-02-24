@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { Modal } from 'components/elements/Modal';
 import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
@@ -151,6 +151,7 @@ export default function GalleryPage() {
         'drop-shadow-md px-8'
       )}>
         <Button
+          size={ButtonSize.LARGE}
           stretch
           label={showFilters ? 'Close' : 'Filter'}
           onClick={() => {

@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { ProfileCard } from 'components/modules/DiscoveryCards/ProfileCard';
@@ -112,6 +112,7 @@ export default function ProfilePage() {
                 : (
                   !isLeaderBoard
                     ? <Button
+                      size={ButtonSize.LARGE}
                       label={'Load More'}
                       onClick={() => loadMoreProfilesFunc()}
                       type={ButtonType.PRIMARY}

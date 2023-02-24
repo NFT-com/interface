@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { tw } from 'utils/tw';
 
@@ -26,7 +26,7 @@ export function SignOutModal(props: SignOutModalProps) {
           <div className='mx-2 flex grow'>
             <Button
               type={ButtonType.PRIMARY}
-              color={'black'}
+              size={ButtonSize.XLARGE}
               label={'CONTINUE'}
               stretch
               onClick={() => {
