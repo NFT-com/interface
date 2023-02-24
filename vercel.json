@@ -9,11 +9,6 @@
       "source": "/discord",
       "destination": "https://discord.gg/nftdotcom",
       "statusCode": 200
-    },
-    {
-      "source": "/(y|Y)(o|O)(u|U)",
-      "destination": "https://www.nft.com/app/mint-profiles",
-      "statusCode": 200
     }
   ]
 }
