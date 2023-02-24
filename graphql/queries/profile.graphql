@@ -11,6 +11,8 @@ query Profile($url: String!, $chainId: String!) {
     deployedContractsVisible
     layoutType
     isGKMinted
+    ownerWalletId
+    ownerUserId
     owner {
       address
       chainId

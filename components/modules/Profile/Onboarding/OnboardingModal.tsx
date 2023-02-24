@@ -18,6 +18,8 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
     profileURI
   );
 
+  const usersActions = profileData?.profile?.usersActionsWithPoints.find((user) => user?.userId === profileData?.profile?.ownerUserId);
+
   const onboardingItems = useMemo(() => [
     {
       name: 'Create NFT Profile',
@@ -26,26 +28,26 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
     },
     {
       name: 'Customize Profile',
-      isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.CustomizeProfile),
+      isCompleted: usersActions?.action.includes(ProfileActionType.CustomizeProfile),
       description: 'Add a profile picture, bio and NFTs to make your NFT Profile yours',
       coins: 1,
       buttonText: 'Continue',
     },
     {
       name: 'Refer Network',
-      isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ReferNetwork),
+      isCompleted: usersActions?.action.includes(ProfileActionType.ReferNetwork),
       coins: 10,
       description: 'Refer friends to join you on NFT.com. Once your referral creates a profile, this step will be marked as completed.',
       buttonText: 'Continue'
     },
     {
       name: 'Buy NFTs',
-      isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.BuyNfTs),
+      isCompleted: usersActions?.action.includes(ProfileActionType.BuyNfTs),
       coins: 5,
       description: 'Grow your collection by purchasing NFTs on NFT.com',
       href: '/app/discover/nfts'
     }
-  ], [profileData]);
+  ], [usersActions]);
 
   useEffect(() => {
     const totalPoints = onboardingItems.reduce((acc, item) => {
