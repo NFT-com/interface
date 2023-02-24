@@ -2,6 +2,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useCallback } from 'react';
+import { MouseEvent } from 'react';
 import ReactLoading from 'react-loading';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
@@ -25,7 +26,7 @@ export interface ButtonProps {
   /** Button label (optional only if icon is passed) */
   label?: string;
   /** Button action */
-  onClick: () => void;
+  onClick: (e?: MouseEvent<HTMLButtonElement>) => void;
   stretch?: boolean;
   icon?: React.ReactElement;
   /** Scale the button on hover for larger screen sizes */
@@ -33,6 +34,7 @@ export interface ButtonProps {
   loading?: boolean;
   loadingText?: string;
   disabled?: boolean;
+  extraClasses?: string;
 }
 
 /** Renders a yellow button with the input label as black text. */
@@ -178,9 +180,9 @@ export function Button(props: ButtonProps) {
   const disabledColorClasses = 'bg-button-bg-disabled text-button-text-disabled';
 
   return (
-    <div
+    <button
       className={tw(
-        'buttonContainer',
+        'buttonContainer w-full',
         'flex items-center font-noi-grotesk font-medium',
         'justify-center',
         'no-underline select-none',
@@ -191,12 +193,13 @@ export function Button(props: ButtonProps) {
         props?.disabled
           ? ''
           : props.scaleOnHover && 'minlg:transform minlg:hover:scale-105',
+        props?.extraClasses && props.extraClasses
       )}
-      onClick={() => {
+      onClick={(e) => {
         if (props?.disabled ?? false) {
           return;
         }
-        props?.onClick();
+        props?.onClick(e);
       }}
     >
       {props?.loading ?
@@ -223,6 +226,6 @@ export function Button(props: ButtonProps) {
           {props?.label}
         </div>
       }
-    </div>
+    </button>
   );
 }
