@@ -27,7 +27,8 @@
     "cypress:record": "cypress run --record",
     "instrument": "npx nyc instrument --compact=false ./ instrumented",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "serve-storybook": "serve storybook-static"
   },
   "resolutions": {
     "glob-parent": "^6.0.1",
