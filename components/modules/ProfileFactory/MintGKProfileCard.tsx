@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
@@ -11,7 +12,6 @@ import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
-import { tw } from 'utils/tw';
 
 import MintProfileInputField from './MintProfileInputField';
 
@@ -20,7 +20,6 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { CheckCircle } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
-import ReactLoading from 'react-loading';
 import { useAccount, useNetwork } from 'wagmi';
 
 const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileModal>>(() => import('components/modules/ProfileFactory/MintProfileModal').then(mod => mod.default));
@@ -171,17 +170,15 @@ export default function MintGKProfileCard() {
             <p className='text-red-500 mt-10 mb-2'>No Genesis Key detected for mint.</p>
             <div className='flex flex-col items-center'>
               <Link href={`/app/collection/${getAddress('genesisKey', defaultChainId)}`}>
-                <button
-                  type="button"
-                  className={tw(
-                    'inline-flex w-max justify-center ml-2',
-                    'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                    'px-4 py-2 text-lg font-medium text-black',
-                    'focus:outline-none focus-visible:bg-[#E4BA18]'
-                  )}
-                >
-                  Buy Genesis Key
-                </button>
+                <a>
+                  <Button
+                    size={ButtonSize.LARGE}
+                    type={ButtonType.PRIMARY}
+                    onClick={() => null}
+                    label='Buy Genesis Key'
+                    stretch
+                  />
+                </a>
               </Link>
               <Link href='/'>
                 <p className='mt-2 hover:cursor-pointer'>Return to home</p>
@@ -194,18 +191,12 @@ export default function MintGKProfileCard() {
 
             {!currentAddress &&
           <div className='flex justify-center'>
-            <button
+            <Button
               onClick={openConnectModal}
-              type="button"
-              className={tw(
-                'inline-flex w-max justify-center ml-2',
-                'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                'px-4 py-2 text-lg font-medium text-black',
-                'focus:outline-none focus-visible:bg-[#E4BA18]'
-              )}
-            >
-              Connect Wallet
-            </button>
+              type={ButtonType.PRIMARY}
+              size={ButtonSize.LARGE}
+              label='Connect Wallet'
+            />
           </div>
             }
 
@@ -278,22 +269,19 @@ export default function MintGKProfileCard() {
             }
 
             {claimable && claimable.length && hasMintsAvailable ?
-              <button
-                type="button"
-                className={tw(
-                  'inline-flex w-full justify-center',
-                  'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                  'px-4 py-4 text-lg font-medium text-black',
-                  'focus:outline-none focus-visible:bg-[#E4BA18]',
-                  'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-                )}
+              <Button
+                type={ButtonType.PRIMARY}
+                size={ButtonSize.XLARGE}
+                label='Mint your NFT Profile'
+                stretch
+                loading={minting}
                 disabled={
                   inputs.some(item => item.status === 'Owned') ||
-                inputs.some(item => item.isVisible === true && item.profileURI === null) ||
-                isNullOrEmpty(inputs) ||
-                inputs.some(item => item.profileURI === '') ||
-                isNullOrEmpty(filteredInputs) ||
-                filteredInputs.some(item => item.profileURI === undefined)
+                  inputs.some(item => item.isVisible === true && item.profileURI === null) ||
+                  isNullOrEmpty(inputs) ||
+                  inputs.some(item => item.profileURI === '') ||
+                  isNullOrEmpty(filteredInputs) ||
+                  filteredInputs.some(item => item.profileURI === undefined)
                 }
                 onClick={async () => {
                   if (
@@ -302,10 +290,9 @@ export default function MintGKProfileCard() {
                     return;
                   }
                   setModalOpen(true);
+                  setMinting(true);
                 }}
-              >
-                {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}
-              </button>
+              />
               : null
             }
               

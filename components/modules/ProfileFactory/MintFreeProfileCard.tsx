@@ -6,14 +6,12 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
 import { isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
-import { tw } from 'utils/tw';
 
 import MintProfileInputField from './MintProfileInputField';
 
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useCallback,useEffect, useState } from 'react';
-import ReactLoading from 'react-loading';
 
 const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileModal>>(() => import('components/modules/ProfileFactory/MintProfileModal').then(mod => mod.default));
 
@@ -81,11 +79,14 @@ export default function MintFreeProfileCard() {
         <div className='mt-12 minlg:mt-[59px]'>
           {hasListings ?
             <Link href={`/app/nft/0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D/${profileTokenId?.toNumber()}`}>
-              <Button
-                type={ButtonType.PRIMARY}
-                size={ButtonSize.LARGE}
-                label='View NFT.com listing'
-              />
+              <a>
+                <Button
+                  type={ButtonType.PRIMARY}
+                  size={ButtonSize.LARGE}
+                  label='View NFT.com listing'
+                  onClick={() => null}
+                />
+              </a>
             </Link>
             :
             <Button

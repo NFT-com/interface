@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { AddressTupleStructOutput } from 'constants/typechain/Nft_resolver';
 import { useAssociatedAddressesForContractQuery } from 'graphql/hooks/useAssociatedAddressesForContractQuery';
@@ -163,10 +164,14 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
           <h2 className='text-4xl tracking-wide font-bold mb-10'>Not Authorized</h2>
            
           <p className='mt-2 text-[#6F6F6F]'>It looks like the collection was not deployed by a address associated to your profile.</p>
-          <p className='text-[#6F6F6F] mt-3'>Please associate the deployer address or try another collection address.</p>
-          <button onClick={() => {setVisible(false); setNotAuthorized(false); setLookupInProgress(true); setInputVal(''); setCollectionNameModal('');}} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-              Return to Settings
-          </button>
+          <p className='text-[#6F6F6F] mt-3 mb-6'>Please associate the deployer address or try another collection address.</p>
+          <Button
+            type={ButtonType.PRIMARY}
+            size={ButtonSize.LARGE}
+            onClick={() => {setVisible(false); setNotAuthorized(false); setLookupInProgress(true); setInputVal(''); setCollectionNameModal('');}}
+            stretch
+            label='Return to Settings'
+          />
         </>
       );
     }
@@ -183,12 +188,17 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
               {collectionName === '' ? inputVal : collectionNameModal}
             </span>
           </p>
-          <p className='text-[#6F6F6F] mt-6'>
+          <p className='text-[#6F6F6F] my-6'>
             Please confirm this is the collection you want to display on your profile. Displaying this collection will require you to authorize a transaction in your wallet.
           </p>
-          <button onClick={() => submitHandler()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-            Display Collection
-          </button>
+          <Button
+            type={ButtonType.PRIMARY}
+            size={ButtonSize.LARGE}
+            label='Display Collection'
+            onClick={() => submitHandler()}
+            stretch
+          />
+
           <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 text-sm'>
             <GasPump size={20} weight="fill" />
             <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
@@ -204,10 +214,14 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
           <p className='font-mono text-black text-xl break-words mt-2'>{inputVal}</p>
            
           <p className='mt-2 text-[#6F6F6F]'>Your collection will now display on your NFT profile.</p>
-          <p className='text-[#6F6F6F] mt-6'>You can always change the collection anytime by visiting your profile’s settings.</p>
-          <button onClick={() => {setVisible(false); setSuccess(false); setLookupInProgress(true); setInputVal('');}} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-              Return to Settings
-          </button>
+          <p className='text-[#6F6F6F] my-6'>You can always change the collection anytime by visiting your profile’s settings.</p>
+          <Button
+            size={ButtonSize.LARGE}
+            type={ButtonType.PRIMARY}
+            label='Return to Settings'
+            onClick={() => {setVisible(false); setSuccess(false); setLookupInProgress(true); setInputVal('');}}
+            stretch
+          />
         </>
       );}
 

@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 
 import { ArrowsClockwise, GasPump, XCircle } from 'phosphor-react';
@@ -58,12 +59,16 @@ export default function RequestModal({ visible, setVisible, address, transaction
                       rel="noreferrer" href={`https://etherscan.io/address/${address}`} className='font-bold underline tracking-wide'>Etherscan
                     </a>
                   </p>
-                  <p className='mt-6'>
+                  <p className='my-6'>
                     Please sign the transaction in your wallet. If you have changed your mind and do not wish to send this request, simply cancel.
                   </p>
-                  <button onClick={() => submitHandler()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                    Request Association
-                  </button>
+                  <Button
+                    type={ButtonType.PRIMARY}
+                    size={ButtonSize.LARGE}
+                    label='Request Association'
+                    onClick={() => submitHandler()}
+                    stretch
+                  />
                   <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
                     <GasPump size={20} weight="fill" />
                     <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'> gas fee.</span></p>
@@ -90,12 +95,16 @@ export default function RequestModal({ visible, setVisible, address, transaction
                     rel="noreferrer" href={`https://goerli.etherscan.io/tx/${transaction}`} className='font-bold underline tracking-wide'>Etherscan
                   </a>
                 </p>
-                <p className='mt-6'>
+                <p className='my-6'>
                   Please inform the owner of this address to connect to NFT.com to approve your request. You will receive a notification once approved.
                 </p>
-                <button onClick={() => {setVisible(false); setAddressVal(''); }} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                  Return to Settings
-                </button>
+                <Button
+                  type={ButtonType.PRIMARY}
+                  size={ButtonSize.LARGE}
+                  label='Return to Settings'
+                  onClick={() => {setVisible(false); setAddressVal(''); }}
+                  stretch
+                />
               </>
             )
           }

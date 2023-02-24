@@ -1,5 +1,6 @@
 import 'react-toastify/dist/ReactToastify.css';
 
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import Toast from 'components/elements/Toast';
 import { SidebarProfileCard } from 'components/modules/Sidebar/SidebarProfileCard';
@@ -155,17 +156,27 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
                 {!allProfiles.length && <p className='text-[#6F6F6F] mb-4'>No profiles found. Please try again.</p>}
 
                 <Link href='/app/mint-profiles'>
-                  <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
-                    Get a New Profile
-                  </button>
+                  <a>
+                    <Button
+                      type={ButtonType.PRIMARY}
+                      size={ButtonSize.LARGE}
+                      label='Get a New Profile'
+                      onClick={() => null}
+                      stretch
+                    />
+                  </a>
                 </Link>
 
                 {allProfiles.length > profilesToShow.length
                   ?
                   (
-                    <button onClick={() => LoadMoreHandler()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
-                      Load More
-                    </button>
+                    <Button
+                      type={ButtonType.PRIMARY}
+                      size={ButtonSize.LARGE}
+                      label='Load More'
+                      onClick={() => LoadMoreHandler()}
+                      stretch
+                    />
                   )
                   : null
                 }
@@ -213,17 +224,27 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
                 {!allProfiles.length && <p className='text-[#6F6F6F] mb-4'>No profiles found. Please try again.</p>}
 
                 <Link href='/app/mint-profiles'>
-                  <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
-                    Get a New Profile
-                  </button>
+                  <a>
+                    <Button
+                      type={ButtonType.PRIMARY}
+                      size={ButtonSize.LARGE}
+                      label='Get a New Profile'
+                      onClick={() => null}
+                      stretch
+                    />
+                  </a>
                 </Link>
 
                 {allProfiles.length > profilesToShow.length
                   ?
                   (
-                    <button onClick={() => LoadMoreHandler()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
-                      Load More
-                    </button>
+                    <Button
+                      type={ButtonType.PRIMARY}
+                      size={ButtonSize.LARGE}
+                      label='Load More'
+                      onClick={() => LoadMoreHandler()}
+                      stretch
+                    />
                   )
                   : null
                 }
