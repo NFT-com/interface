@@ -20,7 +20,9 @@ export default function ProfileURI() {
     }
   },[router, profileURI]);
 
-  if (profileURI === null || profileURI === undefined) {
+  if (profileURI?.toString()?.toLowerCase() == 'you') router.push('/app/mint-profiles');
+
+  if (profileURI === null || profileURI === undefined || profileURI?.toString()?.toLowerCase() == 'you') {
     return <div className={tw(
       'text-primary-txt dark:text-primary-txt-dk flex flex-col',
       'items-center justify-center h-screen'
