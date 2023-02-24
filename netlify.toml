@@ -23,3 +23,26 @@ publish = ".next"
   status = 200
   force = true
 
+[[redirects]]
+  from = "/You"
+  to = "https://www.nft.com/app/mint-profiles"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/YOU"
+  to = "https://www.nft.com/app/mint-profiles"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/YoU"
+  to = "https://www.nft.com/app/mint-profiles"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/YOu"
+  to = "https://www.nft.com/app/mint-profiles"
+  status = 200
+  force = true
