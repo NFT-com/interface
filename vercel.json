@@ -11,7 +11,7 @@
       "statusCode": 200
     },
     {
-      "source": "/you",
+      "source": "/(y|Y)(o|O)(u|U)",
       "destination": "https://www.nft.com/app/mint-profiles",
       "statusCode": 200
     }

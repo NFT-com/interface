@@ -141,11 +141,6 @@
 }
 
 @font-face {
-  font-family: "Stretch Pro";
-  src: url("https://nftcom-prod-assets.s3.amazonaws.com/StretchPro.otf"), url("./fonts/StretchPro.otf");
-}
-
-@font-face {
   font-family: "Grotesk";
   src: url("./fonts/HKGrotesk-Light.otf");
   font-weight: 300;

@@ -45,7 +45,7 @@ export async function getPreviewPostBySlug(slug) {
 export async function getAllPostsWithSlug() {
   const entries = await fetchGraphQL(
     `query {
-      blogPostCollection(where: { slug_exists: true }, order: date_DESC) {
+      blogPostCollection(where: { slug_exists: true }, order: publishDate_DESC) {
         items {
           ${POST_LIST_GRAPHQL_FIELDS}
         }

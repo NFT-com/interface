@@ -20,6 +20,7 @@ const sentryWebpackPluginOptions = {
 
 const moduleExports = withTM({
   reactStrictMode: true,
+  compress: true,
   sentry: { hideSourceMaps: true },
   productionBrowserSourceMaps: false,
   webpack(config) {

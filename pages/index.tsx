@@ -8,7 +8,7 @@ import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/Lea
 import contentfulBackupData from 'constants/contenful_backup_data.json';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { HomePageV2 } from 'types';
-import { getBaseUrl } from 'utils/helpers';
+import { getBaseUrl, getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { NextPageWithLayout } from './_app';
@@ -663,7 +663,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
               'minmd:-order-1 -mx-5'
             )}>
               <LazyLoad offset={200}>
-                <video className='w-full' autoPlay loop muted playsInline src="video-discover.mp4"></video>
+                <video className='w-full' autoPlay loop muted playsInline src={getStaticAsset('public/video-discover.mp4')}></video>
               </LazyLoad>
             </div>
           </div>
@@ -1058,7 +1058,7 @@ Index.getLayout = function getLayout(page) {
   );
 };
 
-export async function getServerSideProps({ preview = false }) {
+export async function getStaticProps({ preview = false }) {
   const homeDataV2 = await getCollection(false, 10, 'homepageV2Collection', HOME_PAGE_FIELDS_V2);
   return {
     props: {
