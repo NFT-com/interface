@@ -12,5 +12,11 @@
       "source": "/(y|Y)(o|O)(u|U)",
       "destination": "/app/mint-profiles"
     }
-  ]
+  ],
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "yarn build-storybook",
+  "devCommand": "yarn storybook",
+  "installCommand": "yarn install",
+  "framework": null,
+  "outputDirectory": "./storybook-static"
 }

@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { KeyClaimVideo } from 'components/modules/GenesisKeyAuction/KeyClaimVideo';
 import { HeroTitle } from 'components/modules/Hero/HeroTitle';
@@ -17,7 +17,6 @@ import { GenesisKeyPostClaimView } from './GenesisKeyPostClaimView';
 import { BigNumber } from 'ethers';
 import { useCallback, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useSigner } from 'wagmi';
 
 export interface GenesisKeyWinnerViewProps {
@@ -39,9 +38,6 @@ export interface GenesisKeyWinnerViewProps {
 }
 
 export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
-  const {
-    alwaysBlack
-  } = useThemeColors();
   const { genesisKeyTeamDistributor } = useAllContracts();
   const { address: currentAddress } = useAccount();
   const { data: signer } = useSigner();
@@ -105,7 +101,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
             <div className={tw('shadow-md hover:shadow-lg focus:shadow-lg',
               'w-full font-bold tracking-wider space-y-5')}>
               <Button
-                color={alwaysBlack}
+                size={ButtonSize.LARGE}
                 stretch
                 onClick={() => {
                   // todo: include a link to the metadata api for rendering card previews.
@@ -146,7 +142,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
           }
         </div>
       </div>);
-  }, [alwaysBlack, mintSucceeded, props.ownedTokenID, setKeyBackground]);
+  }, [mintSucceeded, props.ownedTokenID, setKeyBackground]);
 
   return (
     <>
@@ -214,7 +210,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                     </span>
                     <Button
                       type={ButtonType.PRIMARY}
-                      color={alwaysBlack}
+                      size={ButtonSize.LARGE}
                       label="Claim your key"
                       disabled={mintSucceeded || submitting}
                       loading={submitting}

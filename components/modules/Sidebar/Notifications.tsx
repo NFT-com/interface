@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { TxActivity, TxLooksrareProtocolData, TxSeaportProtocolData, TxX2Y2ProtocolData } from 'graphql/generated/types';
 import { useUpdateReadByIdsMutation } from 'graphql/hooks/useUpdateReadByIdsMutation';
@@ -227,10 +228,13 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
             You’ll see here the offers to your listed NFTs and when other owners accept of decline your made offers.
           </div>
           <div className='w-[100px] border-b border-[#ECECEC] my-8' />
-          <div className='text-center text-black text-[16px] font-semi-bold'>Start your collection by buying your first NFT</div>
-          <button onClick={() => router.push('/app/discover/nfts')} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[12px] focus:outline-none w-full mt-6" type="button">
-            Start your collection
-          </button>
+          <div className='text-center text-black text-[16px] font-semi-bold mb-6'>Start your collection by buying your first NFT</div>
+          <Button
+            type={ButtonType.PRIMARY}
+            size={ButtonSize.LARGE}
+            label='Start your collection'
+            onClick={() => router.push('/app/discover/nfts')}
+          />
         </div>
         :
         <div className='flex flex-col w-full items-center max-h-screen minlg:max-h-[350px] overflow-auto'>

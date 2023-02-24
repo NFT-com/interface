@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useKeyVideo } from 'hooks/state/useKeyVideo';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { tw } from 'utils/tw';
@@ -64,6 +64,7 @@ export function KeyClaimVideo() {
           className="absolute z-50 bottom-12 right-12"
         >
           <Button
+            size={ButtonSize.LARGE}
             label={'Skip'}
             onClick={() => {
               setHovering(false);

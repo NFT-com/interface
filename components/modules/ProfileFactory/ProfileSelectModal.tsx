@@ -1,9 +1,9 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useUser } from 'hooks/state/useUser';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { tw } from 'utils/tw';
 
 import { Dialog, Transition } from '@headlessui/react';
 import Link from 'next/link';
@@ -85,7 +85,7 @@ export default function ProfileSelectModal() {
                       </div>
                     )}
                   </div>
-                  <p className='text-[#5B5B5B] font-normal flex items-center mt-3'>
+                  <p className='text-[#5B5B5B] font-normal flex items-center mt-3 mb-3'>
                     {claimable &&
                         <>
                           <KeyIcon className='inline mr-3 h-9 w-9' stroke="black" />
@@ -94,20 +94,16 @@ export default function ProfileSelectModal() {
                     }
                   </p>
                   <Link href='/app/mint-profiles'>
-                    <button
-                      type="button"
-                      className={tw(
-                        'inline-flex w-full justify-center',
-                        'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                        'px-4 py-4 text-xl font-medium text-black',
-                        'focus:outline-none focus-visible:bg-[#E4BA18]',
-                        'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C] mt-10'
-                      )}
-                      disabled={claimableSum === 0}
-                      
-                    >
-                   Add NFT Profile
-                    </button>
+                    <a>
+                      <Button
+                        label='Add NFT Profile'
+                        disabled={claimableSum === 0}
+                        type={ButtonType.PRIMARY}
+                        size={ButtonSize.LARGE}
+                        onClick={() => null}
+                        stretch
+                      />
+                    </a>
                   </Link>
                 </div>
               </Dialog.Panel>

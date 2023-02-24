@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Nft } from 'graphql/generated/types';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -93,9 +94,12 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
       }
       {cachedTotalCount > nftData?.length && !isNullOrEmpty(nftData) &&
         <div className='w-full flex justify-center items-center'>
-          <button onClick={() => loadMoreActivities()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full minlg:w-[250px] mt-6" type="button">
-            Load More
-          </button>
+          <Button
+            onClick={() => loadMoreActivities()}
+            type={ButtonType.PRIMARY}
+            size={ButtonSize.LARGE}
+            label='Load More'
+          />
         </div>
       }
     </div>

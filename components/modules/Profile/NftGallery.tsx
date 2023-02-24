@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -92,7 +92,7 @@ export function NftGallery(props: NftGalleryProps) {
           <div className='pr-2 w-1/2'>
             <Button
               stretch
-              color="white"
+              size={ButtonSize.LARGE}
               label={'Back'}
               onClick={() => {
                 setSpotLightIndex(spotlightIndex === 0 ? nftsToShow.length - 1 : spotlightIndex - 1);
@@ -103,7 +103,7 @@ export function NftGallery(props: NftGalleryProps) {
           <div className="pl-2 w-1/2">
             <Button
               stretch
-              color="white"
+              size={ButtonSize.LARGE}
               label={'Next'}
               onClick={() => {
                 setSpotLightIndex(spotlightIndex + 1 > nftsToShow.length - 1 ? 0 : spotlightIndex + 1);

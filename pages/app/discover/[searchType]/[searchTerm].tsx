@@ -1,4 +1,4 @@
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import PreloaderImage from 'components/elements/PreloaderImage';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
@@ -323,8 +323,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
               </div>
               {searchedData && searchedData.length < found.current && <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
                 <Button
-                  color={'black'}
-                  accent={AccentType.SCALE}
+                  size={ButtonSize.LARGE}
+                  scaleOnHover
                   stretch={true}
                   label={'Load More'}
                   onClick={() => setPage(page + 1)}

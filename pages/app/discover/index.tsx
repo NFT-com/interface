@@ -1,4 +1,4 @@
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import { SearchBar } from 'components/elements/SearchBar';
 import TimePeriodToggle from 'components/elements/TimePeriodToggle';
@@ -230,6 +230,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                 : (
                   !isLeaderBoard
                     ? <Button
+                      size={ButtonSize.LARGE}
                       label={'Load More'}
                       onClick={() => loadMoreProfilesFunc()}
                       type={ButtonType.PRIMARY}
@@ -275,8 +276,8 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
             { !isLeaderBoard && paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.length < nftsForCollections?.length &&
               <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
                 <Button
-                  color={'black'}
-                  accent={AccentType.SCALE}
+                  size={ButtonSize.LARGE}
+                  scaleOnHover
                   stretch={true}
                   label={'Load More'}
                   onClick={() => setPage(page + 1)}

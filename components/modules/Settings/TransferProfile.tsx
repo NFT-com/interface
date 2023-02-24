@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useSidebar } from 'hooks/state/useSidebar';
@@ -106,7 +107,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                     <>
                       <h2 className='text-4xl tracking-wide font-bold mb-10'>Transfer In Progress</h2>
                   
-                      <p className='text-[#6F6F6F]'>
+                      <p className='text-[#6F6F6F] mb-6'>
                         You can confirm this transaction on{' '}
                         <a
                           target="_blank"
@@ -114,9 +115,13 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                         </a>
                         You can safely navigate away from this screen and return to NFT.com
                       </p>
-                      <button onClick={() => {closeModal();}} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                        Return to NFT.com
-                      </button>
+                      <Button
+                        type={ButtonType.PRIMARY}
+                        size={ButtonSize.LARGE}
+                        label='Return to NFT.com'
+                        onClick={() => {closeModal();}}
+                        stretch
+                      />
                     </>
                   )
                   :
@@ -133,12 +138,16 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                         </span>
                       </p>
             
-                      <p className='mt-6 text-[#6F6F6F]'>
+                      <p className='my-6 text-[#6F6F6F]'>
                         Please confirm this address is correct. Once the transfer process begins, you will lose access to this profile.
                       </p>
-                      <button onClick={() => submitHandler()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                    Transfer Profile
-                      </button>
+                      <Button
+                        type={ButtonType.PRIMARY}
+                        size={ButtonSize.LARGE}
+                        label='Transfer Profile'
+                        onClick={() => submitHandler()}
+                        stretch
+                      />
                       <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 text-sm'>
                         <GasPump size={20} weight="fill" />
                         <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>

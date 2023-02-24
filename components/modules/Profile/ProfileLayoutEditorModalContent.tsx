@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { ProfileLayoutType } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
@@ -99,6 +99,7 @@ export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalC
       </div>
       <div data-testid="ConfirmButton" className='flex flex-col w-full items-center mt-4' onClick={props.onClose}>
         <Button
+          size={ButtonSize.LARGE}
           label={'Confirm'}
           onClick={() => {
             props.onClose();

@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { HeroTitle } from 'components/modules/Hero/HeroTitle';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
@@ -20,7 +20,7 @@ export function InsiderProfileClaim() {
   const { address: currentAddress } = useAccount();
   const { nftProfile } = useAllContracts();
   const profileAuctionSigner = useProfileAuctionSigner();
-  const { alwaysBlack, link } = useThemeColors();
+  const { link } = useThemeColors();
   const { mutate: mutateMyProfileTokens } = useMyNftProfileTokens();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { reservedProfiles } = useInsiderReservedProfiles();
@@ -122,7 +122,7 @@ export function InsiderProfileClaim() {
           </span>
           <Button
             label={'NEXT'}
-            color={alwaysBlack}
+            size={ButtonSize.LARGE}
             onClick={() => {
               mutateMintedReservedProfileCount();
               setMintSuccess(null);
@@ -219,7 +219,7 @@ export function InsiderProfileClaim() {
         )}>
           <Button
             label={'Mint Your Profile'}
-            color={alwaysBlack}
+            size={ButtonSize.LARGE}
             loading={minting}
             disabled={isNullOrEmpty(selectedReservedProfile)}
             loadingText={'Minting'}
@@ -250,7 +250,7 @@ export function InsiderProfileClaim() {
         </span>
       </div>
     );
-  }, [mintSuccess, firstReservedProfileMinted, secondReservedProfileMinted, reservedProfiles, minting, alwaysBlack, selectedReservedProfile, mutateMintedReservedProfileCount, link, thirdReservedProfileMinted, fourthReservedProfileMinted, mintProfile]);
+  }, [mintSuccess, firstReservedProfileMinted, secondReservedProfileMinted, reservedProfiles, minting, selectedReservedProfile, mutateMintedReservedProfileCount, link, thirdReservedProfileMinted, fourthReservedProfileMinted, mintProfile]);
   return <LoadedContainer loaded={loadedMintedState}>
     {getContent()}
   </LoadedContainer>;

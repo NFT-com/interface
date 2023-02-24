@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useHasGk } from 'hooks/useHasGk';
 import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
@@ -91,6 +91,7 @@ export function PurchaseSummary() {
         Once the transaction is confirmed, the NFT will be sent to your wallet instantly.
       </span>
       <Button
+        size={ButtonSize.LARGE}
         stretch
         label={'Buy now'}
         onClick={() => {

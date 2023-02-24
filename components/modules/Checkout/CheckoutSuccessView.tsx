@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { processIPFSURL } from 'utils/helpers';
@@ -31,7 +32,6 @@ export interface CheckoutSuccessViewProps {
 export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const router = useRouter();
-
   const {
     clear,
     closeCartSidebar,
@@ -113,22 +113,25 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <div className='text-[34px] font-medium'>Congratulations!</div>
           <div className='text-[18px] font-medium mt-4'>{message()}</div>
           <div className='text-[16px] mt-10'>Let&apos;s continue your web3 journey</div>
-          <button onClick={() => {
-            closeCartSidebar();
-            props.onClose();
-            router.push(`/app/nft/${list[0]?.nft?.contract}/${list[0]?.nft?.tokenId}`);
-            window.open(
-              'https://twitter.com/intent/tweet?' +
+          <Button
+            size={ButtonSize.LARGE}
+            type={ButtonType.PRIMARY}
+            label='Share'
+            onClick={() => {
+              closeCartSidebar();
+              props.onClose();
+              router.push(`/app/nft/${list[0]?.nft?.contract}/${list[0]?.nft?.tokenId}`);
+              window.open(
+                'https://twitter.com/intent/tweet?' +
               'text=' +
               encodeURIComponent(
                 `Check out my latest NFT ${props.type == SuccessType.Listing ? 'listing' : 'purchase'}: ` +
                 'https://' + window.location.host + '/app/nft/' + list[0]?.nft?.contract + '/' + list[0]?.nft?.tokenId
               ),
-              '_blank'
-            );
-          }} className="bg-[#F9D963] w-[277px] my-8 font-medium hover:bg-[#fcd034] text-base text-black text-[14px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
-            Share
-          </button>
+                '_blank'
+              );
+            }}
+          />
           <div onClick={() => {
             closeCartSidebar();
             props.onClose();
@@ -157,7 +160,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
             Get access to lower fees by creating an NFT Profile
           </div>
           <div className='text-[18px] font-medium mt-4'>{message()}</div>
-          <div className='w-[277px] flex flex-col text-[16px] mt-6'>
+          <div className='w-[277px] flex flex-col text-[16px] mt-6 mb-8'>
             <div className='flex item-center py-3 justify-between'>
               <div className='text-[#6A6A6A]'>With an NFT Profile</div>
               <div className='font-medium text-transparent bg-clip-text bg-gradient-to-br from-[#FAC213] to-[#FF9B37]'>0% fee</div>
@@ -167,14 +170,17 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
               <div className='font-medium line-through'>2.5% fee</div>
             </div>
           </div>
-          <button onClick={() => {
-            props.onClose();
-            clear();
-            closeCartSidebar();
-            router.push('/app/mint-profiles');
-          }} className="bg-[#F9D963] w-[277px] mt-8 mb-14 font-medium hover:bg-[#fcd034] text-base text-black text-[16px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
-            Create a Profile
-          </button>
+          <Button
+            type={ButtonType.PRIMARY}
+            size={ButtonSize.LARGE}
+            label='Create a Profile'
+            onClick={() => {
+              props.onClose();
+              clear();
+              closeCartSidebar();
+              router.push('/app/mint-profiles');
+            }}
+          />
         </div>
       </div>
     </div>;

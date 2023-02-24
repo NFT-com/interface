@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { PostData } from 'types/blogs';
 import { tw } from 'utils/tw';
 
@@ -81,17 +82,18 @@ export default function BlogSliderCard({ post }: BlogSliderPostProps) {
             </div>
           </div>
         </div>
-        <Link href={`/articles/${post.slug}`}>
-          <button
-            className={tw(
-              'font-grotesk font-bold bg-[#F9D963] rounded-lg text-[#4D4412] block',
-              'flex flex-row items-center cursor-pointer hover:opacity-80 w-max mt-8 minlg:mt-6 mt-3 minlg:mb-9 minmd:mb-6 mb-4',
-              'py-2 px-5'
-            )}
-            type="button">
-                View Post
-          </button>
-        </Link>
+        <div className='mt-8 minlg:mt-6'>
+          <Link href={`/articles/${post.slug}`}>
+            <a>
+              <Button
+                size={ButtonSize.LARGE}
+                type={ButtonType.PRIMARY}
+                label='View Post'
+                onClick={() => null}
+              />
+            </a>
+          </Link>
+        </div>
       </div>
     </div>
   );

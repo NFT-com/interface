@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -72,7 +73,7 @@ export default function SettingsForm({ buttonText, inputVal, changeHandler, subm
 
   return (
     <div className='w-full'>
-      <div className='relative'>
+      <div className='relative mb-3'>
         <input value={inputVal} onChange={(e) => changeHandler(e.target.value)}
           className={tw('box-border shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline  placeholder:font-mono placeholder:text-sm pr-10',
             inputVal === '' ? 'border-[#D5D5D5]' : error ? 'border-[#DD0F70] focus:ring-[#DD0F70] focus:ring-1 focus:border-[#DD0F70]' : 'border-[#0E8344] focus:ring-[#0E8344] focus:ring-1 focus:border-[#0E8344]',
@@ -81,10 +82,15 @@ export default function SettingsForm({ buttonText, inputVal, changeHandler, subm
 
         {getContent()}
       </div>
-  
-      <button onClick={() => submitHandler()} disabled={error || inputVal === '' || isAssociatedOrPending} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] font-bold tracking-wide focus:outline-none focus:shadow-outline w-full mt-3 disabled:bg-[#B6B6B6] disabled:text-white disabled:border-[#6F6F6F] disabled:border disabled:hover:cursor-not-allowed" type="button">
-        {buttonText}
-      </button>
+
+      <Button
+        type={ButtonType.PRIMARY}
+        size={ButtonSize.LARGE}
+        label={buttonText}
+        stretch
+        disabled={error || inputVal === '' || isAssociatedOrPending}
+        onClick={() => submitHandler()}
+      />
       <div className='flex items-center font-grotesk text-[#6F6F6F] justify-center mt-2 text-sm'>
         <GasPump size={20} weight="fill" />
         <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>

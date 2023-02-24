@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
@@ -119,6 +119,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
           <span className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>List item on another marketplace</span>
           <Button
             stretch
+            size={ButtonSize.LARGE}
             label={'List item'}
             onClick={() => {
               stageListing({

@@ -1,5 +1,5 @@
 import { BidStatusIcon } from 'components/elements/BidStatusIcon';
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import Loader from 'components/elements/Loader';
 import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
@@ -114,7 +114,7 @@ export function ProfilePreferencesSearch() {
               'uppercase font-hero-heading1 font-extrabold tracking-wide')}>
               <Button
                 type={ButtonType.PRIMARY}
-                color={alwaysBlack}
+                size={ButtonSize.LARGE}
                 label="Purchase Genesis Key"
                 onClick={() => {
                   router.push(`/app/collection/${getAddress('genesisKey', defaultChainId)}`);
@@ -145,7 +145,7 @@ export function ProfilePreferencesSearch() {
           'uppercase font-hero-heading1 font-extrabold tracking-wide')}>
           <Button
             type={ButtonType.PRIMARY}
-            color={alwaysBlack}
+            size={ButtonSize.LARGE}
             label="GO TO DISCORD"
             onClick={() => {
               window.open(
@@ -157,7 +157,7 @@ export function ProfilePreferencesSearch() {
         </div>
       </>
     );
-  }, [alwaysBlack, link, router, totalRemaining, defaultChainId]);
+  }, [link, router, totalRemaining, defaultChainId]);
 
   const getNonSearchView = useCallback(() => {
     if (currentAddress && !isSupported ) {
@@ -189,7 +189,7 @@ export function ProfilePreferencesSearch() {
               'uppercase font-hero-heading1 font-extrabold tracking-wide')}>
               <Button
                 type={ButtonType.PRIMARY}
-                color={alwaysBlack}
+                size={ButtonSize.LARGE}
                 label="MINT ANOTHER PROFILE"
                 onClick={() => {
                   setCurrentURI('');
@@ -207,14 +207,7 @@ export function ProfilePreferencesSearch() {
         {allDoneText()}
       </>;
     }
-  }, [
-    currentAddress,
-    allDoneText,
-    isSupported,
-    alwaysBlack,
-    currentURI,
-    totalClaimable
-  ]);
+  }, [currentAddress, allDoneText, isSupported, currentURI, totalClaimable]);
 
   return (
     <LoadedContainer loaded={firstLoaded}>
@@ -302,7 +295,7 @@ export function ProfilePreferencesSearch() {
             )}>
               <Button
                 type={ButtonType.PRIMARY}
-                color={alwaysBlack}
+                size={ButtonSize.LARGE}
                 loadingText={'Minting...'}
                 loading={minting}
                 label={'Mint Your Profile'}

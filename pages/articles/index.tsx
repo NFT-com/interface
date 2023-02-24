@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import contentfulBackupData from 'constants/contenful_backup_data.json';
@@ -66,6 +66,7 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
         {posts?.length < totalPosts && (
           <div className="w-full flex justify-center pb-32 bg-white">
             <Button
+              size={ButtonSize.LARGE}
               label={'Load More'}
               type={ButtonType.PRIMARY}
               onClick={async () => {

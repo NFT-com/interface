@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { OwnedProfileGalleryCard } from 'components/modules/Gallery/OwnedProfileGalleryCard';
 import { ProfileCard } from 'components/modules/Profile/ProfileCard';
 import { Maybe, Profile } from 'graphql/generated/types';
@@ -123,6 +123,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
               &&
               <div className="w-full flex justify-center pb-32 mt-12">
                 <Button
+                  size={ButtonSize.LARGE}
                   label={'Load More'}
                   onClick={loadMoreProfiles}
                   type={ButtonType.PRIMARY}

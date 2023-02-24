@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { NULL_ADDRESS } from 'constants/addresses';
@@ -210,9 +211,12 @@ export default function AssetsPages() {
           )}>No assets</p>}
           {cachedTotalCount !== 1 && cachedTotalCount > assetData?.length &&
             <div className='w-full flex justify-center'>
-              <button onClick={() => loadMoreAssets()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full minlg:w-[250px] mt-6" type="button">
-                Load More
-              </button>
+              <Button
+                onClick={() => loadMoreAssets()}
+                label='Load More'
+                size={ButtonSize.LARGE}
+                type={ButtonType.PRIMARY}
+              />
             </div>
           }
         </div>

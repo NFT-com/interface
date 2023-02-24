@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
@@ -151,7 +151,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
     case ListingButtonType.Adjust: {
       return <Button
         stretch
-        color="black"
+        size={ButtonSize.LARGE}
         label={'Adjust Price'}
         onClick={() => {
           stageListing({
@@ -187,7 +187,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
       return <Button
         stretch
         type={ButtonType.SECONDARY}
-        color="black"
+        size={ButtonSize.LARGE}
         label={'Cancel Listing'}
         disabled={cancelling}
         loading={cancelling}
@@ -254,6 +254,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
     case ListingButtonType.AddToCart: {
       return <Button
         stretch
+        size={ButtonSize.LARGE}
         disabled={nftInPurchaseCart}
         label={nftInPurchaseCart ? 'In Cart' : 'Add to Cart'}
         onClick={async () => {

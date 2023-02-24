@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
@@ -285,19 +286,23 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                             </div>
                           </ExternalLink>
 
-                          <p className='text-[#6F6F6F]'>
+                          <p className='text-[#6F6F6F] mb-3'>
                             If you approve this request, your NFTs will be available to display on their profile{'\''}s gallery.
                             <span className='text-black font-bold tracking-wide'>
                               {' '}{profile.profileUrl || profile.url}{' '}
                             </span>
                               will <span className='text-black font-bold tracking-wide'>NOT</span> be able to make any changes to your address or its contents. You can change this connection at any time in your account’s settings.
                           </p>
-                          <button onClick={(e) => acceptPendingProfile(e, profile.profileUrl || profile.url)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                            Approve Request
-                          </button>
+                          <Button
+                            type={ButtonType.PRIMARY}
+                            size={ButtonSize.LARGE}
+                            label='Approve Request'
+                            onClick={(e) => acceptPendingProfile(e, profile.profileUrl || profile.url)}
+                            stretch
+                          />
                           <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
                             <GasPump size={20} weight="fill" />
-                            <p className='ml-1'>This action will require a<span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
+                            <p className='ml-1'>This action will require a<span className='border-dashed	border-b border-[#6F6F6F]'> gas fee.</span></p>
                           </div>
                           <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {setRemoveModalVisible(true); setVisible(false);}}>Reject Request</p>
                         </div>
@@ -321,12 +326,16 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                               {' '}NOT{' '}
                             </span>
                             be able to make any changes to your address or its contents. </p>
-                          <p className='text-[#6F6F6F]'>
+                          <p className='text-[#6F6F6F] mb-6'>
                             You can change this association at any time in your account’s settings.
                           </p>
-                          <button onClick={closeModal} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                            Return to NFT.com
-                          </button>
+                          <Button
+                            label='Return to NFT.com'
+                            type={ButtonType.PRIMARY}
+                            size={ButtonSize.LARGE}
+                            stretch
+                            onClick={closeModal}
+                          />
                         </div>
                       )
                   )
@@ -338,11 +347,15 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                         You have denied access to the NFT Profile
                         <span className='text-black font-bold tracking-wide'>{' '}{profile.profileUrl || profile.url}</span>
                       </p>
-                      <p className='text-[#6F6F6F]'>Your NFTs will not display on their NFT Profile`&apos;`s gallery.</p>
+                      <p className='text-[#6F6F6F] mb-6'>Your NFTs will not display on their NFT Profile`&apos;`s gallery.</p>
                   
-                      <button onClick={closeModal} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                        Return to NFT.com
-                      </button>
+                      <Button
+                        onClick={closeModal}
+                        size={ButtonSize.LARGE}
+                        type={ButtonType.PRIMARY}
+                        stretch
+                        label='Return to NFT.com'
+                      />
                     </div>
                   )
             }

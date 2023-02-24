@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import maxProfilesABI from 'constants/abis/MaxProfiles.json';
 import { useMaxProfilesSigner } from 'hooks/contracts/useMaxProfilesSigner';
 import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
@@ -13,7 +14,6 @@ import { BigNumber, utils } from 'ethers';
 import { useRouter } from 'next/router';
 import ETHIcon from 'public/eth_icon.svg';
 import { Fragment, useCallback, useState } from 'react';
-import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import useSWR from 'swr';
 import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
@@ -354,15 +354,16 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                 </div>
 
                 <div>
-                  <button
-                    type="button"
-                    className="inline-flex w-full justify-center rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E] px-4 py-4 text-lg font-medium text-black focus:outline-none focus-visible:bg-[#E4BA18]"
+                  <Button
+                    type={ButtonType.PRIMARY}
+                    size={ButtonSize.LARGE}
+                    stretch
                     onClick={async () => {
                       submitHandler();
                     }}
-                  >
-                    {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : type === 'Renew' ? <span>Renew</span> : <span>Mint your profile</span>}
-                  </button>
+                    loading={minting}
+                    label={type === 'Renew' ? 'Renew' : 'Mint your profile'}
+                  />
                 </div>
               </Dialog.Panel>
             </Transition.Child>

@@ -3,7 +3,7 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
   ],
-  darkMode: 'class', // or 'media' or 'class'
+  darkMode: ['class', '[data-mode="dark"]'],
   theme: {
     screens: {
       // everything above 1200 is XL, but content should be constrained to 1200px
@@ -100,6 +100,23 @@ module.exports = {
         'secondary-yellow': '#FCBB1B',
         'key-bg': '#4D4D4D',
         'key-gray': '#8B8B8B',
+        'alert-red': '#E43D20',
+        'alert-red-light': '#E45E47',
+        'alert-red-bg': '#FCE3E3',
+        'alert-red-bg-light': '#FFF8F7',
+        'alert-green': '#26AA73',
+        'alert-green-light': '#3EC98E',
+        'alert-green-bg': '#C1F4DE',
+        'alert-green-bg-light': '#F0FFF9',
+        'alert-yellow': '#E4B200',
+        'alert-yellow-light': '#FFC737',
+        'alert-yellow-bg': '#FFF0CB',
+        'alert-yellow-bg-light': '#FFF9ED',
+        'alert-grey': '#6A6A6A',
+        'alert-grey-bg': '#F2F2F2',
+        'button-bg-disabled': '#E6E6E6',
+        'button-text-disabled': '#969696',
+        'button-tertiary-hover': '#4D4D4D'
       },
       fontFamily: {
         'rubik': ['Rubik'],

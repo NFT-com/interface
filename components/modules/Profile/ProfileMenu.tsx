@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { ProfileLayoutType } from 'graphql/generated/types';
@@ -264,15 +265,11 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
               {editMode && userIsAdmin &&
               <div className='fixed minlg:relative bottom-0 left-0 bg-white minlg:bg-transparent flex w-full py-5 px-3 space-x-4 shadow-[0_-16px_32px_rgba(0,0,0,0.08)] minlg:shadow-none z-50'
               >
-                <button
-                  type="button"
-                  className={tw(
-                    'flex w-full justify-center items-center',
-                    'rounded-[10px] border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                    'px-4 py-2 font-medium text-black whitespace-nowrap',
-                    'focus:outline-none focus-visible:bg-[#E4BA18]',
-                    'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-                  )}
+                <Button
+                  label='Save changes'
+                  type={ButtonType.PRIMARY}
+                  size={ButtonSize.LARGE}
+                  extraClasses="whitespace-nowrap"
                   onClick={() => {
                     analytics.track('Update Profile', {
                       ethereumAddress: currentAddress,
@@ -281,28 +278,19 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                       newHeader: draftHeaderImg?.preview ? true : false,
                       newDescription: draftBio,
                     });
-      
+    
                     saveProfile();
                     setTimeout(() => {
                       setEditMode(false);
                     }, 3000);
                   }}
-                >
-                Save changes
-                </button>
-                <button
-                  type="button"
-                  className={tw(
-                    'flex w-full justify-center items-center',
-                    'rounded-[10px] border border-transparent bg-black hover:bg-[#282828]',
-                    'px-4 py-2 font-medium text-white',
-                    'focus:outline-none focus-visible:bg-[#E4BA18]',
-                    'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-                  )}
+                />
+                <Button
+                  label='Cancel'
+                  type={ButtonType.SECONDARY}
+                  size={ButtonSize.LARGE}
                   onClick={clearDrafts}
-                >
-                Cancel
-                </button>
+                />
               </div>
               }
             </>

@@ -1,152 +1,231 @@
-import Loader from 'components/elements/Loader';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useCallback } from 'react';
+import { MouseEvent } from 'react';
+import ReactLoading from 'react-loading';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-
-export enum AccentType {
-  SCALE = 'SCALE',
-  OPACITY = 'OPACITY',
-}
 
 export enum ButtonType {
   PRIMARY = 'PRIMARY',
   SECONDARY = 'SECONDARY',
-  ERROR = 'ERROR'
+  TERTIARY = 'TERTIARY'
 }
 
 export enum ButtonSize {
   SMALL = 'SMALL',
+  MEDIUM = 'MEDIUM',
+  LARGE = 'LARGE',
+  XLARGE = 'XLARGE'
 }
 
 export interface ButtonProps {
+  /** Button type */
+  type: ButtonType;
+  size: ButtonSize;
+  /** Button label (optional only if icon is passed) */
+  label?: string;
+  /** Button action */
+  onClick: (e?: MouseEvent<HTMLButtonElement>) => void;
   stretch?: boolean;
-  label: string;
   icon?: React.ReactElement;
-  accent?: AccentType;
-  onClick: () => void;
+  /** Scale the button on hover for larger screen sizes */
+  scaleOnHover?: boolean;
   loading?: boolean;
   loadingText?: string;
   disabled?: boolean;
-  type: ButtonType;
-  color?: string;
-  size?: ButtonSize;
-  bgColor?: string;
-  outline?: string;
+  extraClasses?: string;
 }
 
-/**
- * Renders a blue button with the input label as white text.
- */
+/** Renders a yellow button with the input label as black text. */
 export function Button(props: ButtonProps) {
   const {
-    primaryButtonBackground_rebrand,
-    primaryButtonBackgroundDisabled,
-    primaryButtonTextDisabled_rebrand,
+    primaryButtonBackground,
+    primaryButtonBackgroundHover,
+    primaryButtonBackgroundFocus,
+    primaryButtonText,
     secondaryButtonBackground,
-    secondaryButtonBackgroundDisabled,
-    secondaryButtonTextDisabled,
-    red,
-    alwaysBlack,
-    primaryButtonText_rebrand
+    secondaryButtonBackgroundHover,
+    secondaryButtonBackgroundFocus,
+    secondaryButtonText,
+    tertiaryButtonBackground,
   } = useThemeColors();
 
-  const bgColor = useCallback(() => {
-    if(!isNullOrEmpty(props?.bgColor)) {
-      return props?.bgColor;
-    }
-    const disabledBgColors = {
-      'PRIMARY': primaryButtonBackgroundDisabled,
-      'SECONDARY': secondaryButtonBackgroundDisabled,
-      'ERROR': red
-    };
-    const enabledBgColors = {
-      'PRIMARY': primaryButtonBackground_rebrand,
-      'SECONDARY': secondaryButtonBackground,
-      'ERROR': red
-    };
-    if (props?.disabled ?? false) {
-      return disabledBgColors[props?.type];
-    } else {
-      return enabledBgColors[props?.type];
-    }
-  }, [props?.bgColor, props?.disabled, props?.type, primaryButtonBackgroundDisabled, secondaryButtonBackgroundDisabled, red, primaryButtonBackground_rebrand, secondaryButtonBackground]);
+  const sizeClasses = useCallback(() => {
+    switch (props.size) {
+    case ButtonSize.SMALL:
+      switch(props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.SECONDARY):
+        return 'text-xs px-2 py-1 rounded';
+      case(ButtonType.TERTIARY):
+        return 'text-xs px-2 py-1 rounded-full border';
+      default:
+        return '';
+      }
 
-  const textColor = useCallback(() => {
-    if(!isNullOrEmpty(props?.color)) {
-      return props?.color;
-    }
-    const disabledTextColors = {
-      'PRIMARY': primaryButtonTextDisabled_rebrand,
-      'SECONDARY': secondaryButtonTextDisabled,
-      'ERROR': red
-    };
-    const enabledTextColors = {
-      'PRIMARY': primaryButtonText_rebrand,
-      'SECONDARY': alwaysBlack
-    };
-    if (props?.disabled ?? false) {
-      return disabledTextColors[props?.type];
-    } else {
-      return enabledTextColors[props?.type];
-    }
-  }, [props?.color, props?.disabled, props?.type, primaryButtonTextDisabled_rebrand, secondaryButtonTextDisabled, red, primaryButtonText_rebrand, alwaysBlack]);
+    case ButtonSize.MEDIUM:
+      switch(props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.SECONDARY):
+        return 'text-sm px-4 py-1 rounded-lg';
+      case(ButtonType.TERTIARY):
+        return 'text-sm px-4 py-1 rounded-full border-[1.3px]';
+      default:
+        return '';
+      }
 
-  const accent = useCallback(() => {
-    if(isNullOrEmpty(props?.accent) && !props?.loading) {
-      return 'hover:opacity-80';
+    case ButtonSize.LARGE:
+      switch(props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.SECONDARY):
+        return 'text-base	px-4 py-2 rounded-[10px]';
+      case(ButtonType.TERTIARY):
+        return 'text-base	px-4 py-2 rounded-full border-[1.5px]';
+      default:
+        return '';
+      }
+
+    case ButtonSize.XLARGE:
+      switch(props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.SECONDARY):
+        return 'text-xl	px-6 py-3 rounded-xl';
+      case(ButtonType.TERTIARY):
+        return 'text-xl px-6 py-3 rounded-full border-[1.5px]';
+      default:
+        return '';
+      }
+    default:
+      return '';
     }
-    else if(props?.accent === AccentType.SCALE) {
-      return 'minlg:transform minlg:hover:scale-105';
+  }, [props.size, props.type]);
+
+  const sizeClassesIconOnly = useCallback(() => {
+    switch (props.size) {
+    case ButtonSize.SMALL:
+      return 'h-6 w-6 rounded-full';
+    case ButtonSize.MEDIUM:
+      return 'h-8 w-8 rounded-full';
+    case ButtonSize.LARGE:
+      return 'h-10 w-10 rounded-full';
+    case ButtonSize.XLARGE:
+      return 'h-14 w-14 rounded-full';
+    default:
+      return '';
     }
-    return '';
-  }, [props?.accent, props?.loading]);
+  }, [props.size]);
+
+  const colorClasses = useCallback(() => {
+    switch (props.type) {
+    case ButtonType.PRIMARY:
+      return `bg-[${primaryButtonBackground}] hover:bg-[${primaryButtonBackgroundHover}] focus:bg-[${primaryButtonBackgroundFocus}] text-[${primaryButtonText}]`;
+    case ButtonType.SECONDARY:
+      return `bg-[${secondaryButtonBackground}] hover:bg-[${secondaryButtonBackgroundHover}] focus:bg-[${secondaryButtonBackgroundFocus}] text-[${secondaryButtonText}]`;
+    case ButtonType.TERTIARY:
+      return !isNullOrEmpty(props.label) ?
+        `rounded-full bg-[${tertiaryButtonBackground}] border-black hover:border-button-tertiary-hover focus:border-button-tertiary-hover text-black hover:text-button-tertiary-hover focus:text-button-tertiary-hover`:
+        `rounded-full bg-[${tertiaryButtonBackground}] border-black hover:border-button-tertiary-hover focus:border-button-tertiary-hover text-black hover:text-button-tertiary-hover focus:text-button-tertiary-hover border-[1.5px]`;
+    }
+  }, [primaryButtonBackground, primaryButtonBackgroundFocus, primaryButtonBackgroundHover, primaryButtonText, props.label, props.type, secondaryButtonBackground, secondaryButtonBackgroundFocus, secondaryButtonBackgroundHover, secondaryButtonText, tertiaryButtonBackground]);
+
+  const getLoader = useCallback(() => {
+    switch (props.size) {
+    case ButtonSize.SMALL:
+      switch(props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.TERTIARY):
+        return <ReactLoading type='spin' color='#707070' height={14} width={14} /> ;
+      case(ButtonType.SECONDARY):
+        return <ReactLoading type='spin' color={primaryButtonBackground} height={14} width={14} /> ;
+      default:
+        return '';
+      }
+
+    case ButtonSize.MEDIUM:
+      switch(props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.TERTIARY):
+        return <ReactLoading type='spin' color='#707070' height={16} width={16} /> ;
+      case(ButtonType.SECONDARY):
+        return <ReactLoading type='spin' color={primaryButtonBackground} height={16} width={16} /> ;
+      default:
+        return '';
+      }
+
+    case ButtonSize.LARGE:
+      switch(props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.TERTIARY):
+        return <ReactLoading type='spin' color='#707070' height={20} width={20} /> ;
+      case(ButtonType.SECONDARY):
+        return <ReactLoading type='spin' color={primaryButtonBackground} height={20} width={20} /> ;
+      default:
+        return '';
+      }
+
+    case ButtonSize.XLARGE:
+      switch(props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.TERTIARY):
+        return <ReactLoading type='spin' color='#707070' height={24} width={24} /> ;
+      case(ButtonType.SECONDARY):
+        return <ReactLoading type='spin' color={primaryButtonBackground} height={24} width={24} /> ;
+      default:
+        return '';
+      }
+    }
+  }, [primaryButtonBackground, props.size, props.type]);
+
+  const disabledColorClasses = 'bg-button-bg-disabled text-button-text-disabled';
 
   return (
-    <div
+    <button
       className={tw(
-        'buttonContainer',
+        'buttonContainer w-full',
         'flex items-center font-noi-grotesk font-medium',
-        'justify-center rounded-xl',
+        'justify-center',
         'no-underline select-none',
         !props?.loading && !props?.disabled && 'cursor-pointer',
-        props?.outline ?? '',
-        props?.size === ButtonSize.SMALL ? 'min-h-[2.5rem] px-3 minsm:px-6 text-xs' : 'min-h-[3rem] px-6 text-lg',
-        props?.stretch ? 'w-full grow' : 'w-fit',
+        !props.disabled ? colorClasses() : disabledColorClasses,
+        !isNullOrEmpty(props.label) ? sizeClasses() : sizeClassesIconOnly(),
+        props?.stretch ? 'w-full grow' : !isNullOrEmpty(props.label) ? 'w-fit' : '',
         props?.disabled
           ? ''
-          : accent(),
-        props?.type === ButtonType.SECONDARY || props?.type === ButtonType.ERROR ? 'border' : ''
+          : props.scaleOnHover && 'minlg:transform minlg:hover:scale-105',
+        props?.extraClasses && props.extraClasses
       )}
-      style={{
-        backgroundColor: bgColor(),
-        color: textColor(),
-        borderColor: props?.type === ButtonType.ERROR ? red : props?.type === ButtonType.SECONDARY ? '' : '#CAD2E8'
-      }}
-      onClick={() => {
+      onClick={(e) => {
         if (props?.disabled ?? false) {
           return;
         }
-        props?.onClick();
+        props?.onClick(e);
       }}
     >
       {props?.loading ?
         <div className='flex w-full items-center justify-center'>
-          <Loader />
-          <span className="flex ml-2 whitespace-normal">{props?.loadingText}</span>
+          {getLoader()}
+          {props?.loadingText && <span className="flex ml-2 whitespace-normal">{props?.loadingText}</span>}
         </div> :
-        <>
+        <div className='flex justify-center items-center'>
           {props?.icon &&
-            <div className={tw('mr-2 relative',
-              props?.size === ButtonSize.SMALL ? 'h-3 w-3 minsm:h-5 minsm:w-5':'h-5 w-5'
+            <div className={tw('relative flex items-center',
+              !isNullOrEmpty(props.label) ?
+                props?.size === ButtonSize.SMALL ? 'h-[14px] w-[14px]' : 'h-[18px] w-[18px] mr-1' :
+                props?.size === ButtonSize.SMALL
+                  ? 'h-[14px] w-[14px] justify-center' :
+                  props?.size === ButtonSize.MEDIUM
+                    ? 'h-4 w-4 justify-center' :
+                    props?.size === ButtonSize.LARGE
+                      ? 'h-5 w-5 justify-center' :
+                      props?.size === ButtonSize.XLARGE && 'h-7 w-7 justify-center',
             )}>
               {props.icon}
             </div>
           }
           {props?.label}
-        </>
+        </div>
       }
-    </div>
+    </button>
   );
 }

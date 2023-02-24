@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { HeroTitle } from 'components/modules/Hero/HeroTitle';
 import { tw } from 'utils/tw';
 
@@ -32,6 +32,7 @@ export function GenesisKeyLoserView(props: GenesisKeyLoserViewProps) {
           <div
             className='no-underline font-hero-heading1 mb-5 deprecated_sm:mb-16'>
             <Button
+              size={ButtonSize.LARGE}
               type={ButtonType.PRIMARY}
               label={'View Listings'}
               onClick={() => router.push('/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414')}

@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTPurchasesContext } from 'components/modules//Checkout/NFTPurchaseContext';
@@ -180,7 +181,10 @@ export function NftCard(props: NftCardProps) {
                 <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
                   {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe && hasGk ?
                     <>
-                      <button
+                      <Button
+                        label='Buy Now'
+                        type={ButtonType.PRIMARY}
+                        size={ButtonSize.LARGE}
                         onClick={async (e) => {
                           e.preventDefault();
                           const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
@@ -209,10 +213,7 @@ export function NftCard(props: NftCardProps) {
                           });
                           togglePurchaseSummaryModal();
                         }}
-                        className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] "
-                      >
-                        Buy Now
-                      </button>
+                      />
                       <button
                         onClick={async (e) => {
                           e.preventDefault();

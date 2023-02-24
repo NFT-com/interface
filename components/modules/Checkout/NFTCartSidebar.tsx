@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -134,6 +134,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
       !(router.pathname.includes('/app/list') && props.selectedTab === 'Sell')
         ) && <div className="mx-7 my-4 flex">
           <Button
+            size={ButtonSize.LARGE}
             stretch
             label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Buy now'}
             onClick={() => {

@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useMeQuery } from 'graphql/hooks/useMeQuery';
 import { useUpdateMeMutation } from 'graphql/hooks/useUpdateMeMutation';
 import { useEmailCaptureModal } from 'hooks/state/useEmailCaptureModal';
@@ -99,19 +100,14 @@ export default function EmailCaptureModal() {
                       </p>
                     </div>
 
-                    <button
-                      type="submit"
-                      className={tw(
-                        'inline-flex w-full justify-center max-w-[300px]',
-                        'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                        'px-4 py-4 text-xl font-medium text-black',
-                        'focus:outline-none focus-visible:bg-[#E4BA18]',
-                        'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-                      )}
+                    <Button
+                      type={ButtonType.PRIMARY}
+                      size={ButtonSize.LARGE}
+                      label='Sign up'
+                      stretch
                       disabled={!isChecked || isNullOrEmpty(emailValue) || emailValue === ''}
-                    >
-                    Sign up
-                    </button>
+                      onClick={() => null}
+                    />
                   </form>
 
                   <p onClick={() => closeModal()} className='mt-5 text-[#6A6A6A] hover:cursor-pointer'>Skip</p>
