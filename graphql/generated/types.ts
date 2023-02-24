@@ -37,7 +37,9 @@ export enum ActivityType {
   Bid = 'Bid',
   Cancel = 'Cancel',
   Listing = 'Listing',
+  Purchase = 'Purchase',
   Sale = 'Sale',
+  Swap = 'Swap',
   Transfer = 'Transfer'
 }
 
@@ -1498,6 +1500,8 @@ export type Profile = {
   layoutType?: Maybe<ProfileLayoutType>;
   nftsDescriptionsVisible?: Maybe<Scalars['Boolean']>;
   owner?: Maybe<Wallet>;
+  ownerUserId?: Maybe<Scalars['String']>;
+  ownerWalletId?: Maybe<Scalars['String']>;
   photoURL?: Maybe<Scalars['String']>;
   profileView?: Maybe<ProfileViewType>;
   status?: Maybe<ProfileStatus>;
@@ -2255,6 +2259,7 @@ export type TxActivity = {
   cancel?: Maybe<TxCancel>;
   chainId?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  index?: Maybe<Scalars['Int']>;
   nftContract: Scalars['String'];
   nftId: Array<Maybe<Scalars['String']>>;
   order?: Maybe<TxOrder>;
@@ -3211,7 +3216,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, ownerWalletId?: string | null, ownerUserId?: string | null, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -5324,6 +5329,8 @@ export const ProfileDocument = gql`
     deployedContractsVisible
     layoutType
     isGKMinted
+    ownerWalletId
+    ownerUserId
     owner {
       address
       chainId
