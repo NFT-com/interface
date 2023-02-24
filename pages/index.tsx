@@ -1058,7 +1058,7 @@ Index.getLayout = function getLayout(page) {
   );
 };
 
-export async function getServerSideProps({ preview = false }) {
+export async function getStaticProps({ preview = false }) {
   const homeDataV2 = await getCollection(false, 10, 'homepageV2Collection', HOME_PAGE_FIELDS_V2);
   return {
     props: {

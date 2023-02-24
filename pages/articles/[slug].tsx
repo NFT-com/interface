@@ -6,7 +6,7 @@ import contentfulBackupData from 'constants/contenful_backup_data.json';
 import NotFoundPage from 'pages/404';
 import { PostData } from 'types/blogs';
 
-import { getPost } from 'lib/contentful/api';
+import { getAllPostsWithSlug, getPost } from 'lib/contentful/api';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -101,7 +101,15 @@ Post.getLayout = function getLayout(page) {
   );
 };
 
-export async function getServerSideProps({ params, preview = false }) {
+export async function getStaticPaths() {
+  const posts = await getAllPostsWithSlug();
+  return {
+    paths: posts?.map(({ slug }) => `/articles/${slug}`) ?? [],
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params, preview = false }) {
   const data = await getPost(params.slug, preview);
   return {
     props: {
