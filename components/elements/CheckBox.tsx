@@ -12,7 +12,7 @@ export interface CheckBoxProps {
  * Custom UI for a checkbox - parent is responsible for state management.
  */
 export function CheckBox(props: CheckBoxProps) {
-  const { primaryButtonBackground_rebrand } = useThemeColors();
+  const { primaryButtonBackground } = useThemeColors();
   return (
     <div
       className={tw(
@@ -21,7 +21,7 @@ export function CheckBox(props: CheckBoxProps) {
         'shrink-0'
       )}
       style={{
-        backgroundColor: props.checked ? primaryButtonBackground_rebrand : '#F2F2F2',
+        backgroundColor: props.checked ? primaryButtonBackground : '#F2F2F2',
       }}
       onClick={() => {
         props.onToggle(!props.checked);
