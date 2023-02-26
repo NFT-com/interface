@@ -346,7 +346,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             />
           </div>
           <RemoveIcon
-            className="h-20 minhd:h-28 absolute -right-[50%] top-[-1.5rem] minhd:top-[-2rem] cursor-pointer z-[100]"
+            className="h-20 minhd:h-28 absolute right-0 top-[-1.5rem] mr-[-2.5rem] minhd:mr-[-3.5rem] minhd:top-[-2rem] cursor-pointer z-[100]"
             onClick={() => removeListing(props.listing?.nft)} />
         </div>
         <div className='flex flex-col font-noi-grotesk'>

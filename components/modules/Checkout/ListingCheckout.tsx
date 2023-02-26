@@ -58,6 +58,7 @@ export function ListingCheckout() {
   const { marketplace } = useAllContracts();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const hasGk = useHasGk();
+  const [notAllListingsConfigured, setNotAllListingsConfigured] = useState(true);
 
   const defaultChainId = useDefaultChainId();
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner);
@@ -75,6 +76,10 @@ export function ListingCheckout() {
     });
   },[setDuration, toList]);
 
+  useEffect(() => {
+    setNotAllListingsConfigured(!allListingsConfigured);
+  }, [allListingsConfigured]);
+     
   const { data: NFTCOMProtocolFee } = useSWR(
     'NFTCOMProtocolFee' + currentAddress,
     async () => {
@@ -120,10 +125,6 @@ export function ListingCheckout() {
   const NFTCOMAtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
     return nft?.targets?.find(target => target?.protocol === ExternalProtocol.NFTCOM) != null;
   }) != null;
-
-  const buttonsRowWidth = () => {
-    return 'w-1/4';
-  };
 
   const ListingOneNFT = useCallback(() => {
     return(
@@ -218,7 +219,7 @@ export function ListingCheckout() {
           'w-full flex flex-col items-center')}>
           <span className='text-lg w-full font-semibold flex text-[#A6A6A6]'>Select Marketplace(s)</span>
           <div className='flex flex-wrap minlg:flex-nowrap justify-between minlg:flex-row items-start w-full mt-2'>
-            <div className={`max-h-[93px] w-[49%] minlg:${buttonsRowWidth()} minlg:mr-2 flex flex-col items-center`}>
+            <div className='max-h-[93px] w-[49%] minlg:w-1/4 minlg:mr-2 flex flex-col items-center'>
               <div
                 onClick={() => {
                   toggleTargetMarketplace(ExternalProtocol.NFTCOM);
@@ -253,7 +254,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
+                'max-h-[93px] w-[49%] minlg:w-1/4',
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 openseaAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
@@ -275,7 +276,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `mt-[100px] max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
+                'mt-[100px] max-h-[93px] w-[49%] minlg:w-1/4',
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer minlg:mt-2 minlg:mr-2 flex flex-col items-center',
                 looksrareAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
@@ -298,7 +299,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `mt-[100px] max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
+                'mt-[100px] max-h-[93px] w-[49%] minlg:w-1/4',
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 pt-3 py-3 cursor-pointer minlg:mt-2 flex flex-col items-center',
                 X2Y2AtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
@@ -366,7 +367,7 @@ export function ListingCheckout() {
           <Button
             size={ButtonSize.LARGE}
             label={'Start Listing'}
-            disabled={!allListingsConfigured()}
+            disabled={notAllListingsConfigured}
             onClick={async () => {
               await prepareListings();
               if(allListingsFail){
@@ -380,7 +381,7 @@ export function ListingCheckout() {
       </div>
       {showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0 && !allListingsFail} onClose={() => setShowSummary(false)} />}
     </div>;
-  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, allListingsFail, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
+  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsFail, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, notAllListingsConfigured, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
   
   return (
     <div className='flex w-full justify-between h-full'>
