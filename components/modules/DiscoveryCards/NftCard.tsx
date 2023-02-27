@@ -179,7 +179,7 @@ export function NftCard(props: NftCardProps) {
               />
               <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
                 <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
-                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe && hasGk ?
+                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe ?
                     <>
                       <Button
                         label='Buy Now'
