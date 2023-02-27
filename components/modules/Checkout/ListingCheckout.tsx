@@ -58,7 +58,6 @@ export function ListingCheckout() {
   const { marketplace } = useAllContracts();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const hasGk = useHasGk();
-  const [notAllListingsConfigured, setNotAllListingsConfigured] = useState(true);
 
   const defaultChainId = useDefaultChainId();
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner);
@@ -75,10 +74,6 @@ export function ListingCheckout() {
       }
     });
   },[setDuration, toList]);
-
-  useEffect(() => {
-    setNotAllListingsConfigured(!allListingsConfigured());
-  }, [allListingsConfigured]);
      
   const { data: NFTCOMProtocolFee } = useSWR(
     'NFTCOMProtocolFee' + currentAddress,
@@ -367,7 +362,7 @@ export function ListingCheckout() {
           <Button
             size={ButtonSize.LARGE}
             label={'Start Listing'}
-            disabled={notAllListingsConfigured}
+            disabled={!allListingsConfigured}
             onClick={async () => {
               await prepareListings();
               if(allListingsFail){
@@ -381,7 +376,7 @@ export function ListingCheckout() {
       </div>
       {showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0 && !allListingsFail} onClose={() => setShowSummary(false)} />}
     </div>;
-  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsFail, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, notAllListingsConfigured, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
+  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, allListingsFail, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
   
   return (
     <div className='flex w-full justify-between h-full'>
