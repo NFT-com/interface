@@ -77,6 +77,33 @@ export default function CollectionsPage() {
               skipNftQuery/>
           );
         })}
+        {
+          <NFTGalleryListRC
+            nfts={nftsRC}
+            hasMore={hasNextPage}
+            isFetching={isFetchingNextPage}
+            fetchNfts={fetchNextPage}
+            draftLayoutType={draftLayoutType}
+            profileLoading={loading}
+          >
+            {nft => (nft ?
+              <NftCard
+                name={nft?.metadata?.name}
+                images={[nft?.previewLink || nft?.metadata?.imageURL]}
+                collectionName={nft?.collection?.name}
+                isOwnedByMe={nft?.isOwnedByMe}
+                listings={nft?.listings?.items || []}
+                nft={nft}
+                fallbackImage={nft?.metadata?.imageURL}
+                contractAddr={nft?.contract}
+                tokenId={nft?.tokenId}
+                redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
+                customBackground={tileBackgroundSecondary}
+                nftsDescriptionsVisible={draftNftsDescriptionsVisible}
+                preventDefault={editMode} />
+              : <CardLoader.Loader />)}
+          </NFTGalleryListRC>
+        }
       </div>
     );
   };
