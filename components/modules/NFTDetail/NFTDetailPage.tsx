@@ -51,7 +51,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       refreshNft(nft?.id);
-    }, 5000);
+    }, 1000);
     return () => clearTimeout(delayDebounceFn);
   }, [nft?.id, refreshNft]);
 
