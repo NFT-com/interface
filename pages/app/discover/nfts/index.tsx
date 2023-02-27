@@ -73,7 +73,8 @@ export default function CollectionsPage() {
               redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
               description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
               customBackground={'white'}
-              lightModeForced/>
+              lightModeForced
+              skipNftQuery/>
           );
         })}
       </div>

@@ -58,6 +58,7 @@ export interface NftCardProps {
   nftsDescriptionsVisible?: boolean;
   preventDefault?: boolean;
   fallbackImage?: string;
+  skipNftQuery?: boolean;
 }
 
 export function NftCard(props: NftCardProps) {
@@ -66,7 +67,7 @@ export function NftCard(props: NftCardProps) {
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
   const { getByContractAddress } = useSupportedCurrencies();
-  const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nfts is passed by setting tokenId to null
+  const { data: nft } = useNftQuery(props.contractAddr, props.skipNftQuery ?? (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nfts is passed by setting tokenId to null
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
