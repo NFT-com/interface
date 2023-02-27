@@ -362,7 +362,7 @@ export function ListingCheckout() {
           <Button
             size={ButtonSize.LARGE}
             label={'Start Listing'}
-            disabled={!allListingsConfigured}
+            disabled={!allListingsConfigured()}
             onClick={async () => {
               await prepareListings();
               if(allListingsFail){
