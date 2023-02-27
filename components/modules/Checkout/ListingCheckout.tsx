@@ -77,7 +77,7 @@ export function ListingCheckout() {
   },[setDuration, toList]);
 
   useEffect(() => {
-    setNotAllListingsConfigured(!allListingsConfigured);
+    setNotAllListingsConfigured(!allListingsConfigured());
   }, [allListingsConfigured]);
      
   const { data: NFTCOMProtocolFee } = useSWR(
