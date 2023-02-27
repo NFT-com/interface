@@ -2,6 +2,8 @@ import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
+import CardLoader from 'components/modules/Profile/CardLoader';
+import NFTGalleryListRC from 'components/modules/Profile/NFTGalleryListRC';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
@@ -27,6 +29,7 @@ export default function CollectionsPage() {
   const [nftSData, setNftsData] = useState([]);
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [nftsRC, setNftsRC] = useState([]);
   const prevFilters = usePrevious(nftsResultsFilterBy);
 
   useEffect(() => {
@@ -56,6 +59,12 @@ export default function CollectionsPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
+
+  useEffect(() => {
+    const nftsDocument = nftSData.map(item => item.document);
+    setNftsRC([...nftsDocument]);
+  },[nftSData]);
+
   const showNftView = () => {
     return (
       <div className={tw(
@@ -74,33 +83,44 @@ export default function CollectionsPage() {
               description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
               customBackground={'white'}
               lightModeForced
-              skipNftQuery/>
+              skipNftQuery
+            />
           );
         })}
         {
           <NFTGalleryListRC
             nfts={nftsRC}
-            hasMore={hasNextPage}
-            isFetching={isFetchingNextPage}
-            fetchNfts={fetchNextPage}
-            draftLayoutType={draftLayoutType}
+            // hasMore={hasNextPage}
+            hasMore={nftSData.length < found}
+            // isFetching={isFetchingNextPage}
+            isFetching={loading}
+            // fetchNfts={fetchNextPage}
+            fetchNfts={() => setPage(page + 1)}
             profileLoading={loading}
           >
             {nft => (nft ?
               <NftCard
                 name={nft?.metadata?.name}
+                tokenId={nft?.tokenId}
+                contractAddr={nft?.contract}
                 images={[nft?.previewLink || nft?.metadata?.imageURL]}
                 collectionName={nft?.collection?.name}
                 isOwnedByMe={nft?.isOwnedByMe}
                 listings={nft?.listings?.items || []}
                 nft={nft}
-                fallbackImage={nft?.metadata?.imageURL}
-                contractAddr={nft?.contract}
-                tokenId={nft?.tokenId}
-                redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
-                customBackground={tileBackgroundSecondary}
-                nftsDescriptionsVisible={draftNftsDescriptionsVisible}
-                preventDefault={editMode} />
+                redirectTo={`/app/nft/${nft?.contractAddr}/${nft?.tokenId}`}
+                description={nft?.nftDescription ? nft?.nftDescription.slice(0,50) + '...': '' }
+                customBackground={'white'}
+                lightModeForced
+                skipNftQuery
+                // fallbackImage={nft?.metadata?.imageURL}
+                // contractAddr={nft?.contract}
+                // tokenId={nft?.tokenId}
+                // redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
+                // customBackground={tileBackgroundSecondary}
+                // nftsDescriptionsVisible={draftNftsDescriptionsVisible}
+                // preventDefault={editMode} 
+              />
               : <CardLoader.Loader />)}
           </NFTGalleryListRC>
         }

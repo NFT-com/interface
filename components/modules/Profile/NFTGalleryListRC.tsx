@@ -37,7 +37,7 @@ interface NFTGalleryListRCProps<Nft> {
   nftWidth?: number;
   nftHeight?: number;
   children: NftRenderer<Nft>;
-  draftLayoutType: string;
+  draftLayoutType?: string;
   profileLoading: boolean;
 }
 
