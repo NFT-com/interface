@@ -269,7 +269,7 @@ export function NftCard(props: NftCardProps) {
                     <p className="p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">
                       {props.name}
                     </p>
-                    {props.nft?.isGKMinted || nftProfileData?.profile?.isGKMinted &&
+                    {(props.nft?.isGKMinted ?? nftProfileData?.profile?.isGKMinted) &&
                         <div className='h-4 w-4 minlg:h-6 minlg:w-6 ml-2 min-w-[24px] flex items-center'>
                           <GK />
                         </div>
