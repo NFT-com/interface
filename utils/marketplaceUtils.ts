@@ -96,7 +96,7 @@ export function getTotalMarketplaceFeesUSD(
       );
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 18)));
-    } else if (hasGk && stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
+    } else if (hasGk || stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
       return 0;
     } else {
       const fee = BigNumber.from(multiplyBasisPoints(stagedPurchase?.price ?? 0, 250));
