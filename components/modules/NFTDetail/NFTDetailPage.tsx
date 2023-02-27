@@ -46,8 +46,14 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
 
   useEffect(() => {
     refreshNftOrders(nft?.id);
-    refreshNft(nft?.id);
-  }, [refreshNftOrders, nft, refreshNft]);
+  }, [nft?.id, refreshNftOrders]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      refreshNft(nft?.id);
+    }, 1000);
+    return () => clearTimeout(delayDebounceFn);
+  }, [nft?.id, refreshNft]);
 
   const [selectedDetailTab, setSelectedDetailTab] = useState(0);
 
