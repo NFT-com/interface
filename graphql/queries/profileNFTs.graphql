@@ -11,6 +11,7 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
       contract
       id
       tokenId
+      isGKMinted
       type
       collection {
           contract

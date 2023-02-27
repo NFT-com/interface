@@ -12,7 +12,6 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
-import { useHasGk } from 'hooks/useHasGk';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
@@ -70,9 +69,8 @@ export function NftCard(props: NftCardProps) {
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
-  const hasGk = useHasGk();
   const isOwnedByMe = props?.isOwnedByMe || (nft?.wallet?.address ?? nft?.owner) === currentAddress;
-  const { profileData: nftProfileData } = useProfileQuery(props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null);
+  const { profileData: nftProfileData } = useProfileQuery(!props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts is passed by setting null
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
@@ -271,7 +269,7 @@ export function NftCard(props: NftCardProps) {
                     <p className="p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">
                       {props.name}
                     </p>
-                    {nftProfileData?.profile?.isGKMinted &&
+                    {(props.nft?.isGKMinted ?? nftProfileData?.profile?.isGKMinted) &&
                         <div className='h-4 w-4 minlg:h-6 minlg:w-6 ml-2 min-w-[24px] flex items-center'>
                           <GK />
                         </div>
