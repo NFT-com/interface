@@ -10,5 +10,5 @@ jobs:
       - name: daily cron job
         run: |
           curl --request POST \
-          --url '${{ secrets.NEXT_PUBLIC_BASE_URL }}api/x-vercel-reval-key' \
-          --header 'Authorization: Bearer ${{ secrets.CONTENTFUL_REVALIDATE_SECRET }}'
+          --url '${{ secrets.NEXT_PUBLIC_BASE_URL }}api/revalidate' \
+          --header 'Authorization: x-vercel-reval-key ${{ secrets.CONTENTFUL_REVALIDATE_SECRET }}'
