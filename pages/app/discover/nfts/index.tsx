@@ -45,7 +45,7 @@ export default function CollectionsPage() {
         sort_by: 'score:desc',
         query_by: '',
         filter_by: nftsResultsFilterBy,
-        per_page: 20,
+        per_page: 100,
         page: page,
       }).then((results) => {
         setLoading(false);
@@ -62,69 +62,60 @@ export default function CollectionsPage() {
 
   useEffect(() => {
     const nftsDocument = nftSData.map(item => item.document);
+    console.log('nftsDocument fdo', nftsDocument);
     setNftsRC([...nftsDocument]);
   },[nftSData]);
 
   const showNftView = () => {
     return (
-      <div className={tw(
-        'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-        sideNavOpen ? 'minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2 minmd:grid-cols-2 grid-cols-1 w-full' : 'minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1 w-full')}>
-        {nftSData && nftSData?.length > 0 && nftSData?.map((item, index) => {
-          return (
-            <NftCard
-              key={index}
-              name={item.document.nftName}
-              tokenId={item.document.tokenId}
-              contractAddr={item.document.contractAddr}
-              images={[item.document.imageURL]}
-              collectionName={item.document.contractName}
-              redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-              description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-              customBackground={'white'}
-              lightModeForced
-              skipNftQuery
-            />
-          );
-        })}
-        {
-          <NFTGalleryListRC
-            nfts={nftsRC}
-            // hasMore={hasNextPage}
-            hasMore={nftSData.length < found}
-            // isFetching={isFetchingNextPage}
-            isFetching={loading}
-            // fetchNfts={fetchNextPage}
-            fetchNfts={() => setPage(page + 1)}
-            profileLoading={loading}
-          >
-            {nft => (nft ?
-              <NftCard
-                name={nft?.metadata?.name}
-                tokenId={nft?.tokenId}
-                contractAddr={nft?.contract}
-                images={[nft?.previewLink || nft?.metadata?.imageURL]}
-                collectionName={nft?.collection?.name}
-                isOwnedByMe={nft?.isOwnedByMe}
-                listings={nft?.listings?.items || []}
-                nft={nft}
-                redirectTo={`/app/nft/${nft?.contractAddr}/${nft?.tokenId}`}
-                description={nft?.nftDescription ? nft?.nftDescription.slice(0,50) + '...': '' }
-                customBackground={'white'}
-                lightModeForced
-                skipNftQuery
-                // fallbackImage={nft?.metadata?.imageURL}
-                // contractAddr={nft?.contract}
-                // tokenId={nft?.tokenId}
-                // redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
-                // customBackground={tileBackgroundSecondary}
-                // nftsDescriptionsVisible={draftNftsDescriptionsVisible}
-                // preventDefault={editMode} 
-              />
-              : <CardLoader.Loader />)}
-          </NFTGalleryListRC>
-        }
-      </div>
+    // <div className={tw(
+    //   'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
+    //   sideNavOpen ? 'minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2 minmd:grid-cols-2 grid-cols-1 w-full' : 'minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1 w-full')}>
+    //   {nftSData && nftSData?.length > 0 && nftSData?.map((item, index) => {
+    //     return (
+    //       <NftCard
+    //         key={index}
+    //         name={item.document.nftName}
+    //         tokenId={item.document.tokenId}
+    //         contractAddr={item.document.contractAddr}
+    //         images={[item.document.imageURL]}
+    //         collectionName={item.document.contractName}
+    //         redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+    //         description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
+    //         customBackground={'white'}
+    //         lightModeForced
+    //         skipNftQuery
+    //       />
+    //     );
+    //   })}
+    // </div>
+      
+      <NFTGalleryListRC
+        nfts={nftsRC}
+        // hasMore={hasNextPage}
+        hasMore={nftSData.length < found}
+        // isFetching={isFetchingNextPage}
+        isFetching={loading}
+        // fetchNfts={fetchNextPage}
+        fetchNfts={() => setPage(page + 1)}
+        profileLoading={loading}
+      >
+        {nft => (nft ?
+          <NftCard
+            name={nft?.name}
+            tokenId={nft?.tokenId}
+            contractAddr={nft?.contract}
+            images={[nft?.imageURL]}
+            collectionName={nft?.contractName}
+            redirectTo={`/app/nft/${nft?.contractAddr}/${nft?.tokenId}`}
+            description={nft?.nftDescription ? nft?.nftDescription.slice(0,50) + '...': '' }
+            customBackground={'white'}
+            lightModeForced
+            skipNftQuery
+          />
+          : <CardLoader.Loader />)}
+      </NFTGalleryListRC>
+      
     );
   };
   return(

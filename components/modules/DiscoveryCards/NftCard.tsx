@@ -9,7 +9,7 @@ import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocol
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
+// import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { useHasGk } from 'hooks/useHasGk';
@@ -75,7 +75,7 @@ export function NftCard(props: NftCardProps) {
   const isOwnedByMe = props?.isOwnedByMe || (nft?.wallet?.address ?? nft?.owner) === currentAddress;
   const { profileData: nftProfileData } = useProfileQuery(props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null);
   const chainId = useDefaultChainId();
-  const ethPriceUSD = useEthPriceUSD();
+  const ethPriceUSD = 1641.91; //useEthPriceUSD();
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
