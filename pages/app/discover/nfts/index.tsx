@@ -3,7 +3,7 @@ import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import CardLoader from 'components/modules/Profile/CardLoader';
-import NFTGalleryListRC from 'components/modules/Profile/NFTGalleryListRC';
+import NFTGalleryListVirtualized from 'components/modules/Profile/NFTGalleryListVirtualized';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
@@ -88,7 +88,7 @@ export default function CollectionsPage() {
     //   })}
     // </div>
       
-      <NFTGalleryListRC
+      <NFTGalleryListVirtualized
         nfts={nftsVirtualized}
         // hasMore={hasNextPage}
         hasMore={nftSData.length < found}
@@ -112,7 +112,7 @@ export default function CollectionsPage() {
             skipNftQuery
           />
           : <CardLoader.Loader />)}
-      </NFTGalleryListRC>
+      </NFTGalleryListVirtualized>
       
     );
   };

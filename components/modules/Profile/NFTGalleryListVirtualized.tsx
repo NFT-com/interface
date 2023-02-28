@@ -28,7 +28,7 @@ const WindowScroller = _WindowScroller as unknown as FC<WindowScrollerProps>;
 
 type NftRenderer<Nft> = (nft?: Nft) => React.ReactNode;
 
-interface NFTGalleryListRCProps<Nft> {
+interface NFTGalleryListVirtualizedProps<Nft> {
   nfts?: Nft[];
   fetchNfts?: () => void;//Function;
   hasMore?: boolean;
@@ -41,7 +41,7 @@ interface NFTGalleryListRCProps<Nft> {
   profileLoading: boolean;
 }
 
-function NFTGalleryListRC<Nft>({
+function NFTGalleryListVirtualized<Nft>({
   nftWidth = 200,
   nftHeight = 400,
   hasMore = false,
@@ -52,7 +52,7 @@ function NFTGalleryListRC<Nft>({
   children,
   draftLayoutType = 'Default',
   profileLoading = false
-}: NFTGalleryListRCProps<Nft>) {
+}: NFTGalleryListVirtualizedProps<Nft>) {
   const infiniteLoaderRef = useRef<InfiniteLoaderProps>(null);
 
   useEffect(() => {
@@ -164,4 +164,4 @@ function NFTGalleryListRC<Nft>({
   );
 }
 
-export default NFTGalleryListRC;
+export default NFTGalleryListVirtualized;
