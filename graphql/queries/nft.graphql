@@ -16,6 +16,7 @@ query Nft(
     type
     owner
     previewLink
+    isGKMinted
     wallet {
       address
       chainId

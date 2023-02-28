@@ -1,0 +1,14 @@
+name: daily cron job
+on:
+  schedule:
+    # 5pm UTC -> 12pm EST
+    - cron: '0 17 * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: daily cron job
+        run: |
+          curl --request POST \
+          --url '${{ secrets.NEXT_PUBLIC_BASE_URL }}api/revalidate' \
+          --header 'x-vercel-reval-key: ${{ secrets.CONTENTFUL_REVALIDATE_SECRET }}'
