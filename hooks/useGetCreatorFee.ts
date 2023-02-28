@@ -6,11 +6,11 @@ import { ExternalProtocol } from 'types';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
-import { BigNumber as BN } from 'bignumber.js'
+import { BigNumber as BN } from 'bignumber.js';
 import { BigNumber } from 'ethers';
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
-import { useNetwork } from 'wagmi';;
+import { useNetwork } from 'wagmi';
 
 interface RoyaltyObject {
   [key: string]: number;
@@ -64,7 +64,7 @@ const getCreatorFeeFromListing = (
     }
   } else {
     const item = itemParam as StagedListing;
-    return { royalty: 0, marketplace: item.targets[0].protocol };
+    return { royalty: 0, marketplace: item?.targets[0]?.protocol };
   }
 };
 
