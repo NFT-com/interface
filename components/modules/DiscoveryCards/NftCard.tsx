@@ -73,7 +73,7 @@ export function NftCard(props: NftCardProps) {
   const isOwnedByMe = props?.isOwnedByMe || (nft?.wallet?.address ?? nft?.owner) === currentAddress;
   const { profileData: nftProfileData } = useProfileQuery(!props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts is passed by setting null
   const chainId = useDefaultChainId();
-  const ethPriceUSD = 1641.91; //useEthPriceUSD();
+  const ethPriceUSD = 1641.91; //useEthPriceUSD(); // adjustment for testing virtualization / 02/28/23
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();

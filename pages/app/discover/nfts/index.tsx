@@ -29,7 +29,7 @@ export default function CollectionsPage() {
   const [nftSData, setNftsData] = useState([]);
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [nftsRC, setNftsRC] = useState([]);
+  const [nftsVirtualized, setNftsVirtualized] = useState([]);
   const prevFilters = usePrevious(nftsResultsFilterBy);
 
   useEffect(() => {
@@ -52,6 +52,10 @@ export default function CollectionsPage() {
         setTotalFound(results.found);
         page > 1 ? setNftsData([...nftSData,...results.hits]) : setNftsData(results.hits);
         filters.length < 1 && !isNullOrEmpty(results?.facet_counts) && setFilters([...results.facet_counts]);
+
+        // adjustment for virtualization / 02/28/23
+        const nftsVirtualizedMap = nftSData.map(item => item.document);
+        page > 1 ? setNftsVirtualized([...nftsVirtualized,...nftsVirtualizedMap]) : setNftsVirtualized(nftsVirtualizedMap);
       });
     }
     return () => {
@@ -59,12 +63,6 @@ export default function CollectionsPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
-
-  useEffect(() => {
-    const nftsDocument = nftSData.map(item => item.document);
-    console.log('nftsDocument fdo', nftsDocument);
-    setNftsRC([...nftsDocument]);
-  },[nftSData]);
 
   const showNftView = () => {
     return (
@@ -91,7 +89,7 @@ export default function CollectionsPage() {
     // </div>
       
       <NFTGalleryListRC
-        nfts={nftsRC}
+        nfts={nftsVirtualized}
         // hasMore={hasNextPage}
         hasMore={nftSData.length < found}
         // isFetching={isFetchingNextPage}
