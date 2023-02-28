@@ -38,7 +38,6 @@ import { rainbowLight } from 'styles/RainbowKitThemes';
 import { v4 as uuid } from 'uuid';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { goerli, mainnet } from 'wagmi/chains';
-import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 // import { safeWallet } from 'wallets/SafeWallet';
 
@@ -77,12 +76,21 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
   const getLayout = Component.getLayout ?? ((page) => page);
 
   const { chains, provider } = useMemo(() => {
-    const keys = process?.env?.INFURA_KEY_SET?.split(',');
     return configureChains(
       getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
         [mainnet, goerli] :
         [mainnet],
-      [infuraProvider({ apiKey: keys && keys[Math.floor(Math.random() * keys.length)] })]
+      [
+        jsonRpcProvider({
+          rpc: (chain) => {
+            const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
+            url.searchParams.set('chainId', chain?.id.toString());
+            return {
+              http: url.toString(),
+            };
+          }
+        }),
+      ]
     );
   }, []);
 
