@@ -23,8 +23,7 @@
   "settings": {
     "react": {
       "version": "detect"
-    },
-    "caseSensitive": false
+    }
   },
   "ignorePatterns": [
     "**/generated/**",
