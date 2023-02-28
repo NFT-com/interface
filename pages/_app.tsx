@@ -7,7 +7,6 @@ import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurch
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { getBaseUrl, getChainIdString } from 'utils/helpers';
 
 import {
   AvatarComponent,
@@ -39,6 +38,7 @@ import { rainbowLight } from 'styles/RainbowKitThemes';
 import { v4 as uuid } from 'uuid';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { goerli, mainnet } from 'wagmi/chains';
+import { infuraProvider } from 'wagmi/providers/infura';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 // import { safeWallet } from 'wallets/SafeWallet';
 
@@ -77,21 +77,12 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
   const getLayout = Component.getLayout ?? ((page) => page);
 
   const { chains, provider } = useMemo(() => {
+    const keys = process?.env?.INFURA_KEY_SET?.split(',');
     return configureChains(
       getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
         [mainnet, goerli] :
         [mainnet],
-      [
-        jsonRpcProvider({
-          rpc: (chain) => {
-            const url = new URL(getBaseUrl() + 'api/ethrpc');
-            url.searchParams.set('chainId', getChainIdString(chain?.id));
-            return {
-              http: url.toString(),
-            };
-          }
-        }),
-      ]
+      [infuraProvider({ apiKey: keys && keys[Math.floor(Math.random() * keys.length)] })]
     );
   }, []);
 
