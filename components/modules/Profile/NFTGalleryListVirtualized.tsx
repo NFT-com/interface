@@ -43,7 +43,7 @@ interface NFTGalleryListVirtualizedProps<Nft> {
 
 function NFTGalleryListVirtualized<Nft>({
   nftWidth = 200,
-  nftHeight = 400,
+  nftHeight = 500,
   hasMore = false,
   nfts = [],
   reset = false,
@@ -62,9 +62,7 @@ function NFTGalleryListVirtualized<Nft>({
   }, [reset, infiniteLoaderRef]);
 
   const loadMoreRows = async () => {
-    console.log('fetching from infinte loading fdo 2');
     if (!isFetching) {
-      console.log('fetching from infinte loading fdo 1');
       fetchNfts();
     }
   };
@@ -121,7 +119,7 @@ function NFTGalleryListVirtualized<Nft>({
                           nftWidth,
                           nfts.length
                         ).map(nftIndex => nfts[nftIndex]);
-
+                        
                         return (
                           <div
                             // role='list'

@@ -49,7 +49,7 @@ export default function CollectionsPage() {
         page: page,
       }).then((results) => {
         setLoading(false);
-        setTotalFound(results.found);
+        setTotalFound(results?.found);
         page > 1 ? setNftsData([...nftSData,...results.hits]) : setNftsData(results.hits);
         filters.length < 1 && !isNullOrEmpty(results?.facet_counts) && setFilters([...results.facet_counts]);
 

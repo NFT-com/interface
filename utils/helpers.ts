@@ -334,7 +334,7 @@ export function createRowIndices(
   nftsAmount: number
 ) {
   const result = [];
-  const maxNftsPerRow = getMaxNftsPerRow(rowWidth, nftWidth);
+  const maxNftsPerRow = 6;//getMaxNftsPerRow(rowWidth, nftWidth);
   const startIndex = rowIndex * maxNftsPerRow;
 
   for (
