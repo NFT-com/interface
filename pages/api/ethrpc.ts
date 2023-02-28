@@ -9,8 +9,6 @@ const ethRpcHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     chainId = process.env.NEXT_PUBLIC_CHAIN_ID;
   }
 
-  res.setHeader('Cache-Control', 's-maxage=10'); // 10 sec cache
-
   const INFURA_PREFIXES = {
     '1': 'mainnet',
     '5': 'goerli',
