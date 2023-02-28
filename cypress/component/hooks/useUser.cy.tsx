@@ -9,23 +9,15 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { MockConnector } from '@wagmi/core/connectors/mock';
 import { configureChains, useDisconnect, WagmiConfig } from 'wagmi';
 import { goerli, mainnet } from 'wagmi/chains';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { infuraProvider } from 'wagmi/providers/infura';
+
+const keys = process?.env?.INFURA_KEY_SET?.split(',');
 
 const { chains } = configureChains(
   getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
     [mainnet, goerli] :
     [mainnet],
-  [
-    jsonRpcProvider({
-      rpc: (chain) => {
-        const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
-        url.searchParams.set('chainId', String(chain?.id));
-        return {
-          http: url.toString(),
-        };
-      }
-    }),
-  ]
+  [infuraProvider({ apiKey: keys && keys[Math.floor(Math.random() * keys.length)] })]
 );
 
 const TestComponent = () => {

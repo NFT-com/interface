@@ -11,23 +11,15 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { ethers } from 'ethers';
 import { configureChains, WagmiConfig } from 'wagmi';
 import { goerli, mainnet } from 'wagmi/chains';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { infuraProvider } from 'wagmi/providers/infura';
+
+const keys = process?.env?.INFURA_KEY_SET?.split(',');
 
 const { chains } = configureChains(
   getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
     [mainnet, goerli] :
     [mainnet],
-  [
-    jsonRpcProvider({
-      rpc: (chain) => {
-        const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
-        url.searchParams.set('chainId', chain?.id.toString());
-        return {
-          http: url.toString(),
-        };
-      }
-    }),
-  ]
+  [infuraProvider({ apiKey: keys && keys[Math.floor(Math.random() * keys.length)] })]
 );
 
 // TODO: re-enable this test when we can mock the useSupportedCurrencies hook.
