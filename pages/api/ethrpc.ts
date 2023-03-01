@@ -1,4 +1,7 @@
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
+
+import { ALCHEMY_KEYS, ALCHEMY_PREFIXES } from './alchemynft';
 
 import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -35,8 +38,11 @@ const ethRpcHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   ];
 
   const infuraAPIKey = keys[Math.floor(Math.random() * keys.length)];
+  const alchemyAPIKey = ALCHEMY_KEYS[chainId as string];
 
-  const apiUrl = `https://${INFURA_PREFIXES[chainId as string]}.infura.io/v3/${infuraAPIKey}`;
+  const apiUrl = getEnvBool(Doppler.NEXT_PUBLIC_INFURA_ENABLED) ?
+    `https://${INFURA_PREFIXES[chainId as string]}.infura.io/v3/${infuraAPIKey}` :
+    `https://eth-${ALCHEMY_PREFIXES[chainId as string]}.alchemyapi.io/v2/${alchemyAPIKey}`;
 
   try {
     const result = await fetch(apiUrl, {
