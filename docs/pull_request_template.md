@@ -1,16 +1,17 @@
 # Describe your changes
 
-
 - 
+
 
 # Associated JIRA task link
 
-
 - LINK-TO-JIRA-TASK
+
+# Routes affected by changes
+## example: '/app/list'
 
 
 # Checklist before requesting a review
-
 
 - [ ] I have performed a self-review of my code
     ## Describe your self-review process (if applicable):
@@ -25,10 +26,7 @@
          -
 
 # Prior Work
-
-
 ## If this is a follow-up PR to existing work, link the relevant PR(s) here (or N/A if not a follow-up)
-
 
 - Link(s) to Prior Work: 
 
