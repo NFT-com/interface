@@ -3,7 +3,7 @@ import { useActivitiesForAddressQuery } from 'graphql/hooks/useActivitiesForAddr
 import { useUpdateReadByIdsMutation } from 'graphql/hooks/useUpdateReadByIdsMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { usePaginator } from 'hooks/usePaginator';
-import { filterNulls } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 
 import ActivityTableRow from './ActivityTableRow';
 
@@ -43,6 +43,10 @@ export default function ActivityPages() {
       updateReadbyIds({ ids: [] });
     }
   }, [updateReadbyIds, currentAddress, activityData]);
+  
+  useEffect(() => {
+    setActivityData([]);
+  }, [currentAddress]);
 
   useEffect(() => {
     if (
@@ -56,9 +60,15 @@ export default function ActivityPages() {
       setLastAddedPage(loadedActivitiesNextPage?.getActivities?.pageInfo?.firstCursor);
       setTotalCount(loadedActivitiesNextPage?.getActivities?.totalItems);
     } else {
-      setTotalCount(loadedActivitiesNextPage?.getActivities?.totalItems || 0);
+      if(loadedActivitiesNextPage?.getActivities?.items?.length > 0 && isNullOrEmpty(activityData)){
+        setActivityData(filterNulls(loadedActivitiesNextPage?.getActivities?.items));
+        setLastAddedPage(loadedActivitiesNextPage?.getActivities?.pageInfo?.firstCursor);
+        setTotalCount(loadedActivitiesNextPage?.getActivities?.totalItems);
+      } else {
+        setTotalCount(loadedActivitiesNextPage?.getActivities?.totalItems || 0);
+      }
     }
-  }, [lastAddedPage, setTotalCount, activityData, loadedActivitiesNextPage, afterCursor, loadedActivitiesNextPage?.getActivities?.items, currentAddress]);
+  }, [lastAddedPage, setTotalCount, activityData, loadedActivitiesNextPage, afterCursor, loadedActivitiesNextPage?.getActivities?.items]);
   
   return (
     <div className='flex flex-col justify-between minlg:pt-28 px-4 font-grotesk'>

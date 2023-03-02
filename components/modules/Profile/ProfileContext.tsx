@@ -75,6 +75,7 @@ export interface ProfileContextType {
   currentLayoutType: ProfileLayoutType;
   searchQuery: string;
   setSearchQuery: (val: string) => void;
+  debouncedSearchQuery: string;
 }
 
 // initialize with default values
@@ -124,7 +125,8 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   currentNftsDescriptionsVisible: true,
   currentLayoutType: ProfileLayoutType.Default,
   searchQuery: null,
-  setSearchQuery: () => null
+  setSearchQuery: () => null,
+  debouncedSearchQuery: null
 });
 
 export interface ProfileContextProviderProps {
@@ -353,7 +355,7 @@ export function ProfileContextProvider(
   useEffect(() => {
     if(debouncedSearch !== null){
       setAfterCursor('');
-      setPubliclyVisibleNftsNoEdit(null);
+      setPubliclyVisibleNftsNoEdit([]);
     }
   }, [debouncedSearch]);
 
@@ -638,7 +640,8 @@ export function ProfileContextProvider(
     currentNftsDescriptionsVisible,
     currentLayoutType,
     searchQuery,
-    setSearchQuery
+    setSearchQuery,
+    debouncedSearchQuery: debouncedSearch
   }}>
     {props.children}
   </ProfileContext.Provider>;

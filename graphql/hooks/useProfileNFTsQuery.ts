@@ -4,6 +4,7 @@ import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
 
 import { useAtom } from 'jotai';
+import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
 
@@ -24,6 +25,7 @@ export function useProfileNFTsQuery(
 ): ProfileNFTsQueryData {
   const sdk = useGraphQLSDK();
   const [savedCount,] = useAtom(profileSaveCounter);
+  const [loading, setLoading] = useState(false);
   
   const keyString = 'ProfileNFTsQuery' +
     profileId +
@@ -36,6 +38,7 @@ export function useProfileNFTsQuery(
     if (isNullOrEmpty(profileId)) {
       return null;
     }
+    setLoading(true);
     const result = await sdk.ProfileNFTs({
       input: {
         profileId,
@@ -44,6 +47,7 @@ export function useProfileNFTsQuery(
         query
       }
     });
+    setLoading(false);
     return result;
   }, {
     revalidateOnFocus: false,
@@ -54,7 +58,7 @@ export function useProfileNFTsQuery(
     nfts: data?.updateNFTsForProfile.items,
     pageInfo: data?.updateNFTsForProfile.pageInfo,
     totalItems: data?.updateNFTsForProfile.totalItems,
-    loading: data == null,
+    loading: loading,
     mutate: () => {
       mutate(keyString);
     },

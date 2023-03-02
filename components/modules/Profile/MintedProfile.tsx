@@ -53,6 +53,7 @@ export function MintedProfile(props: MintedProfileProps) {
     userIsAdmin,
     publiclyVisibleNftsNoEdit,
     loading,
+    debouncedSearchQuery
   } = useContext(ProfileContext);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
@@ -311,7 +312,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     )}
                     >
                       <div className="mx-auto text-base minlg:text-lg minxl:text-xl w-3/5 text-center minlg:text-left font-bold">
-                        <div
+                        {isNullOrEmpty(debouncedSearchQuery) && <div
                           onClick={() => {
                             if (addressOwner !== currentAddress) {
                               window.open(
@@ -324,21 +325,29 @@ export function MintedProfile(props: MintedProfileProps) {
                         >
                           {addressOwner === currentAddress ? 'You own this profile.' :'This profile is owned by ' + shortenAddress(addressOwner)}
                         </div>
+                        }
                       </div>
+
                       <div className="mx-auto text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col">
-                        <div className="text-sm minxl:text-lg mb-8 minlg:mb-0 mt-8 w-full text-center">
-                          {addressOwner === currentAddress ?
-                            <p className='mx-8'>
+                        {isNullOrEmpty(debouncedSearchQuery) ?
+                          <div className="text-sm minxl:text-lg mb-8 minlg:mb-0 mt-8 w-full text-center">
+                            {addressOwner === currentAddress ?
+                              <p className='mx-8'>
                         As we roll out new features, you can return here for the latest NFT.com news, discover{' '}
                         other minted Genesis Keys and profiles in our community, and more.{' '}
                         We have so much in store!
-                            </p>
-                            :
-                            <p className='mx-8'>
+                              </p>
+                              :
+                              <p className='mx-8'>
                         Do you want your own NFT.com Profile?<br />
                         Learn how to claim a profile for your own by visiting either NFT.com or our Support knowledge base.
-                            </p>}
-                        </div>
+                              </p>
+                            }
+                          </div> :
+                          <div className="text-sm minxl:text-lg mb-8 minlg:mb-0 mt-8 w-full text-center">
+                            <p className='mx-8'>No NFTs found, please try again.</p>
+                          </div>
+                        }
                         <div className="mt-10 minxl:mt-24 w-full flex justify-center mb-24 px-4 minmd:px-0">
                           <LinksToSection isAddressOwner={addressOwner === currentAddress}/>
                         </div>
