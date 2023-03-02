@@ -113,43 +113,35 @@ export default function CollectionsPage() {
     const columnCount = 5;//Math.floor(width / cardWidth);
     const itemData = createItemData({ nftSData, columnCount });
     return (
-      <div className='grid-cols-1 w-full'
-        style={{
-          minHeight: '100vh',
-          backgroundColor: 'inherit',
-          position: 'sticky',
-          top: '0px',
-        }}>
-        <AutoSizer>
-          {({ width }) => (
-            <InfiniteLoader
-              isItemLoaded={isItemLoaded}
-              itemCount={1000}
-              loadMoreItems={ () => setPage(page + 1)}
-              threshold={10}
-            >
-              {({ onItemsRendered, ref }) => (
-                <FixedSizeList
-                  className="grid no-scrollbar"
-                  width={width}
-                  height={871}
-                  itemCount={1000}
-                  itemData={itemData}
-                  itemSize={600}
-                  overscanRowCount={3}
-                  onItemsRendered={(stuff) => {
-                    console.log('stuff fdo', stuff);
-                    setPage(page + 1);
-                  }}
-                  ref={ref}
-                >
-                  {Row}
-                </FixedSizeList>
-              )}
-            </InfiniteLoader>
-          )}
-        </AutoSizer>
-      </div>
+      <AutoSizer>
+        {({ width }) => (
+          <InfiniteLoader
+            isItemLoaded={isItemLoaded}
+            itemCount={1000}
+            loadMoreItems={ () => setPage(page + 1)}
+            threshold={10}
+          >
+            {({ onItemsRendered, ref }) => (
+              <FixedSizeList
+                className="grid no-scrollbar"
+                width={width}
+                height={871}
+                itemCount={1000}
+                itemData={itemData}
+                itemSize={600}
+                overscanRowCount={3}
+                onItemsRendered={(stuff) => {
+                  console.log('stuff fdo', stuff);
+                  setPage(page + 1);
+                }}
+                ref={ref}
+              >
+                {Row}
+              </FixedSizeList>
+            )}
+          </InfiniteLoader>
+        )}
+      </AutoSizer>
     );
   };
   return(
@@ -189,7 +181,13 @@ export default function CollectionsPage() {
                     <div className={'hidden minlg:block'}>
                       <SideNav onSideNav={() => null} filtersData={filters}/>
                     </div>
-                    <div>
+                    <div className='grid-cols-1 w-full'
+                      style={{
+                        minHeight: '100vh',
+                        backgroundColor: 'inherit',
+                        position: 'sticky',
+                        top: '0px',
+                      }}>
                       {
                         !loading && nftSData?.length === 0
                           ? (
