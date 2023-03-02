@@ -5,7 +5,7 @@ import { Doppler, getEnv } from 'utils/env';
 
 import { useContext } from 'react';
 import useSWR, { mutate } from 'swr';
-import { useAccount, useNetwork } from 'wagmi';
+import { Address, useNetwork } from 'wagmi';
 
 export interface AssetsData {
   data: MyNfTsQuery;
@@ -14,20 +14,19 @@ export interface AssetsData {
   mutate: () => void;
 }
 
-export function useMyAssetsQuery(first: number, afterCursor: string): AssetsData {
+export function useMyAssetsQuery(first: number, afterCursor: string, currentAddress: Address): AssetsData {
   const sdk = useGraphQLSDK();
   const { signed } = useContext(GraphQLContext);
-  const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const keyString = 'MyAssetsQuery' +
     currentAddress +
-    String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) +
+    chain?.id +
     signed +
     first +
     afterCursor;
 
   const { data } = useSWR(keyString, async () => {
-    if (!currentAddress) {
+    if (!currentAddress || !signed) {
       return { myNFTs: { items: [], totalItems: 0, loading: false } };
     }
     const result: MyNfTsQuery = await sdk.MyNFTs({

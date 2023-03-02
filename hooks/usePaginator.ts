@@ -25,11 +25,11 @@ export function usePaginator(initialPageSize: number): Paginator {
 
   const setTotalCount = useCallback(
     (totalCount: number) => {
-      if (totalCount != null && totalCount !== 0 && cachedTotalCount === 1) {
+      if (totalCount != null && totalCount !== 0) {
         setCachedTotalCount(totalCount);
       }
     },
-    [cachedTotalCount]
+    []
   );
 
   const nextPage = useCallback(
