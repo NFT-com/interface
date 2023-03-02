@@ -10,9 +10,12 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import memoize from 'memoize-one';
 import { SlidersHorizontal, X } from 'phosphor-react';
 import NoActivityIcon from 'public/no_activity.svg';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { areEqual, FixedSizeGrid as Grid, FixedSizeList } from 'react-window';
 function usePrevious(value) {
   const ref = useRef(value);
   useEffect(() => {
@@ -29,7 +32,6 @@ export default function CollectionsPage() {
   const [nftSData, setNftsData] = useState([]);
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [nftsVirtualized, setNftsVirtualized] = useState([]);
   const prevFilters = usePrevious(nftsResultsFilterBy);
 
   useEffect(() => {
@@ -45,17 +47,13 @@ export default function CollectionsPage() {
         sort_by: 'score:desc',
         query_by: '',
         filter_by: nftsResultsFilterBy,
-        per_page: 100,
+        per_page: 20,
         page: page,
       }).then((results) => {
         setLoading(false);
         setTotalFound(results?.found);
         page > 1 ? setNftsData([...nftSData,...results.hits]) : setNftsData(results.hits);
         filters.length < 1 && !isNullOrEmpty(results?.facet_counts) && setFilters([...results.facet_counts]);
-
-        // adjustment for virtualization / 02/28/23
-        const nftsVirtualizedMap = nftSData.map(item => item.document);
-        page > 1 ? setNftsVirtualized([...nftsVirtualized,...nftsVirtualizedMap]) : setNftsVirtualized(nftsVirtualizedMap);
       });
     }
     return () => {
@@ -64,56 +62,78 @@ export default function CollectionsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
 
+  const createItemData = memoize(({ columnCount, nftSData }) => {
+    const thing = [...nftSData];
+    const nftsDataRows = [];
+    while(thing.length) nftsDataRows.push(thing.splice(0,columnCount));
+    return({
+      columnCount,
+      nftsDataRows,
+    });
+  });
+  
+  const isItemLoaded = index => index < nftSData.length && nftSData[index] !== null;
+  const loadMoreItems = (startIndex, stopIndex) => {
+    setPage(page + 1);
+  };
+
+  const Row = useCallback(({ index, style, data }: any) => {
+    const { nftsDataRows, columnCount } = data;
+    // const singleColumnIndex = columnIndex + rowIndex * columnCount;
+    const row = nftsDataRows[index];
+    console.log('row fdo', index, row);
+    
+    return (
+      <div style={style} className={tw(
+        'flex flex-row justify-between w-full gap-4'
+      )}>{row.map((item) => (
+          item && (
+            <NftCard
+              name={item.document.nftName}
+              tokenId={item.document.tokenId}
+              contractAddr={item.document.contractAddr}
+              images={[item.document.imageURL]}
+              collectionName={item.document.contractName}
+              redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+              description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
+              customBackground={'white'}
+              lightModeForced
+              skipNftQuery
+            />
+          )))}
+      </div>
+    );
+  }, []);
+  
   const showNftView = () => {
     return (
-    // <div className={tw(
-    //   'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-    //   sideNavOpen ? 'minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2 minmd:grid-cols-2 grid-cols-1 w-full' : 'minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1 w-full')}>
-    //   {nftSData && nftSData?.length > 0 && nftSData?.map((item, index) => {
-    //     return (
-    //       <NftCard
-    //         key={index}
-    //         name={item.document.nftName}
-    //         tokenId={item.document.tokenId}
-    //         contractAddr={item.document.contractAddr}
-    //         images={[item.document.imageURL]}
-    //         collectionName={item.document.contractName}
-    //         redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-    //         description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-    //         customBackground={'white'}
-    //         lightModeForced
-    //         skipNftQuery
-    //       />
-    //     );
-    //   })}
-    // </div>
-      
-      <NFTGalleryListVirtualized
-        nfts={nftsVirtualized}
-        // hasMore={hasNextPage}
-        hasMore={nftSData.length < found}
-        // isFetching={isFetchingNextPage}
-        isFetching={loading}
-        // fetchNfts={fetchNextPage}
-        fetchNfts={() => setPage(page + 1)}
-        profileLoading={loading}
-      >
-        {nft => (nft ?
-          <NftCard
-            name={nft?.name}
-            tokenId={nft?.tokenId}
-            contractAddr={nft?.contract}
-            images={[nft?.imageURL]}
-            collectionName={nft?.contractName}
-            redirectTo={`/app/nft/${nft?.contractAddr}/${nft?.tokenId}`}
-            description={nft?.nftDescription ? nft?.nftDescription.slice(0,50) + '...': '' }
-            customBackground={'white'}
-            lightModeForced
-            skipNftQuery
-          />
-          : <CardLoader.Loader />)}
-      </NFTGalleryListVirtualized>
-      
+      // <InfiniteLoader
+      //   isItemLoaded={isItemLoaded}
+      //   itemCount={nftSData.length}
+      //   loadMoreItems={loadMoreItems}
+      // >
+      <AutoSizer>
+        {({ width, height }) => {
+          const columnCount = 5;//Math.floor(width / cardWidth);
+          const itemData = createItemData({ nftSData, columnCount });
+          console.log('width fdo', width);
+          console.log('height fdo', height);
+          return (
+            <FixedSizeList
+              className="grid no-scrollbar"
+              width={width}
+              height={871}
+              itemCount={itemData.nftsDataRows.length}
+              itemData={itemData}
+              itemSize={600}
+              overscanRowCount={3}
+            >
+              {Row}
+            </FixedSizeList>
+          );
+        }}
+      </AutoSizer>
+      // </InfiniteLoader>
     );
   };
   return(
@@ -153,7 +173,12 @@ export default function CollectionsPage() {
                     <div className={'hidden minlg:block'}>
                       <SideNav onSideNav={() => null} filtersData={filters}/>
                     </div>
-                    <div className='grid-cols-1 w-full'>
+                    <div className='grid-cols-1 w-full'         style={{
+                      minHeight: '100vh',
+                      backgroundColor: 'inherit',
+                      position: 'sticky',
+                      top: '0px',
+                    }}>
                       {
                         !loading && nftSData?.length === 0
                           ? (
