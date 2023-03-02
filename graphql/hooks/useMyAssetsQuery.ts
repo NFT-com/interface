@@ -37,8 +37,6 @@ export function useMyAssetsQuery(first: number, afterCursor: string, currentAddr
     });
     return result;
   });
-
-  console.log('🚀 ~ file: useMyAssetsQuery.ts:29 ~ const{data}=useSWR ~ data:', data?.myNFTs?.items);
   
   return {
     data: data,
