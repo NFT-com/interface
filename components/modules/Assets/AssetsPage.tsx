@@ -34,7 +34,8 @@ export default function AssetsPages() {
 
   const { data: loadedAssetsNextPage, loading: loadingAssets } = useMyAssetsQuery(
     ASSET_LOAD_COUNT,
-    afterCursor
+    afterCursor,
+    currentAddress
   );
 
   const loadMoreAssets = useCallback(() => {
@@ -46,10 +47,14 @@ export default function AssetsPages() {
       loadedAssetsNextPage?.myNFTs?.items?.length > 0 &&
       lastAddedPage !== loadedAssetsNextPage?.myNFTs?.pageInfo?.firstCursor
     ) {
-      setAssetData([
-        ...assetData,
-        ...filterNulls(loadedAssetsNextPage?.myNFTs?.items)
-      ]);
+      if(assetData?.length > 0 && assetData[0]?.wallet?.address === currentAddress){
+        setAssetData([
+          ...assetData,
+          ...filterNulls(loadedAssetsNextPage?.myNFTs?.items)
+        ]);
+      } else {
+        setAssetData(filterNulls(loadedAssetsNextPage?.myNFTs?.items));
+      }
       setLastAddedPage(loadedAssetsNextPage?.myNFTs?.pageInfo?.firstCursor);
       setTotalCount(loadedAssetsNextPage?.myNFTs?.totalItems);
     } else {
