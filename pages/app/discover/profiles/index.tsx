@@ -6,18 +6,25 @@ import { Profile } from 'graphql/generated/types';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { usePaginator } from 'hooks/usePaginator';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import _ from 'lodash';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import React, { useCallback, useEffect, useState } from 'react';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList } from 'react-window';
+import InfiniteLoader from 'react-window-infinite-loader';
 import { PartialDeep } from 'type-fest';
 
 export default function ProfilePage() {
   const [isLoading, toggleLoadState] = useState(false);
   const [isLeaderBoard, toggleLeaderBoardState] = useState(false);
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
+  const [profilesPerRows, setProfilesPerRows] = useState([]);
+  const [columnCount, setColumnCount] = useState(5);
+  const { width: screenWidth } = useWindowDimensions();
 
   const PROFILE_LOAD_COUNT = 20;
 
@@ -54,22 +61,93 @@ export default function ProfilePage() {
     }
   }, [allLoadedProfiles, lastAddedPage, loadedProfilesNextPage, setTotalCount]);
 
+  useEffect(() => {
+    const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
+    const flatData = [...uniqData];
+    const data2D = [];
+    while(flatData.length) data2D.push(flatData.splice(0,columnCount));
+    setProfilesPerRows(data2D);
+  },[columnCount, allLoadedProfiles]);
+
+  useEffect(() => {
+    if (screenWidth > 1600) {
+      setColumnCount(5);
+    } else if (screenWidth > 1200 && screenWidth <= 1600) {
+      setColumnCount(4);
+    } else if (screenWidth > 900 && screenWidth <= 1200) {
+      setColumnCount(3);
+    } else if (screenWidth > 600 && screenWidth <= 900) {
+      setColumnCount(2);
+    } else
+      setColumnCount(1);
+  },[screenWidth]);
+
   const loadMoreProfilesFunc = () => {
     toggleLoadState(true);
     loadMoreProfiles();
   };
 
+  const isItemLoaded = index => index < profilesPerRows.length;
+
+  const Row = useCallback(({ index, style, data }: any) => {
+    const row = data[index];
+    
+    return (
+      <div style={style}
+        className={tw(
+          'grid grid-cols-1 minlg:space-x-0 gap-1 minmd:gap-4',
+          'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}
+      >{row && row?.map((item, index) => (
+          item && (
+            <ProfileCard
+              key={index}
+              profile={item}
+            />
+          )))}
+      </div>
+    );
+  }, []);
+
   const filterUniqProfiles = () => {
     if(!allLoadedProfiles && !allLoadedProfiles.length) return;
-    const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
-    return uniqData.map((profile, index) => {
-      return (
-        <ProfileCard
-          key={index}
-          profile={profile}
-        />
-      );
-    });
+    return (
+      <div className='grid-cols-1 w-full'
+        style={{
+          minHeight: '100vh',
+          backgroundColor: 'inherit',
+          position: 'sticky',
+          top: '0px',
+        }}>
+        <AutoSizer>
+          {({ width }) => (
+            <InfiniteLoader
+              isItemLoaded={isItemLoaded}
+              itemCount={profilesPerRows.length}
+              loadMoreItems={() => loadMoreProfilesFunc()}
+              threshold={10}
+            >
+              {({ ref }) => (
+                <FixedSizeList
+                  className="grid no-scrollbar"
+                  width={width}
+                  height={871}
+                  itemCount={profilesPerRows.length}
+                  itemData={profilesPerRows}
+                  itemSize={228}
+                  overscanRowCount={3}
+                  onItemsRendered={() => {
+                    loadMoreProfilesFunc();
+                  }}
+                  ref={ref}
+                >
+                  {Row}
+                </FixedSizeList>
+              )}
+            </InfiniteLoader>
+          )}
+        </AutoSizer>
+      </div>
+    );
   };
 
   const returnProfileBlock = () => {
@@ -78,7 +156,7 @@ export default function ProfilePage() {
         <div>
           <div className={tw(
             'grid grid-cols-1 minlg:space-x-0 gap-1 minmd:gap-4',
-            isLeaderBoard ? 'minxl:grid-cols-1' : 'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
+            isLeaderBoard ? 'minxl:grid-cols-1' : '')}>
             {
               !isLeaderBoard
                 ? filterUniqProfiles()
@@ -100,24 +178,6 @@ export default function ProfilePage() {
                       />
                     );
                   })
-                )
-            }
-          </div>
-          <div className="w-full flex justify-center pb-32 mt-12">
-            {
-              isLoading
-                ? (
-                  <Loader />
-                )
-                : (
-                  !isLeaderBoard
-                    ? <Button
-                      size={ButtonSize.LARGE}
-                      label={'Load More'}
-                      onClick={() => loadMoreProfilesFunc()}
-                      type={ButtonType.PRIMARY}
-                    />
-                    : null
                 )
             }
           </div>

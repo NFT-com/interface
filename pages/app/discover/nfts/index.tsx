@@ -1,14 +1,12 @@
-import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import memoize from 'memoize-one';
 import { SlidersHorizontal, X } from 'phosphor-react';
 import NoActivityIcon from 'public/no_activity.svg';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -29,9 +27,12 @@ export default function CollectionsPage() {
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
   const [nftSData, setNftsData] = useState([]);
+  const [nftSDataPerRows, setNftsDataPerRows] = useState([]);
+  const [columnCount, setColumnCount] = useState(5);
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
   const prevFilters = usePrevious(nftsResultsFilterBy);
+  const { width: screenWidth } = useWindowDimensions();
 
   useEffect(() => {
     if (page > 1 && nftsResultsFilterBy !== prevFilters){
@@ -61,29 +62,43 @@ export default function CollectionsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
 
-  const createItemData = memoize(({ columnCount, nftSData }) => {
-    const thing = [...nftSData];
-    const nftsDataRows = [];
-    while(thing.length) nftsDataRows.push(thing.splice(0,columnCount));
-    return({
-      columnCount,
-      nftsDataRows,
-    });
-  });
-  
-  // const isItemLoaded = index => index < nftSData.length && nftSData[index] !== null;
-  // Every row is loaded except for our loading indicator row.
-  const isItemLoaded = index => index < 1000;
+  useEffect(() => {
+    const flatData = [...nftSData];
+    const data2D = [];
+    while(flatData.length) data2D.push(flatData.splice(0,columnCount));
+    setNftsDataPerRows(data2D);
+  },[columnCount, nftSData]);
 
-  // const isItemLoaded = itemsCount => index => {  return (itemsCount - index) > 5; };
-  const loadMoreItems = (startIndex, stopIndex) => {
-    console.log('loadMore, executed fdo', startIndex, stopIndex);
-    setPage(page + 1);
-  };
+  useEffect(() => {
+    if (!sideNavOpen) {
+      if (screenWidth > 1600) {
+        setColumnCount(5);
+      } else if (screenWidth > 1200 && screenWidth <= 1600) {
+        setColumnCount(4);
+      } else if (screenWidth > 900 && screenWidth <= 1200) {
+        setColumnCount(3);
+      } else if (screenWidth > 600 && screenWidth <= 900) {
+        setColumnCount(2);
+      } else
+        setColumnCount(1);
+    } else {
+      if (screenWidth > 1600) {
+        setColumnCount(4);
+      } else if (screenWidth > 1200 && screenWidth <= 1600) {
+        setColumnCount(3);
+      } else if (screenWidth > 900 && screenWidth <= 1200) {
+        setColumnCount(2);
+      } else if (screenWidth > 600 && screenWidth <= 900) {
+        setColumnCount(2);
+      } else
+        setColumnCount(1);
+    }
+  },[nftSData, screenWidth, sideNavOpen]);
+
+  const isItemLoaded = index => index < nftSDataPerRows.length;
 
   const Row = useCallback(({ index, style, data }: any) => {
-    const { nftsDataRows, columnCount } = data;
-    const row = nftsDataRows[index];
+    const row = data[index];
     // console.log('row fdo', index, row);
     
     return (
@@ -100,39 +115,36 @@ export default function CollectionsPage() {
               redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
               description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
               customBackground={'white'}
+              isGKMinted={item.document.isProfileGKMinted}
               lightModeForced
-              // listings={item.document.listings}
-              // skipNftQuery
             />
           )))}
       </div>
     );
   }, []);
   
-  const showNftView = () => {
-    const columnCount = 5;//Math.floor(width / cardWidth);
-    const itemData = createItemData({ nftSData, columnCount });
+  const showNftView = (nftSDataPerRows: any[]) => {
     return (
       <AutoSizer>
         {({ width }) => (
           <InfiniteLoader
             isItemLoaded={isItemLoaded}
-            itemCount={1000}
-            loadMoreItems={ () => setPage(page + 1)}
+            itemCount={nftSDataPerRows.length}
+            loadMoreItems={() => setPage(page + 1)}
             threshold={10}
           >
-            {({ onItemsRendered, ref }) => (
+            {({ ref }) => (
               <FixedSizeList
                 className="grid no-scrollbar"
                 width={width}
                 height={871}
-                itemCount={1000}
-                itemData={itemData}
+                itemCount={nftSDataPerRows.length}
+                itemData={nftSDataPerRows}
                 itemSize={600}
                 overscanRowCount={3}
-                onItemsRendered={(stuff) => {
-                  console.log('stuff fdo', stuff);
-                  setPage(page + 1);
+                onItemsRendered={() => {
+                  if (nftSData && nftSData.length < found && nftSData?.length > 0)
+                    setPage(page + 1);
                 }}
                 ref={ref}
               >
@@ -198,27 +210,10 @@ export default function CollectionsPage() {
                           )
                           : null
                       }
-                      {nftSData?.length > 0 && showNftView()}
+                      {nftSData?.length > 0 && showNftView(nftSDataPerRows)}
                     </div>
 
                   </div>
-                  {(loading) &&
-                    (<div className="flex items-center justify-center min-h-[16rem] w-full">
-                      <Loader />
-                    </div>)}
-                  { nftSData && nftSData.length < found && nftSData?.length > 0 &&
-                    <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
-                      <Button
-                        size={ButtonSize.LARGE}
-                        scaleOnHover
-                        stretch={true}
-                        label={'Load More'}
-                        onClick={() => {
-                          setPage(page + 1);
-                        }}
-                        type={ButtonType.PRIMARY}
-                      />
-                    </div>}
                 </div>
               </div>
             </div>

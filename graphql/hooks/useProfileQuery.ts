@@ -22,6 +22,7 @@ export function useProfileQuery(
   const keyString = 'ProfileQuery ' + url + chain?.id;
 
   const { data, error } = useSWR(keyString, async () => {
+    console.log('url inside fdo', url);
     if (isNullOrEmpty(url)) {
       return null;
     }

@@ -1,4 +1,3 @@
-import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
@@ -8,13 +7,17 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeaderBoardQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import NoActivityIcon from 'public/no_activity.svg';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList } from 'react-window';
+import InfiniteLoader from 'react-window-infinite-loader';
 function usePrevious(value) {
   const ref = useRef(value);
   useEffect(() => {
@@ -33,6 +36,9 @@ export default function CollectionsPage() {
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
   const prevFilters = usePrevious(collectionsResultsFilterBy);
+  const [collectionsPerRows, setCollectionsPerRows] = useState([]);
+  const [columnCount, setColumnCount] = useState(5);
+  const { width: screenWidth } = useWindowDimensions();
 
   useEffect(() => {
     if (page > 1 && collectionsResultsFilterBy !== prevFilters){
@@ -61,8 +67,70 @@ export default function CollectionsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, filters]);
 
+  useEffect(() => {
+    const flatData = [...collections];
+    const data2D = [];
+    while(flatData.length) data2D.push(flatData.splice(0,columnCount));
+    setCollectionsPerRows(data2D);
+  },[collections, columnCount]);
+
+  useEffect(() => {
+    if (!sideNavOpen) {
+      if (screenWidth > 1600) {
+        setColumnCount(3);
+      } else if (screenWidth > 1200 && screenWidth <= 1600) {
+        setColumnCount(3);
+      } else if (screenWidth > 900 && screenWidth <= 1200) {
+        setColumnCount(2);
+      } else if (screenWidth > 600 && screenWidth <= 900) {
+        setColumnCount(2);
+      } else
+        setColumnCount(1);
+    } else {
+      if (screenWidth > 1600) {
+        setColumnCount(3);
+      } else if (screenWidth > 1200 && screenWidth <= 1600) {
+        setColumnCount(3);
+      } else if (screenWidth > 900 && screenWidth <= 1200) {
+        setColumnCount(2);
+      } else if (screenWidth > 600 && screenWidth <= 900) {
+        setColumnCount(2);
+      } else
+        setColumnCount(1);
+    }
+  },[screenWidth, sideNavOpen]);
+
+  const isItemLoaded = index => index < collectionsPerRows.length;
+
+  const Row = useCallback(({ index, data }: any) => {
+    const row = data[index];
+    return (
+      <div
+        className={tw(
+          'mb-5 gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
+          'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4 w-full')}>{row && row?.map((item) => (
+          item && (
+            <CollectionCard
+              redirectTo={`/app/collection/${item.document?.contractAddr}/`}
+              contractAddress={item.document?.contractAddr}
+              contract={item.document?.contractAddr}
+              floorPrice={item.document?.floor}
+              totalVolume={item.document?.volume}
+              userName={item.document.contractName}
+              contractName={item.document.contractName}
+              isOfficial={item.document.isOfficial}
+              description={item.document.description}
+              countOfElements={item.document.actualNumberOfNFTs}
+              maxSymbolsInString={180}
+              images={[item.document.bannerUrl]}
+            />
+          )))}
+      </div>
+    );
+  }, []);
+
   const leaderBoardOrCollectionView = () => {
-    if(isLeaderBoard){
+    if (isLeaderBoard) {
       return (
         <div className={tw(
           'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
@@ -89,29 +157,44 @@ export default function CollectionsPage() {
           }
         </div>
       );
-    }else{
+    } else {
       return (
-        <div className={tw(
-          'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-          'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4 w-full')}>
-          {collections && collections?.length > 0 && collections?.map((collection, index) => {
-            return (
-              <CollectionCard
-                key={index}
-                redirectTo={`/app/collection/${collection.document?.contractAddr}/`}
-                contractAddress={collection.document?.contractAddr}
-                contract={collection.document?.contractAddr}
-                floorPrice={collection.document?.floor}
-                totalVolume={collection.document?.volume}
-                userName={collection.document.contractName}
-                contractName={collection.document.contractName}
-                isOfficial={collection.document.isOfficial}
-                description={collection.document.description}
-                countOfElements={collection.document.actualNumberOfNFTs}
-                maxSymbolsInString={180}
-                images={[collection.document.bannerUrl]}/>
-            );
-          })}
+        <div className='grid-cols-1 w-full'
+          style={{
+            minHeight: '100vh',
+            backgroundColor: 'inherit',
+            position: 'sticky',
+            top: '0px',
+          }}>
+          <AutoSizer>
+            {({ width }) => (
+              <InfiniteLoader
+                isItemLoaded={isItemLoaded}
+                itemCount={collectionsPerRows.length}
+                loadMoreItems={() => setPage(page + 1)}
+                threshold={10}
+              >
+                {({ ref }) => (
+                  <FixedSizeList
+                    className="grid no-scrollbar"
+                    width={width}
+                    height={871}
+                    itemCount={collectionsPerRows.length}
+                    itemData={collectionsPerRows}
+                    itemSize={320}
+                    overscanRowCount={3}
+                    onItemsRendered={() => {
+                      if (!isLeaderBoard && collections && collections.length < found && collections?.length > 0 )
+                        setPage(page + 1);
+                    }}
+                    ref={ref}
+                  >
+                    {Row}
+                  </FixedSizeList>
+                )}
+              </InfiniteLoader>
+            )}
+          </AutoSizer>
         </div>
       );
     }
@@ -204,23 +287,6 @@ export default function CollectionsPage() {
                     }
                     {collections && collections?.length > 0 && leaderBoardOrCollectionView()}
                   </div>
-                  {(loading) &&
-                    (<div className="flex items-center justify-center min-h-[16rem] w-full">
-                      <Loader />
-                    </div>)}
-                  { !isLeaderBoard && collections && collections.length < found && collections?.length > 0 &&
-                    <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
-                      <Button
-                        size={ButtonSize.LARGE}
-                        scaleOnHover
-                        stretch={true}
-                        label={'Load More'}
-                        onClick={() => {
-                          setPage(page + 1);
-                        }}
-                        type={ButtonType.PRIMARY}
-                      />
-                    </div>}
                 </div>
               </div>
             </div>
