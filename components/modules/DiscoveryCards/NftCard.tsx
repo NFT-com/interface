@@ -72,7 +72,6 @@ export function NftCard(props: NftCardProps) {
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
   const isOwnedByMe = props?.isOwnedByMe || (nft?.wallet?.address ?? nft?.owner) === currentAddress;
-  console.log('gkminted info ',props.isGKMinted !== null, props.isGKMinted);
   const { profileData: nftProfileData } = useProfileQuery(props.isGKMinted !== null ? null : !props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts or GKMinted info are passed by setting null
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();

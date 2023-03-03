@@ -99,7 +99,6 @@ export default function CollectionsPage() {
 
   const Row = useCallback(({ index, style, data }: any) => {
     const row = data[index];
-    // console.log('row fdo', index, row);
     
     return (
       <div style={style} className={tw(
