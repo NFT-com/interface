@@ -1,4 +1,3 @@
-import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { ProfileCard } from 'components/modules/DiscoveryCards/ProfileCard';
@@ -73,7 +72,7 @@ export default function ProfilePage() {
     if (screenWidth > 1600) {
       setColumnCount(5);
     } else if (screenWidth > 1200 && screenWidth <= 1600) {
-      setColumnCount(4);
+      setColumnCount(5);
     } else if (screenWidth > 900 && screenWidth <= 1200) {
       setColumnCount(3);
     } else if (screenWidth > 600 && screenWidth <= 900) {
