@@ -102,10 +102,10 @@ export default function CollectionsPage() {
 
   const isItemLoaded = index => index < collectionsPerRows.length;
 
-  const Row = useCallback(({ index, data }: any) => {
+  const Row = useCallback(({ index, data, style }: any) => {
     const row = data[index];
     return (
-      <div
+      <div style={style}
         className={tw(
           'mb-5 gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
           'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4 w-full')}>{row && row?.map((item) => (

@@ -118,7 +118,7 @@ export default function ProfilePage() {
           top: '0px',
         }}>
         <AutoSizer>
-          {({ width }) => (
+          {({ width, height }) => (
             <InfiniteLoader
               isItemLoaded={isItemLoaded}
               itemCount={profilesPerRows.length}
@@ -129,7 +129,7 @@ export default function ProfilePage() {
                 <FixedSizeList
                   className="grid no-scrollbar"
                   width={width}
-                  height={871}
+                  height={height}
                   itemCount={profilesPerRows.length}
                   itemData={profilesPerRows}
                   itemSize={228}
