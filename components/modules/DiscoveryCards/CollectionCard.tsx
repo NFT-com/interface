@@ -9,6 +9,7 @@ import {
   sameAddress,
 } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
+import { tw } from 'utils/tw';
 
 import VerifiedIcon from 'public/verifiedIcon.svg';
 import VolumeIcon from 'public/volumeIcon.svg';
@@ -39,6 +40,7 @@ export interface CollectionCardProps {
   tokenId?: string;
   images?: Array<string | null>,
   isOfficial?: boolean;
+  customHeight?: string;
 }
 
 export function CollectionCard(props: CollectionCardProps) {
@@ -65,7 +67,9 @@ export function CollectionCard(props: CollectionCardProps) {
     return convertedValue.slice(1);
   };
   return (
-    <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden">
+    <a href={props.redirectTo} className={tw(
+      props.customHeight ?? ' min-h-[100%] ',
+      'sm:mb-4 block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden')}>
       <div className="h-44 relative ">
         <RoundedCornerMedia
           variant={RoundedCornerVariant.None}

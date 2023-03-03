@@ -107,10 +107,12 @@ export default function CollectionsPage() {
     return (
       <div style={style}
         className={tw(
-          'mb-5 gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-          'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4 w-full')}>{row && row?.map((item) => (
+          'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
+          'minxl:grid-cols-3 minmd:grid-cols-2 minhd:grid-cols-4 w-full')}>
+        {row && row?.map((item,i) => (
           item && (
             <CollectionCard
+              key={i}
               redirectTo={`/app/collection/${item.document?.contractAddr}/`}
               contractAddress={item.document?.contractAddr}
               contract={item.document?.contractAddr}
@@ -123,6 +125,7 @@ export default function CollectionsPage() {
               countOfElements={item.document.actualNumberOfNFTs}
               maxSymbolsInString={180}
               images={[item.document.bannerUrl]}
+              customHeight='h-[20rem]'
             />
           )))}
       </div>
@@ -167,7 +170,7 @@ export default function CollectionsPage() {
             top: '0px',
           }}>
           <AutoSizer>
-            {({ width }) => (
+            {({ width, height }) => (
               <InfiniteLoader
                 isItemLoaded={isItemLoaded}
                 itemCount={collectionsPerRows.length}
@@ -178,10 +181,10 @@ export default function CollectionsPage() {
                   <FixedSizeList
                     className="grid no-scrollbar"
                     width={width}
-                    height={871}
+                    height={height}
                     itemCount={collectionsPerRows.length}
                     itemData={collectionsPerRows}
-                    itemSize={320}
+                    itemSize={340}
                     overscanRowCount={3}
                     onItemsRendered={() => {
                       if (!isLeaderBoard && collections && collections.length < found && collections?.length > 0 )
