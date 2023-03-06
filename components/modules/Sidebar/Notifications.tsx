@@ -188,8 +188,8 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
       {
         text: 'Your NFT Profile needs attention',
         onClick: () => {
-          console.log('profile customization click');
           setVisible(false);
+          router.push(`/${user?.currentProfileUrl}`);
         },
         date: null
       }
