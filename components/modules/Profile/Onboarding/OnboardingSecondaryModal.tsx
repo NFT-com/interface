@@ -36,9 +36,6 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
   const [errorMessage, setErrorMessage] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  console.log('user.currentProfileUrl: ', user.currentProfileUrl);
-  console.log('data: ', data);
-
   const handleSubmit = (e, value, index) => {
     setErrorMessage(null);
     e.preventDefault();
