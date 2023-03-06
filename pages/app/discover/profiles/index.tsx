@@ -1,4 +1,6 @@
+import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
+import { outerElementType } from 'components/elements/outerElementType';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { ProfileCard } from 'components/modules/DiscoveryCards/ProfileCard';
 import { Profile } from 'graphql/generated/types';
@@ -12,7 +14,6 @@ import { tw } from 'utils/tw';
 import _ from 'lodash';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import React, { useCallback, useEffect, useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 import { PartialDeep } from 'type-fest';
@@ -117,34 +118,31 @@ export default function ProfilePage() {
           position: 'sticky',
           top: '0px',
         }}>
-        <AutoSizer>
-          {({ width, height }) => (
-            <InfiniteLoader
-              isItemLoaded={isItemLoaded}
+        <InfiniteLoader
+          isItemLoaded={isItemLoaded}
+          itemCount={profilesPerRows.length}
+          loadMoreItems={() => loadMoreProfilesFunc()}
+          threshold={10}
+        >
+          {({ ref }) => (
+            <FixedSizeList
+              className="grid no-scrollbar"
+              outerElementType={outerElementType}
+              width={window.innerWidth}
+              height={window.innerHeight}
               itemCount={profilesPerRows.length}
-              loadMoreItems={() => loadMoreProfilesFunc()}
-              threshold={10}
+              itemData={profilesPerRows}
+              itemSize={228}
+              overscanRowCount={3}
+              onItemsRendered={() => {
+                loadMoreProfilesFunc();
+              }}
+              ref={ref}
             >
-              {({ ref }) => (
-                <FixedSizeList
-                  className="grid no-scrollbar"
-                  width={width}
-                  height={height}
-                  itemCount={profilesPerRows.length}
-                  itemData={profilesPerRows}
-                  itemSize={228}
-                  overscanRowCount={3}
-                  onItemsRendered={() => {
-                    loadMoreProfilesFunc();
-                  }}
-                  ref={ref}
-                >
-                  {Row}
-                </FixedSizeList>
-              )}
-            </InfiniteLoader>
+              {Row}
+            </FixedSizeList>
           )}
-        </AutoSizer>
+        </InfiniteLoader>
       </div>
     );
   };
@@ -212,13 +210,14 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
 
 ProfilePage.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout showDNavigation={true}>
+    <DefaultLayout hideFooter={true} showDNavigation={true}>
       { page }
     </DefaultLayout>
   );

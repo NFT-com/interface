@@ -60,6 +60,7 @@
     "@types/react-dom": "^18.0.6",
     "@types/react-scroll": "^1.8.4",
     "@types/tailwindcss": "^3.0.10",
+    "@use-gesture/react": "^10.2.24",
     "@x2y2-io/sdk": "^0.3.2",
     "aos": "^2.3.4",
     "d3-color": "3.1.0",

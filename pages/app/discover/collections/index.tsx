@@ -1,4 +1,6 @@
+import { Footer as StaticFooter } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
+import { outerElementType } from 'components/elements/outerElementType';
 import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
@@ -11,13 +13,14 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import dynamic from 'next/dynamic';
 import { SlidersHorizontal, X } from 'phosphor-react';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import NoActivityIcon from 'public/no_activity.svg';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
+
 function usePrevious(value) {
   const ref = useRef(value);
   useEffect(() => {
@@ -25,6 +28,8 @@ function usePrevious(value) {
   });
   return ref.current;
 }
+
+const DynamicFooter = dynamic<React.ComponentProps<typeof StaticFooter>>(() => import('components/elements/Footer').then(mod => mod.Footer));
 
 export default function CollectionsPage() {
   const [page, setPage] = useState(1);
@@ -52,7 +57,7 @@ export default function CollectionsPage() {
         q: '*',
         query_by: 'contractAddr,contractName',
         filter_by: collectionsResultsFilterBy ? `isOfficial:true && ${collectionsResultsFilterBy}` : 'isOfficial:true',
-        per_page: 20,
+        per_page: 10,
         page: page,
       }).then((results) => {
         setLoading(false);
@@ -131,7 +136,7 @@ export default function CollectionsPage() {
       </div>
     );
   }, []);
-
+  
   const leaderBoardOrCollectionView = () => {
     if (isLeaderBoard) {
       return (
@@ -164,40 +169,38 @@ export default function CollectionsPage() {
       return (
         <div className='grid-cols-1 w-full'
           style={{
-            minHeight: '100vh',
+            height: '100vh',
             backgroundColor: 'inherit',
-            position: 'sticky',
             top: '0px',
           }}>
-          <AutoSizer>
-            {({ width, height }) => (
-              <InfiniteLoader
-                isItemLoaded={isItemLoaded}
+
+          <InfiniteLoader
+            isItemLoaded={isItemLoaded}
+            itemCount={collectionsPerRows.length}
+            loadMoreItems={() => setPage(page + 1)}
+            threshold={10}
+          >
+            {({ ref }) => (
+              <FixedSizeList
+                className="grid no-scrollbar"
+                outerElementType={outerElementType}
+                width={window.innerWidth}
+                height={window.innerHeight}
                 itemCount={collectionsPerRows.length}
-                loadMoreItems={() => setPage(page + 1)}
-                threshold={10}
+                itemData={collectionsPerRows}
+                itemSize={340}
+                overscanRowCount={3}
+                onItemsRendered={(itemsRendered) => {
+                  if (!isLeaderBoard && collections && collections.length < found && collections?.length > 0 )
+                    itemsRendered.visibleStartIndex % 2 == 0 && setPage(page + 1);
+                }}
+                ref={ref}
               >
-                {({ ref }) => (
-                  <FixedSizeList
-                    className="grid no-scrollbar"
-                    width={width}
-                    height={height}
-                    itemCount={collectionsPerRows.length}
-                    itemData={collectionsPerRows}
-                    itemSize={340}
-                    overscanRowCount={3}
-                    onItemsRendered={() => {
-                      if (!isLeaderBoard && collections && collections.length < found && collections?.length > 0 )
-                        setPage(page + 1);
-                    }}
-                    ref={ref}
-                  >
-                    {Row}
-                  </FixedSizeList>
-                )}
-              </InfiniteLoader>
+                {Row}
+              </FixedSizeList>
             )}
-          </AutoSizer>
+          </InfiniteLoader>
+
         </div>
       );
     }
@@ -296,13 +299,14 @@ export default function CollectionsPage() {
           </div>
         </div>
       </div>
+      {isLeaderBoard && <DynamicFooter />}
     </>
   );
 }
 
 CollectionsPage.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout showDNavigation={true}>
+    <DefaultLayout hideFooter={true} showDNavigation={true}>
       { page }
     </DefaultLayout>
   );

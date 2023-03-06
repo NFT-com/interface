@@ -1,3 +1,4 @@
+import { outerElementType } from 'components/elements/outerElementType';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { SideNav } from 'components/modules/Search/SideNav';
@@ -10,7 +11,6 @@ import { tw } from 'utils/tw';
 import { SlidersHorizontal, X } from 'phosphor-react';
 import NoActivityIcon from 'public/no_activity.svg';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 function usePrevious(value) {
@@ -124,35 +124,32 @@ export default function CollectionsPage() {
   
   const showNftView = (nftSDataPerRows: any[]) => {
     return (
-      <AutoSizer>
-        {({ width }) => (
-          <InfiniteLoader
-            isItemLoaded={isItemLoaded}
+      <InfiniteLoader
+        isItemLoaded={isItemLoaded}
+        itemCount={nftSDataPerRows.length}
+        loadMoreItems={() => setPage(page + 1)}
+        threshold={10}
+      >
+        {({ ref }) => (
+          <FixedSizeList
+            className="grid no-scrollbar"
+            outerElementType={outerElementType}
+            width={window.innerWidth}
+            height={window.innerHeight}
             itemCount={nftSDataPerRows.length}
-            loadMoreItems={() => setPage(page + 1)}
-            threshold={10}
+            itemData={nftSDataPerRows}
+            itemSize={600}
+            overscanRowCount={3}
+            onItemsRendered={(itemsRendered) => {
+              if (nftSData && nftSData.length < found && nftSData?.length > 0)
+                itemsRendered.visibleStartIndex % 2 == 0 && setPage(page + 1);
+            }}
+            ref={ref}
           >
-            {({ ref }) => (
-              <FixedSizeList
-                className="grid no-scrollbar"
-                width={width}
-                height={871}
-                itemCount={nftSDataPerRows.length}
-                itemData={nftSDataPerRows}
-                itemSize={600}
-                overscanRowCount={3}
-                onItemsRendered={() => {
-                  if (nftSData && nftSData.length < found && nftSData?.length > 0)
-                    setPage(page + 1);
-                }}
-                ref={ref}
-              >
-                {Row}
-              </FixedSizeList>
-            )}
-          </InfiniteLoader>
+            {Row}
+          </FixedSizeList>
         )}
-      </AutoSizer>
+      </InfiniteLoader>
     );
   };
   return(
