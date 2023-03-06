@@ -77,12 +77,8 @@ export function useMaybeCreateUser(): void {
                 network: 'ethereum',
               }
             };
-
-          alert(`Creating user: ${JSON.stringify(userData)}`);
           
           const result = await createUser(userData);
-
-          console.log('result: ', result);
 
           mutateMe();
           setRecentlyCreatedUser(true);
