@@ -24,7 +24,6 @@ export function useGetSentReferralEmailsQuery(profileUrl: string): GetSentReferr
       profileUrl
     });
 
-    console.log('result: ', result);
     return result.getSentReferralEmails.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   });
   
