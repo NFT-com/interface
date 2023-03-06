@@ -77,7 +77,13 @@ export function useMaybeCreateUser(): void {
                 network: 'ethereum',
               }
             };
+
+          alert(`Creating user: ${JSON.stringify(userData)}`);
+          
           const result = await createUser(userData);
+
+          console.log('result: ', result);
+
           mutateMe();
           setRecentlyCreatedUser(true);
           if (result?.signUp?.id) localStorage.setItem(getCacheKey(currentAddress, chain?.id), result?.signUp?.id);
