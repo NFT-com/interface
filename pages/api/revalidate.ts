@@ -18,6 +18,7 @@ export default async function handler(req, res) {
   
     // revalidate the individual post and the home page
     await res.revalidate(`/articles/${postSlug}`);
+    await res.revalidate('/articles');
     await res.revalidate('/');
   
     return res.json({ revalidated: true });
