@@ -42,6 +42,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
   useEffect(() => {
     if (!router.pathname.includes('discover/')) {
       inputRef.current.value = '';
+      inputRef.current.blur();
       setShowHits(false);
     }
     setSearchResults([]);
@@ -51,6 +52,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
     setShowHits(false);
     setSearchModalOpen(false);
     setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
+    inputRef.current.blur();
   });
 
   const goTo = () => {
@@ -58,6 +60,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
     setShowHits(false);
     setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
     inputRef.current.value = '';
+    inputRef.current.blur();
     setDropDownSearchResults([]);
   };
 
@@ -106,6 +109,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
       }
 
       inputRef.current.value = '';
+      inputRef.current.blur();
       setSearchModalOpen(false);
       setShowHits(false);
     } else {
@@ -216,7 +220,11 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
                   leaderBoardSearch ? 'w-full' : transitionWidth
                 )}
                 onKeyUp={(event) => search(event)}
-                onFocus={(event) => event.target.value !== '' && search(event)}
+                onFocus={(event) => {
+                  event.target.value !== '' && search(event);
+                  setTransitionWidth('w-[18.4rem]');
+                }}
+                onBlur={() => setTransitionWidth('minlg:w-[4.65rem]')}
                 onChange={(event) => !event.target.value && setShowHits(false)}
               />
             </div>
