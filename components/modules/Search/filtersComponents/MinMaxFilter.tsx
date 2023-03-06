@@ -1,6 +1,7 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { tw } from 'utils/tw';
 
+import { useRouter } from 'next/router';
 import ArrowDown from 'public/arrow-down-black.svg';
 import React, { useEffect, useRef,useState } from 'react';
 
@@ -35,6 +36,8 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
   const [minVal, setValueMin] = useState(min);
   const [maxVal, setValueMax] = useState(max);
   const [isError, setError] = useState(false);
+  const router = useRouter();
+  const location = router.pathname;
   useOutsideCLick(wrapperRef, props);
   useEffect(() => {
     if(!maxVal){
@@ -48,6 +51,10 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
       }
     }
   }, [minVal, maxVal]);
+
+  useEffect(() => {
+    location.includes('collections') && props.changeCurrency('ETH');
+  },[location, props]);
 
   return (
     <div ref={wrapperRef}>
@@ -72,7 +79,7 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
       <div className='mb-2.5 relative'>
         <div onClick={() => props.toggleSelect(props.isOpen)} className={`${props.isOpen ? 'rounded-b-[0]' : ''} text-black w-full border-none bg-[#F2F2F2] h-[46px] flex items-center justify-between pl-2 pr-4 rounded-[8px]`}>
           {props.currency ? props.currency : 'ETH'}
-          <ArrowDown/>
+          {!location.includes('collections') ? <ArrowDown/> : null}
         </div>
         <ul className={`${props.isOpen ? 'h-[96px]' : 'h-0'} bg-[#F2F2F2] transition-all relative w-full p-0 h-0 overflow-hidden rounded-b-[8px]`}>
           <li onClick={() => {
