@@ -33,6 +33,10 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
   const [posts, setPosts] = useState(postData);
   const router = useRouter();
 
+  console.log('posts: ', posts);
+  console.log('contentfulBackupData[2]?.items: ', contentfulBackupData[2]?.items);
+  console.log('router.isFallback: ', router.isFallback);
+
   if (!router.isFallback && !posts) {
     return <NotFoundPage />;
   }
