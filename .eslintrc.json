@@ -8,16 +8,10 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": [
-    "react",
-    "react-hooks",
-    "@typescript-eslint",
-    "simple-import-sort"
-  ],
+  "plugins": ["@typescript-eslint", "simple-import-sort"],
   "extends": [
     "eslint:recommended",
     "next/core-web-vitals",
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
   "settings": {
@@ -25,15 +19,9 @@
       "version": "detect"
     }
   },
-  "ignorePatterns": [
-    "**/generated/**",
-    "**/*.d.ts"
-  ],
+  "ignorePatterns": ["**/generated/**", "**/*.d.ts"],
   "rules": {
     "semi": "error",
-    "react/jsx-props-no-multi-spaces": "warn",
-    "react/react-in-jsx-scope": "off",
-    "react-hooks/exhaustive-deps": "error",
     "no-trailing-spaces": [
       "warn",
       {
@@ -66,18 +54,13 @@
         ]
       }
     ],
-    "quotes": [
-      "error",
-      "single"
-    ],
+    "quotes": ["error", "single"],
     "sort-imports": "off",
     "simple-import-sort/imports": [
       "error",
       {
         "groups": [
-          [
-            "^\\u0000"
-          ], // side effect (imports that do not export anything)
+          ["^\\u0000"], // side effect (imports that do not export anything)
           [
             "^assets*",
             "^components",
@@ -92,21 +75,15 @@
             "^types",
             "^utils"
           ], // local absolute imports `@/foo`
-          [
-            "^\\."
-          ], // relative imports
-          [
-            "^[^.]"
-          ] // anything that does not start with dot
+          ["^\\."], // relative imports
+          ["^[^.]"] // anything that does not start with dot
         ]
       }
     ],
     "no-restricted-imports": [
       "error",
       {
-        "patterns": [
-          "..*"
-        ]
+        "patterns": ["..*"]
       }
     ],
     "simple-import-sort/exports": "warn",
@@ -128,27 +105,14 @@
         "allowAllPropertiesOnSameLine": true
       }
     ],
-    "object-curly-spacing": [
-      "warn",
-      "always"
-    ],
+    "object-curly-spacing": ["warn", "always"],
     "no-multi-spaces": "warn",
-    "multiline-ternary": [
-      "warn",
-      "always-multiline"
-    ],
-    "function-call-argument-newline": [
-      "warn",
-      "consistent"
-    ],
+    "multiline-ternary": ["warn", "always-multiline"],
+    "function-call-argument-newline": ["warn", "consistent"],
     "import/no-unresolved": [
       "error",
       {
-        "ignore": [
-          "\\.css$",
-          "\\.svg",
-          "\\.svg?url"
-        ]
+        "ignore": ["\\.css$", "\\.svg", "\\.svg?url"]
       }
     ],
     "no-namespace": [
