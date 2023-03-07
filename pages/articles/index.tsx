@@ -30,16 +30,21 @@ const DynamicBlogSlider = dynamic(() => import('components/modules/BlogPage/Blog
 const DynamicPreviewBanner = dynamic(() => import('components/elements/PreviewBanner'));
 
 export default function BlogListPage({ postData, preview, data, totalPosts }: PostListProps) {
-  const [posts, setPosts] = useState(postData);
+  const [posts, setPosts] = useState(postData ?? contentfulBackupData[2]?.items as PostData[]);
+  const totalPostsFallback = totalPosts ?? contentfulBackupData[2]?.total;
+  const dataFallback = data ?? contentfulBackupData[1] as {
+    heroTitle: string
+    listTitle: string
+    blogSlidesCollection: {
+      items: PostData[]
+    }
+  };
   const router = useRouter();
-
-  console.log('posts: ', posts);
-  console.log('contentfulBackupData[2]?.items: ', contentfulBackupData[2]?.items);
-  console.log('router.isFallback: ', router.isFallback);
 
   if (!router.isFallback && !posts) {
     return <NotFoundPage />;
   }
+  
   return (
     <>
       <NextSeo
@@ -57,17 +62,17 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
       />
       <div className='bg-white'>
         <div className='px-2.5 minlg:pt-28 max-w-nftcom mx-auto'>
-          <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{data?.heroTitle}</h2>
-          {posts && <DynamicBlogSlider posts={data?.blogSlidesCollection.items} />}
+          <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{dataFallback?.heroTitle}</h2>
+          {posts && <DynamicBlogSlider posts={dataFallback?.blogSlidesCollection.items} />}
       
-          <h2 className='font-bold font-grotesk minlg:text-4xl text-lg minlg:mb-6 mb-4 mt-10 '>{data?.listTitle}</h2>
+          <h2 className='font-bold font-grotesk minlg:text-4xl text-lg minlg:mb-6 mb-4 mt-10 '>{dataFallback?.listTitle}</h2>
           <div className="grid minmd:gap-x-4 gap-x-3 gap-y-7 minlg:grid-cols-3 grid-cols-2 minxl:pb-24 pb-12 ">
             {posts && posts.map((post) => (
               <RelatedPostCard key={post.sys.id} post={post} />
             ))}
           </div>
         </div>
-        {posts?.length < totalPosts && (
+        {posts?.length < totalPostsFallback && (
           <div className="w-full flex justify-center pb-32 bg-white">
             <Button
               size={ButtonSize.LARGE}
