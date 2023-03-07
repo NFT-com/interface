@@ -43,7 +43,13 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
       .then(res => res.sentEmails.includes(value) ?
         setSuccess(index) :
         setErrorMessage([index, 'This user was previously referred. Please try a different email.'])
-      ).then(() => mutateSentReferrals())
+      ).then(() => {
+        mutateSentReferrals();
+        analytics.track('Sent Email Referral', {
+          sentReferralAddress: value,
+          profile: user.currentProfileUrl
+        });
+      })
       .catch(e => setErrorMessage([index, e.message]));
   };
 
