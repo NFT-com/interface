@@ -1,17 +1,17 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
-import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
+import CustomAvatar from 'components/elements/CustomAvatar';
+import Disclaimer from 'components/elements/Disclaimer';
 import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import useAnalyticsOnRouteChange from 'hooks/useAnalyticsOnRouteChange';
+import { Doppler, getEnv } from 'utils/env';
 
 import {
-  AvatarComponent,
   connectorsForWallets,
-  DisclaimerComponent,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import {
@@ -21,74 +21,57 @@ import {
   metaMaskWallet,
   rainbowWallet,
   trustWallet,
-  walletConnectWallet
+  walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import { AnimatePresence } from 'framer-motion';
+// import * as fbq from 'lib/fbq';
+import * as gtag from 'lib/gtag';
+import * as segment from 'lib/segment';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import { DefaultSeo } from 'next-seo';
-import { FunctionComponent, ReactElement, ReactNode, useMemo } from 'react';
-import { isMobile } from 'react-device-detect';
+import { ReactElement, ReactNode, useMemo } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import ReactGA from 'react-ga';
 import { rainbowLight } from 'styles/RainbowKitThemes';
-import { v4 as uuid } from 'uuid';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { goerli, mainnet } from 'wagmi/chains';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-// import { safeWallet } from 'wallets/SafeWallet';
-
-const GOOGLE_ANALYTICS_ID: string | undefined = getEnv(Doppler.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID);
-if (GOOGLE_ANALYTICS_ID != null) {
-  const debugLogging = getEnvBool(Doppler.NEXT_PUBLIC_DEBUG_LOGGING);
-  ReactGA.initialize(GOOGLE_ANALYTICS_ID, {
-    gaOptions: {
-      userId: uuid(), // this is used as the sessionId
-    },
-    testMode: debugLogging,
-    debug: debugLogging,
-    titleCase: false,
-  });
-  ReactGA.set({
-    customBrowserType: !isMobile
-      ? 'desktop'
-      : 'web3' in window || 'ethereum' in window
-        ? 'mobileWeb3'
-        : 'mobileRegular',
-  });
-} else {
-  ReactGA.initialize('test', { testMode: true, debug: true });
-}
 
 export type NextPageWithLayout = NextPage & {
-  getLayout?: (page: ReactElement) => ReactNode
-}
+  getLayout?: (page: ReactElement) => ReactNode;
+};
 
 type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout
-}
+  Component: NextPageWithLayout;
+};
 
-export default function MyApp({ Component, pageProps, router }: AppPropsWithLayout) {
+export default function MyApp({
+  Component,
+  pageProps,
+  router,
+}: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
 
   const { chains, provider } = useMemo(() => {
     return configureChains(
-      getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
-        [mainnet, goerli] :
-        [mainnet],
+      getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION'
+        ? [mainnet, goerli]
+        : [mainnet],
       [
         jsonRpcProvider({
           rpc: (chain) => {
-            const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
+            const url = new URL(
+              getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc'
+            );
             url.searchParams.set('chainId', chain?.id.toString());
             return {
               http: url.toString(),
             };
-          }
+          },
         }),
       ]
     );
@@ -111,7 +94,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
           coinbaseWallet({ chains, appName: 'NFT.com' }),
           trustWallet({ chains }),
           ledgerWallet({ chains }),
-          argentWallet({ chains })
+          argentWallet({ chains }),
         ],
       },
     ]);
@@ -121,43 +104,66 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
     return createClient({
       autoConnect: true,
       connectors,
-      provider
+      provider,
     });
   }, [connectors, provider]);
 
-  const CustomAvatar: AvatarComponent = () => {
-    return <LoggedInIdenticon />;
-  };
-
-  type DisclaimerProps = {
-    Text: FunctionComponent<{
-      children: ReactNode
-    }>
-    Link: any
-  }
-
-  const Disclaimer: DisclaimerComponent = ({ Text, Link }: DisclaimerProps) => (
-    <Text>
-      By connecting my wallet, I agree to the{' '}
-      <Link href='https://cdn.nft.com/nft_com_terms_of_service.pdf'>{' '}Terms of Service{' '}</Link>
-      and acknowledge the
-      <Link href="https://cdn.nft.com/nft_com_privacy_policy.pdf">{' '}Privacy Policy</Link>.
-    </Text>
-  );
+  useAnalyticsOnRouteChange();
 
   return (
     <>
       <Head>
         <title>NFT.com</title>
+        <script
+          type="text/partytown"
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function gtag(){window.dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
+                page_path: window.location.pathname,
+            });
+        `,
+          }}
+        />
       </Head>
+      <Script
+        strategy="worker"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+      />
+      {/* <Script
+        id="fb-pixel"
+        strategy="worker"
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'js/fbevents.js');
+            fbq('init', ${fbq.FB_PIXEL_ID});
+          `,
+        }}
+      /> */}
+      <Script
+        id="segment-script"
+        strategy="worker"
+        dangerouslySetInnerHTML={{ __html: segment.renderSnippet() }}
+      />
       <Script strategy="afterInteractive" src="/js/pageScripts.js" />
       <DefaultSeo
-        title='NFT.com | The Social NFT Marketplace'
-        description='Join NFT.com to display, trade, and engage with your NFTs.'
+        title="NFT.com | The Social NFT Marketplace"
+        description="Join NFT.com to display, trade, and engage with your NFTs."
         openGraph={{
           url: 'https://www.nft.com',
           title: 'NFT.com | The Social NFT Marketplace',
-          description: 'Join NFT.com to display, trade, and engage with your NFTs.',
+          description:
+            'Join NFT.com to display, trade, and engage with your NFTs.',
           site_name: 'NFT.com',
           images: [
             {
@@ -166,7 +172,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
               height: 627,
               alt: 'NFT.com | The Social NFT Marketplace',
               type: 'image/png',
-            }
+            },
           ],
         }}
         twitter={{
@@ -178,11 +184,16 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
           appInfo={{
             appName: 'NFT.com',
             learnMoreUrl: 'https://docs.nft.com/what-is-a-wallet',
-            disclaimer: Disclaimer
+            disclaimer: Disclaimer,
           }}
           theme={rainbowLight}
           chains={chains}
-          initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? goerli : mainnet}
+          initialChain={
+            getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' &&
+            getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING'
+              ? goerli
+              : mainnet
+          }
           avatar={CustomAvatar}
         >
           <AnimatePresence exitBeforeEnter>
@@ -191,7 +202,9 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
                 <NotificationContextProvider>
                   <NFTPurchaseContextProvider>
                     <NFTListingsContextProvider>
-                      {getLayout(<Component {...pageProps} key={router.pathname} />)}
+                      {getLayout(
+                        <Component {...pageProps} key={router.pathname} />
+                      )}
                     </NFTListingsContextProvider>
                   </NFTPurchaseContextProvider>
                 </NotificationContextProvider>
