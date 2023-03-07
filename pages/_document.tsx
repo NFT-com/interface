@@ -8,6 +8,7 @@ import Document, {
 import { ReactElement } from 'react';
 
 class MyDocument extends Document {
+
   static async getInitialProps(ctx: DocumentContext) {
     const initialProps = await Document.getInitialProps(ctx);
 
@@ -118,7 +119,7 @@ class MyDocument extends Document {
               __html: `
                 partytown = {
                   lib: "/_next/static/~partytown/",
-                  forward: ["dataLayer.push", "gtag", "fbq"]
+                  forward: ["dataLayer.push", "gtag"]
                 };
               `,
             }}
@@ -133,6 +134,7 @@ class MyDocument extends Document {
       </Html>
     );
   }
+
 }
 
 export default MyDocument;

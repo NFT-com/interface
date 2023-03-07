@@ -24,7 +24,6 @@ import {
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import { AnimatePresence } from 'framer-motion';
-// import * as fbq from 'lib/fbq';
 import * as gtag from 'lib/gtag';
 import * as segment from 'lib/segment';
 import type { NextPage } from 'next';
@@ -133,29 +132,12 @@ export default function MyApp({
         strategy="worker"
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
       />
-      {/* <Script
-        id="fb-pixel"
-        strategy="worker"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'js/fbevents.js');
-            fbq('init', ${fbq.FB_PIXEL_ID});
-          `,
-        }}
-      /> */}
       <Script
         id="segment-script"
         strategy="worker"
         dangerouslySetInnerHTML={{ __html: segment.renderSnippet() }}
       />
-      <Script strategy="afterInteractive" src="/js/pageScripts.js" />
+      <Script strategy="afterInteractive" src="/js/fbq.js" />
       <DefaultSeo
         title="NFT.com | The Social NFT Marketplace"
         description="Join NFT.com to display, trade, and engage with your NFTs."
