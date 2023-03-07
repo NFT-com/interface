@@ -39,7 +39,6 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
     }
     setDropDownSearchResults([], '');
     itemListOnClick && itemListOnClick(hit.document);
-    console.log('hi fdo1');
   };
   const resultTitle = (found, collectionName) => {
     let title = '';
@@ -63,7 +62,6 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
             setClearedFilters();
             setDropDownSearchResults([], '');
             resultTitleOnClick && resultTitleOnClick(collectionName);
-            console.log('hi fdo2');
           }}
         >
           See All
