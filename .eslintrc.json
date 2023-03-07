@@ -3,46 +3,26 @@
     "browser": true,
     "es2021": true
   },
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 12,
-    "sourceType": "module"
-  },
-  "plugins": ["@typescript-eslint", "simple-import-sort"],
   "extends": [
     "eslint:recommended",
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended"
   ],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
+  "ignorePatterns": [
+    "**/generated/**",
+    "**/*.d.ts"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
   },
-  "ignorePatterns": ["**/generated/**", "**/*.d.ts"],
+  "plugins": [
+    "@typescript-eslint",
+    "simple-import-sort"
+  ],
   "rules": {
-    "semi": "error",
-    "no-trailing-spaces": [
-      "warn",
-      {
-        "skipBlankLines": true,
-        "ignoreComments": true
-      }
-    ],
-    "padded-blocks": [
-      "warn",
-      {
-        "blocks": "never",
-        "classes": "always"
-      }
-    ],
-    "no-multiple-empty-lines": [
-      "warn",
-      {
-        "max": 1,
-        "maxEOF": 1
-      }
-    ],
+    "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/indent": [
       "warn",
       2,
@@ -54,13 +34,92 @@
         ]
       }
     ],
-    "quotes": ["error", "single"],
-    "sort-imports": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "array-bracket-spacing": "warn",
+    "array-element-newline": [
+      "error",
+      {
+        "ArrayExpression": "consistent",
+        "ArrayPattern": {
+          "minItems": 3
+        }
+      }
+    ],
+    "function-call-argument-newline": [
+      "warn",
+      "consistent"
+    ],
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": [
+          "\\.css$",
+          "\\.svg",
+          "\\.svg?url"
+        ]
+      }
+    ],
+    "multiline-ternary": [
+      "warn",
+      "always-multiline"
+    ],
+    "no-multi-spaces": "warn",
+    "no-multiple-empty-lines": [
+      "warn",
+      {
+        "max": 1,
+        "maxEOF": 1
+      }
+    ],
+    "no-namespace": [
+      "off",
+      {
+        "allowDeclarations": true
+      }
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          "..*"
+        ]
+      }
+    ],
+    "no-trailing-spaces": [
+      "warn",
+      {
+        "ignoreComments": true,
+        "skipBlankLines": true
+      }
+    ],
+    "object-curly-spacing": [
+      "warn",
+      "always"
+    ],
+    "object-property-newline": [
+      "warn",
+      {
+        "allowAllPropertiesOnSameLine": true
+      }
+    ],
+    "padded-blocks": [
+      "warn",
+      {
+        "blocks": "never",
+        "classes": "always"
+      }
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": "error",
+    "simple-import-sort/exports": "warn",
     "simple-import-sort/imports": [
       "error",
       {
         "groups": [
-          ["^\\u0000"], // side effect (imports that do not export anything)
+          [ "^\\u0000" ], // side effect (imports that do not export anything)
           [
             "^assets*",
             "^components",
@@ -75,51 +134,27 @@
             "^types",
             "^utils"
           ], // local absolute imports `@/foo`
-          ["^\\."], // relative imports
-          ["^[^.]"] // anything that does not start with dot
+          [ "^\\." ], // relative imports
+          [ "^[^.]" ] // anything that does not start with dot
         ]
       }
     ],
-    "no-restricted-imports": [
-      "error",
-      {
-        "patterns": ["..*"]
+    "sort-imports": "off"
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.config.js",
+        "*.config.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
       }
-    ],
-    "simple-import-sort/exports": "warn",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "array-bracket-spacing": "warn",
-    "array-element-newline": [
-      "error",
-      {
-        "ArrayExpression": "consistent",
-        "ArrayPattern": {
-          "minItems": 3
-        }
-      }
-    ],
-    "object-property-newline": [
-      "warn",
-      {
-        "allowAllPropertiesOnSameLine": true
-      }
-    ],
-    "object-curly-spacing": ["warn", "always"],
-    "no-multi-spaces": "warn",
-    "multiline-ternary": ["warn", "always-multiline"],
-    "function-call-argument-newline": ["warn", "consistent"],
-    "import/no-unresolved": [
-      "error",
-      {
-        "ignore": ["\\.css$", "\\.svg", "\\.svg?url"]
-      }
-    ],
-    "no-namespace": [
-      "off",
-      {
-        "allowDeclarations": true
-      }
-    ]
+    }
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
