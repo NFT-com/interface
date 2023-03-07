@@ -6,7 +6,13 @@ export type GTagEvent = {
   action: string;
   category: string;
   label: string;
-  value: number
+  value?: number;
+  eventParams?: any;
+}
+
+export type OutboundLink = {
+  url: string;
+  hitCallback: () => void;
 }
 
 export const GA_TRACKING_ID: string | undefined = getEnv(Doppler.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID);
@@ -34,10 +40,11 @@ export const pageview = (url) => {
  * @param {GTagEvent} event - The event to send.
  * @returns None
  */
-export const event = ({ action, category, label, value }: GTagEvent) => {
+export const event = ({ action, category, label, value, eventParams }: GTagEvent) => {
+  const extraParams = value ? { value, ...eventParams } : eventParams;
   window.gtag('event', action, {
     event_category: category,
     event_label: label,
-    value: value,
+    ...extraParams
   });
 };
