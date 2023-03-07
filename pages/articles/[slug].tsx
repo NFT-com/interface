@@ -114,7 +114,8 @@ export async function getStaticProps({ params, preview = false }) {
   return {
     props: {
       post: data?.post ?? contentfulBackupData[2].items.find(item => item.slug == params.slug),
-      preview
+      preview,
+      revalidate: 10,
     },
   };
 }
