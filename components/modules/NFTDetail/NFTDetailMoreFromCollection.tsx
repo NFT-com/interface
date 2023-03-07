@@ -64,7 +64,6 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                     name={nft.metadata.name}
                     nft={nft}
                     images={[nft.metadata.imageURL]}
-                    fallbackImage={nft.metadata.imageURL}
                     collectionName={props.collectionName}
                     redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
                   />
@@ -117,7 +116,6 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                       isOwnedByMe={nft?.isOwnedByMe}
                       listings={nft?.listings?.items || []}
                       images={[nft.metadata.imageURL]}
-                      fallbackImage={nft.metadata.imageURL}
                       collectionName={props.collectionName}
                       redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
                     />

@@ -36,47 +36,44 @@ import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftCardProps {
   name: string;
-  images?: Array<string | null>;
+  images: Array<string | null>;
   collectionName: string;
-  redirectTo?: string;
-  description?: string;
-  customBackground?: string;
-  contractAddr?: string;
-  lightModeForced?: boolean;
+  contractAddr: string;
+  tokenId: string;
+  redirectTo: string;
+  
   listings?: PartialDeep<TxActivity>[];
   nft?: PartialDeep<DetailedNft>;
-  price?: string;
-  secondPrice?: string;
-  ednDay?: string;
-  tokenId?: string;
-  isOnSale?: boolean;
   isOwnedByMe?: boolean;
   visible?: boolean;
   onVisibleToggle?: (visible: boolean) => void;
   onClick?: () => void;
-  nftsDescriptionsVisible?: boolean;
+  descriptionVisible?: boolean;
   preventDefault?: boolean;
-  fallbackImage?: string;
 }
 
 export function NftCard(props: NftCardProps) {
   const { stagePurchase, stageBuyNow, togglePurchaseSummaryModal } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
-  const defaultChainId = useDefaultChainId();
   const { getByContractAddress } = useSupportedCurrencies();
-  const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nfts is passed by setting tokenId to null
+  const defaultChainId = useDefaultChainId();
+  const currentDate = useGetCurrentDate();
+  const chainId = useDefaultChainId();
+  const ethPriceUSD = useEthPriceUSD();
+
+  const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nft is passed by setting tokenId to null
+  const { profileData: nftProfileData } = useProfileQuery(!props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts is passed by setting null
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
+
   const isOwnedByMe = props?.isOwnedByMe || (nft?.wallet?.address ?? nft?.owner) === currentAddress;
-  const { profileData: nftProfileData } = useProfileQuery(!props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts is passed by setting null
-  const chainId = useDefaultChainId();
-  const ethPriceUSD = useEthPriceUSD();
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
-  const currentDate = useGetCurrentDate();
+  
+  const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth; // ?????????
 
   const checkEndDate = () => {
     if(bestListing){
@@ -88,8 +85,6 @@ export function NftCard(props: NftCardProps) {
       } else return date.replace('in ', '');
     }
   };
-
-  const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth;
 
   const getIcon = useCallback((contract: string, currency: string) => {
     switch (currency) {
@@ -114,7 +109,7 @@ export function NftCard(props: NftCardProps) {
   return (
     <div className={tw(
       'group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-xl overflow-hidden cursor-p relative w-full mb-3',
-      props.nftsDescriptionsVisible != false ? '' : 'h-max'
+      props.descriptionVisible != false ? '' : 'h-max'
     )}>
       {
         props.visible != null &&
@@ -250,7 +245,7 @@ export function NftCard(props: NftCardProps) {
             </div>
           </div>
 
-          {props.nftsDescriptionsVisible != false &&
+          {props.descriptionVisible != false &&
             <div className="sm:h-[auto] h-[190px] p-[18px] bg-white font-noi-grotesk">
               <div
                 className="sm:leading-[18px] sm:h-[54px] h-[94px] flex flex-col text-[20px] leading-[28px] font-[600] list-none border-b-[1px] border-[#F2F2F2] pb-[8px] mb-[8px]">

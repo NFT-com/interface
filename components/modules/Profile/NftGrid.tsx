@@ -13,7 +13,6 @@ import { ProfileContext } from './ProfileContext';
 
 import { BigNumber } from 'ethers';
 import { useContext } from 'react';
-import { useThemeColors } from 'styles/theme/useThemeColors';
 import { PartialDeep } from 'type-fest';
 
 export type DetailedNft = Nft & { hidden?: boolean };
@@ -34,7 +33,6 @@ export function NftGrid(props: NftGridProps) {
   const { user } = useUser();
   const defaultChainId = useDefaultChainId();
   const { data: profileCustomizationStatus } = useIsProfileCustomized(user?.currentProfileUrl, defaultChainId.toString());
-  const { tileBackgroundSecondary } = useThemeColors();
   const { width: screenWidth } = useWindowDimensions();
 
   const mosaicArray = [0];
@@ -52,25 +50,6 @@ export function NftGrid(props: NftGridProps) {
   }
 
   const savedLayoutType = 'Default';
-
-  const mosaicCardType = (layoutType, index) => {
-    if (layoutType === 'Mosaic') {
-      if (screenWidth > 1199) {
-        if (index % 7 === 0 )
-          return 'LargeMosaicLargeCard';
-        if ((index-4) % 7 === 0)
-          return 'LargeMosaicMediumCard';
-        if (index % 7 !== 0 && (index-4) % 7 !== 0)
-          return 'LargeMosaicSmallCard';
-      } else if (screenWidth > 900 && screenWidth <= 1199) {
-        return mosaicArray2.includes(index) ? 'MediumMosaicMediumCard' : 'MediumMosaicSmallCard';
-      } else if(screenWidth > 600 && screenWidth <= 899) {
-        return mosaicArray.includes(index) ? 'SmallMosaicMediumCard' : 'SmallMosaicSmallCard';
-      }
-    }
-
-    return '';
-  };
 
   return <div
     className={tw(
@@ -113,7 +92,6 @@ export function NftGrid(props: NftGridProps) {
             isOwnedByMe={nft?.isOwnedByMe}
             listings={nft?.listings?.items || []}
             nft={nft}
-            fallbackImage={nft?.metadata?.imageURL}
             contractAddr={nft?.contract}
             tokenId={nft?.tokenId}
             // only show the eye icons to the owner in edit mode
@@ -132,7 +110,6 @@ export function NftGrid(props: NftGridProps) {
               }
             }}
             redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
-            customBackground={tileBackgroundSecondary}
             nftsDescriptionsVisible={draftNftsDescriptionsVisible}
             preventDefault={editMode}
           />

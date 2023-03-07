@@ -71,9 +71,7 @@ export default function CollectionsPage() {
               images={[item.document.imageURL]}
               collectionName={item.document.contractName}
               redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-              description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-              customBackground={'white'}
-              lightModeForced/>
+            />
           );
         })}
       </div>
