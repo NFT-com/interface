@@ -224,7 +224,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
                 <p className='border-l pl-2'>Years</p>
               </div>
               <p className='text-[40px]'>=</p>
-              <p className='text-xl'>{registrationFee && utils.formatEther(BigNumber.from(registrationFee))} ETH</p>
+              <p className='text-xl'>{registrationFee ? utils.formatEther(BigNumber.from(registrationFee)) : 0.03 * yearValue } ETH</p>
             </div>
             <div className='flex items-center justify-between pr-0 pl-2 minmd:pr-12 minmd:pl-14'>
               <p className='text-[#B2B2B2] font-normal'>Profile Duration</p>

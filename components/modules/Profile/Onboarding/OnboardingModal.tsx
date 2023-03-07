@@ -1,4 +1,5 @@
 import { ProfileActionType } from 'graphql/generated/types';
+import { useGetSentReferralEmailsQuery } from 'graphql/hooks/useGetSentReferralEmailsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
@@ -18,7 +19,10 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
     profileURI
   );
 
+  const { data } = useGetSentReferralEmailsQuery(profileURI);
+
   const usersActions = profileData?.profile?.usersActionsWithPoints.find((user) => user?.userId === profileData?.profile?.ownerUserId);
+  const sufficientReferrals = data?.filter((referral) => referral?.accepted === true).length >= 5;
 
   const onboardingItems = useMemo(() => [
     {
@@ -35,7 +39,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
     },
     {
       name: 'Refer Network',
-      isCompleted: usersActions?.action.includes(ProfileActionType.ReferNetwork),
+      isCompleted: usersActions?.action.includes(ProfileActionType.ReferNetwork) && sufficientReferrals,
       coins: 10,
       description: 'Refer friends to join you on NFT.com. Once your referral creates a profile, this step will be marked as completed.',
       buttonText: 'Continue'
@@ -47,7 +51,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
       description: 'Grow your collection by purchasing NFTs on NFT.com',
       href: '/app/discover/nfts'
     }
-  ], [usersActions]);
+  ], [usersActions, sufficientReferrals]);
 
   useEffect(() => {
     const totalPoints = onboardingItems.reduce((acc, item) => {
