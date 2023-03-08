@@ -44,7 +44,8 @@ export function useSearchModal() {
         contractName: null
       },
       dropDownSearchResults: null,
-      keyword: ''
+      keyword: '',
+      isDiscoverCollections: false,
     } });
 
   const loading = !data;
@@ -136,6 +137,13 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
+  const setIsDiscoverCollections = useCallback((isDiscoverCollections: boolean) => {
+    mutate({
+      ...data,
+      isDiscoverCollections
+    });
+  },[data, mutate]);
+
   const setDropDownSearchResults = useCallback((dropDownSearchResults: any, keyword?: string) => {
     mutate({
       ...data,
@@ -214,6 +222,7 @@ export function useSearchModal() {
     collectionsFilter: data.collectionsFilter,
     nftSFilters: data.nftSFilters,
     isLeaderBoard: data.isLeaderBoard,
+    isDiscoverCollections: data.isDiscoverCollections,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     changeTimePeriod: useChangeTimePeriod,
@@ -227,7 +236,8 @@ export function useSearchModal() {
     setCollectionPageAppliedFilters,
     setResultsPageAppliedFilters,
     setClearedFilters,
-    setDropDownSearchResults
+    setDropDownSearchResults,
+    setIsDiscoverCollections,
   };
 }
 
