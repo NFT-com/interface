@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 import codeCoverageTask from '@cypress/code-coverage/task';
 import { defineConfig } from 'cypress';
 
