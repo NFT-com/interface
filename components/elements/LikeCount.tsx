@@ -16,7 +16,7 @@ export default function Alert({ count, isLiked, onClick }: LikeCountProps) {
         onClick && onClick();
       }}
       className={tw(
-        isLiked ? 'bg-alert-red-bg-light' : 'bg-footer-bg',
+        isLiked ? 'bg-alert-red-bg-light hover:bg-alert-red-bg' : 'bg-footer-bg hover:bg-[#ECECEC]',
         ' w-max relative h-10 px-3 rounded-[10px] hover:cursor-pointer'
       )}
     >
