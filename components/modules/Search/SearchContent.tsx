@@ -107,6 +107,8 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
       inputRef.current.value = '';
       setSearchModalOpen(false);
       setShowHits(false);
+      setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
+      inputRef.current.blur();
     } else {
       fetchTypesenseMultiSearch(searchRequests)
         .then((data) => {
