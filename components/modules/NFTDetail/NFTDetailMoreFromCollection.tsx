@@ -5,9 +5,10 @@ import 'swiper/components/pagination/pagination.min.css';
 import 'swiper/components/navigation/navigation.min.css';
 
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
+import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { useFetchCollectionNFTs } from 'graphql/hooks/useFetchCollectionNFTs';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -58,15 +59,29 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 <div className={tw(
                   'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
                 )} key={nft?.id ?? index}>
-                  <NftCard
-                    contractAddr={props.contract}
-                    tokenId={nft.tokenId}
-                    name={nft.metadata.name}
-                    nft={nft}
-                    images={[nft.metadata.imageURL]}
-                    collectionName={props.collectionName}
-                    redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
-                  />
+
+                  {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+                    <NftCard
+                      contractAddr={props.contract}
+                      tokenId={nft.tokenId}
+                      name={nft.metadata.name}
+                      nft={nft}
+                      images={[nft.metadata.imageURL]}
+                      collectionName={props.collectionName}
+                      redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
+                    />
+                    :
+                    <NFTCard
+                      contractAddr={props.contract}
+                      tokenId={nft.tokenId}
+                      name={nft.metadata.name}
+                      nft={nft}
+                      images={[nft.metadata.imageURL]}
+                      collectionName={props.collectionName}
+                      redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
+                    />
+                  }
+                  
                 </div>
               );
             })}

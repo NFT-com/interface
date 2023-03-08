@@ -56,24 +56,20 @@ export function NftCard(props: NftCardProps) {
   const { stagePurchase, stageBuyNow, togglePurchaseSummaryModal } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
-  const { getByContractAddress } = useSupportedCurrencies();
   const defaultChainId = useDefaultChainId();
-  const currentDate = useGetCurrentDate();
-  const chainId = useDefaultChainId();
-  const ethPriceUSD = useEthPriceUSD();
-
-  const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nft is passed by setting tokenId to null
-  const { profileData: nftProfileData } = useProfileQuery(!props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts is passed by setting null
+  const { getByContractAddress } = useSupportedCurrencies();
+  const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nfts is passed by setting tokenId to null
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
-
   const isOwnedByMe = props?.isOwnedByMe || (nft?.wallet?.address ?? nft?.owner) === currentAddress;
+  const { profileData: nftProfileData } = useProfileQuery(!props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts is passed by setting null
+  const chainId = useDefaultChainId();
+  const ethPriceUSD = useEthPriceUSD();
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
-  
-  const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth; // ?????????
+  const currentDate = useGetCurrentDate();
 
   const checkEndDate = () => {
     if(bestListing){
@@ -85,6 +81,8 @@ export function NftCard(props: NftCardProps) {
       } else return date.replace('in ', '');
     }
   };
+
+  const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth;
 
   const getIcon = useCallback((contract: string, currency: string) => {
     switch (currency) {

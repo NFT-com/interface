@@ -3,6 +3,7 @@ import PreloaderImage from 'components/elements/PreloaderImage';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
+import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollections';
@@ -307,14 +308,24 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                             </div>
                             <span className="sr-only">Loading...</span>
                           </div>:
-                        <NftCard
-                          name={item.document.nftName}
-                          tokenId={item.document.tokenId}
-                          contractAddr={item.document.contractAddr}
-                          images={[item.document.imageURL]}
-                          collectionName={item.document.contractName}
-                          redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-                        />
+
+                        !getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+                          <NftCard
+                            name={item.document.nftName}
+                            tokenId={item.document.tokenId}
+                            contractAddr={item.document.contractAddr}
+                            images={[item.document.imageURL]}
+                            collectionName={item.document.contractName}
+                            redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+                          /> :
+                          <NFTCard
+                            name={item.document.nftName}
+                            tokenId={item.document.tokenId}
+                            contractAddr={item.document.contractAddr}
+                            images={[item.document.imageURL]}
+                            collectionName={item.document.contractName}
+                            redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+                          />
                       }
                     </div>);
                 })}
