@@ -2,10 +2,7 @@ import LoggedInIdenticon from './LoggedInIdenticon';
 
 import { AvatarComponent } from '@rainbow-me/rainbowkit';
 
-export const CustomAvatar: AvatarComponent = ({
-  address,
-}) => {
-  console.log(address);
+export const CustomAvatar: AvatarComponent = () => {
   return <LoggedInIdenticon />;
 };
 
