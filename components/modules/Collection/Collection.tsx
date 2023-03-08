@@ -1,6 +1,7 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
 import { CollectionActivity } from 'components/modules/Analytics/CollectionActivity';
+import { NFTCard as NFTCardNew } from 'components/modules/NFTCard/NFTCard';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
@@ -355,18 +356,32 @@ export function Collection(props: CollectionProps) {
                   }
                   <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
                     {collectionNfts.map((nft, index) => {
-                      return (
-                        <div className="NftCollectionItem" key={index}>
-                          <NFTCard
-                            contractAddress={nft.document.contractAddr}
-                            tokenId={nft.document.tokenId}
-                            title={nft.document.nftName}
-                            collectionName={nft.document.contractName}
-                            images={[]}
-                            redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
-                            description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
-                          />
-                        </div>);}
+                      return !getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)
+                        ? (
+                          <div className="NftCollectionItem" key={index}>
+                            <NFTCard
+                              contractAddress={nft.document.contractAddr}
+                              tokenId={nft.document.tokenId}
+                              title={nft.document.nftName}
+                              collectionName={nft.document.contractName}
+                              images={[]}
+                              redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
+                              description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
+                            />
+                          </div>) :
+                        (
+                          <div className="NftCollectionItem" key={index}>
+                            <NFTCardNew
+                              contractAddr={nft.document.contractAddr}
+                              tokenId={nft.document.tokenId}
+                              name={nft.document.nftName}
+                              collectionName={nft.document.contractName}
+                              images={[]}
+                              redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
+                            />
+                          </div>
+                        );
+                    }
                     )}
                   </div>
                   {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
