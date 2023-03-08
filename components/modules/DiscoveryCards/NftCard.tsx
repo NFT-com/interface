@@ -234,7 +234,9 @@ export function NftCard(props: NftCardProps) {
                           toggleCartSidebar('Buy');
                         }}
                         className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#ffffff] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-[#F9D54C]">
-                        <ShopIcon/>
+                        <div className='w-6 h-6'>
+                          <ShopIcon/>
+                        </div>
                       </button>
                     </>
                     : null}
