@@ -9,6 +9,7 @@ import { NotificationContextProvider } from 'components/modules/Notifications/No
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import useAnalyticsOnRouteChange from 'hooks/useAnalyticsOnRouteChange';
 import { Doppler, getEnv } from 'utils/env';
+import { DeploymentEnv, isNotEnv, isProd } from 'utils/isEnv';
 
 import {
   connectorsForWallets,
@@ -57,7 +58,7 @@ export default function MyApp({
 
   const { chains, provider } = useMemo(() => {
     return configureChains(
-      getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION'
+      !isProd
         ? [mainnet, goerli]
         : [mainnet],
       [
@@ -178,8 +179,7 @@ export default function MyApp({
           theme={rainbowLight}
           chains={chains}
           initialChain={
-            getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' &&
-            getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING'
+            isNotEnv([DeploymentEnv.STAGING, DeploymentEnv.PRODUCTION])
               ? goerli
               : mainnet
           }

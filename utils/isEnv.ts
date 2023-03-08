@@ -20,7 +20,15 @@ export const getDeployEnv = () => (getEnv(Doppler.NEXT_PUBLIC_ENV) as Deployment
 export const isProd: boolean = getDeployEnv() === DeploymentEnv.PRODUCTION;
 
 /**
- * Returns whether the current deployment environment is the development environment.
- * @returns {boolean} - whether the current deployment environment is the development environment.
+ * Returns true if the current deployment environment matches the given environment(s).
+ * @param {DeploymentEnv} env - the environment to check against.
+ * @returns {boolean} - true if the current deployment environment is the given environment.
  */
-export const isDev: boolean = getDeployEnv() === DeploymentEnv.DEBUG;
+export const isEnv= (env: DeploymentEnv | DeploymentEnv[]) => Array.isArray(env) ? env.includes(getDeployEnv()) : getDeployEnv() === env;
+
+/**
+ * Checks if the given environment(s) DON'T match the current environment.
+ * @param {DeploymentEnv | DeploymentEnv[]} env - the environment to check against the current environment.
+ * @returns {boolean} - true if the given environment is not the current environment.
+ */
+export const isNotEnv = (env: DeploymentEnv | DeploymentEnv[]) => !isEnv(env);
