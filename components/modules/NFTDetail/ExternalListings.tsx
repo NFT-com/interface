@@ -309,7 +309,7 @@ export function ExternalListings(props: ExternalListingsProps) {
             </div>
           </div>
           <div className='flex flex-col pt-7'>
-            <Countdown eventTime={getListingEndDate(listing, listing?.order?.protocol as ExternalProtocol)} interval={1000} />
+            <Countdown eventTime={getListingEndDate(listing, listing?.order?.protocol as ExternalProtocol)} />
             {getListingSummaryTitle(listing)}
           </div>
           
