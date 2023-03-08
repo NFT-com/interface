@@ -99,7 +99,7 @@ BlogListPage.getLayout = function getLayout(page) {
   );
 };
 
-export async function getStaticProps({ preview = false }) {
+export async function getServerSideProps({ preview = false }) {
   const homeData = await getCollection(preview, 1, 'blogHomePageCollection', BLOG_LIST_HOME_FIELDS);
   const posts = await getPaginatedPosts(0, 12, preview);
 
