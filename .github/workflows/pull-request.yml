@@ -55,7 +55,7 @@ jobs:
     - name: Configure Doppler Config
       run: |
         doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
-    
+
     - name: Download the build folders
       uses: actions/download-artifact@v2
       with:
@@ -117,14 +117,14 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2.4.2
-      
+
     - name: Install Doppler CLI
       uses: dopplerhq/cli-action@v1
 
     - name: Configure Doppler Config
       run: |
         doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
-    
+
     - name: Download the build folders
       uses: actions/download-artifact@v2
       with:
@@ -149,7 +149,7 @@ jobs:
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: ✅ Upload coverage to Codecov
       uses: codecov/codecov-action@v3.1.0
       with:
@@ -157,20 +157,20 @@ jobs:
         fail_ci_if_error: true
 
   deploy-preview:
-    if: startsWith(github.base_ref, 'feat') || startsWith(github.base_ref, 'fix') || startsWith(github.base_ref, 'main')
+    if: startsWith(github.base_ref, 'feat') || startsWith(github.base_ref, 'fix') || startsWith(github.base_ref, 'task') || startsWith(github.base_ref, 'main')
     runs-on: ubuntu-latest
     environment: sandbox
     steps:
       - name: Checkout
         uses: actions/checkout@v2.4.2
-        
+
       - name: Install Doppler CLI
         uses: dopplerhq/cli-action@v1
 
       - name: Configure Doppler Config
         run: |
           doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
-        
+
       - name: Checkout
         uses: actions/checkout@v2.4.2
       - uses: actions/setup-node@v3
