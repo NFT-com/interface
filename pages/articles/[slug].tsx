@@ -109,13 +109,12 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params, preview = false }) {
+export async function getServerSideProps({ params, preview = false }) {
   const data = await getPost(params.slug, preview);
   return {
     props: {
       post: data?.post ?? contentfulBackupData[2].items.find(item => item.slug == params.slug),
-      preview,
-      revalidate: 10,
+      preview
     },
   };
 }
