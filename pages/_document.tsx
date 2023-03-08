@@ -119,7 +119,28 @@ class MyDocument extends Document {
               __html: `
                 partytown = {
                   lib: "/_next/static/~partytown/",
-                  forward: ["dataLayer.push", "gtag"]
+                  forward: [
+                    "dataLayer.push",
+                    "gtag",
+                    // segment.io
+                    "analytics",
+                    "analytics.trackSubmit",
+                    "analytics.trackClick",
+                    "analytics.trackLink",
+                    "analytics.trackForm",
+                    "analytics.pageview",
+                    "analytics.identify",
+                    "analytics.reset",
+                    "analytics.group",
+                    "analytics.track",
+                    "analytics.ready",
+                    "analytics.alias",
+                    "analytics.debug",
+                    "analytics.page",
+                    "analytics.once",
+                    "analytics.off",
+                    "analytics.on",
+                  ]
                 };
               `,
             }}
