@@ -101,6 +101,7 @@ Post.getLayout = function getLayout(page) {
   );
 };
 
+
 export async function getServerSideProps({ params, preview = false }) {
   const data = await getPost(params.slug, preview);
   return {
