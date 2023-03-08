@@ -34,8 +34,7 @@ import Reorder from 'public/Reorder.svg';
 import ShopIcon from 'public/shop-icon.svg';
 import USDC from 'public/usdc.svg';
 import Visible from 'public/Visible.svg';
-import X2Y2Gray from 'public/x2y2-gray.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
+import X2Y2Gray from 'public/x2y2_gray.svg';
 import { MouseEvent, useCallback, useContext, useMemo } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
@@ -50,7 +49,7 @@ export interface NftCardProps {
   listings?: PartialDeep<TxActivity>[];
   nft?: PartialDeep<DetailedNft>;
   isOwnedByMe?: boolean;
-  visible?: boolean;
+  visible?: boolean | null;
   onVisibleToggle?: (visible: boolean) => void;
   onClick?: () => void;
   descriptionVisible?: boolean;
@@ -133,9 +132,11 @@ export function NFTCard(props: NftCardProps) {
 
   return (
     <div className='relative w-full h-full'>
-      <div className='absolute top-4 right-4 z-50'>
-        <LikeCount count={10} isLiked={false} onClick={() => null} />
-      </div>
+      {props?.visible !== true && props?.visible !== false &&
+       <div className='absolute top-4 right-4 z-50'>
+         <LikeCount count={10} isLiked={false} onClick={() => null} />
+       </div>
+      }
       
       <div className={tw(
         'group/ntfCard transition-all cursor-pointer rounded-2xl shadow-xl cursor-p relative w-full h-full mb-3 minmd:mb-0 overflow-visible',
@@ -190,9 +191,13 @@ export function NFTCard(props: NftCardProps) {
           }}
         >
           <div className={tw(
-            'relative object-cover w-full h-max flex flex-col'
+            'relative object-cover w-full h-max flex flex-col',
+            !bestListing && 'mb-10'
           )}>
-            <div className={`h-[${nftImage}px] object-cover overflow-hidden rounded-t-2xl`}>
+            <div className={tw(
+              `h-[${nftImage}px] object-cover overflow-hidden rounded-t-2xl`,
+              props?.descriptionVisible === false && 'rounded-b-2xl'
+            )}>
               <div className='group-hover/ntfCard:scale-110 hover:scale-105 transition'>
                 <RoundedCornerMedia
                   variant={RoundedCornerVariant.None}
@@ -300,7 +305,7 @@ export function NFTCard(props: NftCardProps) {
                               }
                             >
                               <X2Y2Gray
-                                className='h-[25px] w-[25px] relative shrink-0 mt-1 ml-1 grayscale'
+                                className='h-[25px] w-[25px] relative shrink-0 ml-1 grayscale'
                                 alt="Opensea logo redirect"
                                 layout="fill"
                               />
@@ -321,7 +326,7 @@ export function NFTCard(props: NftCardProps) {
                               }
                             >
                               <NFTLogo
-                                className='h-[25px] w-[25px] relative shrink-0 mt-1 ml-1.5'
+                                className='h-[25px] w-[25px] relative shrink-0 ml-1.5'
                                 alt="NFT.com logo redirect"
                                 layout="fill"
                               />
@@ -340,7 +345,7 @@ export function NFTCard(props: NftCardProps) {
             <div className={tw(
               'sm:h-[auto] p-[18px] bg-white font-noi-grotesk',
               'h-max',
-              'flex flex-row w-full max-w-full'
+              'flex flex-row w-full max-w-full rounded-b-2xl'
             )}
             >
               <div
@@ -350,14 +355,14 @@ export function NFTCard(props: NftCardProps) {
                 )}
               >
                 <div className='flex w-full justify-between'>
-                  <p className="p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden mr-5">
-                    {props.name}
-                  </p>
-                  {(props.nft?.isGKMinted ?? nftProfileData?.profile?.isGKMinted) &&
+                  <div className="p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden flex mr-5">
+                    <p className='whitespace-nowrap text-ellipsis overflow-hidden'>{props.name}</p>
+                    {(props.nft?.isGKMinted ?? nftProfileData?.profile?.isGKMinted) &&
                         <div className='h-4 w-4 minlg:h-6 minlg:w-6 ml-2 min-w-[24px] flex items-center'>
                           <GK />
                         </div>
-                  }
+                    }
+                  </div>
                   {
                     (props?.listings?.length || nft?.listings?.items?.length) && bestListing ?
                       <CustomTooltip2
@@ -373,7 +378,7 @@ export function NFTCard(props: NftCardProps) {
                           </div>
                         }
                       >
-                        <div className='flex items-center text-base font-medium hover:bg-footer-bg hover:rounded-full py-1 px-2 -mr-2 -mt-1'>
+                        <div className='hidden minmd:flex items-center text-base font-medium hover:bg-footer-bg hover:rounded-full py-1 px-2 -mr-2 -mt-1 '>
                           {getIcon(
                             listingCurrencyData?.contract,
                             listingCurrencyData?.name ?? 'WETH',
@@ -395,17 +400,51 @@ export function NFTCard(props: NftCardProps) {
                     {props.collectionName}
                   </p>
                   {(props?.listings?.length || nft?.listings?.items?.length) && bestListing ?
-                    <p className="text-[#B2B2B2] font-normal text-sm mt-1 whitespace-nowrap ml-5">
+                    <p className="text-[#B2B2B2] font-normal text-sm mt-1 whitespace-nowrap ml-5 hidden minmd:block">
                       Ends in
                       <span className='text-[#6A6A6A] font-medium'> {checkEndDate()}</span>
                     </p>
                     : null
                   }
                 </div>
+                <div className='flex minmd:hidden justify-between mt-4'>
+                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing ?
+                    <>
+                      <p className="text-[#B2B2B2] font-normal text-sm mt-1 whitespace-nowrap">
+                      Ends in
+                        <span className='text-[#6A6A6A] font-medium'> {checkEndDate()}</span>
+                      </p>
+                      <CustomTooltip2
+                        noFullHeight={true}
+                        orientation='top'
+                        tooltipComponent={
+                          <div
+                            className="w-max"
+                          >
+                            <p>
+                              {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0)}
+                            </p>
+                          </div>
+                        }
+                      >
+                        <div className='items-center text-base font-medium hover:bg-footer-bg hover:rounded-full py-1 px-2 -mr-2 -mt-1 flex'>
+                          {getIcon(
+                            listingCurrencyData?.contract,
+                            listingCurrencyData?.name ?? 'WETH',
+                          )}
+                          {listingCurrencyData?.decimals ? Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)).toLocaleString(undefined, { maximumSignificantDigits: 3 }) : '-'}
+                   &nbsp;
+                          {listingCurrencyData?.name ?? 'WETH'}
+                        </div>
+                      </CustomTooltip2>
+                    </>
+                    : null
+                  }
+                </div>
               </div>
             </div>
             }
-            {(props?.listings?.length || nft?.listings?.items?.length) && bestListing ?
+            {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && props?.descriptionVisible !== false ?
               bestListing?.order?.protocol === ExternalProtocol.NFTCOM && (bestListing?.order?.protocolData as NftcomProtocolData)?.auctionType === AuctionType.English ?
                 <div className='w-full overflow-hidden rounded-b-2xl'>
                   <div className='-ml-2 -mr-2'>
