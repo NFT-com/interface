@@ -14,10 +14,7 @@ export default async function handler(req, res) {
   try {
     // Note: if this fails to parse you may have forget to set the
     // "content-type" header correctly as mentioned here https://github.com/vercel/next.js/blob/canary/examples/cms-contentful/README.md#step-9-try-using-on-demand-revalidation
-    const postSlug = req.body.fields.slug['en-US'];
-  
-    // revalidate the individual post and the home page
-    await res.revalidate(`/articles/${postSlug}`);
+    
     await res.revalidate('/articles');
     await res.revalidate('/');
   
@@ -25,6 +22,6 @@ export default async function handler(req, res) {
   } catch (err) {
     // If there was an error, Next.js will continue
     // to show the last successfully generated page
-    return res.status(500).send('Error revalidating');
+    return res.status(500).send(`Error revalidating, ${JSON.stringify(err)}`);
   }
 }

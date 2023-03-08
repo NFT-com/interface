@@ -33,7 +33,7 @@ const DynamicFooter = dynamic<React.ComponentProps<typeof StaticFooter>>(() => i
 
 export default function CollectionsPage() {
   const [page, setPage] = useState(1);
-  const { sideNavOpen, activePeriod, setSideNavOpen, collectionsResultsFilterBy, isLeaderBoard, toggleLeaderBoardState, changeTimePeriod, setSearchModalOpen, setClearedFilters } = useSearchModal();
+  const { sideNavOpen, activePeriod, setSideNavOpen, collectionsResultsFilterBy, isLeaderBoard, toggleLeaderBoardState, changeTimePeriod, setSearchModalOpen, setClearedFilters, setIsDiscoverCollections, isDiscoverCollections } = useSearchModal();
   const { data: collectionData } = useCollectionQueryLeaderBoard(activePeriod);
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
@@ -44,6 +44,10 @@ export default function CollectionsPage() {
   const [collectionsPerRows, setCollectionsPerRows] = useState([]);
   const [columnCount, setColumnCount] = useState(5);
   const { width: screenWidth } = useWindowDimensions();
+
+  useEffect(() => {
+    !isDiscoverCollections && setIsDiscoverCollections(true);
+  }, [isDiscoverCollections, setIsDiscoverCollections]);
 
   useEffect(() => {
     if (page > 1 && collectionsResultsFilterBy !== prevFilters){
@@ -277,7 +281,7 @@ export default function CollectionsPage() {
                     {
                       !isLeaderBoard && sideNavOpen && (
                         <div className='hidden minlg:block'>
-                          <SideNav onSideNav={() => null} filtersData={filters}/>
+                          <SideNav onSideNav={() => null} filtersData={filters} />
                         </div>
                       )
                     }
