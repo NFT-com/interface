@@ -1,3 +1,6 @@
+import { Doppler, getEnvBool } from 'utils/env';
+import { tw } from 'utils/tw';
+
 import { PropsWithChildren, useState } from 'react';
 
 type ToolTipProps = {
@@ -101,7 +104,10 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
 
   return (
     <div
-      className={`relative flex items-center w-full ${props?.noFullHeight ? '' : 'h-full'} ${props.tooltipClick && 'cursor-pointer'}`}
+      className={tw(
+        `relative flex items-center  z-50 ${props?.noFullHeight ? '' : 'h-full'} ${props.tooltipClick && 'cursor-pointer'}`,
+        getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ? 'w-max' : 'w-full'
+      )}
       onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
     >
       <div

@@ -26,6 +26,7 @@ import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
 import GK from 'public/Badge_Key.svg';
 import ETH from 'public/eth.svg';
+import ETHBlack from 'public/eth-black.svg';
 import Hidden from 'public/Hidden.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import NFTLogo from 'public/nft_logo_yellow.svg';
@@ -93,9 +94,11 @@ export function NFTCard(props: NftCardProps) {
   const getIcon = useCallback((contract: string, currency: string) => {
     switch (currency) {
     case 'ETH':
-      return <ETH className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="ETH logo redirect" layout="fill"/>;
+      return <ETHBlack className='-ml-1 mr-1 h-4 w-4 relative shrink-0 grayscale' alt="ETH logo redirect" layout="fill"/>;
     case 'USDC':
       return <USDC className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="USDC logo redirect" layout="fill"/>;
+    case 'WETH':
+      return <ETH className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="ETH logo redirect" layout="fill"/>;
     default:
       if (!contract) {
         return <div>{currency}</div>;
