@@ -1,6 +1,5 @@
 import { tw } from 'utils/tw';
 
-// import { Heart } from 'phosphor-react';
 import Heart from 'public/heart.svg';
 
 type LikeCountProps = {
@@ -18,19 +17,13 @@ export default function Alert({ count, isLiked, onClick }: LikeCountProps) {
       }}
       className={tw(
         isLiked ? 'bg-alert-red-bg-light hover:bg-alert-red-bg' : 'bg-footer-bg hover:bg-[#ECECEC]',
-        ' w-max relative h-10 px-3 rounded-[10px] hover:cursor-pointer'
+        ' w-max relative h-10 rounded-[10px] hover:cursor-pointer px-3'
       )}
     >
-      <div className='h-full flex flex-row items-center justify-center'>
-        <div className='w-6 h-6 flex'>
+      <div className='h-full flex flex-row items-center justify-center space-x-2'>
+        <div className='w-[18px] h-5 flex'>
           <Heart
-            className={tw(
-              count > 0 && 'mr-1.5'
-            )}
-            size={21}
             fill={isLiked ? '#E45E47' : '#4D4D4D'}
-            weight="fill"
-          
           />
         </div>
         {count > 0 &&

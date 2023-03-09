@@ -51,7 +51,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
       description: 'Grow your collection by purchasing NFTs on NFT.com',
       href: '/app/discover/nfts'
     }
-  ], [usersActions]);
+  ], [usersActions, sufficientReferrals]);
 
   useEffect(() => {
     const totalPoints = onboardingItems.reduce((acc, item) => {

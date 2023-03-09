@@ -1,18 +1,27 @@
 module.exports = {
   stories: [
-    "../stories/**/*.stories.mdx",
-    "../stories/**/*.stories.@(js|jsx|ts|tsx)"
+    '../stories/**/*.stories.mdx',
+    '../stories/**/*.stories.@(js|jsx|ts|tsx)'
   ],
-  staticDirs: ['../public'],
   addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "@storybook/addon-postcss",
-    "storybook-addon-next",
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    'storybook-addon-next',
+    '@storybook/addon-interactions'
   ],
-  framework: "@storybook/react",
+  framework: '@storybook/react',
   core: {
-    "builder": "@storybook/builder-webpack5"
+    builder: 'webpack5'
+  },
+  webpackFinal: async config => {
+    const imageRule = config.module.rules.find(rule => rule.test.test('.svg'))
+    imageRule.exclude = /\.svg$/
+
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack']
+    })
+
+    return config
   }
 }
