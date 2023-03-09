@@ -22,7 +22,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
   const { data } = useGetSentReferralEmailsQuery(profileURI);
 
   const usersActions = profileData?.profile?.usersActionsWithPoints.find((user) => user?.userId === profileData?.profile?.ownerUserId);
-  const sufficientReferrals = data?.filter((referral) => referral?.accepted === true).length == 5;
+  const sufficientReferrals = data?.filter((referral) => referral?.accepted === true).length >= 5;
 
   const onboardingItems = useMemo(() => [
     {
@@ -39,7 +39,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
     },
     {
       name: 'Refer Network',
-      isCompleted: sufficientReferrals,
+      isCompleted: usersActions?.action.includes(ProfileActionType.ReferNetwork) && sufficientReferrals,
       coins: 10,
       description: 'Refer friends to join you on NFT.com. Once your referral creates a profile, this step will be marked as completed.',
       buttonText: 'Continue'

@@ -1,7 +1,8 @@
-/** @type {import('next').NextConfig} */
+
 const { withSentryConfig } = require('@sentry/nextjs');
 const path = require('path');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
+
 const withTM = require('next-transpile-modules')([
   'react-dnd',
   'dnd-core',
@@ -18,48 +19,18 @@ const sentryWebpackPluginOptions = {
   silent: true,
 };
 
-const moduleExports = withTM({
+/** @type {import('next').NextConfig} */
+const nextConfig =
+{
   reactStrictMode: true,
   compress: true,
+  swcMinify: true, // Enables SWC rust compiler for minification
+  experimental: {
+    forceSwcTransforms: true,
+    nextScriptWorkers: true,
+  },
   sentry: { hideSourceMaps: true },
   productionBrowserSourceMaps: false,
-  webpack(config) {
-    // This allows you to import SVG files as strings/urls
-    // but doesn't work with typescript yet.
-    config.module.rules.push({
-      test: /\.svg$/i,
-      type: 'asset',
-      resourceQuery: /url/, // *.svg?url
-    });
-    config.module.rules.push({
-      test: /\.svg$/i,
-      issuer: /\.[jt]sx?$/,
-      resourceQuery: { not: [/url/] }, // exclude react component if *.svg?url
-      use: ['@svgr/webpack'],
-    });
-
-    config.plugins.push(new DuplicatePackageCheckerPlugin());
-    [
-      'axios',
-      'bn.js',
-      'buffer',
-      'clsx',
-      'color-name',
-      'eth-rpc-errors',
-      'pify',
-      'preact',
-      'qrcode',
-      'react-is',
-      'tslib',
-      'typesense'
-    ].map(i => config.resolve.alias[i] = path.resolve(
-      __dirname,
-      'node_modules',
-      i
-    ));
-    
-    return config;
-  },
   async headers() {
     const securityHeaders = [
       {
@@ -123,7 +94,7 @@ const moduleExports = withTM({
         headers: manifestHeaders
       },
       {
-        // matching all API routes
+      // matching all API routes
         source: '/api/:path*',
         headers: [
           { key: 'Access-Control-Allow-Credentials', value: 'true' },
@@ -148,6 +119,46 @@ const moduleExports = withTM({
       }
     ];
   },
+  webpack(config) {
+  // This allows you to import SVG files as strings/urls
+  // but doesn't work with typescript yet.
+    config.module.rules.push({
+      test: /\.svg$/i,
+      type: 'asset',
+      resourceQuery: /url/, // *.svg?url
+    });
+
+    config.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      resourceQuery: { not: [/url/] }, // exclude react component if *.svg?url
+      use: ['@svgr/webpack'],
+    });
+
+    config.plugins.push(new DuplicatePackageCheckerPlugin());
+    // config.plugins.push(new SaveRemoteFilePlugin([{ url: 'https://connect.facebook.net/en_US/fbevents.js', filepath: 'public/js/fbevents.js', hash: false }]));
+    [
+      'axios',
+      'bn.js',
+      'buffer',
+      'clsx',
+      'color-name',
+      'eth-rpc-errors',
+      'pify',
+      'preact',
+      'qrcode',
+      'react-is',
+      'tslib',
+      'typesense'
+    ].map(i => config.resolve.alias[i] = path.resolve(
+      __dirname,
+      'node_modules',
+      i
+    ));
+
+    return config;
+  },
+
   images: {
     domains: [
       'cdn.nft.com',
@@ -163,6 +174,8 @@ const moduleExports = withTM({
       'img.cryptokitties.co'
     ],
   },
-});
+};
+
+const moduleExports = withTM(nextConfig);
 
 module.exports = withBundleAnalyzer(withSentryConfig(moduleExports, sentryWebpackPluginOptions));

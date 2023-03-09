@@ -23,7 +23,7 @@ function usePrevious(value) {
 
 export default function CollectionsPage() {
   const [page, setPage] = useState(1);
-  const { sideNavOpen, setSideNavOpen, setSearchModalOpen, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
+  const { sideNavOpen, setSideNavOpen, setSearchModalOpen, nftsResultsFilterBy, setClearedFilters, setIsDiscoverCollections, isDiscoverCollections } = useSearchModal();
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
   const [nftSData, setNftsData] = useState([]);
@@ -31,6 +31,10 @@ export default function CollectionsPage() {
   const [loading, setLoading] = useState(false);
   const prevFilters = usePrevious(nftsResultsFilterBy);
 
+  useEffect(() => {
+    isDiscoverCollections && setIsDiscoverCollections(false);
+  }, [isDiscoverCollections, setIsDiscoverCollections]);
+  
   useEffect(() => {
     if (page > 1 && nftsResultsFilterBy !== prevFilters){
       setPage(1);

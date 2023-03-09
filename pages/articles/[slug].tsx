@@ -101,15 +101,8 @@ Post.getLayout = function getLayout(page) {
   );
 };
 
-export async function getStaticPaths() {
-  const posts = await getAllPostsWithSlug();
-  return {
-    paths: posts?.map(({ slug }) => `/articles/${slug}`) ?? [],
-    fallback: false,
-  };
-}
 
-export async function getStaticProps({ params, preview = false }) {
+export async function getServerSideProps({ params, preview = false }) {
   const data = await getPost(params.slug, preview);
   return {
     props: {

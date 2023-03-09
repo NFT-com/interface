@@ -31,7 +31,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage({ data }: ResultsPageProps) {
-  const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters, setIsDiscoverCollections, isDiscoverCollections } = useSearchModal();
   const router = useRouter();
   const { searchTerm } = router.query;
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
@@ -80,6 +80,10 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       return nft.document?.contractAddr;
     });
   }
+
+  useEffect(() => {
+    isDiscoverCollections && setIsDiscoverCollections(false);
+  }, [isDiscoverCollections, setIsDiscoverCollections]);
 
   useEffect(() => {
     if (isNullOrEmpty(curatedCollections)) {
