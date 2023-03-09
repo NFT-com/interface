@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { outerElementType } from 'components/elements/outerElementType';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
@@ -5,12 +6,14 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
 import NoActivityIcon from 'public/no_activity.svg';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Loader } from 'react-feather';
 import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 function usePrevious(value) {
@@ -67,35 +70,39 @@ export default function CollectionsPage() {
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
 
   useEffect(() => {
-    const flatData = [...nftSData];
-    const data2D = [];
-    while(flatData.length) data2D.push(flatData.splice(0,columnCount));
-    setNftsDataPerRows(data2D);
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+      const flatData = [...nftSData];
+      const data2D = [];
+      while(flatData.length) data2D.push(flatData.splice(0,columnCount));
+      setNftsDataPerRows(data2D);
+    }
   },[columnCount, nftSData]);
 
   useEffect(() => {
-    if (!sideNavOpen) {
-      if (screenWidth > 1600) {
-        setColumnCount(5);
-      } else if (screenWidth > 1200 && screenWidth <= 1600) {
-        setColumnCount(4);
-      } else if (screenWidth > 900 && screenWidth <= 1200) {
-        setColumnCount(3);
-      } else if (screenWidth > 600 && screenWidth <= 900) {
-        setColumnCount(2);
-      } else
-        setColumnCount(1);
-    } else {
-      if (screenWidth > 1600) {
-        setColumnCount(4);
-      } else if (screenWidth > 1200 && screenWidth <= 1600) {
-        setColumnCount(3);
-      } else if (screenWidth > 900 && screenWidth <= 1200) {
-        setColumnCount(2);
-      } else if (screenWidth > 600 && screenWidth <= 900) {
-        setColumnCount(2);
-      } else
-        setColumnCount(1);
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+      if (!sideNavOpen) {
+        if (screenWidth > 1600) {
+          setColumnCount(5);
+        } else if (screenWidth > 1200 && screenWidth <= 1600) {
+          setColumnCount(4);
+        } else if (screenWidth > 900 && screenWidth <= 1200) {
+          setColumnCount(3);
+        } else if (screenWidth > 600 && screenWidth <= 900) {
+          setColumnCount(2);
+        } else
+          setColumnCount(1);
+      } else {
+        if (screenWidth > 1600) {
+          setColumnCount(4);
+        } else if (screenWidth > 1200 && screenWidth <= 1600) {
+          setColumnCount(3);
+        } else if (screenWidth > 900 && screenWidth <= 1200) {
+          setColumnCount(2);
+        } else if (screenWidth > 600 && screenWidth <= 900) {
+          setColumnCount(2);
+        } else
+          setColumnCount(1);
+      }
     }
   },[nftSData, screenWidth, sideNavOpen]);
 
@@ -126,8 +133,27 @@ export default function CollectionsPage() {
     );
   }, []);
   
-  const showNftView = (nftSDataPerRows: any[]) => {
-    return (
+  const showNftView = (nftSDataPerRows?: any[]) => {
+    return (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) ?
+      <div className={tw(
+        'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
+        sideNavOpen ? 'minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2 minmd:grid-cols-2 grid-cols-1 w-full' : 'minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1 w-full')}>
+        {nftSData && nftSData?.length > 0 && nftSData?.map((item, index) => {
+          return (
+            <NftCard
+              key={index}
+              name={item.document.nftName}
+              tokenId={item.document.tokenId}
+              contractAddr={item.document.contractAddr}
+              images={[item.document.imageURL]}
+              collectionName={item.document.contractName}
+              redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+              description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
+              customBackground={'white'}
+              lightModeForced/>
+          );
+        })}
+      </div> :
       <InfiniteLoader
         isItemLoaded={isItemLoaded}
         itemCount={nftSDataPerRows.length}
@@ -214,6 +240,23 @@ export default function CollectionsPage() {
                     </div>
 
                   </div>
+                  {!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && (loading) &&
+                    (<div className="flex items-center justify-center min-h-[16rem] w-full">
+                      <Loader />
+                    </div>)}
+                  { !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && nftSData && nftSData.length < found && nftSData?.length > 0 &&
+                    <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
+                      <Button
+                        size={ButtonSize.LARGE}
+                        scaleOnHover
+                        stretch={true}
+                        label={'Load More'}
+                        onClick={() => {
+                          setPage(page + 1);
+                        }}
+                        type={ButtonType.PRIMARY}
+                      />
+                    </div>}
                 </div>
               </div>
             </div>

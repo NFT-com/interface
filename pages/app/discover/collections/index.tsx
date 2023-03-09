@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Footer as StaticFooter } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
 import { outerElementType } from 'components/elements/outerElementType';
@@ -10,6 +11,7 @@ import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeader
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -61,7 +63,7 @@ export default function CollectionsPage() {
         q: '*',
         query_by: 'contractAddr,contractName',
         filter_by: collectionsResultsFilterBy ? `isOfficial:true && ${collectionsResultsFilterBy}` : 'isOfficial:true',
-        per_page: 10,
+        per_page: getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) ? 10 : 20,
         page: page,
       }).then((results) => {
         setLoading(false);
@@ -77,35 +79,39 @@ export default function CollectionsPage() {
   }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, filters]);
 
   useEffect(() => {
-    const flatData = [...collections];
-    const data2D = [];
-    while(flatData.length) data2D.push(flatData.splice(0,columnCount));
-    setCollectionsPerRows(data2D);
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+      const flatData = [...collections];
+      const data2D = [];
+      while(flatData.length) data2D.push(flatData.splice(0,columnCount));
+      setCollectionsPerRows(data2D);
+    }
   },[collections, columnCount]);
 
   useEffect(() => {
-    if (!sideNavOpen) {
-      if (screenWidth > 1600) {
-        setColumnCount(4);
-      } else if (screenWidth > 1200 && screenWidth <= 1600) {
-        setColumnCount(3);
-      } else if (screenWidth > 900 && screenWidth <= 1200) {
-        setColumnCount(2);
-      } else if (screenWidth > 600 && screenWidth <= 900) {
-        setColumnCount(2);
-      } else
-        setColumnCount(1);
-    } else {
-      if (screenWidth > 1600) {
-        setColumnCount(3);
-      } else if (screenWidth > 1200 && screenWidth <= 1600) {
-        setColumnCount(3);
-      } else if (screenWidth > 900 && screenWidth <= 1200) {
-        setColumnCount(2);
-      } else if (screenWidth > 600 && screenWidth <= 900) {
-        setColumnCount(2);
-      } else
-        setColumnCount(1);
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+      if (!sideNavOpen) {
+        if (screenWidth > 1600) {
+          setColumnCount(4);
+        } else if (screenWidth > 1200 && screenWidth <= 1600) {
+          setColumnCount(3);
+        } else if (screenWidth > 900 && screenWidth <= 1200) {
+          setColumnCount(2);
+        } else if (screenWidth > 600 && screenWidth <= 900) {
+          setColumnCount(2);
+        } else
+          setColumnCount(1);
+      } else {
+        if (screenWidth > 1600) {
+          setColumnCount(3);
+        } else if (screenWidth > 1200 && screenWidth <= 1600) {
+          setColumnCount(3);
+        } else if (screenWidth > 900 && screenWidth <= 1200) {
+          setColumnCount(2);
+        } else if (screenWidth > 600 && screenWidth <= 900) {
+          setColumnCount(2);
+        } else
+          setColumnCount(1);
+      }
     }
   },[screenWidth, sideNavOpen]);
 
@@ -171,41 +177,64 @@ export default function CollectionsPage() {
       );
     } else {
       return (
-        <div className='grid-cols-1 w-full'
-          style={{
-            height: '100vh',
-            backgroundColor: 'inherit',
-            top: '0px',
-          }}>
+        !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)
+          ?<div className={tw(
+            'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
+            'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4 w-full')}>
+            {collections && collections?.length > 0 && collections?.map((collection, index) => {
+              return (
+                <CollectionCard
+                  key={index}
+                  redirectTo={`/app/collection/${collection.document?.contractAddr}/`}
+                  contractAddress={collection.document?.contractAddr}
+                  contract={collection.document?.contractAddr}
+                  floorPrice={collection.document?.floor}
+                  totalVolume={collection.document?.volume}
+                  userName={collection.document.contractName}
+                  contractName={collection.document.contractName}
+                  isOfficial={collection.document.isOfficial}
+                  description={collection.document.description}
+                  countOfElements={collection.document.actualNumberOfNFTs}
+                  maxSymbolsInString={180}
+                  images={[collection.document.bannerUrl]}/>
+              );
+            })}
+          </div> :
+          <div className='grid-cols-1 w-full'
+            style={{
+              height: '100vh',
+              backgroundColor: 'inherit',
+              top: '0px',
+            }}>
 
-          <InfiniteLoader
-            isItemLoaded={isItemLoaded}
-            itemCount={collectionsPerRows.length}
-            loadMoreItems={() => setPage(page + 1)}
-            threshold={10}
-          >
-            {({ ref }) => (
-              <FixedSizeList
-                className="grid no-scrollbar"
-                outerElementType={outerElementType}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                itemCount={collectionsPerRows.length}
-                itemData={collectionsPerRows}
-                itemSize={340}
-                overscanRowCount={3}
-                onItemsRendered={(itemsRendered) => {
-                  if (!isLeaderBoard && collections && collections.length < found && collections?.length > 0 )
-                    itemsRendered.visibleStartIndex % 2 == 0 && setPage(page + 1);
-                }}
-                ref={ref}
-              >
-                {Row}
-              </FixedSizeList>
-            )}
-          </InfiniteLoader>
+            <InfiniteLoader
+              isItemLoaded={isItemLoaded}
+              itemCount={collectionsPerRows.length}
+              loadMoreItems={() => setPage(page + 1)}
+              threshold={10}
+            >
+              {({ ref }) => (
+                <FixedSizeList
+                  className="grid no-scrollbar"
+                  outerElementType={outerElementType}
+                  width={window.innerWidth}
+                  height={window.innerHeight}
+                  itemCount={collectionsPerRows.length}
+                  itemData={collectionsPerRows}
+                  itemSize={340}
+                  overscanRowCount={3}
+                  onItemsRendered={(itemsRendered) => {
+                    if (!isLeaderBoard && collections && collections.length < found && collections?.length > 0 )
+                      itemsRendered.visibleStartIndex % 2 == 0 && setPage(page + 1);
+                  }}
+                  ref={ref}
+                >
+                  {Row}
+                </FixedSizeList>
+              )}
+            </InfiniteLoader>
 
-        </div>
+          </div>
       );
     }
   };
@@ -297,20 +326,37 @@ export default function CollectionsPage() {
                     }
                     {collections && collections?.length > 0 && leaderBoardOrCollectionView()}
                   </div>
+                  {!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && (loading) &&
+                    (<div className="flex items-center justify-center min-h-[16rem] w-full">
+                      <Loader />
+                    </div>)}
+                  {!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && !isLeaderBoard && collections && collections.length < found && collections?.length > 0 &&
+                    <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
+                      <Button
+                        size={ButtonSize.LARGE}
+                        scaleOnHover
+                        stretch={true}
+                        label={'Load More'}
+                        onClick={() => {
+                          setPage(page + 1);
+                        }}
+                        type={ButtonType.PRIMARY}
+                      />
+                    </div>}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {isLeaderBoard && <DynamicFooter />}
+      {getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && isLeaderBoard && <DynamicFooter />}
     </>
   );
 }
 
 CollectionsPage.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout hideFooter={true} showDNavigation={true}>
+    <DefaultLayout hideFooter={getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)} showDNavigation={true}>
       { page }
     </DefaultLayout>
   );

@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
 import { outerElementType } from 'components/elements/outerElementType';
@@ -6,7 +7,9 @@ import { ProfileCard } from 'components/modules/DiscoveryCards/ProfileCard';
 import { Profile } from 'graphql/generated/types';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
+import { usePaginator } from 'hooks/usePaginator';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { Doppler, getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -24,21 +27,31 @@ export default function ProfilePage() {
   const [profilesPerRows, setProfilesPerRows] = useState([]);
   const [columnCount, setColumnCount] = useState(5);
   const { width: screenWidth } = useWindowDimensions();
-  const [afterCursor, setAfterCursor] = useState('');
+  const [afterCursorRW, setAfterCursorRW] = useState('');
 
   const PROFILE_LOAD_COUNT = 20;
 
+  const {
+    nextPage,
+    afterCursor,
+    setTotalCount
+  } = usePaginator(PROFILE_LOAD_COUNT);
+  
   const [lastAddedPage, setLastAddedPage] = useState('');
 
   const [allLoadedProfiles, setAllLoadedProfiles] = useState<PartialDeep<Profile>[]>([]);
   const { data: loadedProfilesNextPage } = useRecentProfilesQuery({
     first: PROFILE_LOAD_COUNT,
-    afterCursor
+    afterCursor: !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) ? afterCursor : afterCursorRW,
   });
 
   const loadMoreProfiles = useCallback(() => {
-    loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor && setAfterCursor(loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor);
-  }, [loadedProfilesNextPage?.latestProfiles?.pageInfo]);
+    if (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+      nextPage(loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor);
+    } else {
+      loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor && setAfterCursorRW(loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor);
+    }
+  }, [loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor, nextPage]);
 
   useEffect(() => {
     if (
@@ -51,28 +64,33 @@ export default function ProfilePage() {
       ]);
       toggleLoadState(false);
       setLastAddedPage(loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor);
+      !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && setTotalCount(loadedProfilesNextPage?.latestProfiles?.totalItems);
     }
-  }, [allLoadedProfiles, lastAddedPage, loadedProfilesNextPage?.latestProfiles?.items, loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor]);
+  }, [allLoadedProfiles, lastAddedPage, loadedProfilesNextPage?.latestProfiles?.items, loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor, loadedProfilesNextPage?.latestProfiles?.totalItems, setTotalCount]);
 
   useEffect(() => {
-    const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
-    const flatData = [...uniqData];
-    const data2D = [];
-    while(flatData.length) data2D.push(flatData.splice(0,columnCount));
-    setProfilesPerRows(data2D);
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+      const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
+      const flatData = [...uniqData];
+      const data2D = [];
+      while(flatData.length) data2D.push(flatData.splice(0,columnCount));
+      setProfilesPerRows(data2D);
+    }
   },[columnCount, allLoadedProfiles]);
 
   useEffect(() => {
-    if (screenWidth > 1600) {
-      setColumnCount(5);
-    } else if (screenWidth > 1200 && screenWidth <= 1600) {
-      setColumnCount(5);
-    } else if (screenWidth > 900 && screenWidth <= 1200) {
-      setColumnCount(3);
-    } else if (screenWidth > 600 && screenWidth <= 900) {
-      setColumnCount(2);
-    } else
-      setColumnCount(1);
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+      if (screenWidth > 1600) {
+        setColumnCount(5);
+      } else if (screenWidth > 1200 && screenWidth <= 1600) {
+        setColumnCount(5);
+      } else if (screenWidth > 900 && screenWidth <= 1200) {
+        setColumnCount(3);
+      } else if (screenWidth > 600 && screenWidth <= 900) {
+        setColumnCount(2);
+      } else
+        setColumnCount(1);
+    }
   },[screenWidth]);
 
   const loadMoreProfilesFunc = () => {
@@ -103,53 +121,62 @@ export default function ProfilePage() {
 
   const filterUniqProfiles = () => {
     if(!allLoadedProfiles && !allLoadedProfiles.length) return;
-    return (
-      <div className='grid-cols-1 w-full'
-        style={{
-          minHeight: '100vh',
-          backgroundColor: 'inherit',
-          position: 'sticky',
-          top: '0px',
-        }}>
-        <InfiniteLoader
-          isItemLoaded={isItemLoaded}
-          itemCount={profilesPerRows.length}
-          loadMoreItems={() => loadMoreProfilesFunc()}
-          threshold={10}
-        >
-          {({ ref }) => (
-            <FixedSizeList
-              className="grid no-scrollbar"
-              outerElementType={outerElementType}
-              width={window.innerWidth}
-              height={window.innerHeight}
-              itemCount={profilesPerRows.length}
-              itemData={profilesPerRows}
-              itemSize={228}
-              overscanRowCount={3}
-              onItemsRendered={(itemsRendered) => {
-                if (itemsRendered.visibleStartIndex !== 0 && itemsRendered.visibleStartIndex % 2 == 0) {
-                  loadMoreProfilesFunc();
-                }
-              }}
-              ref={ref}
-            >
-              {Row}
-            </FixedSizeList>
-          )}
-        </InfiniteLoader>
-      </div>
-    );
+    const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
+    return !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)
+      ? uniqData.map((profile, index) => {
+        return (
+          <ProfileCard
+            key={index}
+            profile={profile}
+          />
+        );
+      })
+      : (
+        <div className='grid-cols-1 w-full'
+          style={{
+            minHeight: '100vh',
+            backgroundColor: 'inherit',
+            position: 'sticky',
+            top: '0px',
+          }}>
+          <InfiniteLoader
+            isItemLoaded={isItemLoaded}
+            itemCount={profilesPerRows.length}
+            loadMoreItems={() => loadMoreProfilesFunc()}
+            threshold={10}
+          >
+            {({ ref }) => (
+              <FixedSizeList
+                className="grid no-scrollbar"
+                outerElementType={outerElementType}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                itemCount={profilesPerRows.length}
+                itemData={profilesPerRows}
+                itemSize={228}
+                overscanRowCount={3}
+                onItemsRendered={(itemsRendered) => {
+                  if (itemsRendered.visibleStartIndex !== 0 && itemsRendered.visibleStartIndex % 2 == 0) {
+                    loadMoreProfilesFunc();
+                  }
+                }}
+                ref={ref}
+              >
+                {Row}
+              </FixedSizeList>
+            )}
+          </InfiniteLoader>
+        </div>
+      );
   };
 
-  console.log('leaderboardData fdo', leaderboardData);
   const returnProfileBlock = () => {
     if(allLoadedProfiles && allLoadedProfiles.length){
       return (
         <div>
           <div className={tw(
             'grid grid-cols-1 minlg:space-x-0 gap-1 minmd:gap-4',
-            isLeaderBoard ? 'minxl:grid-cols-1' : '')}>
+            isLeaderBoard ? 'minxl:grid-cols-1' : getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) ? '' : 'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
             {
               !isLeaderBoard
                 ? filterUniqProfiles()
@@ -174,6 +201,26 @@ export default function ProfilePage() {
                 )
             }
           </div>
+          {getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)
+            ? <div className="w-full flex justify-center pb-32 mt-12">
+              {
+                isLoading
+                  ? (
+                    <Loader />
+                  )
+                  : (
+                    !isLeaderBoard
+                      ? <Button
+                        size={ButtonSize.LARGE}
+                        label={'Load More'}
+                        onClick={() => loadMoreProfilesFunc()}
+                        type={ButtonType.PRIMARY}
+                      />
+                      : null
+                  )
+              }
+            </div>
+            : null}
         </div>
       );
     }else {
@@ -213,7 +260,7 @@ export default function ProfilePage() {
 
 ProfilePage.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout hideFooter={true} showDNavigation={true}>
+    <DefaultLayout hideFooter={getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)} showDNavigation={true}>
       { page }
     </DefaultLayout>
   );

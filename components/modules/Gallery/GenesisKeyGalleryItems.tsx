@@ -162,7 +162,6 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
               rowHeight={getRowHeight(width)}
               rowCount={Math.ceil(10000 / itemsPerRow())}
               overscanColumnCount={2}
-              itemData={[]}
             >
               {GKGridCell}
             </FixedSizeGrid>

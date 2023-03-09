@@ -11,7 +11,6 @@ const emptyFunction = (): void => {
 
 const DynamicFooter = dynamic<React.ComponentProps<typeof StaticFooter>>(() => import('components/elements/Footer').then(mod => mod.Footer));
 
-
 type DocumentPropsType = React.HTMLProps<HTMLElement>;
 
 // eslint-disable-next-line react/display-name
