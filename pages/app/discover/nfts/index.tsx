@@ -142,7 +142,7 @@ export default function CollectionsPage() {
             height={window.innerHeight}
             itemCount={nftSDataPerRows.length}
             itemData={nftSDataPerRows}
-            itemSize={600}
+            itemSize={screenWidth > 1200 && screenWidth < 1450 ? 530 : 600}
             overscanRowCount={3}
             onItemsRendered={(itemsRendered) => {
               if (nftSData && nftSData.length < found && nftSData?.length > 0)

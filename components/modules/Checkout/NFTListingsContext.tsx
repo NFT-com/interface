@@ -9,7 +9,6 @@ import { useLooksrareRoyaltyFeeManagerContractContract } from 'hooks/contracts/u
 import { useLooksrareRoyaltyFeeRegistryContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeRegistryContract';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignNativeOrder } from 'hooks/useSignNativeOrder';
@@ -114,7 +113,7 @@ export interface NFTListingsContextType {
   setHasListingError: (listing: PartialDeep<StagedListing>, hasError: boolean, targetProtocol?: ExternalProtocol) => void;
   removeListing: (nft: PartialDeep<Nft>) => void;
   approveCollection: (listing: PartialDeep<StagedListing>, target: ExternalProtocol) => Promise<boolean>;
-  allListingsConfigured: () => boolean;
+  allListingsConfigured: (ethPriceUSD: number) => boolean;
   clearGeneralConfig: (listing: PartialDeep<StagedListing>) => void;
   getTarget: (listing: PartialDeep<StagedListing>, protocol: ExternalProtocol) => Maybe<PartialDeep<ListingTarget>>;
   setDecreasingPriceError:(value: boolean) => void;
@@ -184,7 +183,6 @@ export function NFTListingsContextProvider(
 
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
-  const ethPriceUSD = useEthPriceUSD();
   const provider = useProvider();
   const { data: signer } = useSigner();
 
@@ -247,7 +245,7 @@ export function NFTListingsContextProvider(
     setEnglishAuctionError(englishAuctionPriceinvalidInputs);
   }, []);
 
-  const allListingsConfigured = useCallback(() => {
+  const allListingsConfigured = useCallback((ethPriceUSD: number) => {
     const unconfiguredNft = toList.find((stagedNft: StagedListing) => {
       const lowestX2Y2Listing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.X2Y2);
       const lowestLooksrareListing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.LooksRare);
@@ -288,7 +286,7 @@ export function NFTListingsContextProvider(
       return unconfiguredTarget != null;
     });
     return unconfiguredNft == null;
-  }, [decreasingPriceErrorEnabled, defaultChainId, englishAuctionPriceErrorEnabled, ethPriceUSD, toList]);
+  }, [decreasingPriceErrorEnabled, defaultChainId, englishAuctionPriceErrorEnabled, toList]);
 
   const toggleTargetMarketplace = useCallback((targetMarketplace: ExternalProtocol, toggleListing?: PartialDeep<StagedListing>, previousSelectedMarketplace?: ExternalProtocol) => {
     const targetFullyEnabled = toList.find(nft => {

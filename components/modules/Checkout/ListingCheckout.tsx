@@ -9,6 +9,7 @@ import { Profile } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
@@ -58,6 +59,7 @@ export function ListingCheckout() {
   const { marketplace } = useAllContracts();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const hasGk = useHasGk();
+  const ethPriceUSD = useEthPriceUSD();
 
   const defaultChainId = useDefaultChainId();
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner);
@@ -362,7 +364,7 @@ export function ListingCheckout() {
           <Button
             size={ButtonSize.LARGE}
             label={'Start Listing'}
-            disabled={!allListingsConfigured()}
+            disabled={!allListingsConfigured(ethPriceUSD)}
             onClick={async () => {
               await prepareListings();
               if(allListingsFail){
@@ -376,7 +378,7 @@ export function ListingCheckout() {
       </div>
       {showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0 && !allListingsFail} onClose={() => setShowSummary(false)} />}
     </div>;
-  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, allListingsFail, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
+  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, allListingsFail, ethPriceUSD, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
   
   return (
     <div className='flex w-full justify-between h-full'>

@@ -3,6 +3,7 @@ import { Modal } from 'components/elements/Modal';
 import { Maybe, NftType } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
@@ -57,6 +58,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [success, setSuccess] = useState(false);
   const [partialError, setPartialError] = useState(false);
+  const ethPriceUSD = useEthPriceUSD();
   const [error, setError] = useState<Maybe<
   'ApprovalError' | 'ListingSignatureRejected' | 'ListingUnknownError' | 'ConnectionError'
   >>(null);
@@ -333,7 +335,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               size={ButtonSize.LARGE}
               stretch
               loading={showProgressBar && !error && !success && !partialError}
-              disabled={!allListingsConfigured() || (showProgressBar && !error && !success && !partialError)}
+              disabled={!allListingsConfigured(ethPriceUSD) || (showProgressBar && !error && !success && !partialError)}
               label={success || partialError ? 'Finish' : error ? 'Try Again' : 'Proceed to list'}
               onClick={async () => {
                 try {

@@ -6,7 +6,6 @@ import { ProfileCard } from 'components/modules/DiscoveryCards/ProfileCard';
 import { Profile } from 'graphql/generated/types';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
-import { usePaginator } from 'hooks/usePaginator';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -25,14 +24,9 @@ export default function ProfilePage() {
   const [profilesPerRows, setProfilesPerRows] = useState([]);
   const [columnCount, setColumnCount] = useState(5);
   const { width: screenWidth } = useWindowDimensions();
+  const [afterCursor, setAfterCursor] = useState('');
 
   const PROFILE_LOAD_COUNT = 20;
-
-  const {
-    nextPage,
-    afterCursor,
-    setTotalCount
-  } = usePaginator(PROFILE_LOAD_COUNT);
 
   const [lastAddedPage, setLastAddedPage] = useState('');
 
@@ -43,8 +37,8 @@ export default function ProfilePage() {
   });
 
   const loadMoreProfiles = useCallback(() => {
-    nextPage(loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor);
-  }, [loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor, nextPage]);
+    loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor && setAfterCursor(loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor);
+  }, [loadedProfilesNextPage?.latestProfiles?.pageInfo]);
 
   useEffect(() => {
     if (
@@ -57,9 +51,8 @@ export default function ProfilePage() {
       ]);
       toggleLoadState(false);
       setLastAddedPage(loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor);
-      setTotalCount(loadedProfilesNextPage?.latestProfiles?.totalItems);
     }
-  }, [allLoadedProfiles, lastAddedPage, loadedProfilesNextPage, setTotalCount]);
+  }, [allLoadedProfiles, lastAddedPage, loadedProfilesNextPage?.latestProfiles?.items, loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor]);
 
   useEffect(() => {
     const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
@@ -134,8 +127,10 @@ export default function ProfilePage() {
               itemData={profilesPerRows}
               itemSize={228}
               overscanRowCount={3}
-              onItemsRendered={() => {
-                loadMoreProfilesFunc();
+              onItemsRendered={(itemsRendered) => {
+                if (itemsRendered.visibleStartIndex !== 0 && itemsRendered.visibleStartIndex % 2 == 0) {
+                  loadMoreProfilesFunc();
+                }
               }}
               ref={ref}
             >
@@ -147,6 +142,7 @@ export default function ProfilePage() {
     );
   };
 
+  console.log('leaderboardData fdo', leaderboardData);
   const returnProfileBlock = () => {
     if(allLoadedProfiles && allLoadedProfiles.length){
       return (

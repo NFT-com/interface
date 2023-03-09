@@ -95,3 +95,9 @@ Loading.args = {
   loading:'true',
   loadingText: 'Loading...'
 };
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  disabled: true,
+  label: 'Button',
+};

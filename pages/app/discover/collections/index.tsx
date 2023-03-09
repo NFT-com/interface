@@ -86,7 +86,7 @@ export default function CollectionsPage() {
   useEffect(() => {
     if (!sideNavOpen) {
       if (screenWidth > 1600) {
-        setColumnCount(3);
+        setColumnCount(4);
       } else if (screenWidth > 1200 && screenWidth <= 1600) {
         setColumnCount(3);
       } else if (screenWidth > 900 && screenWidth <= 1200) {

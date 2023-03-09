@@ -1,7 +1,5 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Profile } from 'graphql/generated/types';
-import { useProfileNFTsTotalItemsQuery } from 'graphql/hooks/useProfileNFTsTotalItemsQuery';
-import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
 import Image from 'next/image';
 import GK from 'public/Badge_Key.svg';
@@ -25,21 +23,13 @@ export interface ProfileCardProps {
   photoURL?: string,
   url?: string,
   profile?: PartialDeep<Profile>,
-  isGkMinted?: boolean
+  isGkMinted?: boolean,
 }
 
 export function ProfileCard(props: ProfileCardProps) {
   const isLeaderBoard = props.isLeaderBoard;
-  const defaultChainId = useDefaultChainId();
-  const {
-    totalItems: publicProfileNftsCount,
-  } = useProfileNFTsTotalItemsQuery(
-    props?.profile?.id,
-    defaultChainId,
-    1000
-  );
 
-  if(isLeaderBoard){
+  if (isLeaderBoard) {
     return (
       <div className='flex justify-center'>
         <a href={'/' + props?.url} className="max-w-[320px] minmd:max-w-[100%] flex-col minmd:flex-row py-4 minmd:py-0 px-6 font-noi-grotesk w-full flex justify-between items-start minmd:items-center hover:scale-[1.01] transition-all cursor-pointer rounded-[16px] minmd:h-[6.25rem] shadow-lg overflow-hidden">
@@ -72,7 +62,7 @@ export function ProfileCard(props: ProfileCardProps) {
         </a>
       </div>
     );
-  }else {
+  } else {
     return (
       <a href={'/' + props.profile?.url} className="mb-3 minmd:mb-0 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p h-[212px]">
         <div className="bg-black h-[99px] relative">
@@ -134,7 +124,7 @@ export function ProfileCard(props: ProfileCardProps) {
             </li>
           </ul>
           <ul className="mt-2 list-none flex flex-row justify-between">
-            <li className="m-0 p-0 list-none text-5 leading-7 text-[#000000] font-[600]">{publicProfileNftsCount} <span className="text-[#6A6A6A] text-4 leading-6 font-[400]"> NFTs collected</span></li>
+            <li className="m-0 p-0 list-none text-5 leading-7 text-[#000000] font-[600]">{props.profile.visibleNFTs} <span className="text-[#6A6A6A] text-4 leading-6 font-[400]"> NFTs collected</span></li>
           </ul>
         </div>
       </a>
