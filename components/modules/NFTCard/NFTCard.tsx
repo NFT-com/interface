@@ -77,9 +77,6 @@ export function NFTCard(props: NftCardProps) {
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
-  
-  const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth; // ?????????
-
   const checkEndDate = () => {
     if(bestListing){
       const endDate = moment.unix(getListingEndDate(bestListing, bestListing.order.protocol as ExternalProtocol));
@@ -198,7 +195,7 @@ export function NFTCard(props: NftCardProps) {
             !bestListing && 'mb-10'
           )}>
             <div className={tw(
-              `h-[${nftImage}px] object-cover overflow-hidden rounded-t-2xl`,
+              'object-cover overflow-hidden rounded-t-2xl',
               props?.descriptionVisible === false && 'rounded-b-2xl'
             )}>
               <div className='group-hover/ntfCard:scale-110 hover:scale-105 transition'>
@@ -252,88 +249,32 @@ export function NFTCard(props: NftCardProps) {
                         {showListingIcons && (
                           <div className='flex flex-row'>
                             {showLooksrareListingIcon &&
-                            <CustomTooltip2
-                              noFullHeight={true}
-                              orientation='top'
-                              tooltipComponent={
-                                <div
-                                  className="w-max"
-                                >
-                                  <p>
-                                    Buy Now
-                                  </p>
-                                </div>
-                              }
-                            >
                               <LooksrareIcon
                                 className='h-8 w-8 relative shrink-0 grayscale'
                                 alt="Looksrare logo redirect"
                                 layout="fill"
                               />
-                            </CustomTooltip2>
                             }
                             {showOpenseaListingIcon &&
-                             <CustomTooltip2
-                               noFullHeight={true}
-                               orientation='top'
-                               tooltipComponent={
-                                 <div
-                                   className="w-max"
-                                 >
-                                   <p>
-                                     Buy Now
-                                   </p>
-                                 </div>
-                               }
-                             >
                                <OpenseaIcon
                                  className='h-8 w-8 relative shrink-0 grayscale'
                                  alt="Opensea logo redirect"
                                  layout="fill"
                                />
-                             </CustomTooltip2>
                             }
                             {showX2Y2ListingIcon &&
-                            <CustomTooltip2
-                              noFullHeight={true}
-                              orientation='top'
-                              tooltipComponent={
-                                <div
-                                  className="w-max"
-                                >
-                                  <p>
-                                    Buy Now
-                                  </p>
-                                </div>
-                              }
-                            >
                               <X2Y2Gray
                                 className='h-[25px] w-[25px] relative shrink-0 ml-1 grayscale'
                                 alt="Opensea logo redirect"
                                 layout="fill"
                               />
-                            </CustomTooltip2>
                             }
                             {showNftcomListingIcon &&
-                            <CustomTooltip2
-                              noFullHeight={true}
-                              orientation='top'
-                              tooltipComponent={
-                                <div
-                                  className="w-max"
-                                >
-                                  <p>
-                                    Buy Now
-                                  </p>
-                                </div>
-                              }
-                            >
                               <NFTLogo
                                 className='h-[25px] w-[25px] relative shrink-0 ml-1.5'
                                 alt="NFT.com logo redirect"
                                 layout="fill"
                               />
-                            </CustomTooltip2>
                             }
                           </div>
                         )}
@@ -448,48 +389,40 @@ export function NFTCard(props: NftCardProps) {
             </div>
             }
             {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && props?.descriptionVisible !== false ?
-              bestListing?.order?.protocol === ExternalProtocol.NFTCOM && (bestListing?.order?.protocolData as NftcomProtocolData)?.auctionType === AuctionType.English ?
-                <div className='w-full overflow-hidden rounded-b-2xl'>
-                  <div className='-ml-2 -mr-2'>
-                    <Button stretch label='Make an offer' type={ButtonType.SECONDARY} size={ButtonSize.LARGE}
-                      onClick={() => null} />
-                  </div>
+              <div className='w-full overflow-hidden rounded-b-2xl'>
+                <div className='-ml-2 -mr-2'>
+                  <Button stretch label='Buy Now' type={ButtonType.PRIMARY} size={ButtonSize.LARGE}
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
+                      const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
+                      const protocolAllowance = await currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(bestListing?.order?.protocol as ExternalProtocol));
+                      const price = getListingPrice(bestListing, (bestListing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null);
+                      const protocol = bestListing?.order?.protocol as ExternalProtocol;
+                      stageBuyNow({
+                        nft: props?.nft || nft,
+                        activityId: bestListing?.id,
+                        currency: getListingCurrencyAddress(bestListing) ?? WETH.address,
+                        price: price,
+                        collectionName: props.collectionName,
+                        protocol: protocol,
+                        isERC20ApprovedForAggregator: BigNumber.from(allowance ?? 0).gt(price),
+                        isERC20ApprovedForProtocol: BigNumber.from(protocolAllowance ?? 0).gt(price),
+                        orderHash: bestListing?.order?.orderHash,
+                        makerAddress: bestListing?.order?.makerAddress,
+                        takerAddress: bestListing?.order?.takerAddress,
+                        nonce: bestListing?.order?.nonce,
+                        protocolData: bestListing?.order?.protocol === ExternalProtocol.Seaport ?
+                          bestListing?.order?.protocolData as SeaportProtocolData :
+                          bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
+                            bestListing?.order?.protocolData as X2Y2ProtocolData:
+                            bestListing?.order?.protocolData as LooksrareProtocolData
+                      });
+                      togglePurchaseSummaryModal();
+                    }}
+                  />
                 </div>
-                :
-                <div className='w-full overflow-hidden rounded-b-2xl'>
-                  <div className='-ml-2 -mr-2'>
-                    <Button stretch label='Buy Now' type={ButtonType.PRIMARY} size={ButtonSize.LARGE}
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
-                        const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
-                        const protocolAllowance = await currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(bestListing?.order?.protocol as ExternalProtocol));
-                        const price = getListingPrice(bestListing, (bestListing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null);
-                        const protocol = bestListing?.order?.protocol as ExternalProtocol;
-                        stageBuyNow({
-                          nft: props?.nft || nft,
-                          activityId: bestListing?.id,
-                          currency: getListingCurrencyAddress(bestListing) ?? WETH.address,
-                          price: price,
-                          collectionName: props.collectionName,
-                          protocol: protocol,
-                          isERC20ApprovedForAggregator: BigNumber.from(allowance ?? 0).gt(price),
-                          isERC20ApprovedForProtocol: BigNumber.from(protocolAllowance ?? 0).gt(price),
-                          orderHash: bestListing?.order?.orderHash,
-                          makerAddress: bestListing?.order?.makerAddress,
-                          takerAddress: bestListing?.order?.takerAddress,
-                          nonce: bestListing?.order?.nonce,
-                          protocolData: bestListing?.order?.protocol === ExternalProtocol.Seaport ?
-                            bestListing?.order?.protocolData as SeaportProtocolData :
-                            bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
-                              bestListing?.order?.protocolData as X2Y2ProtocolData:
-                              bestListing?.order?.protocolData as LooksrareProtocolData
-                        });
-                        togglePurchaseSummaryModal();
-                      }}
-                    />
-                  </div>
-                </div>
+              </div>
               : null
             }
           </div>
