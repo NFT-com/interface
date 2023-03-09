@@ -139,7 +139,8 @@
         ]
       }
     ],
-    "sort-imports": "off"
+    "sort-imports": "off",
+    "react-hooks/exhaustive-deps": "error"
   },
   "overrides": [
     {
