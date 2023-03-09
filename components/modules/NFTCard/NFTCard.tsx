@@ -137,7 +137,7 @@ export function NFTCard(props: NftCardProps) {
     <div className='relative w-full h-full'>
       {props?.visible !== true && props?.visible !== false &&
        <div className='absolute top-4 right-4 z-50'>
-         <LikeCount count={10} isLiked={false} onClick={() => null} />
+         <LikeCount count={10} isLiked={true} onClick={() => null} />
        </div>
       }
       

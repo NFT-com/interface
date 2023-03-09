@@ -1,7 +1,9 @@
 import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import LikeCount from 'components/elements/LikeCount';
 import Toast from 'components/elements/Toast';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
@@ -61,7 +63,11 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             </div>
             }
           </div>
+          {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
+            <LikeCount count={10} isLiked={false} onClick={() => null} />
+          }
         </div>
+        
         <div className='hidden minlg:block'>
           <ProfileMenu profileURI={profileURI} />
         </div>
