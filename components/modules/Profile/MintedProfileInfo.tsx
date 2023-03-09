@@ -52,20 +52,21 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           <div
             id="MintedProfileNameContainer"
             className={tw(
-              'font-bold text-lg minlg:text-[44px] minlg:font-medium',
-              'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4 minmd:mt-4 flex items-center'
+              'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left minmd:mt-4 flex items-center space-x-2'
             )}>
-            <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl minlg:text-[40px] mr-1'>/</span>
-            {profileURI}
+            <div className='font-bold text-lg minlg:text-[44px] minlg:font-medium'>
+              <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl minlg:text-[40px] mr-1'>/</span>
+              {profileURI}
+            </div>
             {profileData?.profile?.isGKMinted &&
             <div className='h-5 w-5 minlg:h-7 minlg:w-7 ml-2'>
               <GK />
             </div>
             }
+            {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
+              <LikeCount count={10} isLiked={false} onClick={() => null} />
+            }
           </div>
-          {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-            <LikeCount count={10} isLiked={false} onClick={() => null} />
-          }
         </div>
         
         <div className='hidden minlg:block'>
