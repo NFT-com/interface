@@ -10,7 +10,6 @@ module.exports = {
     "@storybook/addon-interactions",
     "@storybook/addon-postcss",
     "storybook-addon-next",
-    "storybook-addon-pseudo-states",
   ],
   framework: "@storybook/react",
   core: {
