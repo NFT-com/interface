@@ -1,9 +1,8 @@
-import {Wallet} from "ethers";
+import { Wallet } from "ethers";
 import { configureChains, createClient, mainnet, WagmiConfig } from "wagmi";
 import { MockConnector } from "@wagmi/core/connectors/mock";
-import {jsonRpcProvider} from "wagmi/providers/jsonRpc";
-import {Story} from "@storybook/react";
-import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { Story } from "@storybook/react";
 
 
 const {chains, provider, webSocketProvider} = configureChains(
@@ -17,26 +16,6 @@ const {chains, provider, webSocketProvider} = configureChains(
         }),
     ],
 )
-
-const { connectors } = getDefaultWallets({
-    appName: 'My RainbowKit App',
-    chains
-  });
-
-export const wagmiClient = (wallet: Wallet) => createClient({
-    autoConnect: true,
-    connectors,
-    provider,
-});
-
-
-export const wagmiDecorator = (wallet: Wallet) => (Story: Story) => {
-    return (
-        <WagmiConfig client={wagmiClient(wallet)}>
-            <Story/>
-        </WagmiConfig>
-    );
-};
 
 /**
  * A wagmi client which provides access to the given Wallet instance.
