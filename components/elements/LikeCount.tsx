@@ -3,8 +3,8 @@ import { tw } from 'utils/tw';
 import Heart from 'public/heart.svg';
 
 type LikeCountProps = {
-  count: number;
-  isLiked: boolean;
+  count?: number;
+  isLiked?: boolean;
   onClick: () => void;
 }
 

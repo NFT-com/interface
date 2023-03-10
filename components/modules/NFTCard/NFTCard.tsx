@@ -28,15 +28,15 @@ import GK from 'public/Badge_Key.svg';
 import ETH from 'public/eth.svg';
 import ETHBlack from 'public/eth-black.svg';
 import Hidden from 'public/Hidden.svg';
-import LooksrareIcon from 'public/looksrare-icon.svg';
+import LooksrareIcon from 'public/LR_gray_card.svg';
 import NFTLogo from 'public/nft_logo_yellow.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
+import OpenseaIcon from 'public/OS_gray_card.svg';
 import Reorder from 'public/Reorder.svg';
 import ShopIcon from 'public/shop-icon.svg';
 import USDC from 'public/usdc.svg';
 import Visible from 'public/Visible.svg';
 import X2Y2Gray from 'public/x2y2_gray.svg';
-import { MouseEvent, useCallback, useContext, useMemo } from 'react';
+import { MouseEvent, useCallback, useContext } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftCardProps {
@@ -110,25 +110,46 @@ export function NFTCard(props: NftCardProps) {
     }
   }, []);
 
-  const showListingIcons: boolean = useMemo(() => {
-    return !isNullOrEmpty(filterValidListings(props?.listings || nft?.listings?.items));
-  }, [props, nft]);
+  const getMarketplaceIcon = useCallback((protocol: ExternalProtocol) => {
+    switch (protocol) {
+    case ExternalProtocol.NFTCOM:
+      return (
+        <NFTLogo
+          className='h-[25px] w-[25px] relative shrink-0'
+          alt="NFT.com logo redirect"
+          layout="fill"
+        />
+      );
+    case ExternalProtocol.LooksRare:
+      return (
+        <LooksrareIcon
+          className='h-[25px] w-[25px] relative shrink-0 grayscale'
+          alt="Looksrare logo redirect"
+          layout="fill"
+        />
+      );
+    case ExternalProtocol.Seaport:
+      return (
+        <OpenseaIcon
+          className='h-[25px] w-[25px] relative shrink-0 grayscale'
+          alt="Opensea logo redirect"
+          layout="fill"
+        />
+      );
+    case ExternalProtocol.X2Y2:
+      return (
+        <X2Y2Gray
+          className='h-[25px] w-[25px] relative shrink-0 grayscale'
+          alt="Opensea logo redirect"
+          layout="fill"
+        />
+      );
+    default:
+      break;
+    }
+  }, []);
 
-  const showOpenseaListingIcon: boolean = useMemo(() => {
-    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
-  }, [props, nft]);
-
-  const showLooksrareListingIcon: boolean = useMemo(() => {
-    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
-  }, [props, nft]);
-
-  const showNftcomListingIcon: boolean = useMemo(() => {
-    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.NFTCOM) != null;
-  }, [props, nft]);
-
-  const showX2Y2ListingIcon: boolean = useMemo(() => {
-    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.X2Y2) != null;
-  }, [props, nft]);
+  const validListings = filterValidListings(props?.listings || nft?.listings?.items);
 
   return (
     <div className='relative w-full h-full'>
@@ -139,7 +160,7 @@ export function NFTCard(props: NftCardProps) {
       }
       
       <div className={tw(
-        'group/ntfCard transition-all cursor-pointer rounded-2xl shadow-xl cursor-p relative w-full h-full mb-3 minmd:mb-0 overflow-visible',
+        'group/ntfCard transition-all cursor-pointer rounded-2xl shadow-xl relative w-full h-full minmd:mb-0 overflow-visible',
         props.descriptionVisible != false ? '' : 'h-max'
       )}>
         {
@@ -207,9 +228,8 @@ export function NFTCard(props: NftCardProps) {
                   src={processedImageURLs[0]}
                   extraClasses='hover:scale-105 transition'
                 />
-                <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
-                
-                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe ?
+                <div className="group-hover/ntfCard:opacity-100 opacity-0 w-full h-full bg-[rgba(0,0,0,0.40)] absolute top-0">
+                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing ?
                     <div className='w-full h-full relative'>
                       <div className='absolute top-7 left-7'>
                         <button
@@ -244,38 +264,13 @@ export function NFTCard(props: NftCardProps) {
                           <ShopIcon/>
                         </button>
                       </div>
-                      <div className='absolute bottom-7 left-7 flex flex-row w-full justify-between items-center pr-14'>
+                      <div className='absolute bottom-7 left-7 flex flex-row w-full justify-between items-center pr-14 flex-wrap'>
                         <p className='text-white text-sm font-noi-grotesk font-medium'>Available on</p>
-                        {showListingIcons && (
-                          <div className='flex flex-row'>
-                            {showLooksrareListingIcon &&
-                              <LooksrareIcon
-                                className='h-8 w-8 relative shrink-0 grayscale'
-                                alt="Looksrare logo redirect"
-                                layout="fill"
-                              />
-                            }
-                            {showOpenseaListingIcon &&
-                               <OpenseaIcon
-                                 className='h-8 w-8 relative shrink-0 grayscale'
-                                 alt="Opensea logo redirect"
-                                 layout="fill"
-                               />
-                            }
-                            {showX2Y2ListingIcon &&
-                              <X2Y2Gray
-                                className='h-[25px] w-[25px] relative shrink-0 ml-1 grayscale'
-                                alt="Opensea logo redirect"
-                                layout="fill"
-                              />
-                            }
-                            {showNftcomListingIcon &&
-                              <NFTLogo
-                                className='h-[25px] w-[25px] relative shrink-0 ml-1.5'
-                                alt="NFT.com logo redirect"
-                                layout="fill"
-                              />
-                            }
+                        {validListings && (
+                          <div className='flex flex-row space-x-1.5 flex-nowrap'>
+                            {validListings.map((listing) => {
+                              return getMarketplaceIcon(listing?.order?.protocol as ExternalProtocol);
+                            })}
                           </div>
                         )}
                       </div>
