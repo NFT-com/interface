@@ -43,7 +43,7 @@ const getAlertStyles = (type: AlertType) => {
 
 const getAlertIcon =(type: AlertType) => {
   switch (type) {
-  case AlertType.ERROR: {
+  case AlertType.ERROR: {//
     return <Image src={Error} color="#6A6A6A" className='relative shrink-0 w-7 ' alt={'Error'} />;
   }
   case AlertType.SUCCESS: {
