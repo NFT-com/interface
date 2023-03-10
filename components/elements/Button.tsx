@@ -121,7 +121,7 @@ export function Button(props: ButtonProps) {
     case ButtonType.PRIMARY:
       return `bg-[${primaryButtonBackground}] hover:bg-[${primaryButtonBackgroundHover}] focus:bg-[${primaryButtonBackgroundFocus}] text-[${primaryButtonText}]`;
     case ButtonType.SECONDARY:
-      return `bg-[${secondaryButtonBackground}] hover:bg-button-tertiary-hover focus:bg-[${secondaryButtonBackgroundFocus}] text-[${secondaryButtonText}]`;
+      return `bg-[${secondaryButtonBackground}] hover:button-secondary-hover focus:bg-[${secondaryButtonBackgroundFocus}] text-[${secondaryButtonText}]`;
     case ButtonType.TERTIARY:
       return !isNullOrEmpty(props.label) ?
         `rounded-full bg-[${tertiaryButtonBackground}] border-black hover:border-button-tertiary-hover focus:border-button-tertiary-hover text-black hover:text-button-tertiary-hover focus:text-button-tertiary-hover`:
