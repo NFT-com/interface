@@ -8,7 +8,7 @@ type LikeCountProps = {
   onClick: () => void;
 }
 
-export default function Alert({ count, isLiked, onClick }: LikeCountProps) {
+export default function LikeCount({ count = 0, isLiked = false, onClick }: LikeCountProps) {
   return (
     <div
       onClick={(e) => {
