@@ -229,7 +229,7 @@ export function NFTCard(props: NftCardProps) {
                   extraClasses='hover:scale-105 transition'
                 />
                 <div className="group-hover/ntfCard:opacity-100 opacity-0 w-full h-full bg-[rgba(0,0,0,0.40)] absolute top-0">
-                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing ?
+                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe ?
                     <div className='w-full h-full relative'>
                       <div className='absolute top-7 left-7'>
                         <button
