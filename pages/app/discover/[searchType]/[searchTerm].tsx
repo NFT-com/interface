@@ -18,7 +18,7 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
 import { SlidersHorizontal, X } from 'phosphor-react';
-import NoActivityIcon from 'public/no_activity.svg';
+import NoActivityIcon from 'public/no_activity.svg?svgr';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 

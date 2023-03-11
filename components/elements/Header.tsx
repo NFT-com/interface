@@ -153,7 +153,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   </a>
                 </DropdownPickerModal>
 
-                <Link href='/app/gallery'>
+                <Link href='/app/gallery' legacyBehavior>
                   <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>Gallery</a>
                 </Link>
 
@@ -391,7 +391,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                 </a>
               </DropdownPickerModal>
 
-              <Link href='/app/gallery'>
+              <Link href='/app/gallery' legacyBehavior>
                 <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>Gallery</a>
               </Link>
 

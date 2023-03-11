@@ -7,7 +7,7 @@ import { tw } from 'utils/tw';
 import { ProfileContext } from './ProfileContext';
 import { ProfileMenu } from './ProfileMenu';
 
-import GK from 'public/Badge_Key.svg';
+import GK from 'public/Badge_Key.svg?svgr';
 import { useContext } from 'react';
 
 export interface MintedProfileInfoProps {
@@ -27,7 +27,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   } = useContext(ProfileContext);
 
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
-  
+
   const handleBioChange = (event) => {
     let bioValue = event.target.value;
     if(bioValue.length === 0) {

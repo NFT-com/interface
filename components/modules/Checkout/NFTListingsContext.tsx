@@ -62,10 +62,10 @@ export type StagedListing = {
   targets: PartialDeep<ListingTarget>[],
   // top-level configs which will apply to all targets, if it exists.
   // if it doesn't, then each target must have a configuration for the listing to be valid.
-  startingPrice: BigNumberish;
-  endingPrice: BigNumberish;
-  currency: string;
-  duration: BigNumberish;
+  startingPrice?: BigNumberish;
+  endingPrice?: BigNumberish;
+  currency?: string;
+  duration?: BigNumberish;
 
   //NFTCOM only listing fields
   auctionType?: number;
@@ -671,7 +671,7 @@ export function NFTListingsContextProvider(
           };
         }
       }));
-      
+
       return {
         ...stagedNft,
         targets: preparedTargets

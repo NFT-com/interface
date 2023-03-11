@@ -13,8 +13,8 @@ import { getAddress } from 'utils/httpHooks';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
-import LooksrareIcon from 'public/looksrare-icon.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
+import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
+import OpenseaIcon from 'public/opensea-icon.svg?svgr';
 import { useCallback, useEffect, useState } from 'react';
 
 type MintProfileInputFieldProps = {
@@ -48,7 +48,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
     }
     return profileTokenId == null ? ProfileStatus.Available : nft?.listings?.items?.length ? 'Listed' : ProfileStatus.Owned;
   }, [inputValue, currentURIBlocked, profileTokenId, nft]);
-  
+
   const getProfileStatusText = useCallback((profileStatus, isOwner) => {
     switch (profileStatus) {
     case ProfileStatus.Available:
@@ -171,10 +171,9 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
             />}
         </div>
       </div>
-        
+
       {getProfileStatusText(getProfileStatus(), profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(inputValue))}
       {error && <p className='text-[#F02D21] mb-3'>{error}</p>}
     </>
   );
 }
-    

@@ -1,8 +1,7 @@
 
 const { withSentryConfig } = require('@sentry/nextjs');
 const path = require('path');
-const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
-
+// const withImages = require('next-images');
 const withTM = require('next-transpile-modules')([
   'react-dnd',
   'dnd-core',
@@ -22,6 +21,7 @@ const sentryWebpackPluginOptions = {
 /** @type {import('next').NextConfig} */
 const nextConfig =
 {
+  // exclude: path.resolve(__dirname, ['public/*.svg','public/*.png', 'public/images']),
   reactStrictMode: true,
   compress: true,
   swcMinify: true, // Enables SWC rust compiler for minification
@@ -119,24 +119,24 @@ const nextConfig =
       }
     ];
   },
-  webpack(config) {
-  // This allows you to import SVG files as strings/urls
-  // but doesn't work with typescript yet.
-    config.module.rules.push({
-      test: /\.svg$/i,
-      type: 'asset',
-      resourceQuery: /url/, // *.svg?url
-    });
-
+  webpack(config, { dev: isDev, isServer }) {
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
-      resourceQuery: { not: [/url/] }, // exclude react component if *.svg?url
+      resourceQuery: /svgr/, // only use svgr to load svg if path ends with *.svg?svgr
       use: ['@svgr/webpack'],
     });
 
-    config.plugins.push(new DuplicatePackageCheckerPlugin());
-    // config.plugins.push(new SaveRemoteFilePlugin([{ url: 'https://connect.facebook.net/en_US/fbevents.js', filepath: 'public/js/fbevents.js', hash: false }]));
+    // Re-add default nextjs loader for svg
+    config.module.rules.push({
+      test: /\.svg$/i,
+      loader: 'next-image-loader',
+      issuer: { not: /\.(css|scss|sass)$/ },
+      dependency: { not: ['url'] },
+      resourceQuery: { not: [/svgr/] }, // Ignore this rule if the path ends with *.svg?svgr
+      options: { isServer, isDev, basePath: '', assetPrefix: '' },
+    });
+
     [
       'axios',
       'bn.js',
@@ -155,6 +155,10 @@ const nextConfig =
       'node_modules',
       i
     ));
+
+    const defaultSvgLoader = config.module.rules.find(
+      (rule) => typeof rule?.test?.test === 'function' && rule.test.test('.svg')
+    );
 
     return config;
   },

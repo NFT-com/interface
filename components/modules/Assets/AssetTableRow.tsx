@@ -15,7 +15,7 @@ import { tw } from 'utils/tw';
 import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { DotsThreeVertical } from 'phosphor-react';
-import Offers from 'public/images/offers.svg';
+import Offers from 'public/images/offers.svg?svgr';
 import { useCallback } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -110,7 +110,7 @@ export default function AssetTableRow({
       </div>
     );
   }, [profiles]);
-  
+
   return (
     <tr
       className={tw('min-w-[5.5rem] h-20 font-medium font-noi-grotesk border-t border-[#D6D6D6]')}
@@ -161,7 +161,7 @@ export default function AssetTableRow({
           </td>
         </>
       )}
-      
+
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4 -mt-1" >
         <div>
           {getDisplayedProfiles()}

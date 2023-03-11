@@ -27,8 +27,8 @@ import { cancelX2Y2Listing } from 'utils/X2Y2Helpers';
 import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import NFTLogo from 'public/nft_logo_yellow.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
+import NFTLogo from 'public/nft_logo_yellow.svg?svgr';
+import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import React from 'react';
 import { PartialDeep } from 'type-fest';
@@ -77,7 +77,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const { getByContractAddress } = useSupportedCurrencies();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
-  
+
   const nftInPurchaseCart = useMemo(() => {
     return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id && purchase?.orderHash === props?.listing?.order?.orderHash) != null;
   }, [props?.listing?.order?.orderHash, props.nft?.id, toBuy]);
@@ -320,7 +320,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
               <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
             </div>
         }
-        
+
       </div>
       <div className="flex flex-col text-primary-txt dark:text-primary-txt-dk ml-3">
         <span className='text-sm text-secondary-txt'>

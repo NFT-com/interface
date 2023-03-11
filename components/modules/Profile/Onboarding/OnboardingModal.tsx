@@ -7,7 +7,8 @@ import { tw } from 'utils/tw';
 import OnboardingModalItem from './OnboardingModalItem';
 
 import { CaretDown, CaretUp } from 'phosphor-react';
-import NftGoldLogo from 'public/nft_gold_logo.svg';
+// TODO: optimize image down from 2MB
+import NftGoldLogo from 'public/nft_gold_logo.svg?svgr';
 import { useEffect, useMemo, useState } from 'react';
 
 export interface OnboardingModalProps {
@@ -94,7 +95,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                     <div className='h-[24px] w-[24px] minmd:h-[34px] minmd:w-[34px] mr-[5px]'>
                       <NftGoldLogo />
                     </div>
-                    
+
                     {profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5}/<span className='text-[#6A6A6A]'>{totalPoints || '-'}</span>
                   </div>}
                 </div>
@@ -161,4 +162,3 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
     </>
   );
 }
-    

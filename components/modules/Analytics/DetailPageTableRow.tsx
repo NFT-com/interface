@@ -9,9 +9,9 @@ import { tw } from 'utils/tw';
 import { ethers } from 'ethers';
 import moment from 'moment';
 import Link from 'next/link';
-import LooksrareIcon from 'public/looksrare-icon.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
+import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
+import OpenseaIcon from 'public/opensea-icon.svg?svgr';
+import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
 import { useCallback } from 'react';
 
 export interface DetailPageTableRowProps {
@@ -103,7 +103,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-2'>X2Y2</div>
       </div>;
     }
-    
+
     else {
       return name;
     }
@@ -145,12 +145,10 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
   );
 
   const styledProfile = (url: string) => <Link href={'/' + url} passHref>
-    <a>
-      <div className="hover:font-bold px-4 w-full items-center text-[16px] font-medium cursor-pointer font-noi-grotesk my-4">
-        <span className='font-dm-mono text-primary-yellow'>/</span>
-        <span className='ml-1 whitespace-nowrap text-[#4D4D4D] text-ellipsis overflow-hidden'>{url}</span>
-      </div>
-    </a>
+    <div className="hover:font-bold px-4 w-full items-center text-[16px] font-medium cursor-pointer font-noi-grotesk my-4">
+      <span className='font-dm-mono text-primary-yellow'>/</span>
+      <span className='ml-1 whitespace-nowrap text-[#4D4D4D] text-ellipsis overflow-hidden'>{url}</span>
+    </div>
   </Link>;
 
   const getRowContent = useCallback(() => {

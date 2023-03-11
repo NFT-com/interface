@@ -13,14 +13,13 @@ type RelatedPostProps = {
 export default function RelatedPostCard({ post }: RelatedPostProps) {
   const result = readingTime(post?.body || '');
   return (
-    <Link href={`/articles/${post?.slug}`}>
+    <Link href={`/articles/${post?.slug}`} passHref legacyBehavior>
       <div data-cy="blogPostCard" className="text-left	hover:cursor-pointer">
         {post?.heroImage?.url &&
       <div style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)' }} className="aspect-4/3 w-full relative rounded-md">
         <BlurImage
-          className='rounded-md'
-          objectFit="cover"
-          layout="fill"
+          className='rounded-md object-cover'
+          fill
           src={post?.heroImage?.url}
           alt={post?.heroImage?.description}
         />
@@ -38,15 +37,15 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
         )}
         <div className="flex mt-3">
           {post?.author?.image?.url && (
-            <div className="minlg:h-9 h-7 minlg:w-9 w-7 mr-2 mt-0.5">
+            <span className="rounded-full minlg:h-9 h-7 minlg:w-9 w-7 mr-2 mt-0.5 overflow-hidden relative">
               <Image
-                src={post?.author?.image?.url}
-                alt={post?.author?.image?.description || 'Author Image'}
-                className="rounded-full object-cover"
-                width="100%"
-                height="100%"
+                src={post.author.image.url}
+                alt={post.author.image.description || 'Author Image'}
+                className="object-cover"
+                fill
               />
-            </div>)}
+            </span>
+          )}
           <div>
             <p className="font-grotesk minlg:text-base text-xs leading-5">
               {post?.author?.name}

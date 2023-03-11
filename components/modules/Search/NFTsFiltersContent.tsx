@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
-import SearchIcon from 'public/search.svg';
+import SearchIcon from 'public/search.svg?svgr';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { X } from 'react-feather';
 interface FilterOptionProps {
@@ -363,14 +363,14 @@ export const NFTsFiltersContent = () => {
     const filtersObject = Object.entries(collectionsFilter);
     const nftSFiltersObject = Object.entries(nftSFilters);
     const collectionsFiltersString = filtersObject.filter(Boolean).map(item => {
-      if(!item[1] || !item[1].length) return;
-      if(item[0] === 'issuance' && item[1].length > 0){
-        const sum = item[1].reduce((array, value) => array + Number(value), 0);
+      if(!item[1] || !(item[1] as any[]).length) return;
+      if(item[0] === 'issuance' && (item[1] as any[]).length > 0){
+        const sum = (item[1] as any[]).reduce((array, value) => array + Number(value), 0);
         const now = moment().valueOf();
         const epochFilter = now - (sum ? sum : item[1][0]);
         return `issuance:>${epochFilter}`;
       }
-      if(item[0] === 'floor' && item[1].length){
+      if(item[0] === 'floor' && (item[1] as any[]).length){
         if(item[1][0] && !item[1][1]){
           return `floor:>${item[1][0]}`;
         }
@@ -384,10 +384,10 @@ export const NFTsFiltersContent = () => {
       if(item[0] === 'currency' && item[1]){
         return `currency:=[${item[1]}]`;
       }
-      if(item[0] === 'nftTypes' && item[1].length){
+      if(item[0] === 'nftTypes' && (item[1] as any[]).length){
         return `nftType:=[${item[1]}]`;
       }
-      if(item[0] === 'volume' && item[1].length){
+      if(item[0] === 'volume' && (item[1] as any[]).length){
         if(item[1][0] && !item[1][1]){
           return `volume:>${item[1][0]}`;
         }
@@ -400,11 +400,11 @@ export const NFTsFiltersContent = () => {
       }
     }).filter(Boolean).join(' && ');
     const nftFilterString = nftSFiltersObject.filter(Boolean).map(item => {
-      if(!item[1] || !item[1].length) return;
-      if(item[0] === 'nftTypes' && item[1].length){
+      if(!item[1] || !(item[1] as any[]).length) return;
+      if(item[0] === 'nftTypes' && (item[1] as any[]).length){
         return `nftType:=[${item[1]}]`;
       }
-      if(item[0] === 'marketplace' && item[1].length){
+      if(item[0] === 'marketplace' && (item[1] as any[]).length){
         return `listings.marketplace:=[${item[1]}]`;
       }
       if(item[0] === 'contractName' && item[1] && item[1][0].selectedCheck !== ''){
@@ -413,11 +413,11 @@ export const NFTsFiltersContent = () => {
       if(item[0] === 'currency' && item[1]){
         return `listings.currency:=[${item[1]}]`;
       }
-      if(item[0] === 'status' && item[1].length){
+      if(item[0] === 'status' && (item[1] as any[]).length){
         const now = moment().valueOf();
         const value = `${now}`;
         const epochFilter = Number(value) - 2592000000;
-        if(item[1].length === 1){
+        if((item[1] as any[]).length === 1){
           if(item[1][0] === 'buyNow'){
             return 'hasListings:=1';
           }else {
@@ -427,7 +427,7 @@ export const NFTsFiltersContent = () => {
           return `hasListings:=1 && issuance:>${epochFilter}`;
         }
       }
-      if(item[0] === 'listedFloor' && item[1].length){
+      if(item[0] === 'listedFloor' && (item[1] as any[]).length){
         if(item[1][0] && !item[1][1]){
           return `listedFloor:>${item[1][0]}`;
         }
@@ -438,7 +438,7 @@ export const NFTsFiltersContent = () => {
           return `listedFloor:=[${item[1][0]}..${item[1][1]}]`;
         }
       }
-      if(item[0] === 'price' && item[1].length){
+      if(item[0] === 'price' && (item[1] as any[]).length){
         if(item[1][0] && !item[1][1]){
           return `listings.price:>${item[1][0]}`;
         }

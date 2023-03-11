@@ -18,12 +18,12 @@ import delay from 'delay';
 import { useRouter } from 'next/router';
 import { ArrowClockwise, Check } from 'phosphor-react';
 import { ShareNetwork, TwitterLogo, X } from 'phosphor-react';
-import LinkIcon from 'public/icon_link.svg';
-import FeaturedIcon from 'public/layout_icon_featured.svg';
-import GridIcon from 'public/layout_icon_grid.svg';
-import MosaicIcon from 'public/layout_icon_mosaic.svg';
-import SpotlightIcon from 'public/layout_icon_spotlight.svg';
-import GearIcon from 'public/settings_icon.svg';
+import LinkIcon from 'public/icon_link.svg?svgr';
+import FeaturedIcon from 'public/layout_icon_featured.svg?svgr';
+import GridIcon from 'public/layout_icon_grid.svg?svgr';
+import MosaicIcon from 'public/layout_icon_mosaic.svg?svgr';
+import SpotlightIcon from 'public/layout_icon_spotlight.svg?svgr';
+import GearIcon from 'public/settings_icon.svg?svgr';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -154,7 +154,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             setSearchQuery('');
           }} />
       </div>
-        
+
       <div className={tw(
         'flex flex-row items-center space-x-1 minlg:space-x-3',
         searchVisible && 'hidden minlg:flex',
@@ -278,7 +278,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                       newHeader: draftHeaderImg?.preview ? true : false,
                       newDescription: draftBio,
                     });
-    
+
                     saveProfile();
                     setTimeout(() => {
                       setEditMode(false);

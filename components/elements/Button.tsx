@@ -182,7 +182,7 @@ export function Button(props: ButtonProps) {
   return (
     <button
       className={tw(
-        'buttonContainer w-full',
+        'buttonContainer',
         'flex items-center font-noi-grotesk font-medium',
         'justify-center',
         'no-underline select-none',

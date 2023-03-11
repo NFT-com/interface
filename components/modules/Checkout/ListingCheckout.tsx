@@ -24,15 +24,15 @@ import { handleRender } from './TooltipSlider';
 
 import router from 'next/router';
 import { ArrowLeft } from 'phosphor-react';
-import LooksrareGray from 'public/looksrare_gray.svg';
-import LooksrareIcon from 'public/looksrare-icon.svg';
-import NFTLogo from 'public/nft_logo_yellow.svg';
-import NoActivityIcon from 'public/no_activity.svg';
-import OpenSeaGray from 'public/opensea_gray.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
-import ErrorIcon from 'public/red-error-icon.svg';
-import X2Y2Gray from 'public/x2y2-gray.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
+import LooksrareGray from 'public/looksrare_gray.svg?svgr';
+import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
+import NFTLogo from 'public/nft_logo_yellow.svg?svgr';
+import NoActivityIcon from 'public/no_activity.svg?svgr';
+import OpenSeaGray from 'public/opensea_gray.svg?svgr';
+import OpenseaIcon from 'public/opensea-icon.svg?svgr';
+import ErrorIcon from 'public/red-error-icon.svg?svgr';
+import X2Y2Gray from 'public/x2y2-gray.svg?svgr';
+import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
 import Slider from 'rc-slider';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
@@ -74,7 +74,7 @@ export function ListingCheckout() {
       }
     });
   },[setDuration, toList]);
-     
+
   const { data: NFTCOMProtocolFee } = useSWR(
     'NFTCOMProtocolFee' + currentAddress,
     async () => {
@@ -104,7 +104,7 @@ export function ListingCheckout() {
       refreshInterval: 0,
       revalidateOnFocus: false,
     });
-     
+
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
 
@@ -377,7 +377,7 @@ export function ListingCheckout() {
       {showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0 && !allListingsFail} onClose={() => setShowSummary(false)} />}
     </div>;
   },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, allListingsFail, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
-  
+
   return (
     <div className='flex w-full justify-between h-full'>
       {toList.length === 1 && ListingOneNFT()}

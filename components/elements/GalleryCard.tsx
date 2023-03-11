@@ -2,6 +2,8 @@
 import { useCheckFileType } from 'hooks/useCheckFileType';
 import { tw } from 'utils/tw';
 
+import BlurImage from './BlurImage';
+
 import React from 'react';
 
 export interface GalleryCardProps {
@@ -30,22 +32,21 @@ function GalleryCard(props: GalleryCardProps) {
         'absolute z-10 animate-pulse',
         'w-full h-full rounded-xl bg-gradient-to-tr from-hero-pink to-hero-blue',
       )} />}
-      {/* <Image
+      <BlurImage
         alt={props.label}
-        src={props.imageURL}
-        layout="fill"
-        objectFit="contain"
+        src={imageSrc}
+        fill
         className={tw(
-          'h-full w-full aspect-square rounded-xl absolute z-20',
+          'h-full w-full aspect-square rounded-xl absolute z-20 object-contain',
         )}
-      /> */}
-      <img
+      />
+      {/* <img
         alt=""
         src={imageSrc}
         className={tw(
           'h-full w-full aspect-square rounded-xl absolute z-20',
         )}
-      />
+      /> */}
       <div
         className={tw(
           'absolute font-black bottom-0 w-full text-center mb-4 z-30',

@@ -11,6 +11,7 @@ function PreviewBanner() {
       <Link
         prefetch={false}
         href={`/api/cancel-preview?slug=${router?.asPath}`}
+        legacyBehavior
       >
         <a
           className="bg-white dark:bg-black text-black dark:text-white rounded decoraction p-2"

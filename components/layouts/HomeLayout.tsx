@@ -1,3 +1,4 @@
+import ClientOnly from 'components/elements/ClientOnly';
 import { Footer as StaticFooter } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';
@@ -10,7 +11,6 @@ import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
-import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -34,7 +34,7 @@ export default function HomeLayout({ children, hideFooter, hideHeader }: HomeLay
   const { setProfileSelectModalOpen, profileSelectModal } = useProfileSelectModal();
   const { signed } = useContext(GraphQLContext);
   const { searchModalOpen } = useSearchModal();
-  
+
   return (
     <div className={tw('flex flex-col',
       'w-full min-w-screen min-h-screen overflow-hidden',

@@ -2,6 +2,8 @@ import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { Maybe } from 'graphql/generated/types';
 import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 
+import ClientOnly from './ClientOnly';
+
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { ExternalLink } from 'styles/theme';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -30,10 +32,11 @@ export function ConnectedAddress(props: ConnectedAddressProps) {
             color: secondaryText,
           }}
         >
-          <ExternalLink
-            href={getEtherscanLink(chain?.id, ensName ?? currentAddress, 'address')}
-          >
-            {currentAddress &&
+          <ClientOnly>
+            <ExternalLink
+              href={getEtherscanLink(chain?.id, ensName ?? currentAddress, 'address')}
+            >
+              {currentAddress &&
             <div
               className='flex justify-between font-dm-mono'
               style={{
@@ -43,7 +46,8 @@ export function ConnectedAddress(props: ConnectedAddressProps) {
               {ensName ?? shortenAddress(currentAddress)}
               <LinkIcon size={20} className='ml-2'/>
             </div>}
-          </ExternalLink>
+            </ExternalLink>
+          </ClientOnly>
         </div>
       </div>
     </div>
