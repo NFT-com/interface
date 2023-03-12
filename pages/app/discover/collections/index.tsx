@@ -63,7 +63,7 @@ export default function CollectionsPage() {
         q: '*',
         query_by: 'contractAddr,contractName',
         filter_by: collectionsResultsFilterBy ? `isOfficial:true && ${collectionsResultsFilterBy}` : 'isOfficial:true',
-        per_page: getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) ? 10 : 20,
+        per_page: getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ? 10 : 20,
         page: page,
       }).then((results) => {
         setLoading(false);
@@ -79,7 +79,7 @@ export default function CollectionsPage() {
   }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, filters]);
 
   useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
       const flatData = [...collections];
       const data2D = [];
       while(flatData.length) data2D.push(flatData.splice(0,columnCount));
@@ -88,7 +88,7 @@ export default function CollectionsPage() {
   },[collections, columnCount]);
 
   useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
       if (!sideNavOpen) {
         if (screenWidth > 1600) {
           setColumnCount(4);
@@ -177,7 +177,7 @@ export default function CollectionsPage() {
       );
     } else {
       return (
-        !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)
+        !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)
           ?<div className={tw(
             'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
             'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4 w-full')}>
@@ -326,11 +326,11 @@ export default function CollectionsPage() {
                     }
                     {collections && collections?.length > 0 && leaderBoardOrCollectionView()}
                   </div>
-                  {!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && (loading) &&
+                  {!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && (loading) &&
                     (<div className="flex items-center justify-center min-h-[16rem] w-full">
                       <Loader />
                     </div>)}
-                  {!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && !isLeaderBoard && collections && collections.length < found && collections?.length > 0 &&
+                  {!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && !isLeaderBoard && collections && collections.length < found && collections?.length > 0 &&
                     <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
                       <Button
                         size={ButtonSize.LARGE}
@@ -349,14 +349,14 @@ export default function CollectionsPage() {
           </div>
         </div>
       </div>
-      {getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && isLeaderBoard && <DynamicFooter />}
+      {getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && isLeaderBoard && <DynamicFooter />}
     </>
   );
 }
 
 CollectionsPage.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout hideFooter={getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)} showDNavigation={true}>
+    <DefaultLayout hideFooter={getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)} showDNavigation={true}>
       { page }
     </DefaultLayout>
   );

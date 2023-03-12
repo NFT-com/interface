@@ -42,11 +42,11 @@ export default function ProfilePage() {
   const [allLoadedProfiles, setAllLoadedProfiles] = useState<PartialDeep<Profile>[]>([]);
   const { data: loadedProfilesNextPage } = useRecentProfilesQuery({
     first: PROFILE_LOAD_COUNT,
-    afterCursor: !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) ? afterCursor : afterCursorRW,
+    afterCursor: !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ? afterCursor : afterCursorRW,
   });
 
   const loadMoreProfiles = useCallback(() => {
-    if (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+    if (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
       nextPage(loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor);
     } else {
       loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor && setAfterCursorRW(loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor);
@@ -64,12 +64,12 @@ export default function ProfilePage() {
       ]);
       toggleLoadState(false);
       setLastAddedPage(loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor);
-      !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && setTotalCount(loadedProfilesNextPage?.latestProfiles?.totalItems);
+      !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && setTotalCount(loadedProfilesNextPage?.latestProfiles?.totalItems);
     }
   }, [allLoadedProfiles, lastAddedPage, loadedProfilesNextPage?.latestProfiles?.items, loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor, loadedProfilesNextPage?.latestProfiles?.totalItems, setTotalCount]);
 
   useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
       const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
       const flatData = [...uniqData];
       const data2D = [];
@@ -79,7 +79,7 @@ export default function ProfilePage() {
   },[columnCount, allLoadedProfiles]);
 
   useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
       if (screenWidth > 1600) {
         setColumnCount(5);
       } else if (screenWidth > 1200 && screenWidth <= 1600) {
@@ -122,7 +122,7 @@ export default function ProfilePage() {
   const filterUniqProfiles = () => {
     if(!allLoadedProfiles && !allLoadedProfiles.length) return;
     const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
-    return !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)
+    return !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)
       ? uniqData.map((profile, index) => {
         return (
           <ProfileCard
@@ -176,7 +176,7 @@ export default function ProfilePage() {
         <div>
           <div className={tw(
             'grid grid-cols-1 minlg:space-x-0 gap-1 minmd:gap-4',
-            isLeaderBoard ? 'minxl:grid-cols-1' : getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) ? '' : 'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
+            isLeaderBoard ? 'minxl:grid-cols-1' : getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ? '' : 'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
             {
               !isLeaderBoard
                 ? filterUniqProfiles()
@@ -201,7 +201,7 @@ export default function ProfilePage() {
                 )
             }
           </div>
-          {getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)
+          {getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)
             ? <div className="w-full flex justify-center pb-32 mt-12">
               {
                 isLoading
@@ -260,7 +260,7 @@ export default function ProfilePage() {
 
 ProfilePage.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout hideFooter={getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)} showDNavigation={true}>
+    <DefaultLayout hideFooter={getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)} showDNavigation={true}>
       { page }
     </DefaultLayout>
   );

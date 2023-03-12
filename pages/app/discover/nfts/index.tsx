@@ -70,7 +70,7 @@ export default function CollectionsPage() {
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
 
   useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
       const flatData = [...nftSData];
       const data2D = [];
       while(flatData.length) data2D.push(flatData.splice(0,columnCount));
@@ -79,7 +79,7 @@ export default function CollectionsPage() {
   },[columnCount, nftSData]);
 
   useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED)) {
+    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
       if (!sideNavOpen) {
         if (screenWidth > 1600) {
           setColumnCount(5);
@@ -134,7 +134,7 @@ export default function CollectionsPage() {
   }, []);
   
   const showNftView = (nftSDataPerRows?: any[]) => {
-    return (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) ?
+    return (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ?
       <div className={tw(
         'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
         sideNavOpen ? 'minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2 minmd:grid-cols-2 grid-cols-1 w-full' : 'minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1 w-full')}>
@@ -240,11 +240,11 @@ export default function CollectionsPage() {
                     </div>
 
                   </div>
-                  {!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && (loading) &&
+                  {!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && (loading) &&
                     (<div className="flex items-center justify-center min-h-[16rem] w-full">
                       <Loader />
                     </div>)}
-                  { !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENANBLED) && nftSData && nftSData.length < found && nftSData?.length > 0 &&
+                  { !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && nftSData && nftSData.length < found && nftSData?.length > 0 &&
                     <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
                       <Button
                         size={ButtonSize.LARGE}
