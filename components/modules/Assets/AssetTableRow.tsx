@@ -64,7 +64,7 @@ export default function AssetTableRow({
       return <div className='flex items-center'>
         <RoundedCornerMedia
           priority={true}
-          containerClasses='w-[32px] h-[32px] w-full aspect-square mr-3'
+          containerClasses='w-[32px] h-[32px] aspect-square mr-3'
           variant={RoundedCornerVariant.Full}
           amount={RoundedCornerAmount.Medium}
           src={processIPFSURL(profiles[0].photoURL)}
@@ -90,7 +90,7 @@ export default function AssetTableRow({
                 <div key={i} className='flex items-center'>
                   <RoundedCornerMedia
                     priority={true}
-                    containerClasses='w-[32px] h-[32px] w-full aspect-square mr-3'
+                    containerClasses='w-[32px] h-[32px] aspect-square mr-3'
                     variant={RoundedCornerVariant.Full}
                     amount={RoundedCornerAmount.Medium}
                     src={processIPFSURL(profile.photoURL)}

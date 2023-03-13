@@ -11,7 +11,7 @@ export const RoundedCornerMediaImage = (props: {
       alt='NFT Image'
       key={props.src}
       quality='50'
-      layout='fill'
+      fill
       priority={props?.priority}
       src={props.src}
       onError={props.onError}
