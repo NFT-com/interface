@@ -60,7 +60,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                   'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
                 )} key={nft?.id ?? index}>
 
-                  {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+                  {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
                     <NftCard
                       contractAddr={props.contract}
                       tokenId={nft.tokenId}
@@ -116,24 +116,40 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 'delay': 4500,
                 'disableOnInteraction': false
               }}
-              className="flex overflow-y-visible"
+              className={tw(
+                'flex overflow-y-visible',
+                getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && 'h-max'
+              )}
             >
               {data?.map((nft, index) => {
                 return (
                   <SwiperSlide className={tw(
                     'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
                   )} key={nft?.id ?? index}>
-                    <NftCard
-                      contractAddr={props.contract}
-                      tokenId={nft.tokenId}
-                      name={nft.metadata.name}
-                      nft={nft}
-                      isOwnedByMe={nft?.isOwnedByMe}
-                      listings={nft?.listings?.items || []}
-                      images={[nft.metadata.imageURL]}
-                      collectionName={props.collectionName}
-                      redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
-                    />
+                    {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+                      <NftCard
+                        contractAddr={props.contract}
+                        tokenId={nft.tokenId}
+                        name={nft.metadata.name}
+                        nft={nft}
+                        isOwnedByMe={nft?.isOwnedByMe}
+                        listings={nft?.listings?.items || []}
+                        images={[nft.metadata.imageURL]}
+                        collectionName={props.collectionName}
+                        redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
+                      /> :
+                      <NFTCard
+                        contractAddr={props.contract}
+                        tokenId={nft.tokenId}
+                        name={nft.metadata.name}
+                        nft={nft}
+                        isOwnedByMe={nft?.isOwnedByMe}
+                        listings={nft?.listings?.items || []}
+                        images={[nft.metadata.imageURL]}
+                        collectionName={props.collectionName}
+                        redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
+                      />
+                    }
                   </SwiperSlide>
                 );
               })}
