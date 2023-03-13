@@ -45,7 +45,6 @@ export function Button(props: ButtonProps) {
     primaryButtonBackgroundFocus,
     primaryButtonText,
     secondaryButtonBackground,
-    secondaryButtonBackgroundHover,
     secondaryButtonBackgroundFocus,
     secondaryButtonText,
     tertiaryButtonBackground,

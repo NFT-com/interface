@@ -1,7 +1,7 @@
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
-import { CheckCircle, WarningCircle, X } from 'phosphor-react';
+import { CheckCircle, X } from 'phosphor-react';
 import Error from 'public/error.svg';
 import Warning from 'public/warning.svg';
 
@@ -106,4 +106,3 @@ export default function Alert({ type, heading, description, onClick, onClose, hi
     </div>
   );
 }
-

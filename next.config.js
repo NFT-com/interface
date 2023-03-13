@@ -156,10 +156,6 @@ const nextConfig =
       i
     ));
 
-    const defaultSvgLoader = config.module.rules.find(
-      (rule) => typeof rule?.test?.test === 'function' && rule.test.test('.svg')
-    );
-
     return config;
   },
 
