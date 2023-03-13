@@ -125,7 +125,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
       <div className="relative w-full flex items-center mt-4 mb-3">
         <div className={tw(
           'left-0 pl-4 flex font-bold text-black',
-          'rounded-l-lg bg-white py-3 text-lg',
+          'rounded-l-lg py-3 text-lg',
           'bg-[#F8F8F8]'
         )}>
       NFT.com/

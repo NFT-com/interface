@@ -21,6 +21,7 @@ import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS_V2 } from 'lib/contentful/schemas';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import Link from 'next/link';
 import { NextSeo } from 'next-seo';
 import { useEffect } from 'react';
 import Marquee from 'react-fast-marquee';
@@ -823,14 +824,14 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
 
               <div className='-mx-9 overflow-hidden mb-12'>
                 <div id='anim-news-content' data-aos="fade-left" className='minlg:translate-x-full minlg:transform-gpu'>
-                  <Marquee gradient={false} speed={60} loop={0} play={isVisible} className="flex">
+                  <Marquee gradient={false} speed={60} loop={0} play={isVisible} className="flex" style={{ flex: 'flex' }}>
                     {data_v2?.newsSlidesCollection?.items.map((preview) =>
-                      <a key={preview.slug} href={`articles/${preview.slug}`} className={tw(
-                        'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
+                      <Link key={preview.slug} href={`articles/${preview.slug}`} className={tw(
+                        'bg-white flex flex-col h-full rounded-lg md:mb-5 text-black',
                         'mx-[10px] minlg:mx-4 minxxl:mx-5 cursor-pointer',
-                        'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
+                        'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem] '
                       )}>
-                        <div className='before:pb-[54.129%] before:block relative overflow-hidden'>
+                        <div className='before:pb-[54.129%] before:block relative overflow-hidden aspect-4/3'>
                           <BlurImage
                             fill
                             className='rounded-t-lg object-cover'
@@ -839,7 +840,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                           />
                         </div>
 
-                        <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
+                        <div className='py-5 px-4 minxxl:py-8 minxxl:px-7 flex-grow flex flex-col items-start'>
                           <h3 className={tw(
                             'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
                             'mb-11 minxxl:mb-16'
@@ -854,7 +855,8 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                             {preview.author?.name}
                           </div>
                         </div>
-                      </a>)}
+                      </Link>
+                    )}
                   </Marquee>
                 </div>
               </div>

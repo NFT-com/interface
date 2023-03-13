@@ -13,7 +13,7 @@ import { tw } from 'utils/tw';
 import { BigNumber, BigNumberish } from 'ethers';
 import RightSlider from 'public/right-slider.svg?svgr';
 import { useState } from 'react';
-import { Swiper as SwiperClass } from 'swiper';
+import { Autoplay, Swiper as SwiperClass } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
@@ -80,7 +80,6 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
               my_swiper.slideNext();
             }} className='cursor-pointer absolute right-[-50px] lg:hidden hover:scale-105 top-1/2 bottom-1/2 z-20' />
             <Swiper
-              navigation
               onInit={(ev) => {
                 set_my_swiper(ev);
               }}
@@ -100,6 +99,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 'delay': 4500,
                 'disableOnInteraction': false
               }}
+              modules={[Autoplay]}
               className="flex overflow-y-visible"
             >
               {data?.map((nft, index) => {

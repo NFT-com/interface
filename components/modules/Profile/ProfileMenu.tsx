@@ -127,7 +127,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   return (
     <div className='w-full flex justify-end items-center mt-5 minlg:mt-0 font-noi-grotesk'>
       <div ref={inputRef} className={tw(
-        'w-full flex flex-row border-[#ECECEC] rounded-full justify-center items-center',
+        'flex flex-row border-[#ECECEC] rounded-full justify-center items-center',
         'focus-within:border focus-within:border-[#F9D54C] focus-within:ring-1 focus-within:ring-[#F9D54C] ',
         searchVisible && !editMode ? 'w-full minlg:w-[320px] minlg:max-w-[320px] p-[10px] border-[1.3px] transition-[width] h-10 minlg:h-12' : 'w-0 p-0 border-0'
       )}>
