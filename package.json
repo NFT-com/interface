@@ -61,7 +61,7 @@
     "framer-motion": "^10.2.5",
     "from-exponential": "^1.1.1",
     "graphql": "^16.6.0",
-    "graphql-request": "^5.2.0",
+    "graphql-request": "^4.3.0",
     "graphql-tag": "^2.12.6",
     "gsap": "^3.11.4",
     "is-ipfs": "^8.0.1",
