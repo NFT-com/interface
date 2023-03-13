@@ -1568,6 +1568,12 @@ export enum ProfileViewType {
   Gallery = 'Gallery'
 }
 
+export type ProfileVisibleNftCount = {
+  __typename?: 'ProfileVisibleNFTCount';
+  id: Scalars['String'];
+  visibleNFTs: Scalars['Int'];
+};
+
 export type ProfilesActionsOutput = {
   __typename?: 'ProfilesActionsOutput';
   action?: Maybe<Array<Maybe<ProfileActionType>>>;
@@ -1672,6 +1678,7 @@ export type Query = {
   profile: Profile;
   profileFollowers: FollowersOutput;
   profilePassive: Profile;
+  profileVisibleNFTCount: Array<ProfileVisibleNftCount>;
   profilesByDisplayNft: ProfilesOutput;
   /** AUTHENTICATED */
   profilesFollowedByMe: ProfilesOutput;
@@ -1918,6 +1925,12 @@ export type QueryProfileFollowersArgs = {
 export type QueryProfilePassiveArgs = {
   chainId?: InputMaybe<Scalars['String']>;
   url: Scalars['String'];
+};
+
+
+export type QueryProfileVisibleNftCountArgs = {
+  chainId?: InputMaybe<Scalars['String']>;
+  profileIds: Array<Scalars['String']>;
 };
 
 
