@@ -1,12 +1,14 @@
 import LikeCount from 'components/elements/LikeCount';
 import { DetailedNft } from 'components/modules/DiscoveryCards/CollectionCard';
+import { WETH } from 'constants/tokens';
 import { TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
-import { getLowestPriceListing } from 'utils/listingUtils';
+import { getListingCurrencyAddress, getLowestPriceListing } from 'utils/listingUtils';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
@@ -40,6 +42,7 @@ export function NFTCard(props: NftCardProps) {
   const defaultChainId = useDefaultChainId();
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
+  const { getByContractAddress } = useSupportedCurrencies();
 
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nft is passed by setting tokenId to null
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
@@ -47,6 +50,7 @@ export function NFTCard(props: NftCardProps) {
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
   const isOwnedByMe = props?.isOwnedByMe || (props?.nft?.wallet?.address ?? props?.nft?.owner) === currentAddress;
+  const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
 
   return (
     <div className='relative w-full h-full'>
@@ -79,12 +83,12 @@ export function NFTCard(props: NftCardProps) {
             'relative object-cover w-full h-max flex flex-col',
             !bestListing && 'mb-10'
           )}>
-            <NFTCardImage {...props} bestListing={bestListing} nft={nft} isOwnedByMe={isOwnedByMe} />
+            <NFTCardImage {...props} bestListing={bestListing} nft={nft} isOwnedByMe={isOwnedByMe} currencyData={currencyData} />
             {props.descriptionVisible != false &&
-              <NFTCardDescription {...props} bestListing={bestListing} nft={nft} />
+              <NFTCardDescription {...props} bestListing={bestListing} nft={nft} currencyData={currencyData} />
             }
             {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && props?.descriptionVisible !== false && !isOwnedByMe ?
-              <NFTCardButton {...props} bestListing={bestListing} nft={nft} />
+              <NFTCardButton {...props} bestListing={bestListing} nft={nft} currencyData={currencyData} />
               : null
             }
           </div>

@@ -8,7 +8,7 @@ import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocol
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
-import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 
@@ -23,6 +23,7 @@ export interface NFTCardButtonProps {
   collectionName: string;
   tokenId: string;
   bestListing: PartialObjectDeep<TxActivity, unknown>;
+  currencyData: NFTSupportedCurrency;
   listings?: PartialDeep<TxActivity>[];
   nft?: PartialDeep<DetailedNft>;
 }
@@ -30,7 +31,6 @@ export interface NFTCardButtonProps {
 export function NFTCardButton(props: NFTCardButtonProps) {
   const { stageBuyNow, togglePurchaseSummaryModal } = useContext(NFTPurchasesContext);
   const { address: currentAddress } = useAccount();
-  const { getByContractAddress } = useSupportedCurrencies();
   const currentDate = useGetCurrentDate();
   const chainId = useDefaultChainId();
 
@@ -42,9 +42,8 @@ export function NFTCardButton(props: NFTCardButtonProps) {
         <Button stretch label='Buy Now' type={ButtonType.PRIMARY} size={ButtonSize.LARGE}
           onClick={async (e) => {
             e.preventDefault();
-            const currencyData = getByContractAddress(getListingCurrencyAddress(props?.bestListing) ?? WETH.address);
-            const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
-            const protocolAllowance = await currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(props?.bestListing?.order?.protocol as ExternalProtocol));
+            const allowance = await props?.currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
+            const protocolAllowance = await props?.currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(props?.bestListing?.order?.protocol as ExternalProtocol));
             const price = getListingPrice(props?.bestListing, (props?.bestListing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null);
             const protocol = props?.bestListing?.order?.protocol as ExternalProtocol;
             stageBuyNow({

@@ -7,7 +7,7 @@ import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
-import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
@@ -32,6 +32,7 @@ export interface NFTCardImageProps {
   tokenId: string;
   images: Array<string | null>;
   bestListing: PartialObjectDeep<TxActivity, unknown>;
+  currencyData: NFTSupportedCurrency;
   listings?: PartialDeep<TxActivity>[];
   nft?: PartialDeep<DetailedNft>;
   isOwnedByMe?: boolean;
@@ -42,7 +43,6 @@ export function NFTCardImage(props: NFTCardImageProps) {
   const { stagePurchase } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
-  const { getByContractAddress } = useSupportedCurrencies();
   const defaultChainId = useDefaultChainId();
   const chainId = useDefaultChainId();
 
@@ -114,9 +114,8 @@ export function NFTCardImage(props: NFTCardImageProps) {
                 <button
                   onClick={async (e) => {
                     e.preventDefault();
-                    const currencyData = getByContractAddress(getListingCurrencyAddress(props?.bestListing) ?? WETH.address);
-                    const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
-                    const protocolAllowance = await currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(props?.bestListing?.order?.protocol as ExternalProtocol));
+                    const allowance = await props?.currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
+                    const protocolAllowance = await props?.currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(props?.bestListing?.order?.protocol as ExternalProtocol));
                     const price = getListingPrice(props?.bestListing);
                     stagePurchase({
                       nft: props?.nft,

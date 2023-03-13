@@ -4,9 +4,9 @@ import { getAddressForChain, nftProfile } from 'constants/contracts';
 import { TxActivity } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { getListingCurrencyAddress, getListingEndDate, getListingPrice } from 'utils/listingUtils';
+import { getListingEndDate, getListingPrice } from 'utils/listingUtils';
 import { tw } from 'utils/tw';
 
 import { ethers } from 'ethers';
@@ -25,16 +25,15 @@ export interface NFTCardDescriptionProps {
   name: string;
   collectionName: string;
   bestListing: PartialObjectDeep<TxActivity, unknown>;
+  currencyData: NFTSupportedCurrency;
   nft?: PartialDeep<DetailedNft>;
   listings?: PartialDeep<TxActivity>[];
 }
 
 export function NFTCardDescription(props: NFTCardDescriptionProps) {
-  const { getByContractAddress } = useSupportedCurrencies();
   const defaultChainId = useDefaultChainId();
   const { profileData: nftProfileData } = useProfileQuery(!props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts is passed by setting null
 
-  const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(props?.bestListing));
   const checkEndDate = () => {
     if(props?.bestListing){
       const endDate = moment.unix(getListingEndDate(props?.bestListing, props?.bestListing.order.protocol as ExternalProtocol));
@@ -100,19 +99,19 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
                     className="w-max"
                   >
                     <p>
-                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(props?.bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0)}
+                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(props?.currencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(props?.bestListing), props?.currencyData?.decimals ?? 18))) ?? 0)}
                     </p>
                   </div>
                 }
               >
                 <div className='hidden minmd:flex items-center text-base font-medium hover:bg-footer-bg hover:rounded-full py-1 px-2 -mr-2 -mt-1 '>
                   {getIcon(
-                    listingCurrencyData?.contract,
-                    listingCurrencyData?.name ?? 'WETH',
+                    props?.currencyData?.contract,
+                    props?.currencyData?.name ?? 'WETH',
                   )}
-                  {listingCurrencyData?.decimals ? Number(ethers.utils.formatUnits(getListingPrice(props?.bestListing), listingCurrencyData?.decimals ?? 18)).toLocaleString(undefined, { maximumSignificantDigits: 3 }) : '-'}
+                  {props?.currencyData?.decimals ? Number(ethers.utils.formatUnits(getListingPrice(props?.bestListing), props?.currencyData?.decimals ?? 18)).toLocaleString(undefined, { maximumSignificantDigits: 3 }) : '-'}
                       &nbsp;
-                  {listingCurrencyData?.name ?? 'WETH'}
+                  {props?.currencyData?.name ?? 'WETH'}
                 </div>
               </CustomTooltip2>
               : null
@@ -149,19 +148,19 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
                     className="w-max"
                   >
                     <p>
-                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(props?.bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0)}
+                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(props?.currencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(props?.bestListing), props?.currencyData?.decimals ?? 18))) ?? 0)}
                     </p>
                   </div>
                 }
               >
                 <div className='items-center text-base font-medium hover:bg-footer-bg hover:rounded-full py-1 px-2 -mr-2 -mt-1 flex'>
                   {getIcon(
-                    listingCurrencyData?.contract,
-                    listingCurrencyData?.name ?? 'WETH',
+                    props?.currencyData?.contract,
+                    props?.currencyData?.name ?? 'WETH',
                   )}
-                  {listingCurrencyData?.decimals ? Number(ethers.utils.formatUnits(getListingPrice(props?.bestListing), listingCurrencyData?.decimals ?? 18)).toLocaleString(undefined, { maximumSignificantDigits: 3 }) : '-'}
+                  {props?.currencyData?.decimals ? Number(ethers.utils.formatUnits(getListingPrice(props?.bestListing), props?.currencyData?.decimals ?? 18)).toLocaleString(undefined, { maximumSignificantDigits: 3 }) : '-'}
                    &nbsp;
-                  {listingCurrencyData?.name ?? 'WETH'}
+                  {props?.currencyData?.name ?? 'WETH'}
                 </div>
               </CustomTooltip2>
             </>
