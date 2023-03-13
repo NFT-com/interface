@@ -19,9 +19,7 @@ const sentryWebpackPluginOptions = {
 };
 
 /** @type {import('next').NextConfig} */
-const nextConfig =
-{
-  // exclude: path.resolve(__dirname, ['public/*.svg','public/*.png', 'public/images']),
+const nextConfig = {
   reactStrictMode: true,
   compress: true,
   swcMinify: true, // Enables SWC rust compiler for minification
@@ -30,6 +28,7 @@ const nextConfig =
     nextScriptWorkers: true,
   },
   sentry: { hideSourceMaps: true },
+  poweredByHeader: false,
   productionBrowserSourceMaps: false,
   async headers() {
     const securityHeaders = [
@@ -158,7 +157,6 @@ const nextConfig =
 
     return config;
   },
-
   images: {
     domains: [
       'cdn.nft.com',

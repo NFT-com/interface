@@ -30,7 +30,7 @@ function GalleryCard(props: GalleryCardProps) {
     >
       {props.animate !== false && <div className={tw(
         'absolute z-10 animate-pulse',
-        'w-full h-full rounded-xl bg-gradient-to-tr from-hero-pink to-hero-blue',
+        'w-full h-full rounded-xl bg-gradient-to-tr from-primary-yellow to-[#FF9D39]',
       )} />}
       <BlurImage
         alt={props.label}
@@ -40,13 +40,6 @@ function GalleryCard(props: GalleryCardProps) {
           'h-full w-full aspect-square rounded-xl absolute z-20 object-contain',
         )}
       />
-      {/* <img
-        alt=""
-        src={imageSrc}
-        className={tw(
-          'h-full w-full aspect-square rounded-xl absolute z-20',
-        )}
-      /> */}
       <div
         className={tw(
           'absolute font-black bottom-0 w-full text-center mb-4 z-30',
