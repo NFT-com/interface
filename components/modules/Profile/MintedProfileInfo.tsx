@@ -97,9 +97,14 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       }
 
       {editMode && userIsAdmin &&
-        <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A] group">
+        <div className={tw(
+          'w-full minlg:w-1/2 flex flex-col text-[#6A6A6A] group',
+          getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ? 'items-start' : 'items-end'
+        )}
+        >
           <CustomTooltip2
             orientation='top'
+            width='full'
             tooltipComponent={
               <div
                 className="w-max"

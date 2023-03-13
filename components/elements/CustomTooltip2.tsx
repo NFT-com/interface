@@ -9,8 +9,9 @@ type ToolTipProps = {
   hidden?: boolean;
   noFullHeight?: boolean;
   tooltipClick?: () => void;
-  customLeftPosition?: string
-  customFullLeftPosition?: string
+  customLeftPosition?: string;
+  customFullLeftPosition?: string;
+  width?: 'full' | 'max';
 };
 
 function Tooltip(props : PropsWithChildren<ToolTipProps>) {
@@ -106,7 +107,8 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
     <div
       className={tw(
         `relative flex items-center  z-50 ${props?.noFullHeight ? '' : 'h-full'} ${props.tooltipClick && 'cursor-pointer'}`,
-        getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ? 'w-max' : 'w-full'
+        getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && !props?.width ? 'w-max' : 'w-full',
+        props?.width === 'max' ? 'w-max' : 'w-full'
       )}
       onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
     >
