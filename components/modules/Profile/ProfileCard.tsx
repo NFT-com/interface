@@ -1,6 +1,6 @@
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Profile } from 'graphql/generated/types';
-import { useProfileNFTsTotalItemsQuery } from 'graphql/hooks/useProfileNFTsTotalItemsQuery';
+import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -15,12 +15,9 @@ export interface ProfileCardProps {
 
 export function ProfileCard(props: ProfileCardProps) {
   const defaultChainId = useDefaultChainId();
-  const {
-    totalItems: publicProfileNftsCount,
-  } = useProfileNFTsTotalItemsQuery(
-    props?.profile?.id,
-    defaultChainId,
-    1000
+  const { totalItems } = useProfileVisibleNFTCount(
+    [props?.profile?.id],
+    defaultChainId
   );
 
   return <Link href={'/' + props.profile?.url} passHref legacyBehavior>
@@ -41,7 +38,7 @@ export function ProfileCard(props: ProfileCardProps) {
       </div>
       <div className='flex w-full font-grotesk'>
         <span className='text-secondary-txt'>NFTs Displayed:</span>
-        <span className='font-bold ml-1'>{publicProfileNftsCount}</span>
+        <span className='font-bold ml-1'>{totalItems}</span>
       </div>
     </a>
   </Link>;

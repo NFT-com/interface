@@ -1,7 +1,7 @@
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
-import { useProfileNFTsTotalItemsQuery } from 'graphql/hooks/useProfileNFTsTotalItemsQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
+import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
@@ -96,17 +96,14 @@ const ShowGk = ({ profile }: { profile: string }) => {
 
 const PublicProfileNftsCount = ({ id }: { id: string }) => {
   const defaultChainId = useDefaultChainId();
-  const {
-    totalItems: publicProfileNftsCount,
-  } = useProfileNFTsTotalItemsQuery(
-    id,
-    defaultChainId,
-    1000
+  const { totalItems } = useProfileVisibleNFTCount(
+    [id],
+    defaultChainId
   );
 
   return (
     <div className='lg:hidden flex w-full text-[18px] font-noi-grotesk mr-36'>
-      <span className='font-bold mr-1'>{publicProfileNftsCount}</span>
+      <span className='font-bold mr-1'>{totalItems}</span>
       <span className='text-[#6A6A6A]'>NFTs Displayed</span>
     </div>
   );

@@ -1,6 +1,6 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Profile } from 'graphql/generated/types';
-import { useProfileNFTsTotalItemsQuery } from 'graphql/hooks/useProfileNFTsTotalItemsQuery';
+import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
 import Image from 'next/image';
@@ -31,12 +31,10 @@ export interface ProfileCardProps {
 export function ProfileCard(props: ProfileCardProps) {
   const isLeaderBoard = props.isLeaderBoard;
   const defaultChainId = useDefaultChainId();
-  const {
-    totalItems: publicProfileNftsCount,
-  } = useProfileNFTsTotalItemsQuery(
-    props?.profile?.id,
-    defaultChainId,
-    1000
+
+  const { totalItems } = useProfileVisibleNFTCount(
+    [props?.profile?.id],
+    defaultChainId
   );
 
   if(isLeaderBoard){
@@ -132,7 +130,9 @@ export function ProfileCard(props: ProfileCardProps) {
             </li>
           </ul>
           <ul className="mt-2 list-none flex flex-row justify-between">
-            <li className="m-0 p-0 list-none text-5 leading-7 text-[#000000] font-[600]">{publicProfileNftsCount} <span className="text-[#6A6A6A] text-4 leading-6 font-[400]"> NFTs collected</span></li>
+            <li className="m-0 p-0 list-none text-5 leading-7 text-[#000000] font-[600]">
+              {totalItems} <span className="text-[#6A6A6A] text-4 leading-6 font-[400]"> NFTs collected</span>
+            </li>
           </ul>
         </div>
       </a>
