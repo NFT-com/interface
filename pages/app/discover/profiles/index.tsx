@@ -1,14 +1,13 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import CardsGrid from 'components/elements/CardsGrid';
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
-import { outerElementType } from 'components/elements/outerElementType';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { ProfileCard } from 'components/modules/DiscoveryCards/ProfileCard';
 import { Profile } from 'graphql/generated/types';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { usePaginator } from 'hooks/usePaginator';
-import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -16,17 +15,12 @@ import { tw } from 'utils/tw';
 import _ from 'lodash';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import React, { useCallback, useEffect, useState } from 'react';
-import { FixedSizeList } from 'react-window';
-import InfiniteLoader from 'react-window-infinite-loader';
 import { PartialDeep } from 'type-fest';
 
 export default function ProfilePage() {
   const [isLoading, toggleLoadState] = useState(false);
   const [isLeaderBoard, toggleLeaderBoardState] = useState(false);
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
-  const [profilesPerRows, setProfilesPerRows] = useState([]);
-  const [columnCount, setColumnCount] = useState(5);
-  const { width: screenWidth } = useWindowDimensions();
   const [afterCursorRW, setAfterCursorRW] = useState('');
 
   const PROFILE_LOAD_COUNT = 20;
@@ -68,56 +62,10 @@ export default function ProfilePage() {
     }
   }, [allLoadedProfiles, lastAddedPage, loadedProfilesNextPage?.latestProfiles?.items, loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor, loadedProfilesNextPage?.latestProfiles?.totalItems, setTotalCount]);
 
-  useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
-      const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
-      const flatData = [...uniqData];
-      const data2D = [];
-      while(flatData.length) data2D.push(flatData.splice(0,columnCount));
-      setProfilesPerRows(data2D);
-    }
-  },[columnCount, allLoadedProfiles]);
-
-  useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
-      if (screenWidth > 1600) {
-        setColumnCount(5);
-      } else if (screenWidth > 1200 && screenWidth <= 1600) {
-        setColumnCount(5);
-      } else if (screenWidth > 900 && screenWidth <= 1200) {
-        setColumnCount(3);
-      } else if (screenWidth > 600 && screenWidth <= 900) {
-        setColumnCount(2);
-      } else
-        setColumnCount(1);
-    }
-  },[screenWidth]);
-
   const loadMoreProfilesFunc = () => {
     toggleLoadState(true);
     loadMoreProfiles();
   };
-
-  const isItemLoaded = index => index < profilesPerRows.length;
-
-  const Row = useCallback(({ index, style, data }: any) => {
-    const row = data[index];
-    
-    return (
-      <div style={style}
-        className={tw(
-          'grid grid-cols-1 minlg:space-x-0 gap-1 minmd:gap-4',
-          'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}
-      >{row && row?.map((item, index) => (
-          item && (
-            <ProfileCard
-              key={index}
-              profile={item}
-            />
-          )))}
-      </div>
-    );
-  }, []);
 
   const filterUniqProfiles = () => {
     if(!allLoadedProfiles && !allLoadedProfiles.length) return;
@@ -131,43 +79,23 @@ export default function ProfilePage() {
           />
         );
       })
-      : (
-        <div className='grid-cols-1 w-full'
-          style={{
-            minHeight: '100vh',
-            backgroundColor: 'inherit',
-            position: 'sticky',
-            top: '0px',
-          }}>
-          <InfiniteLoader
-            isItemLoaded={isItemLoaded}
-            itemCount={profilesPerRows.length}
-            loadMoreItems={() => loadMoreProfilesFunc()}
-            threshold={10}
-          >
-            {({ ref }) => (
-              <FixedSizeList
-                className="grid no-scrollbar"
-                outerElementType={outerElementType}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                itemCount={profilesPerRows.length}
-                itemData={profilesPerRows}
-                itemSize={228}
-                overscanRowCount={3}
-                onItemsRendered={(itemsRendered) => {
-                  if (itemsRendered.visibleStartIndex !== 0 && itemsRendered.visibleStartIndex % 2 == 0) {
-                    loadMoreProfilesFunc();
-                  }
-                }}
-                ref={ref}
-              >
-                {Row}
-              </FixedSizeList>
-            )}
-          </InfiniteLoader>
-        </div>
-      );
+      :
+      <CardsGrid
+        gridData={uniqData}
+        totalItems={loadedProfilesNextPage?.latestProfiles?.totalItems}
+        loadMoreItems={loadMoreProfilesFunc}
+        cardType='profileDiscover'
+        defaultRowHeight={225}
+        rowClass={tw(
+          'grid grid-cols-1 minlg:space-x-0 gap-1 minmd:gap-4',
+          'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
+        {({ itemData }) => {
+          return(
+            <ProfileCard
+              profile={itemData}
+            />
+          );}}
+      </CardsGrid>;
   };
 
   const returnProfileBlock = () => {

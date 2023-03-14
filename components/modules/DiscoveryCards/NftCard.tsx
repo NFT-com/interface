@@ -8,6 +8,7 @@ import { WETH } from 'constants/tokens';
 import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
@@ -80,6 +81,7 @@ export function NftCard(props: NftCardProps) {
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
   const currentDate = useGetCurrentDate();
+  const { setCardHeightForRWGrid } = useSearchModal();
   const refNFTCard = useRef(null);
 
   const checkEndDate = () => {
@@ -92,14 +94,13 @@ export function NftCard(props: NftCardProps) {
       } else return date.replace('in ', '');
     }
   };
-
-  const getNFTHeight = useCallback(() => {
-    props.onNFTCardHeight && props.onNFTCardHeight(refNFTCard && refNFTCard?.current?.offsetHeight);
-  }, [props]);
   
   useEffect(() => {
-    getNFTHeight();
-  }, [getNFTHeight]);
+    const delayDebounceFn = setTimeout(() => {
+      setCardHeightForRWGrid(refNFTCard && refNFTCard?.current?.offsetHeight);
+    }, 500);
+    return () => clearTimeout(delayDebounceFn);
+  }, [setCardHeightForRWGrid]);
 
   const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth;
 

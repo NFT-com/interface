@@ -11,7 +11,7 @@ import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
 import NoActivityIcon from 'public/no_activity.svg';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Loader } from 'react-feather';
 function usePrevious(value) {
   const ref = useRef(value);
@@ -27,7 +27,6 @@ export default function CollectionsPage() {
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
   const [nftSData, setNftsData] = useState([]);
-  const [rowHeight, setRowHeight] = useState(550);
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
   const prevFilters = usePrevious(nftsResultsFilterBy);
@@ -68,10 +67,6 @@ export default function CollectionsPage() {
     setPage(page + 1);
   };
 
-  const getRowHeight = useMemo(() => (rowHeight) => {
-    setRowHeight(rowHeight);
-  },[]);
-
   const showNftView = () => {
     return (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ?
       <div className={tw(
@@ -93,16 +88,14 @@ export default function CollectionsPage() {
           );
         })}
       </div> :
-      (rowHeight && <CardsGrid
+      <CardsGrid
         gridData={nftSData}
-        sideNavOpen
+        sideNavOpen={sideNavOpen}
         totalItems={found}
         loadMoreItems={loadMoreItemss}
-        itemHeight={rowHeight}
         cardType='nfts'
         rowClass='flex flex-row justify-between w-full gap-4'>
-        {({ itemData, rowIndex }) => {
-          console.log('itemData fdo', itemData);
+        {({ itemData }) => {
           return(
             <NftCard
               name={itemData.document.nftName}
@@ -113,10 +106,9 @@ export default function CollectionsPage() {
               redirectTo={`/app/nft/${itemData.document.contractAddr}/${itemData.document.tokenId}`}
               description={itemData.document.nftDescription ? itemData.document.nftDescription.slice(0,50) + '...': '' }
               customBackground={'white'}
-              lightModeForced
-              onNFTCardHeight={rowIndex === 0 && getRowHeight}/>
+              lightModeForced/>
           );}}
-      </CardsGrid>)
+      </CardsGrid>
     );
   };
   return(

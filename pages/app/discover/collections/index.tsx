@@ -2,7 +2,6 @@ import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import CardsGrid from 'components/elements/CardsGrid';
 import { Footer as StaticFooter } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
-import { outerElementType } from 'components/elements/outerElementType';
 import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
@@ -11,7 +10,6 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeaderBoardQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -20,9 +18,7 @@ import dynamic from 'next/dynamic';
 import { SlidersHorizontal, X } from 'phosphor-react';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import NoActivityIcon from 'public/no_activity.svg';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FixedSizeList } from 'react-window';
-import InfiniteLoader from 'react-window-infinite-loader';
+import React, { useEffect, useRef, useState } from 'react';
 
 function usePrevious(value) {
   const ref = useRef(value);
@@ -44,9 +40,6 @@ export default function CollectionsPage() {
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
   const prevFilters = usePrevious(collectionsResultsFilterBy);
-  const [collectionsPerRows, setCollectionsPerRows] = useState([]);
-  const [columnCount, setColumnCount] = useState(5);
-  const { width: screenWidth } = useWindowDimensions();
   const [rowHeight, setRowHeight] = useState(400);
 
   useEffect(() => {
@@ -83,10 +76,6 @@ export default function CollectionsPage() {
   const loadMoreItemss = () => {
     setPage(page + 1);
   };
-
-  const getRowHeight = useMemo(() => (rowHeight) => {
-    setRowHeight(rowHeight);
-  },[]);
   
   const leaderBoardOrCollectionView = () => {
     if (isLeaderBoard) {
@@ -141,52 +130,16 @@ export default function CollectionsPage() {
               );
             })}
           </div> :
-          // <div className='grid-cols-1 w-full'
-          //   style={{
-          //     height: '100vh',
-          //     backgroundColor: 'inherit',
-          //     top: '0px',
-          //   }}>
-
-          //   <InfiniteLoader
-          //     isItemLoaded={isItemLoaded}
-          //     itemCount={collectionsPerRows.length}
-          //     loadMoreItems={() => setPage(page + 1)}
-          //     threshold={10}
-          //   >
-          //     {({ ref }) => (
-          //       <FixedSizeList
-          //         className="grid no-scrollbar"
-          //         outerElementType={outerElementType}
-          //         width={window.innerWidth}
-          //         height={window.innerHeight}
-          //         itemCount={collectionsPerRows.length}
-          //         itemData={collectionsPerRows}
-          //         itemSize={340}
-          //         overscanRowCount={3}
-          //         onItemsRendered={(itemsRendered) => {
-          //           if (!isLeaderBoard && collections && collections.length < found && collections?.length > 0 )
-          //             itemsRendered.visibleStartIndex % 2 == 0 && setPage(page + 1);
-          //         }}
-          //         ref={ref}
-          //       >
-          //         {Row}
-          //       </FixedSizeList>
-          //     )}
-          //   </InfiniteLoader>
-          // </div>
           (!isLeaderBoard && <CardsGrid
             gridData={collections}
-            sideNavOpen
+            sideNavOpen={sideNavOpen}
             totalItems={found}
             loadMoreItems={loadMoreItemss}
-            itemHeight={500}
             cardType='collections'
             rowClass={tw(
               'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
               'minxl:grid-cols-3 minmd:grid-cols-2 minhd:grid-cols-4 w-full')}>
-            {({ itemData, rowIndex }) => {
-              console.log('itemData fdo', itemData);
+            {({ itemData }) => {
               return(
                 <CollectionCard
                   redirectTo={`/app/collection/${itemData.document?.contractAddr}/`}
@@ -202,7 +155,6 @@ export default function CollectionsPage() {
                   maxSymbolsInString={180}
                   images={[itemData.document.bannerUrl]}
                   customHeight='h-[20rem]'
-                  // onCollectionCardHeight={rowIndex === 0 && getRowHeight}
                 />
               );}}
           </CardsGrid>)

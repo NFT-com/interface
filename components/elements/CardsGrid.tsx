@@ -1,3 +1,4 @@
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
 import { outerElementType } from './outerElementType';
@@ -17,26 +18,26 @@ interface CardsGridProps {
   sideNavOpen?: boolean;
   loadMoreItems: () => void;
   totalItems: number;
-  itemHeight?: number;
   cardType: string;
-  rowClass?: string
+  rowClass?: string;
+  defaultRowHeight?: number
 }
 
 export default function CardsGrid(props: CardsGridProps) {
-  const { children, gridData, sideNavOpen, loadMoreItems, totalItems, itemHeight, cardType, rowClass } = props;
+  const { children, gridData, sideNavOpen, loadMoreItems, totalItems, cardType, rowClass, defaultRowHeight } = props;
   const childParams = useMemo(() => ({ itemData: null, rowIndex: null } ),[]);
   const [dataPerRows, setDataPerRows] = useState([]);
   const [columnCount, setColumnCount] = useState(5);
-  // const [rowHeight, setRowHeight] = useState(100);
-  const { width: screenWidth } = useWindowDimensions();
+  const { cardHeightForRWGrid } = useSearchModal();
 
   let windowObject;
   if (typeof window !== 'undefined') {
     windowObject = window;
   }
 
+  const { width: screenWidth } = useWindowDimensions();
+
   useEffect(() => {
-    console.log('fdo 1');
     const flatData = [...gridData];
     const data2D = [];
     while(flatData.length) data2D.push(flatData.splice(0,columnCount));
@@ -44,30 +45,32 @@ export default function CardsGrid(props: CardsGridProps) {
   },[columnCount, gridData]);
 
   useEffect(() => {
-    if (!sideNavOpen) {
-        console.log('fdo ');
-      if (screenWidth > 1600) {
-        setColumnCount(cardType == 'nfts' ? 5 : 4);
-      } else if (screenWidth > 1200 && screenWidth <= 1600) {
-        setColumnCount(cardType == 'nfts' ? 4 : 3);
-      } else if (screenWidth > 900 && screenWidth <= 1200) {
-        setColumnCount(cardType == 'nfts' ? 3 : 2);
-      } else if (screenWidth > 600 && screenWidth <= 900) {
-        setColumnCount(2);
+    if (screenWidth) {
+      if (!sideNavOpen) {
+        if (screenWidth > 1600) {
+          setColumnCount(cardType == 'nfts' || cardType == 'profileDiscover' ? 5 : 3);
+        } else if (screenWidth > 1200 && screenWidth <= 1600) {
+          setColumnCount(cardType == 'nfts' ? 4 : cardType == 'profileDiscover' ? 5: 3);
+        } else if (screenWidth > 900 && screenWidth <= 1200) {
+          setColumnCount(cardType == 'nfts' || cardType == 'profileDiscover'? 3 : 2);
+        } else if (screenWidth > 600 && screenWidth <= 900) {
+          setColumnCount(2);
+        } else {
+          setColumnCount(1);
+        }
       } else {
-        setColumnCount(1);
+        if (screenWidth > 1600) {
+          setColumnCount(cardType == 'nfts' ? 4 : 3);
+        } else if (screenWidth > 1200 && screenWidth <= 1600) {
+          setColumnCount(3);
+        } else if (screenWidth > 900 && screenWidth <= 1200) {
+          setColumnCount(2);
+        } else if (screenWidth > 600 && screenWidth <= 900) {
+          setColumnCount(2);
+        } else {
+          setColumnCount(1);
+        }
       }
-    } else {
-      if (screenWidth > 1600) {
-        setColumnCount(cardType == 'nfts' ? 4 : 3);
-      } else if (screenWidth > 1200 && screenWidth <= 1600) {
-        setColumnCount(3);
-      } else if (screenWidth > 900 && screenWidth <= 1200) {
-        setColumnCount(2);
-      } else if (screenWidth > 600 && screenWidth <= 900) {
-        setColumnCount(2);
-      } else
-        setColumnCount(1);
     }
   },[sideNavOpen, screenWidth, cardType]);
 
@@ -76,7 +79,6 @@ export default function CardsGrid(props: CardsGridProps) {
   const Row = useCallback(({ index, style, data }: any) => {
     childParams.rowIndex = index;
     const row = data[index];
-    console.log('index fdo', index);
     
     return (
       <div style={style} className={rowClass}>
@@ -110,10 +112,10 @@ export default function CardsGrid(props: CardsGridProps) {
             height={windowObject?.innerHeight ?? 0}
             itemCount={dataPerRows.length}
             itemData={dataPerRows}
-            itemSize={itemHeight ? (itemHeight+(screenWidth > 600 ? 12 : 65 )): 450}
+            itemSize={defaultRowHeight ?? (cardHeightForRWGrid ? (cardHeightForRWGrid+((screenWidth < 600 && cardType == 'nfts')? 65 : 12 )): 450)}
             overscanRowCount={3}
             onItemsRendered={(itemsRendered) => {
-              if (gridData && gridData.length < totalItems && gridData?.length > 0)
+              if (gridData && ((gridData.length < totalItems && gridData?.length > 0) || totalItems != 0))
                 itemsRendered.visibleStartIndex % 2 == 0 && loadMoreItems();
             }}
             ref={ref}
