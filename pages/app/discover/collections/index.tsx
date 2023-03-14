@@ -138,7 +138,7 @@ export default function CollectionsPage() {
             rowClass={tw(
               'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
               'minxl:grid-cols-3 minmd:grid-cols-2 minhd:grid-cols-4 w-full')}>
-            {({ itemData, rowIndex, cellIndex }) => {
+            {({ itemData, rowIndex, cellIndex, getItemHeight }) => {
               return(
                 <CollectionCard
                   key={''+ rowIndex + cellIndex}
@@ -155,6 +155,7 @@ export default function CollectionsPage() {
                   maxSymbolsInString={180}
                   images={[itemData.document.bannerUrl]}
                   customHeight='h-[20rem]'
+                  onGetItemHight={rowIndex == 0 && getItemHeight}
                 />
               );}}
           </CardsGrid>)

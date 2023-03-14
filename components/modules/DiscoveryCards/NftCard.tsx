@@ -8,12 +8,12 @@ import { WETH } from 'constants/tokens';
 import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { ExternalProtocol } from 'types';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
@@ -54,7 +54,7 @@ export interface NftCardProps {
   fallbackImage?: string;
   skipNftQuery?: boolean;
   isGKMinted?: boolean;
-  onGetNFTHeight?: boolean;
+  onGetItemHight?: (height: number) => void;
 }
 
 export function NftCard(props: NftCardProps) {
@@ -75,8 +75,8 @@ export function NftCard(props: NftCardProps) {
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
   const currentDate = useGetCurrentDate();
-  const { setCardHeightForRWGrid } = useSearchModal();
   const refNFTCard = useRef(null);
+  const { width: screenWidth } = useWindowDimensions();
 
   const checkEndDate = () => {
     if(bestListing){
@@ -90,8 +90,8 @@ export function NftCard(props: NftCardProps) {
   };
   
   useEffect(() => {
-    props.onGetNFTHeight && setCardHeightForRWGrid(refNFTCard && refNFTCard?.current?.offsetHeight);
-  }, [props.onGetNFTHeight, setCardHeightForRWGrid]);
+    props.onGetItemHight && props.onGetItemHight(refNFTCard && refNFTCard?.current?.offsetHeight);
+  }, [props, props.onGetItemHight, screenWidth]);
 
   const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth;
 
@@ -168,7 +168,7 @@ export function NftCard(props: NftCardProps) {
           props.onClick && props.onClick();
         }}
       >
-        <div className='relative object-cover w-full'>
+        <div className='relative object-cover w-full' ref={refNFTCard} >
           <div className={`h-[${nftImage}px] object-cover overflow-hidden`}>
             <div className='group-hover/ntfCard:scale-110 hover:scale-105 transition'>
               <RoundedCornerMedia
@@ -179,7 +179,7 @@ export function NftCard(props: NftCardProps) {
                 src={processedImageURLs[0]}
                 extraClasses='hover:scale-105 transition'
               />
-              <div ref={refNFTCard} className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
+              <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
                 <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
                   {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe ?
                     <>

@@ -109,7 +109,7 @@ export default function CollectionsPage() {
         loadMoreItems={loadMoreItemss}
         cardType='nfts'
         rowClass='flex flex-row justify-between w-full gap-4'>
-        {({ itemData, rowIndex, cellIndex }) => {
+        {({ itemData, rowIndex, cellIndex, getItemHeight }) => {
           return(
             <NftCard
               key={''+ rowIndex + cellIndex}
@@ -119,7 +119,7 @@ export default function CollectionsPage() {
               images={[itemData.document.imageURL]}
               collectionName={itemData.document.contractName}
               redirectTo={`/app/nft/${itemData.document.contractAddr}/${itemData.document.tokenId}`}
-              onGetNFTHeight={rowIndex == 0}
+              onGetItemHight={rowIndex == 0 && getItemHeight}
             />
           );}}
       </CardsGrid>

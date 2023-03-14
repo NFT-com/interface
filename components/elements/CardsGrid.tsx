@@ -11,6 +11,7 @@ interface CellInfo {
   itemData: any;
   rowIndex: number;
   cellIndex: number;
+  getItemHeight: (height: number) => void;
 }
 
 interface CardsGridProps {
@@ -26,17 +27,21 @@ interface CardsGridProps {
 
 export default function CardsGrid(props: CardsGridProps) {
   const { children, gridData, sideNavOpen, loadMoreItems, totalItems, cardType, rowClass, defaultRowHeight } = props;
-  const childParams = useMemo(() => ({ itemData: null, rowIndex: null, cellIndex: null } ),[]);
+  const childParams = useMemo(() => ({ itemData: null, rowIndex: null, cellIndex: null, getItemHeight: null } ),[]);
   const [dataPerRows, setDataPerRows] = useState([]);
-  const [columnCount, setColumnCount] = useState(5);
   const { cardHeightForRWGrid } = useSearchModal();
+  const [rowHeight, setRowhHeight] = useState(550);
 
   let windowObject;
   if (typeof window !== 'undefined') {
     windowObject = window;
   }
 
+  const getRowHeight = useCallback((height: number) => {
+    setRowhHeight(height);
+  }, []);
   const { width: screenWidth } = useWindowDimensions();
+  const [columnCount, setColumnCount] = useState(screenWidth < 600 ? 1 : screenWidth > 600 && screenWidth <= 900 ? 2 : screenWidth > 900 && screenWidth <= 1600 ? 3 : 4);
 
   useEffect(() => {
     const flatData = [...gridData];
@@ -86,11 +91,12 @@ export default function CardsGrid(props: CardsGridProps) {
         {row && row?.map((item, cellIndex) => {
           childParams.itemData = item;
           childParams.cellIndex = cellIndex;
+          childParams.getItemHeight = getRowHeight;
           return item && children(childParams);
         })}
       </div>
     );
-  }, [childParams, children, rowClass]);
+  }, [childParams, children, getRowHeight, rowClass]);
 
   return (
     <div className='grid-cols-1 w-full'
@@ -107,14 +113,14 @@ export default function CardsGrid(props: CardsGridProps) {
         threshold={10}
       >
         {({ ref }) => (
-          <FixedSizeList
+          (rowHeight || defaultRowHeight) &&< FixedSizeList
             className="grid no-scrollbar"
             outerElementType={outerElementType}
             width={windowObject?.innerWidth ?? 0}
             height={windowObject?.innerHeight ?? 0}
             itemCount={dataPerRows.length}
             itemData={dataPerRows}
-            itemSize={defaultRowHeight ?? (cardHeightForRWGrid ? (cardHeightForRWGrid+((screenWidth < 600 && cardType == 'nfts')? 65 : 12 )): 450)}
+            itemSize={defaultRowHeight ?? (rowHeight + (screenWidth > 600 ? 12 : 65))}
             overscanRowCount={3}
             onItemsRendered={(itemsRendered) => {
               if (gridData && ((gridData.length < totalItems && gridData?.length > 0) || totalItems != 0))

@@ -2,8 +2,8 @@ import LikeCount from 'components/elements/LikeCount';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft, TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
-import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnvBool } from 'utils/env';
 import {
   getGenesisKeyThumbnail,
@@ -45,13 +45,14 @@ export interface CollectionCardProps {
   images?: Array<string | null>,
   isOfficial?: boolean;
   customHeight?: string;
+  onGetItemHight?: (height: number) => void;
 }
 
 export function CollectionCard(props: CollectionCardProps) {
   const defaultChainId = useDefaultChainId();
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings || props?.nft) ? null : props.tokenId);
-  const { setCardHeightForRWGrid } = useSearchModal();
   const refCollectionCard = useRef(null);
+  const { width: screenWidth } = useWindowDimensions();
 
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
@@ -72,10 +73,10 @@ export function CollectionCard(props: CollectionCardProps) {
     const convertedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(value);
     return convertedValue.slice(1);
   };
-  
+
   useEffect(() => {
-    setCardHeightForRWGrid(refCollectionCard && refCollectionCard?.current?.offsetHeight);
-  }, [setCardHeightForRWGrid]);
+    props.onGetItemHight && props.onGetItemHight(refCollectionCard && refCollectionCard?.current?.offsetHeight);
+  }, [props, screenWidth]);
 
   return (
     <a href={props.redirectTo} ref={refCollectionCard} className={tw(
