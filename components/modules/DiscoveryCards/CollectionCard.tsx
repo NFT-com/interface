@@ -13,6 +13,7 @@ import { tw } from 'utils/tw';
 
 import VerifiedIcon from 'public/verifiedIcon.svg';
 import VolumeIcon from 'public/volumeIcon.svg';
+import { useCallback, useEffect, useRef } from 'react';
 import { PartialDeep } from 'type-fest';
 
 export type DetailedNft = Nft & { hidden?: boolean };
@@ -41,11 +42,13 @@ export interface CollectionCardProps {
   images?: Array<string | null>,
   isOfficial?: boolean;
   customHeight?: string;
+  onCollectionCardHeight?: (nftHeight: number) => void;
 }
 
 export function CollectionCard(props: CollectionCardProps) {
   const defaultChainId = useDefaultChainId();
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings || props?.nft) ? null : props.tokenId);
+  const refCollectionCard = useRef(null);
 
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
@@ -66,8 +69,16 @@ export function CollectionCard(props: CollectionCardProps) {
     const convertedValue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(value);
     return convertedValue.slice(1);
   };
+
+  // const getCollectionCardHeight = useCallback(() => {
+  //   props.onCollectionCardHeight && props.onCollectionCardHeight(refCollectionCard && refCollectionCard?.current?.offsetHeight);
+  // }, [props]);
+  
+  // useEffect(() => {
+  //   getCollectionCardHeight();
+  // }, [getCollectionCardHeight]);
   return (
-    <a href={props.redirectTo} className={tw(
+    <a href={props.redirectTo} ref={refCollectionCard} className={tw(
       props.customHeight ?? ' min-h-[100%] ',
       'sm:mb-4 block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden')}>
       <div className="h-44 relative ">

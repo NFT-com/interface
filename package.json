@@ -68,6 +68,7 @@
     "jotai": "^1.11.0",
     "jszip": "^3.10.0",
     "jszip-utils": "^0.1.0",
+    "memoize-one": "^6.0.0",
     "moment": "^2.29.3",
     "next": "^12.3.0",
     "next-seo": "^5.4.0",

@@ -1,4 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import CardsGrid from 'components/elements/CardsGrid';
 import { Footer as StaticFooter } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
 import { outerElementType } from 'components/elements/outerElementType';
@@ -19,7 +20,7 @@ import dynamic from 'next/dynamic';
 import { SlidersHorizontal, X } from 'phosphor-react';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import NoActivityIcon from 'public/no_activity.svg';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 
@@ -46,6 +47,7 @@ export default function CollectionsPage() {
   const [collectionsPerRows, setCollectionsPerRows] = useState([]);
   const [columnCount, setColumnCount] = useState(5);
   const { width: screenWidth } = useWindowDimensions();
+  const [rowHeight, setRowHeight] = useState(400);
 
   useEffect(() => {
     !isDiscoverCollections && setIsDiscoverCollections(true);
@@ -78,74 +80,13 @@ export default function CollectionsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, filters]);
 
-  useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
-      const flatData = [...collections];
-      const data2D = [];
-      while(flatData.length) data2D.push(flatData.splice(0,columnCount));
-      setCollectionsPerRows(data2D);
-    }
-  },[collections, columnCount]);
+  const loadMoreItemss = () => {
+    setPage(page + 1);
+  };
 
-  useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
-      if (!sideNavOpen) {
-        if (screenWidth > 1600) {
-          setColumnCount(4);
-        } else if (screenWidth > 1200 && screenWidth <= 1600) {
-          setColumnCount(3);
-        } else if (screenWidth > 900 && screenWidth <= 1200) {
-          setColumnCount(2);
-        } else if (screenWidth > 600 && screenWidth <= 900) {
-          setColumnCount(2);
-        } else
-          setColumnCount(1);
-      } else {
-        if (screenWidth > 1600) {
-          setColumnCount(3);
-        } else if (screenWidth > 1200 && screenWidth <= 1600) {
-          setColumnCount(3);
-        } else if (screenWidth > 900 && screenWidth <= 1200) {
-          setColumnCount(2);
-        } else if (screenWidth > 600 && screenWidth <= 900) {
-          setColumnCount(2);
-        } else
-          setColumnCount(1);
-      }
-    }
-  },[screenWidth, sideNavOpen]);
-
-  const isItemLoaded = index => index < collectionsPerRows.length;
-
-  const Row = useCallback(({ index, data, style }: any) => {
-    const row = data[index];
-    return (
-      <div style={style}
-        className={tw(
-          'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-          'minxl:grid-cols-3 minmd:grid-cols-2 minhd:grid-cols-4 w-full')}>
-        {row && row?.map((item,i) => (
-          item && (
-            <CollectionCard
-              key={i}
-              redirectTo={`/app/collection/${item.document?.contractAddr}/`}
-              contractAddress={item.document?.contractAddr}
-              contract={item.document?.contractAddr}
-              floorPrice={item.document?.floor}
-              totalVolume={item.document?.volume}
-              userName={item.document.contractName}
-              contractName={item.document.contractName}
-              isOfficial={item.document.isOfficial}
-              description={item.document.description}
-              countOfElements={item.document.actualNumberOfNFTs}
-              maxSymbolsInString={180}
-              images={[item.document.bannerUrl]}
-              customHeight='h-[20rem]'
-            />
-          )))}
-      </div>
-    );
-  }, []);
+  const getRowHeight = useMemo(() => (rowHeight) => {
+    setRowHeight(rowHeight);
+  },[]);
   
   const leaderBoardOrCollectionView = () => {
     if (isLeaderBoard) {
@@ -200,41 +141,71 @@ export default function CollectionsPage() {
               );
             })}
           </div> :
-          <div className='grid-cols-1 w-full'
-            style={{
-              height: '100vh',
-              backgroundColor: 'inherit',
-              top: '0px',
-            }}>
+          // <div className='grid-cols-1 w-full'
+          //   style={{
+          //     height: '100vh',
+          //     backgroundColor: 'inherit',
+          //     top: '0px',
+          //   }}>
 
-            <InfiniteLoader
-              isItemLoaded={isItemLoaded}
-              itemCount={collectionsPerRows.length}
-              loadMoreItems={() => setPage(page + 1)}
-              threshold={10}
-            >
-              {({ ref }) => (
-                <FixedSizeList
-                  className="grid no-scrollbar"
-                  outerElementType={outerElementType}
-                  width={window.innerWidth}
-                  height={window.innerHeight}
-                  itemCount={collectionsPerRows.length}
-                  itemData={collectionsPerRows}
-                  itemSize={340}
-                  overscanRowCount={3}
-                  onItemsRendered={(itemsRendered) => {
-                    if (!isLeaderBoard && collections && collections.length < found && collections?.length > 0 )
-                      itemsRendered.visibleStartIndex % 2 == 0 && setPage(page + 1);
-                  }}
-                  ref={ref}
-                >
-                  {Row}
-                </FixedSizeList>
-              )}
-            </InfiniteLoader>
-
-          </div>
+          //   <InfiniteLoader
+          //     isItemLoaded={isItemLoaded}
+          //     itemCount={collectionsPerRows.length}
+          //     loadMoreItems={() => setPage(page + 1)}
+          //     threshold={10}
+          //   >
+          //     {({ ref }) => (
+          //       <FixedSizeList
+          //         className="grid no-scrollbar"
+          //         outerElementType={outerElementType}
+          //         width={window.innerWidth}
+          //         height={window.innerHeight}
+          //         itemCount={collectionsPerRows.length}
+          //         itemData={collectionsPerRows}
+          //         itemSize={340}
+          //         overscanRowCount={3}
+          //         onItemsRendered={(itemsRendered) => {
+          //           if (!isLeaderBoard && collections && collections.length < found && collections?.length > 0 )
+          //             itemsRendered.visibleStartIndex % 2 == 0 && setPage(page + 1);
+          //         }}
+          //         ref={ref}
+          //       >
+          //         {Row}
+          //       </FixedSizeList>
+          //     )}
+          //   </InfiniteLoader>
+          // </div>
+          (!isLeaderBoard && <CardsGrid
+            gridData={collections}
+            sideNavOpen
+            totalItems={found}
+            loadMoreItems={loadMoreItemss}
+            itemHeight={500}
+            cardType='collections'
+            rowClass={tw(
+              'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
+              'minxl:grid-cols-3 minmd:grid-cols-2 minhd:grid-cols-4 w-full')}>
+            {({ itemData, rowIndex }) => {
+              console.log('itemData fdo', itemData);
+              return(
+                <CollectionCard
+                  redirectTo={`/app/collection/${itemData.document?.contractAddr}/`}
+                  contractAddress={itemData.document?.contractAddr}
+                  contract={itemData.document?.contractAddr}
+                  floorPrice={itemData.document?.floor}
+                  totalVolume={itemData.document?.volume}
+                  userName={itemData.document.contractName}
+                  contractName={itemData.document.contractName}
+                  isOfficial={itemData.document.isOfficial}
+                  description={itemData.document.description}
+                  countOfElements={itemData.document.actualNumberOfNFTs}
+                  maxSymbolsInString={180}
+                  images={[itemData.document.bannerUrl]}
+                  customHeight='h-[20rem]'
+                  // onCollectionCardHeight={rowIndex === 0 && getRowHeight}
+                />
+              );}}
+          </CardsGrid>)
       );
     }
   };

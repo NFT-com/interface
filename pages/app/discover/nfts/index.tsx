@@ -1,21 +1,18 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import { outerElementType } from 'components/elements/outerElementType';
+import CardsGrid from 'components/elements/CardsGrid';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
 import NoActivityIcon from 'public/no_activity.svg';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Loader } from 'react-feather';
-import { FixedSizeList } from 'react-window';
-import InfiniteLoader from 'react-window-infinite-loader';
 function usePrevious(value) {
   const ref = useRef(value);
   useEffect(() => {
@@ -30,12 +27,10 @@ export default function CollectionsPage() {
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
   const [nftSData, setNftsData] = useState([]);
-  const [nftSDataPerRows, setNftsDataPerRows] = useState([]);
-  const [columnCount, setColumnCount] = useState(5);
+  const [rowHeight, setRowHeight] = useState(550);
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
   const prevFilters = usePrevious(nftsResultsFilterBy);
-  const { width: screenWidth } = useWindowDimensions();
 
   useEffect(() => {
     isDiscoverCollections && setIsDiscoverCollections(false);
@@ -69,71 +64,15 @@ export default function CollectionsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
 
-  useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
-      const flatData = [...nftSData];
-      const data2D = [];
-      while(flatData.length) data2D.push(flatData.splice(0,columnCount));
-      setNftsDataPerRows(data2D);
-    }
-  },[columnCount, nftSData]);
+  const loadMoreItemss = () => {
+    setPage(page + 1);
+  };
 
-  useEffect(() => {
-    if (getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
-      if (!sideNavOpen) {
-        if (screenWidth > 1600) {
-          setColumnCount(5);
-        } else if (screenWidth > 1200 && screenWidth <= 1600) {
-          setColumnCount(4);
-        } else if (screenWidth > 900 && screenWidth <= 1200) {
-          setColumnCount(3);
-        } else if (screenWidth > 600 && screenWidth <= 900) {
-          setColumnCount(2);
-        } else
-          setColumnCount(1);
-      } else {
-        if (screenWidth > 1600) {
-          setColumnCount(4);
-        } else if (screenWidth > 1200 && screenWidth <= 1600) {
-          setColumnCount(3);
-        } else if (screenWidth > 900 && screenWidth <= 1200) {
-          setColumnCount(2);
-        } else if (screenWidth > 600 && screenWidth <= 900) {
-          setColumnCount(2);
-        } else
-          setColumnCount(1);
-      }
-    }
-  },[nftSData, screenWidth, sideNavOpen]);
+  const getRowHeight = useMemo(() => (rowHeight) => {
+    setRowHeight(rowHeight);
+  },[]);
 
-  const isItemLoaded = index => index < nftSDataPerRows.length;
-
-  const Row = useCallback(({ index, style, data }: any) => {
-    const row = data[index];
-    
-    return (
-      <div style={style} className={tw(
-        'flex flex-row justify-between w-full gap-4'
-      )}>{row && row?.map((item) => (
-          item && (
-            <NftCard
-              name={item.document.nftName}
-              tokenId={item.document.tokenId}
-              contractAddr={item.document.contractAddr}
-              images={[item.document.imageURL]}
-              collectionName={item.document.contractName}
-              redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-              description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-              customBackground={'white'}
-              isGKMinted={item.document.isProfileGKMinted}
-              lightModeForced
-            />
-          )))}
-      </div>
-    );
-  }, []);
-  
-  const showNftView = (nftSDataPerRows?: any[]) => {
+  const showNftView = () => {
     return (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ?
       <div className={tw(
         'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
@@ -154,32 +93,30 @@ export default function CollectionsPage() {
           );
         })}
       </div> :
-      <InfiniteLoader
-        isItemLoaded={isItemLoaded}
-        itemCount={nftSDataPerRows.length}
-        loadMoreItems={() => setPage(page + 1)}
-        threshold={10}
-      >
-        {({ ref }) => (
-          <FixedSizeList
-            className="grid no-scrollbar"
-            outerElementType={outerElementType}
-            width={window.innerWidth}
-            height={window.innerHeight}
-            itemCount={nftSDataPerRows.length}
-            itemData={nftSDataPerRows}
-            itemSize={screenWidth > 1200 && screenWidth < 1450 ? 530 : 600}
-            overscanRowCount={3}
-            onItemsRendered={(itemsRendered) => {
-              if (nftSData && nftSData.length < found && nftSData?.length > 0)
-                itemsRendered.visibleStartIndex % 2 == 0 && setPage(page + 1);
-            }}
-            ref={ref}
-          >
-            {Row}
-          </FixedSizeList>
-        )}
-      </InfiniteLoader>
+      (rowHeight && <CardsGrid
+        gridData={nftSData}
+        sideNavOpen
+        totalItems={found}
+        loadMoreItems={loadMoreItemss}
+        itemHeight={rowHeight}
+        cardType='nfts'
+        rowClass='flex flex-row justify-between w-full gap-4'>
+        {({ itemData, rowIndex }) => {
+          console.log('itemData fdo', itemData);
+          return(
+            <NftCard
+              name={itemData.document.nftName}
+              tokenId={itemData.document.tokenId}
+              contractAddr={itemData.document.contractAddr}
+              images={[itemData.document.imageURL]}
+              collectionName={itemData.document.contractName}
+              redirectTo={`/app/nft/${itemData.document.contractAddr}/${itemData.document.tokenId}`}
+              description={itemData.document.nftDescription ? itemData.document.nftDescription.slice(0,50) + '...': '' }
+              customBackground={'white'}
+              lightModeForced
+              onNFTCardHeight={rowIndex === 0 && getRowHeight}/>
+          );}}
+      </CardsGrid>)
     );
   };
   return(
@@ -219,26 +156,18 @@ export default function CollectionsPage() {
                     <div className={'hidden minlg:block'}>
                       <SideNav onSideNav={() => null} filtersData={filters}/>
                     </div>
-                    <div className='grid-cols-1 w-full'
-                      style={{
-                        minHeight: '100vh',
-                        backgroundColor: 'inherit',
-                        position: 'sticky',
-                        top: '0px',
-                      }}>
-                      {
-                        !loading && nftSData?.length === 0
-                          ? (
-                            <div>
-                              <NoActivityIcon className='m-auto mt-10 h-[300px]' />
-                              <div className="md:text-[20px] text-[24px] font-semibold font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]">No Results Found</div>
-                            </div>
-                          )
-                          : null
-                      }
-                      {nftSData?.length > 0 && showNftView(nftSDataPerRows)}
-                    </div>
 
+                    {
+                      !loading && nftSData?.length === 0
+                        ? (
+                          <div>
+                            <NoActivityIcon className='m-auto mt-10 h-[300px]' />
+                            <div className="md:text-[20px] text-[24px] font-semibold font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]">No Results Found</div>
+                          </div>
+                        )
+                        : null
+                    }
+                    {nftSData?.length > 0 && showNftView()}
                   </div>
                   {!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && (loading) &&
                     (<div className="flex items-center justify-center min-h-[16rem] w-full">

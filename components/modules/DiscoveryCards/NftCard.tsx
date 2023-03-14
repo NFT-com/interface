@@ -31,7 +31,7 @@ import Reorder from 'public/Reorder.svg';
 import ShopIcon from 'public/shop-icon.svg';
 import USDC from 'public/usdc.svg';
 import Visible from 'public/Visible.svg';
-import { MouseEvent, useCallback, useContext } from 'react';
+import { MouseEvent, useCallback, useContext, useEffect, useRef } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftCardProps {
@@ -59,6 +59,7 @@ export interface NftCardProps {
   fallbackImage?: string;
   skipNftQuery?: boolean;
   isGKMinted?: boolean;
+  onNFTCardHeight?: (nftHeight: number) => void;
 }
 
 export function NftCard(props: NftCardProps) {
@@ -79,6 +80,7 @@ export function NftCard(props: NftCardProps) {
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
   const currentDate = useGetCurrentDate();
+  const refNFTCard = useRef(null);
 
   const checkEndDate = () => {
     if(bestListing){
@@ -90,6 +92,14 @@ export function NftCard(props: NftCardProps) {
       } else return date.replace('in ', '');
     }
   };
+
+  const getNFTHeight = useCallback(() => {
+    props.onNFTCardHeight && props.onNFTCardHeight(refNFTCard && refNFTCard?.current?.offsetHeight);
+  }, [props]);
+  
+  useEffect(() => {
+    getNFTHeight();
+  }, [getNFTHeight]);
 
   const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth;
 
@@ -177,7 +187,7 @@ export function NftCard(props: NftCardProps) {
                 src={processedImageURLs[0]}
                 extraClasses='hover:scale-105 transition'
               />
-              <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
+              <div ref={refNFTCard} className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
                 <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
                   {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe ?
                     <>

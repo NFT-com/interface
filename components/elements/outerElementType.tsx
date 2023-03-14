@@ -19,6 +19,10 @@ export const outerElementType = forwardRef<HTMLElement, DocumentPropsType>(
     const containerRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     const location = router.pathname;
+    let windowObject;
+    if (typeof window !== 'undefined') {
+      windowObject = window;
+    }
     useScroll(
       () => {
         if (!(onScroll instanceof Function)) {
@@ -48,7 +52,7 @@ export const outerElementType = forwardRef<HTMLElement, DocumentPropsType>(
           } as unknown as React.UIEvent<HTMLElement>);
         }
       },
-      { target: window },
+      { target: windowObject },
     );
 
     if (forwardedRef != null && !(forwardedRef instanceof Function)) {
