@@ -1,6 +1,6 @@
 import Alert, { AlertType } from 'components/elements/Alert';
 
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
 
 export default {
@@ -11,9 +11,9 @@ export default {
     description: 'Describe the event and give further instructions if needed, including links to other pages.'
   },
 
-} as ComponentMeta<typeof Alert>;
+} as Meta<typeof Alert>;
 
-const Template: ComponentStory<typeof Alert> = (args) => <Alert {...args} />;
+const Template: StoryFn<typeof Alert> = (args) => <Alert {...args} />;
 
 export const Success = Template.bind({});
 Success.args = {

@@ -1,6 +1,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { PlusCircle } from 'phosphor-react';
 import React from 'react';
 
@@ -29,10 +29,10 @@ export default {
       },
     }
   },
-} as ComponentMeta<typeof Button>;
+} as Meta<typeof Button>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
+const Template: StoryFn<typeof Button> = (args) => <Button {...args} />;
 
 export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
