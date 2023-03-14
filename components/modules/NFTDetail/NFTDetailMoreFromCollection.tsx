@@ -1,8 +1,7 @@
 /* eslint-disable import/no-unresolved */
 // Import Swiper styles
-import 'swiper/swiper.min.css';
-import 'swiper/components/pagination/pagination.min.css';
-import 'swiper/components/navigation/navigation.min.css';
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { useFetchCollectionNFTs } from 'graphql/hooks/useFetchCollectionNFTs';
@@ -12,14 +11,12 @@ import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber, BigNumberish } from 'ethers';
-import RightSlider from 'public/right-slider.svg';
+import RightSlider from 'public/right-slider.svg?svgr';
 import { useState } from 'react';
-import SwiperCore, { Autoplay, Navigation } from 'swiper/core';
+import { Autoplay, Swiper as SwiperClass } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
-
-SwiperCore.use([Autoplay, Navigation]);
 
 export interface NFTDetailMoreFromCollectionProps {
   contract: string;
@@ -29,7 +26,7 @@ export interface NFTDetailMoreFromCollectionProps {
 
 export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionProps) {
   const { width: screenWidth } = useWindowDimensions();
-  const [my_swiper, set_my_swiper] = useState({} as SwiperCore);
+  const [my_swiper, set_my_swiper] = useState<SwiperClass>();
   const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
   const { chain } = useNetwork();
   const { data } = useSWR('NFTDetailMoreFromCollection' + props.contract + props.hideTokenId, async () => {
@@ -46,7 +43,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
   if (isNullOrEmpty(data)) {
     return null;
   }
-  
+
   return <div className='bg-[#ECECEC] w-screen flex items-center justify-center'>
     <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
       <div className='flex flex-col w-full px-[16px]'>
@@ -62,7 +59,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                     contractAddr={props.contract}
                     tokenId={nft.tokenId}
                     name={nft.metadata.name}
-                    nft={nft}
+                    nft={nft as any}
                     images={[nft.metadata.imageURL]}
                     fallbackImage={nft.metadata.imageURL}
                     collectionName={props.collectionName}
@@ -102,6 +99,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 'delay': 4500,
                 'disableOnInteraction': false
               }}
+              modules={[Autoplay]}
               className="flex overflow-y-visible"
             >
               {data?.map((nft, index) => {
@@ -113,7 +111,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                       contractAddr={props.contract}
                       tokenId={nft.tokenId}
                       name={nft.metadata.name}
-                      nft={nft}
+                      nft={nft as any}
                       isOwnedByMe={nft?.isOwnedByMe}
                       listings={nft?.listings?.items || []}
                       images={[nft.metadata.imageURL]}

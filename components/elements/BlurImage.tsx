@@ -1,9 +1,11 @@
+import fallbackPlaceholder from '/public/assets/fallback-image.svg';
 import cn from 'clsx';
 import Image, { ImageProps } from 'next/image';
 import { useState } from 'react';
 
 type BlurImageProps = {
-  className?: string
+  className?: string;
+  fallbackImage?: any;
 } & ImageProps
 
 export default function BlurImage(props : BlurImageProps) {
@@ -11,8 +13,11 @@ export default function BlurImage(props : BlurImageProps) {
 
   return (
     <Image
-      {...props}
       alt={props.alt}
+      // TODO: Add base64 encoded fallback image
+      // placeholder="blur"
+      // blurDataURL={fallbackPlaceholder}
+      placeholder={fallbackPlaceholder}
       className={cn(
         props.className,
         'duration-700 ease-in-out',
@@ -21,6 +26,7 @@ export default function BlurImage(props : BlurImageProps) {
           : 'grayscale-0 blur-0 scale-100'
       )}
       onLoadingComplete={() => setLoading(false)}
+      {...props}
     />
   );
 }

@@ -20,7 +20,7 @@ export function ProfileCard(props: ProfileCardProps) {
     defaultChainId
   );
 
-  return <Link href={'/' + props.profile?.url} passHref>
+  return <Link href={'/' + props.profile?.url} passHref legacyBehavior>
     <a className={tw(
       'flex flex-col snap-always snap-center sn:no-scrollbar h-full w-72 shrink-0 p-4 border border-[#D5D5D5] rounded-md cursor-pointer mr-4 text-black text-base',
     )}

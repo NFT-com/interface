@@ -12,8 +12,8 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
-import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
-import NoActivityIcon from 'public/no_activity.svg';
+import LeaderBoardIcon from 'public/leaderBoardIcon.svg?svgr';
+import NoActivityIcon from 'public/no_activity.svg?svgr';
 import React, { useEffect, useRef, useState } from 'react';
 function usePrevious(value) {
   const ref = useRef(value);

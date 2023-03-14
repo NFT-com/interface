@@ -11,12 +11,11 @@ type BlogSliderProps = {
 };
 
 export default function BlogSlider({ posts }:BlogSliderProps) {
-  const options = { delay: 5000 };
-  const autoplayRoot = (emblaRoot) => emblaRoot.parentElement;
-  const autoplay = Autoplay(options, autoplayRoot);
+  const options = { delay: 5000, rootNode: (emblaRoot) => emblaRoot.parentElement };
+  const autoplay = Autoplay(options);
   const [emblaRef, embla] = useEmblaCarousel({
     align: 'start',
-    loop: true,
+    loop: false,
     skipSnaps: false,
     inViewThreshold: 0.7,
   }, [autoplay]);

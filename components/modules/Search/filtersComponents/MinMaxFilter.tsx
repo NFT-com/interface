@@ -2,7 +2,7 @@ import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw';
 
-import ArrowDown from 'public/arrow-down-black.svg';
+import ArrowDown from 'public/arrow-down-black.svg?svgr';
 import React, { useEffect, useRef,useState } from 'react';
 
 interface FilterInputOptionProps {

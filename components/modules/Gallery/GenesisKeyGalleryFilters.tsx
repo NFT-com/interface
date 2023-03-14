@@ -4,7 +4,7 @@ import { useGallery } from 'hooks/state/useGallery';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
-import SearchIcon from 'public/search.svg';
+import SearchIcon from 'public/search.svg?svgr';
 import { useState } from 'react';
 
 export interface GenesisKeyGalleryFiltersProps {

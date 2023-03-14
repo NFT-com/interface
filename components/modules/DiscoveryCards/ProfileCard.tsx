@@ -4,7 +4,7 @@ import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCou
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
 import Image from 'next/image';
-import GK from 'public/Badge_Key.svg';
+import GK from 'public/Badge_Key.svg?svgr';
 import BannerPreview from 'public/banner_1@2x.png';
 import ProfilePreview from 'public/profilePreview.png';
 import { PartialDeep } from 'type-fest';
@@ -88,11 +88,10 @@ export function ProfileCard(props: ProfileCardProps) {
               )
               : (
                 <Image
+                  className="object-cover h-full"
                   src={BannerPreview}
-                  className="h-full"
                   alt="key Splash"
-                  layout="fill"
-                  objectFit="cover"
+                  fill
                 />
               )
           }
@@ -111,11 +110,10 @@ export function ProfileCard(props: ProfileCardProps) {
                 )
                 : (
                   <Image
+                    className="object-cover h-full"
                     src={ProfilePreview}
-                    className="h-full"
                     alt="key Splash"
-                    layout="fill"
-                    objectFit="contain"
+                    fill
                   />
                 )
             }

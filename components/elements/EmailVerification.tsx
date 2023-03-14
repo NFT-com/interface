@@ -11,6 +11,8 @@ import { useBidModal } from 'hooks/state/useBidModal';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty, joinClasses } from 'utils/helpers';
 
+import ClientOnly from './ClientOnly';
+
 import validator from 'email-validator';
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
@@ -97,23 +99,25 @@ export function EmailVerification(props) {
 
   const optionalSkip = () => {
     return !hideOptional && !codeSent && <div className="mt-11 mb-5">
-      <ModalButton
-        text="Skip for now"
-        onClick={() => {
-          createUser({
-            avatarURL: null,
-            referredBy: referral,
-            email: currentEmail !== '' ? currentEmail : null,
-            username: `ethereum-${ethers.utils.getAddress(currentAddress)}`,
-            wallet: {
-              address: currentAddress,
-              chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-              network: 'ethereum',
-            },
-          });
-        }}
-        loading={false}
-      />
+      <ClientOnly>
+        <ModalButton
+          text="Skip for now"
+          onClick={() => {
+            createUser({
+              avatarURL: null,
+              referredBy: referral,
+              email: currentEmail !== '' ? currentEmail : null,
+              username: `ethereum-${ethers.utils.getAddress(currentAddress)}`,
+              wallet: {
+                address: currentAddress,
+                chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+                network: 'ethereum',
+              },
+            });
+          }}
+          loading={false}
+        />
+      </ClientOnly>
     </div>;
   };
 
@@ -147,37 +151,39 @@ export function EmailVerification(props) {
           <div className="p-3 text-red-600 h-11">
             {signUpError}
           </div>
-          <ModalButton
-            text="Login"
-            onClick={async () => {
-              if (changeEmail || (!isNullOrEmpty(userEmailFound) && userEmailVerified)) {
-                const result = await updateMe({ email: currentEmail });
-                if (result) {
-                  mutateMeInfo();
-                  setCodeSent(true);
-                  setChangeEmail(false);
-                }
-              } else {
-                if (hideOptional && email) {
-                  updateEmail({ email: currentEmail });
-                  setChangeEmail(false);
+          <ClientOnly>
+            <ModalButton
+              text="Login"
+              onClick={async () => {
+                if (changeEmail || (!isNullOrEmpty(userEmailFound) && userEmailVerified)) {
+                  const result = await updateMe({ email: currentEmail });
+                  if (result) {
+                    mutateMeInfo();
+                    setCodeSent(true);
+                    setChangeEmail(false);
+                  }
                 } else {
-                  createUser({
-                    avatarURL: null,
-                    referredBy: referral,
-                    email: currentEmail !== '' ? currentEmail : null,
-                    username: null, // null to force user to authenticate code, instead of allowing skip
-                    wallet: {
-                      address: currentAddress,
-                      chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-                      network: 'ethereum',
-                    },
-                  });
+                  if (hideOptional && email) {
+                    updateEmail({ email: currentEmail });
+                    setChangeEmail(false);
+                  } else {
+                    createUser({
+                      avatarURL: null,
+                      referredBy: referral,
+                      email: currentEmail !== '' ? currentEmail : null,
+                      username: null, // null to force user to authenticate code, instead of allowing skip
+                      wallet: {
+                        address: currentAddress,
+                        chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+                        network: 'ethereum',
+                      },
+                    });
+                  }
                 }
-              }
-            }}
-            loading={creating || loadingUpdate}
-          />
+              }}
+              loading={creating || loadingUpdate}
+            />
+          </ClientOnly>
         </div>
       );
     } else {

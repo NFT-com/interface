@@ -5,8 +5,8 @@ import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
 import { Image } from 'phosphor-react';
-import GK from 'public/Badge_Key.svg';
-import VerifiedIcon from 'public/verifiedIcon.svg';
+import GK from 'public/Badge_Key.svg?svgr';
+import VerifiedIcon from 'public/verifiedIcon.svg?svgr';
 
 interface ResultsDropDownProps {
   isHeader?: any;

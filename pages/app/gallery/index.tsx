@@ -1,4 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import ClientOnly from 'components/elements/ClientOnly';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { Modal } from 'components/elements/Modal';
 import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
@@ -14,7 +15,6 @@ import { useGallery } from 'hooks/state/useGallery';
 import { useUser } from 'hooks/state/useUser';
 import { useSignedIn } from 'hooks/useSignedIn';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
-import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
@@ -24,13 +24,13 @@ import { useAccount } from 'wagmi';
 
 /**
  * Renders a gallery of genesis keys and profiles.
- * 
+ *
  * The Genesis Key gallery queries the contract directly and uses a sequence of
  * token IDs from 1 to the totalSupply.
- * 
+ *
  * The Profile gallery queries our backend for a complet list of recently minted profiles,
  * so it will have a slight delay as it depends on the backend to update its data via our regular jobs.
- * 
+ *
  * Profiles owned by the logged in user are not delayed, because we query the contract directly.
  */
 export default function GalleryPage() {
@@ -43,7 +43,7 @@ export default function GalleryPage() {
   const signedIn = useSignedIn();
 
   const { galleryShowMyStuff: showMyStuff, galleryItemType } = useGallery();
-  
+
   const [detailId, setDetailId] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
   const [currentFilter, setCurrentFilter] = useState<string>('');

@@ -19,9 +19,9 @@ import { NFTDetailContextProvider } from './NFTDetailContext';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
-import GK from 'public/Badge_Key.svg';
-import MultipleOwners from 'public/multiple_owners.svg';
-import Owner from 'public/owner.svg';
+import GK from 'public/Badge_Key.svg?svgr';
+import MultipleOwners from 'public/multiple_owners.svg?svgr';
+import Owner from 'public/owner.svg?svgr';
 import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import useSWR from 'swr';
@@ -36,7 +36,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const router = useRouter();
 
   const defaultChainId = useDefaultChainId();
-  
+
   const { data: collection } = useCollectionQuery(String(defaultChainId), props?.nft?.contract);
   const { data: collectionMetadata } = useSWR('ContractMetadata' + props.nft?.contract, async () => {
     return await getContractMetadata(props.nft?.contract, defaultChainId);

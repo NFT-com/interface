@@ -4,6 +4,7 @@ import { tw } from 'utils/tw';
 import { RoundedCornerMediaImage as StaticRoundedCornerMediaImage } from './RoundedCornerMediaImage';
 
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 export enum RoundedCornerVariant {
   TopOnly = 'topOnly',
@@ -40,6 +41,7 @@ export interface RoundedCornerMediaProps {
   objectFit?: 'contain' | 'cover';
 }
 
+// TODO:  Add twMerge util class & prettier config to resolve duplicate tw classes
 export const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmount): string => {
   switch (variant) {
   case RoundedCornerVariant.TopOnly:
@@ -96,7 +98,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
 
   return (
     <div className={tw(
-      'relative object-cover aspect-square',
+      'relative object-cover aspect-square overflow-hidden',
       getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
       props.containerClasses
     )}
@@ -136,12 +138,11 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           />
         </div>
         : rawImageBool ?
-        // SVG has hard time displaying on Next Image
-        // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             alt='NFT Image'
             key={props.src}
             src={imageUrl}
+            fill
             className={tw(
               props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
               'absolute w-full h-full justify-center',

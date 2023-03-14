@@ -5,7 +5,7 @@ import BlurImage from 'components/elements/BlurImage';
 import StaticPreviewBanner from 'components/elements/PreviewBanner';
 import HomeLayout from 'components/layouts/HomeLayout';
 import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/LeaderBoard';
-import contentfulBackupData from 'constants/contenful_backup_data.json';
+import contentfulBackupData from 'constants/contentful_backup_data.json';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { HomePageV2 } from 'types';
 import { getBaseUrl, getStaticAsset } from 'utils/helpers';
@@ -21,11 +21,12 @@ import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS_V2 } from 'lib/contentful/schemas';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import Link from 'next/link';
 import { NextSeo } from 'next-seo';
 import { useEffect } from 'react';
+import Marquee from 'react-fast-marquee';
 import LazyLoad from 'react-lazy-load';
 import { usePageVisibility } from 'react-page-visibility';
-import Ticker from 'react-ticker';
 
 const DynamicLeaderBoard = dynamic<React.ComponentProps<typeof StaticLeaderboard>>(() => import('components/modules/Profile/LeaderBoard').then(mod => mod.LeaderBoard));
 const DynamicPreviewBanner = dynamic<React.ComponentProps<typeof StaticPreviewBanner>>(() => import('components/elements/PreviewBanner'));
@@ -262,7 +263,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           ease: 'power2.out'
         }, 0);
 
-      // Tickers
+      // Marquees
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-ticker-trigger',
@@ -591,31 +592,24 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
 
                   <div className='overflow-hidden -mx-9 mt-4 minxxl:mt-6'>
                     <div data-aos="fade-left" data-aos-delay="200" className="image-ticker mb-4 minxxl:mb-6 h-16 minxl:h-28 minxxl:h-36">
-                      <Ticker speed={7} offset='100%' direction='toRight' move={isVisible}>
-                        {() => (
-                          <div className='flex'>
-                            {data_v2?.wycdBlock2Row1NftsCollection?.items.map((image, index) =>
-                              <div key={index} className='block relative h-16 w-16 minxl:w-28 minxl:h-28 minxxl:w-36 minxxl:h-36 mx-[10px]'>
-                                <Image layout='fill' src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(image.url)}&height=${1084}&width=${1084}`} className='rounded-full w-full' alt="NFT image" />
-                              </div>
-                            )}
+                      <Marquee gradient={false} speed={60} loop={0} direction="right" play={isVisible} className="flex">
+                        {/* TODO: Add proper types to data_v2 */}
+                        {(data_v2?.wycdBlock2Row1NftsCollection?.items as {url: string}[]).map((image, index) =>
+                          <div key={index} className={tw('block relative h-16 w-16 minxl:w-28 minxl:h-28 minxxl:w-36 minxxl:h-36 mx-[10px]', index === 0 ? 'pl-16' : '')}>
+                            <BlurImage fill src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(image.url)}&height=${1084}&width=${1084}`} className='rounded-full w-full o' alt="NFT image" />
                           </div>
                         )}
-                      </Ticker>
+                      </Marquee>
                     </div>
 
                     <div data-aos="fade-left" data-aos-delay="250" className="image-ticker h-16 minxl:h-28 minxxl:h-36">
-                      <Ticker speed={7} offset='-100%' move={isVisible}>
-                        {() => (
-                          <div className='flex'>
-                            {data_v2?.wycdBlock2Row2NftsCollection?.items.map((image, index) =>
-                              <div key={index} className='block relative h-16 w-16 minxl:w-28 minxl:h-28 minxxl:w-36 minxxl:h-36 mx-[10px]'>
-                                <Image layout='fill' src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(image.url)}&height=${1084}&width=${1084}`} className='rounded-full w-full' alt="NFT image" />
-                              </div>
-                            )}
+                      <Marquee gradient={false} speed={60} loop={0} play={isVisible} className="flex">
+                        {(data_v2?.wycdBlock2Row2NftsCollection?.items as {url: string}[]).map((image, index) =>
+                          <div key={index} className='block relative h-16 w-16 minxl:w-28 minxl:h-28 minxxl:w-36 minxxl:h-36 mx-[10px]'>
+                            <BlurImage fill src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(image.url)}&height=${1084}&width=${1084}`} className='rounded-full w-full' alt="NFT image" />
                           </div>
                         )}
-                      </Ticker>
+                      </Marquee>
                     </div>
                   </div>
                 </div>
@@ -812,7 +806,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 <path className='anim-corner anim-corner-news-2' d="M193.373 0H111.357C110.624 0 109.967 0.453661 109.708 1.13943L81.9036 74.6122C81.467 75.7659 82.3195 77 83.5531 77H163.326C164.042 77 164.687 76.5669 164.958 75.904L195.006 2.43123C195.48 1.27098 194.627 0 193.373 0Z" fill="white" />
                 <path className='anim-corner anim-corner-news' d="M251.373 57H169.357C168.624 57 167.967 57.4537 167.708 58.1394L139.904 131.612C139.467 132.766 140.319 134 141.553 134H221.326C222.042 134 222.687 133.567 222.958 132.904L253.006 59.4312C253.48 58.271 252.627 57 251.373 57Z" fill="white" />
               </svg>
-
+67
               <svg className={tw(
                 'absolute -z-10 top-0 right-0 max-w-[250px] minxl:max-w-none',
                 'translate-x-[20px] -translate-y-[67px]',
@@ -830,44 +824,40 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
 
               <div className='-mx-9 overflow-hidden mb-12'>
                 <div id='anim-news-content' data-aos="fade-left" className='minlg:translate-x-full minlg:transform-gpu'>
-                  <Ticker speed={7} move={isVisible}>
-                    {() => (
-                      <div className='flex'>
-                        {data_v2?.newsSlidesCollection?.items.map((preview) =>
-                          <a key={preview.slug} href={`articles/${preview.slug}`} className={tw(
-                            'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
-                            'mx-[10px] minlg:mx-4 minxxl:mx-5 cursor-pointer',
-                            'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
-                          )}>
-                            <div className='before:pb-[54.129%] before:block relative overflow-hidden'>
-                              <BlurImage
-                                objectFit="cover"
-                                className='rounded-t-lg'
-                                layout="fill"
-                                src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(preview?.heroImage?.url)}`}
-                                alt={preview.title}
-                              />
-                            </div>
+                  <Marquee gradient={false} speed={60} loop={0} play={isVisible} className="flex" style={{ flex: 'flex' }}>
+                    {data_v2?.newsSlidesCollection?.items.map((preview) =>
+                      <Link key={preview.slug} href={`articles/${preview.slug}`} className={tw(
+                        'bg-white flex flex-col h-full rounded-lg md:mb-5 text-black',
+                        'mx-[10px] minlg:mx-4 minxxl:mx-5 cursor-pointer',
+                        'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem] '
+                      )}>
+                        <div className='before:pb-[54.129%] before:block relative overflow-hidden aspect-4/3'>
+                          <BlurImage
+                            fill
+                            className='rounded-t-lg object-cover'
+                            src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(preview?.heroImage?.url)}`}
+                            alt={preview.title}
+                          />
+                        </div>
 
-                            <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
-                              <h3 className={tw(
-                                'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
-                                'mb-11 minxxl:mb-16'
-                              )}>{preview.title}</h3>
-                              <div className='flex items-center mt-auto text-xs minlg:text-xl minxxl:text-3xl font-medium text-[#605A45]/60'>
-                                <div className={tw(
-                                  'relative rounded-full mr-[6px] minlg:mr-3 block object-cover',
-                                  'h-5 minlg:h-9 minxxl:h-12 w-5 minlg:w-9 minxxl:w-12'
-                                )}>
-                                  <Image layout='fill' objectFit='cover' className='rounded-full' src={preview.author?.image?.url} alt={`Image for author, ${preview.author?.name}`} />
-                                </div>
-                                {preview.author?.name}
-                              </div>
+                        <div className='py-5 px-4 minxxl:py-8 minxxl:px-7 flex-grow flex flex-col items-start'>
+                          <h3 className={tw(
+                            'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
+                            'mb-11 minxxl:mb-16'
+                          )}>{preview.title}</h3>
+                          <div className='flex items-center mt-auto text-xs minlg:text-xl minxxl:text-3xl font-medium text-[#605A45]/60'>
+                            <div className={tw(
+                              'relative rounded-full mr-[6px] minlg:mr-3 block object-cover',
+                              'h-5 minlg:h-9 minxxl:h-12 w-5 minlg:w-9 minxxl:w-12'
+                            )}>
+                              <Image fill className='object-cover rounded-full' src={preview.author?.image?.url} alt={`Image for author, ${preview.author?.name}`} />
                             </div>
-                          </a>)}
-                      </div>
+                            {preview.author?.name}
+                          </div>
+                        </div>
+                      </Link>
                     )}
-                  </Ticker>
+                  </Marquee>
                 </div>
               </div>
 
@@ -882,64 +872,57 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           </div>
         </div>
 
-        {/* Block: Ticker */}
+        {/* Block: Marquee */}
         <div id='anim-ticker-trigger' className='overflow-x-hidden mb-[4.625rem] minlg:pb-[40rem] minlg:mb-[-34.3rem]'>
           <div id='anim-ticker-first' className={tw(
             'text-4xl minlg:text-7xl minxxl:text-9xl mb-2 -ml-7',
             'minlg:translate-y-96 transform-gpu'
           )}>
-            <Ticker speed={7} offset='100%' direction='toRight' move={isVisible}>
-              {() => (
-                <div className='flex flex-row'>
-                  {data_v2?.tags?.tags1.map(tag =>
-                    <div key={tag} className={tw(
-                      'px-2 minlg:px-10 minxxl:px-14 flex items-baseline group'
-                    )}
-                    ><div role='presentation' className={tw(
-                        'mr-2 minxxl:mr-3 skew-x-[-20deg]',
-                        'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                        'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
-                        'bg-[#B2B2B2] rounded-[3px]'
-                      )}></div>
+            <Marquee gradient={false} speed={60} loop={0} direction='right' play={isVisible} className="flex flex-row">
+              {data_v2?.tags?.tags1.map((tag, index) =>
+                <div key={tag} className={tw(
+                  'px-2 minlg:px-10 minxxl:px-14 flex items-baseline group', index === 0 ? 'mr-2 minlg:mr-10 minxxl:mr-14': ''
+                )}
+                ><div role='presentation' className={tw(
+                    'mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                    'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                    'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
+                    'bg-[#B2B2B2] rounded-[3px]'
+                  )}></div>
 
-                      <i className={tw(
-                        'animate-text-gadient bg-[length:200%_200%]',
-                        'pb-4 pr-1 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
-                        'transition-colors group-hover:text-transparent'
-                      )}>{tag}</i>
-                    </div>)}
-                </div>
-              )}
-            </Ticker>
+                  <i className={tw(
+                    'animate-text-gadient bg-[length:200%_200%]',
+                    'pb-4 pr-1 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
+                    'transition-colors group-hover:text-transparent'
+                  )}>{tag}</i>
+                </div>)}
+            </Marquee>
           </div>
 
           <div id='anim-ticker-second' className={tw(
             'text-4xl minlg:text-7xl minxxl:text-9xl mb-2',
             'minlg:translate-y-96 transform-gpu'
           )}>
-            <Ticker speed={7} offset='-100%' move={isVisible}>
-              {() => (
-                <div className='flex flex-row'>
-                  {data_v2?.tags?.tags2.map(tag =>
-                    <div key={tag} className={tw(
-                      'px-3 minlg:px-10 minxxl:px-14 flex items-baseline group'
-                    )}
-                    ><div role='presentation' className={tw(
-                        'mr-2 minxxl:mr-3 skew-x-[-20deg]',
-                        'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                        'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
-                        'bg-[#B2B2B2] rounded-[3px]'
-                      )}></div>
+            <Marquee gradient={false} speed={60} loop={0} play={isVisible} className="flex flex-row">
+              {data_v2?.tags?.tags2.map((tag, index) =>
+                <div key={tag} className={tw(
+                  'px-3 minlg:px-10 minxxl:px-14 flex items-baseline group', index === 0 ? 'mr-2 minlg:mr-10 minxxl:mr-14': ''
+                )}
+                ><div role='presentation' className={tw(
+                    'mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                    'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                    'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
+                    'bg-[#B2B2B2] rounded-[3px]'
+                  )}></div>
 
-                      <i className={tw(
-                        'animate-text-gadient bg-[length:200%_200%] whitespace-nowrap',
-                        'pb-4 pr-1 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
-                        'transition-colors group-hover:text-transparent'
-                      )}>{tag}</i>
-                    </div>)}
-                </div>
-              )}
-            </Ticker>
+                  <i className={tw(
+                    'animate-text-gadient bg-[length:200%_200%] whitespace-nowrap',
+                    'pb-4 pr-1 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
+                    'transition-colors group-hover:text-transparent'
+                  )}>{tag}</i>
+                </div>)}
+
+            </Marquee>
           </div>
         </div>
 

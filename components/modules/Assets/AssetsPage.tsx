@@ -14,7 +14,7 @@ import { tw } from 'utils/tw';
 
 import AssetTableRow from './AssetTableRow';
 
-import Offers from 'public/images/offers.svg';
+import Offers from 'public/images/offers.svg?svgr';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
@@ -184,7 +184,7 @@ export default function AssetsPages() {
                     <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>USD Value</th>
                   </>
                 }
-                
+
                 <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[140px]'>Profile</th>
                 {getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED) && <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>Offers</th>}
                 <th className='text-black cursor-pointer text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[130px]'>
@@ -229,4 +229,3 @@ export default function AssetsPages() {
     </div>
   );
 }
-

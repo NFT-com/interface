@@ -50,7 +50,7 @@ export function LinksToSection(props: LinksToSectionParams) {
       linkTo: 'https://www.nft.com/you'
     }
   ];
-  
+
   const notOwnerlinksContents = [
     {
       image: '/link-to-key.png',
@@ -90,6 +90,7 @@ export function LinksToSection(props: LinksToSectionParams) {
             (
               <Link href={item.linkTo}
                 key={item.section}
+                legacyBehavior
               >
                 <a
                   target='_blank'

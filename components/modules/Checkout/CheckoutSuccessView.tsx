@@ -11,9 +11,9 @@ import { PartialErrorView } from './PartialErrorView';
 
 import { useRouter } from 'next/router';
 import { Check } from 'phosphor-react';
-import DesktopNoProfile from 'public/images/desktop_no_profile.svg';
-import DesktopSuccessProfile from 'public/images/desktop_success_profile.svg';
-import NullProfile from 'public/images/null_profile.svg';
+import DesktopNoProfile from 'public/images/desktop_no_profile.svg?svgr';
+import DesktopSuccessProfile from 'public/images/desktop_success_profile.svg?svgr';
+import NullProfile from 'public/images/null_profile.svg?svgr';
 import { useContext } from 'react';
 
 export enum SuccessType {
