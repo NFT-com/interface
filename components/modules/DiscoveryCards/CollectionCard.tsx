@@ -14,8 +14,8 @@ import {
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
-import VerifiedIcon from 'public/verifiedIcon.svg';
-import VolumeIcon from 'public/volumeIcon.svg';
+import VerifiedIcon from 'public/verifiedIcon.svg?svgr';
+import VolumeIcon from 'public/volumeIcon.svg?svgr';
 import { useEffect, useRef } from 'react';
 import { PartialDeep } from 'type-fest';
 
@@ -102,18 +102,18 @@ export function CollectionCard(props: CollectionCardProps) {
           <div className="flex justify-between items-start">
             <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">
               {props?.contractName}
-              {props.isOfficial && <VerifiedIcon className='inline ml-3'/>}
+              {props?.isOfficial && <VerifiedIcon className='inline ml-3'/>}
             </span>
           </div>
         </div>
         <div onClick={(event) => event.preventDefault()} className="flex flex-row leading-[23.2px] text-[#959595] font-[400 w-full]">
           {
-            props.floorPrice && props.floorPrice !== 0
+            props?.floorPrice && props?.floorPrice !== 0
               ? (
                 <div className='flex flex-col min-w-[45%] '>
                   <span className='flex items-center justify-start text-xl text-[#000] font-[500] mr-12 w-full'>
                     <VolumeIcon className='mr-2'/>
-                    {checkMinPrice(props.floorPrice)}
+                    {checkMinPrice(props?.floorPrice)}
                   </span>
                   <span>Floor Price</span>
                 </div>
@@ -121,10 +121,10 @@ export function CollectionCard(props: CollectionCardProps) {
               : null
           }
           {
-            props.totalVolume && props.totalVolume !== 0
+            props?.totalVolume && props?.totalVolume !== 0
               ? (
                 <div className='flex flex-col '>
-                  <span className='text-xl text-[#000] font-[500]'>{checkMinPrice(props.totalVolume)}</span>
+                  <span className='text-xl text-[#000] font-[500]'>{checkMinPrice(props?.totalVolume)}</span>
                   <span>Total Volume</span>
                 </div>
               )
