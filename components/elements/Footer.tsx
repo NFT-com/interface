@@ -11,8 +11,8 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import DiscordLogo from 'public/discord.svg';
-import TwitterLogo from 'public/twitter.svg';
+import DiscordLogo from 'public/discord.svg?svgr';
+import TwitterLogo from 'public/twitter.svg?svgr';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
@@ -220,6 +220,7 @@ export const Footer = () => {
                         <Link
                           href={item.link}
                           key={index}
+                          legacyBehavior
                         >
                           {item.newTab ?
                             <a

@@ -31,7 +31,7 @@ export default function SharingIcons({ title }: SharingProps) {
           className="w-8 h-8 md:w-6 md:h-6 border border-share-icon  rounded-full"
         />
       </TwitterShareButton>
-      
+
       <CustomTooltip
         mode="click"
         tooltipComponent={
@@ -52,7 +52,8 @@ export default function SharingIcons({ title }: SharingProps) {
             }}
             className="flex-shrink-0 aspect-square w-8 h-5 md:w-6 md:h-4"
             color="#727272"
-          />
+          >
+          </Link>
         </button>
       </CustomTooltip>
     </div>

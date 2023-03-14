@@ -1,10 +1,12 @@
+import LikeCount from 'components/elements/LikeCount';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Profile } from 'graphql/generated/types';
-import { useProfileNFTsTotalItemsQuery } from 'graphql/hooks/useProfileNFTsTotalItemsQuery';
+import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { Doppler, getEnvBool } from 'utils/env';
 
 import Image from 'next/image';
-import GK from 'public/Badge_Key.svg';
+import GK from 'public/Badge_Key.svg?svgr';
 import BannerPreview from 'public/banner_1@2x.png';
 import ProfilePreview from 'public/profilePreview.png';
 import { PartialDeep } from 'type-fest';
@@ -31,12 +33,10 @@ export interface ProfileCardProps {
 export function ProfileCard(props: ProfileCardProps) {
   const isLeaderBoard = props.isLeaderBoard;
   const defaultChainId = useDefaultChainId();
-  const {
-    totalItems: publicProfileNftsCount,
-  } = useProfileNFTsTotalItemsQuery(
-    props?.profile?.id,
-    defaultChainId,
-    1000
+
+  const { totalItems } = useProfileVisibleNFTCount(
+    [props?.profile?.id],
+    defaultChainId
   );
 
   if(isLeaderBoard){
@@ -76,6 +76,11 @@ export function ProfileCard(props: ProfileCardProps) {
     return (
       <a href={'/' + props.profile?.url} className="mb-3 minmd:mb-0 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p h-[212px]">
         <div className="bg-black h-[99px] relative">
+          {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
+            <div className='absolute top-4 right-4 z-50'>
+              <LikeCount count={10} isLiked={false} onClick={() => null} />
+            </div>
+          }
           {
             props.profile.bannerURL
               ? (
@@ -90,11 +95,10 @@ export function ProfileCard(props: ProfileCardProps) {
               )
               : (
                 <Image
+                  className="object-cover h-full"
                   src={BannerPreview}
-                  className="h-full"
                   alt="key Splash"
-                  layout="fill"
-                  objectFit="cover"
+                  fill
                 />
               )
           }
@@ -113,11 +117,10 @@ export function ProfileCard(props: ProfileCardProps) {
                 )
                 : (
                   <Image
+                    className="object-cover h-full"
                     src={ProfilePreview}
-                    className="h-full"
                     alt="key Splash"
-                    layout="fill"
-                    objectFit="contain"
+                    fill
                   />
                 )
             }
@@ -134,7 +137,9 @@ export function ProfileCard(props: ProfileCardProps) {
             </li>
           </ul>
           <ul className="mt-2 list-none flex flex-row justify-between">
-            <li className="m-0 p-0 list-none text-5 leading-7 text-[#000000] font-[600]">{publicProfileNftsCount} <span className="text-[#6A6A6A] text-4 leading-6 font-[400]"> NFTs collected</span></li>
+            <li className="m-0 p-0 list-none text-5 leading-7 text-[#000000] font-[600]">
+              {totalItems} <span className="text-[#6A6A6A] text-4 leading-6 font-[400]"> NFTs collected</span>
+            </li>
           </ul>
         </div>
       </a>

@@ -159,7 +159,7 @@ export default function MintGKProfileCard() {
       setModalOpen(false);
     }
   }, [setModalOpen]);
-  
+
   return (
     <>
       <>
@@ -170,15 +170,13 @@ export default function MintGKProfileCard() {
             <p className='text-red-500 mt-10 mb-2'>No Genesis Key detected for mint.</p>
             <div className='flex flex-col items-center'>
               <Link href={`/app/collection/${getAddress('genesisKey', defaultChainId)}`}>
-                <a>
-                  <Button
-                    size={ButtonSize.LARGE}
-                    type={ButtonType.PRIMARY}
-                    onClick={() => null}
-                    label='Buy Genesis Key'
-                    stretch
-                  />
-                </a>
+                <Button
+                  size={ButtonSize.LARGE}
+                  type={ButtonType.PRIMARY}
+                  onClick={() => null}
+                  label='Buy Genesis Key'
+                  stretch
+                />
               </Link>
               <Link href='/'>
                 <p className='mt-2 hover:cursor-pointer'>Return to home</p>
@@ -186,7 +184,7 @@ export default function MintGKProfileCard() {
             </div>
           </div>
           }
-        
+
           <div className='mt-9'>
 
             {!currentAddress &&
@@ -242,7 +240,7 @@ export default function MintGKProfileCard() {
               })
             }
           </div>
-        
+
           {!isNullOrEmpty(claimable) &&
           <div className='flex justify-between items-center'>
             <div>
@@ -258,7 +256,7 @@ export default function MintGKProfileCard() {
             {inputCount <= 4 && selectedGK?.claimable > 0 && selectedGK?.claimable - inputCount !== 0 ? <p className='hover:cursor-pointer' onClick={() => setInputVisible()}>Add NFT Profile</p> : null}
           </div>
           }
-            
+
           <div className='mt-12 minlg:mt-[59px]'>
             {
               !isNullOrEmpty(claimable) &&
@@ -295,9 +293,9 @@ export default function MintGKProfileCard() {
               />
               : null
             }
-              
+
           </div>
-          <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4'>
+          <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4' legacyBehavior>
             <a target="_blank" >
               <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
                 Learn more about <span className='text-black inline font-medium'>NFT Profiles</span>
@@ -310,4 +308,3 @@ export default function MintGKProfileCard() {
     </>
   );
 }
-    

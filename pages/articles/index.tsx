@@ -1,7 +1,7 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
-import contentfulBackupData from 'constants/contenful_backup_data.json';
+import contentfulBackupData from 'constants/contentful_backup_data.json';
 import NotFoundPage from 'pages/404';
 import { PostData } from 'types/blogs';
 import { getPaginatedPosts } from 'utils/contentful';
@@ -44,7 +44,7 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
   if (!router.isFallback && !posts) {
     return <NotFoundPage />;
   }
-  
+
   return (
     <>
       <NextSeo
@@ -64,7 +64,7 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
         <div className='px-2.5 minlg:pt-28 max-w-nftcom mx-auto'>
           <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{dataFallback?.heroTitle}</h2>
           {posts && <DynamicBlogSlider posts={dataFallback?.blogSlidesCollection.items} />}
-      
+
           <h2 className='font-bold font-grotesk minlg:text-4xl text-lg minlg:mb-6 mb-4 mt-10 '>{dataFallback?.listTitle}</h2>
           <div className="grid minmd:gap-x-4 gap-x-3 gap-y-7 minlg:grid-cols-3 grid-cols-2 minxl:pb-24 pb-12 ">
             {posts && posts.map((post) => (

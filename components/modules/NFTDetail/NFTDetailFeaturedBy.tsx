@@ -1,15 +1,15 @@
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
-import { useProfileNFTsTotalItemsQuery } from 'graphql/hooks/useProfileNFTsTotalItemsQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
+import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
 import Link from 'next/link';
-import GK from 'public/Badge_Key.svg';
-import NoActivityIcon from 'public/no_activity.svg';
+import GK from 'public/Badge_Key.svg?svgr';
+import NoActivityIcon from 'public/no_activity.svg?svgr';
 export interface NFTDetailFeaturedByProps {
   contract: string,
   tokenId: string
@@ -53,11 +53,9 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
           <div className='flex items-center'>
             <PublicProfileNftsCount id={profile?.id} />
             <Link href={'/' + profile?.url} passHref>
-              <a>
-                <div className='cursor-pointer rounded-[8px] md:px-7 md:py-1.5 px-10 py-2 bg-[#F9D54C] flex items-center text-black font-medium md:text-[14px[ text-[18px] justify-center'>
+              <div className='cursor-pointer rounded-[8px] md:px-7 md:py-1.5 px-10 py-2 bg-[#F9D54C] flex items-center text-black font-medium md:text-[14px[ text-[18px] justify-center'>
                   View
-                </div>
-              </a>
+              </div>
             </Link>
           </div>
         </div>
@@ -98,17 +96,14 @@ const ShowGk = ({ profile }: { profile: string }) => {
 
 const PublicProfileNftsCount = ({ id }: { id: string }) => {
   const defaultChainId = useDefaultChainId();
-  const {
-    totalItems: publicProfileNftsCount,
-  } = useProfileNFTsTotalItemsQuery(
-    id,
-    defaultChainId,
-    1000
+  const { totalItems } = useProfileVisibleNFTCount(
+    [id],
+    defaultChainId
   );
 
   return (
     <div className='lg:hidden flex w-full text-[18px] font-noi-grotesk mr-36'>
-      <span className='font-bold mr-1'>{publicProfileNftsCount}</span>
+      <span className='font-bold mr-1'>{totalItems}</span>
       <span className='text-[#6A6A6A]'>NFTs Displayed</span>
     </div>
   );

@@ -9,7 +9,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import Link from 'next/link';
 import { CheckCircle } from 'phosphor-react';
 import { X } from 'phosphor-react';
-import KeyIcon from 'public/mint-key.svg';
+import KeyIcon from 'public/mint-key.svg?svgr';
 import { Fragment } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -55,7 +55,7 @@ export default function ProfileSelectModal() {
                   color="#8C939A"
                   weight="fill"
                 />
-                
+
                 <div className='max-h-max mx-auto bg-white rounded-[20px] pt-[60px] minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[65px] pb-10 font-medium'>
                   <h3 className='text-[32px] font-medium'>Select NFT Profile</h3>
                   <p className=' my-6 minmd:my-9 text-xl font-normal'>Please select your primary NFT Profile</p>
@@ -94,16 +94,14 @@ export default function ProfileSelectModal() {
                     }
                   </p>
                   <Link href='/app/mint-profiles'>
-                    <a>
-                      <Button
-                        label='Add NFT Profile'
-                        disabled={claimableSum === 0}
-                        type={ButtonType.PRIMARY}
-                        size={ButtonSize.LARGE}
-                        onClick={() => null}
-                        stretch
-                      />
-                    </a>
+                    <Button
+                      label='Add NFT Profile'
+                      disabled={claimableSum === 0}
+                      type={ButtonType.PRIMARY}
+                      size={ButtonSize.LARGE}
+                      onClick={() => null}
+                      stretch
+                    />
                   </Link>
                 </div>
               </Dialog.Panel>
@@ -114,4 +112,3 @@ export default function ProfileSelectModal() {
     </Transition>
   );
 }
-    

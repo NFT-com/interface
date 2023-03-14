@@ -3,7 +3,8 @@ import { Doppler, getEnvBool } from 'utils/env';
 import OnboardingSecondaryModal from './OnboardingSecondaryModal';
 
 import { CheckCircle } from 'phosphor-react';
-import NftGoldLogo from 'public/nft_gold_logo.svg';
+// TODO: optimize image down from 2MB
+import NftGoldLogo from 'public/nft_gold_logo.svg?svgr';
 import { useState } from 'react';
 
 type OnboardingItemProps = {
@@ -66,4 +67,3 @@ export default function OnboardingModalItem({ items } : OnboardingModalItemProps
     </>
   );
 }
-    

@@ -1,6 +1,9 @@
 import { tw } from 'utils/tw';
 
-import { CheckCircle, Warning, WarningCircle, X } from 'phosphor-react';
+import Image from 'next/image';
+import { CheckCircle, X } from 'phosphor-react';
+import Error from 'public/error.svg';
+import Warning from 'public/warning.svg';
 
 export enum AlertType {
   SUCCESS = 'SUCCESS',
@@ -41,13 +44,13 @@ const getAlertStyles = (type: AlertType) => {
 const getAlertIcon =(type: AlertType) => {
   switch (type) {
   case AlertType.ERROR: {
-    return <WarningCircle size={32} color="#e43d20" weight="fill" className='relative shrink-0 h-7 w-7' />;
+    return <Image src={Error} color="#6A6A6A" className='relative shrink-0 w-7 ' alt={'Error'} />;
   }
   case AlertType.SUCCESS: {
     return <CheckCircle size={32} color="#36aa73" weight="fill" className='relative shrink-0 h-7 w-7' />;
   }
   case AlertType.WARNING: {
-    return <Warning size={32} color="#e4b200" weight="fill" className='relative shrink-0 h-7 w-7' />;
+    return <Image src={Warning} color="#e4b200" className='relative shrink-0 w-7 ' alt={'Warning'} />;
   }
   case AlertType.INFO: {
     return <CheckCircle size={32} color="#6A6A6A" weight="fill" className='relative shrink-0 h-7 w-7' />;
@@ -66,11 +69,11 @@ export default function Alert({ type, heading, description, onClick, onClose, hi
         onClick && onClick();
       }}
       className={tw(
-        'flex w-full p-4 border rounded font-noi-grotesk hover:cursor-pointer',
+        'flex w-full p-4 border-2 rounded font-noi-grotesk hover:cursor-pointer',
         getAlertStyles(type)
       )}
     >
-      <div className='flex w-full'>
+      <div className='flex w-full items-start'>
         {getAlertIcon(type)}
         <div className='flex flex-col ml-3'>
           <p
@@ -90,17 +93,16 @@ export default function Alert({ type, heading, description, onClick, onClose, hi
         </div>
       </div>
       {!hideX &&
-      <X
-        onClick={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          onClose && onClose();
-        }}
-        className='relative shrink-0 h-5 w-5 hover:cursor-pointer'
-        weight='fill'
-        color="#6A6A6A" />
+        <X
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onClose && onClose();
+          }}
+          className='relative shrink-0 h-5 w-5 hover:cursor-pointer'
+          weight='bold'
+          color="#6A6A6A" />
       }
     </div>
   );
 }
-

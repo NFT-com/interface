@@ -43,7 +43,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
       setSelected(selectedProfile);
     }
   }, [profileData, myOwnedProfileTokens, updateWalletProfileId, selectedProfile, isSidebar]);
-  
+
   useEffect(() => {
     setAllProfiles(myOwnedProfileTokens);
   }, [myOwnedProfileTokens]);
@@ -156,15 +156,13 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
                 {!allProfiles.length && <p className='text-[#6F6F6F] mb-4'>No profiles found. Please try again.</p>}
 
                 <Link href='/app/mint-profiles'>
-                  <a>
-                    <Button
-                      type={ButtonType.PRIMARY}
-                      size={ButtonSize.LARGE}
-                      label='Get a New Profile'
-                      onClick={() => null}
-                      stretch
-                    />
-                  </a>
+                  <Button
+                    type={ButtonType.PRIMARY}
+                    size={ButtonSize.LARGE}
+                    label='Get a New Profile'
+                    onClick={() => null}
+                    stretch
+                  />
                 </Link>
 
                 {allProfiles.length > profilesToShow.length
@@ -224,15 +222,13 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
                 {!allProfiles.length && <p className='text-[#6F6F6F] mb-4'>No profiles found. Please try again.</p>}
 
                 <Link href='/app/mint-profiles'>
-                  <a>
-                    <Button
-                      type={ButtonType.PRIMARY}
-                      size={ButtonSize.LARGE}
-                      label='Get a New Profile'
-                      onClick={() => null}
-                      stretch
-                    />
-                  </a>
+                  <Button
+                    type={ButtonType.PRIMARY}
+                    size={ButtonSize.LARGE}
+                    label='Get a New Profile'
+                    onClick={() => null}
+                    stretch
+                  />
                 </Link>
 
                 {allProfiles.length > profilesToShow.length

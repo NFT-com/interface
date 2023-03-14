@@ -23,12 +23,12 @@ import { EditListingsModal } from './EditListingsModal';
 import { SelectListingModal } from './SelectListingModal';
 
 import { BigNumber, ethers } from 'ethers';
-import ETH from 'public/eth.svg';
-import LooksrareIcon from 'public/looksrare-icon.svg';
+import ETH from 'public/eth.svg?svgr';
+import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
 import NFTLogo from 'public/nft_logo_yellow.webp';
-import OpenseaIcon from 'public/opensea-icon.svg';
-import USDC from 'public/usdc.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
+import OpenseaIcon from 'public/opensea-icon.svg?svgr';
+import USDC from 'public/usdc.svg?svgr';
+import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
 import { useCallback, useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
@@ -271,7 +271,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         }}
       />
     }
-   
+
     <div className='flex flex-col max-w-nftcom w-full'>
       {[
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
@@ -312,7 +312,7 @@ export function ExternalListings(props: ExternalListingsProps) {
             <Countdown eventTime={getListingEndDate(listing, listing?.order?.protocol as ExternalProtocol)} />
             {getListingSummaryTitle(listing)}
           </div>
-          
+
           <div className='col-span-2 flex w-full h-full px-6 py-4 rounded-br-[18px] rounded-bl-[18px] bg-[#F2F2F2]'>
             {getListingSummaryButtons(listing.order.orderHash)}
           </div>

@@ -20,10 +20,10 @@ import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from '.
 import { BigNumber } from 'ethers';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import LooksrareIcon from 'public/looksrare-icon.svg';
-import NFTLogo from 'public/nft_logo_yellow.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
+import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
+import NFTLogo from 'public/nft_logo_yellow.svg?svgr';
+import OpenseaIcon from 'public/opensea-icon.svg?svgr';
+import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
 import { MouseEvent, useMemo, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -131,7 +131,7 @@ export function NFTCard(props: NFTCardProps) {
   }, [props, nft]);
 
   return (
-    <Link href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} passHref>
+    <Link href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} passHref legacyBehavior>
       <a
         className={tw(
           'rounded flex flex-col',

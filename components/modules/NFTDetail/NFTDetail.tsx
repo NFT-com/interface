@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import LikeCount from 'components/elements/LikeCount';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
@@ -11,6 +12,7 @@ import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMu
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getContractMetadata } from 'utils/alchemyNFT';
+import { Doppler, getEnvBool } from 'utils/env';
 import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -19,9 +21,9 @@ import { NFTDetailContextProvider } from './NFTDetailContext';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
-import GK from 'public/Badge_Key.svg';
-import MultipleOwners from 'public/multiple_owners.svg';
-import Owner from 'public/owner.svg';
+import GK from 'public/Badge_Key.svg?svgr';
+import MultipleOwners from 'public/multiple_owners.svg?svgr';
+import Owner from 'public/owner.svg?svgr';
 import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import useSWR from 'swr';
@@ -36,7 +38,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const router = useRouter();
 
   const defaultChainId = useDefaultChainId();
-  
+
   const { data: collection } = useCollectionQuery(String(defaultChainId), props?.nft?.contract);
   const { data: collectionMetadata } = useSWR('ContractMetadata' + props.nft?.contract, async () => {
     return await getContractMetadata(props.nft?.contract, defaultChainId);
@@ -98,7 +100,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 : collectionName}
             </div>
           </Link>
-          <div className='font-noi-grotesk font-semibold text-[28px] leading-9 tracking-[-2px] flex items-center'>
+          <div className='flex items-center'>
             {isNullOrEmpty(props.nft?.metadata?.name) ?
               (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
                 <div className="w-full">
@@ -109,10 +111,18 @@ export const NFTDetail = (props: NFTDetailProps) => {
               )
               : (
                 <>
-                  <div className='whitespace-nowrap text-ellipsis overflow-hidden'>{props.nft?.metadata?.name}</div>
-                  {nftProfileData?.profile?.isGKMinted && <div className='h-5 w-5 minlg:h-6 minlg:w-6 ml-2'>
-                    <GK />
+                  <div className='whitespace-nowrap text-ellipsis overflow-hidden font-noi-grotesk font-semibold text-[28px] leading-9 tracking-[-2px]'>
+                    {props.nft?.metadata?.name}
                   </div>
+                  {nftProfileData?.profile?.isGKMinted &&
+                    <div className='h-5 w-5 minlg:h-6 minlg:w-6 ml-2'>
+                      <GK />
+                    </div>
+                  }
+                  {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
+                    <div className='ml-3'>
+                      <LikeCount count={10} isLiked={false} onClick={() => null} />
+                    </div>
                   }
                 </>
               )

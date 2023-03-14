@@ -1,3 +1,4 @@
+import ClientOnly from 'components/elements/ClientOnly';
 import { Footer as StaticFooter } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';
@@ -14,7 +15,6 @@ import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
-import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -67,7 +67,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
         {children}
 
         {profileSelectModal && signed && <DynamicProfileSelectModal />}
-        
+
         {emailCaptureModal && <DynamicEmailCaptureModal />}
         {signOutDialogOpen &&
          <SignOutModal
@@ -81,7 +81,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
            }}
          />
         }
-        
+
         {!hideFooter && <DynamicFooter />}
       </div>
     </div>

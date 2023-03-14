@@ -1,7 +1,7 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 
 import Link from 'next/link';
-import ClaimProfileIcon from 'public/claim_profile_icon.svg';
+import ClaimProfileIcon from 'public/claim_profile_icon.svg?svgr';
 
 export function ClaimProfileCard() {
   return (
@@ -11,18 +11,16 @@ export function ClaimProfileCard() {
           <ClaimProfileIcon />
         </div>
       </div>
-      
+
       <h3 className="mb-[10px] minlg:mb-6 font-semibold minlg:font-medium text-lg minlg:text-[27px]">Claim another profile</h3>
       <p className="mb-4 minlg:mb-10 text-[#6A6A6A]">You’re now a part of millions of creators, collectors, and curators.</p>
       <Link href={'/app/mint-profiles'}>
-        <a>
-          <Button
-            onClick={() => null}
-            label='mint another profile'
-            type={ButtonType.PRIMARY}
-            size={ButtonSize.LARGE}
-          />
-        </a>
+        <Button
+          onClick={() => null}
+          label='mint another profile'
+          type={ButtonType.PRIMARY}
+          size={ButtonSize.LARGE}
+        />
       </Link>
     </div>
   );

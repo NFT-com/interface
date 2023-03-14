@@ -1,5 +1,5 @@
+import ClientOnly from 'components/elements/ClientOnly';
 import { PostData } from 'types/blogs';
-import ClientOnly from 'utils/ClientOnly';
 
 import SharingIcons from './SharingIcons';
 
@@ -19,13 +19,12 @@ export default function BlogHeader({ post }: HeaderProps) {
         {post?.title}
       </h2>
       {post?.author?.image?.url && (
-        <div className="mb-4 minlg:mt-4 mt-3 mx-auto minlg:h-12 h-9 minlg:w-12 w-9">
+        <div className="mb-4 minlg:mt-4 mt-3 mx-auto rounded-full overflow-hidden relative minlg:h-12 h-9 minlg:w-12 w-9">
           <Image
             src={post.author.image.url}
             alt={post.author.image.description || 'Author Image'}
-            className="rounded-full object-cover"
-            width="100%"
-            height="100%"
+            className="object-cover"
+            fill
           />
         </div>
       )}

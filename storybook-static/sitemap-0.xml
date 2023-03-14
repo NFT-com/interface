@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url><loc>https://www.nft.com</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/activity</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/assets</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/claim-genesis-key</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/claim-profiles</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/confirm-email</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/discover</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/discover/collections</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/discover/nfts</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/discover/profiles</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/gallery</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/list</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/mint-profiles</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/settings</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/app/vault</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.nft.com/articles</loc><lastmod>2023-03-13T17:54:51.770Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+</urlset>

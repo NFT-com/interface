@@ -24,39 +24,32 @@ import { DetailedNft } from './CollectionCard';
 
 import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
-import GK from 'public/Badge_Key.svg';
-import ETH from 'public/eth.svg';
-import Hidden from 'public/Hidden.svg';
-import Reorder from 'public/Reorder.svg';
-import ShopIcon from 'public/shop-icon.svg';
-import USDC from 'public/usdc.svg';
-import Visible from 'public/Visible.svg';
+import GK from 'public/Badge_Key.svg?svgr';
+import ETH from 'public/eth.svg?svgr';
+import Hidden from 'public/Hidden.svg?svgr';
+import Reorder from 'public/Reorder.svg?svgr';
+import ShopIcon from 'public/shop-icon.svg?svgr';
+import USDC from 'public/usdc.svg?svgr';
+import Visible from 'public/Visible.svg?svgr';
 import { MouseEvent, useCallback, useContext } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftCardProps {
   name: string;
-  images?: Array<string | null>;
+  images: Array<string | null>;
   collectionName: string;
-  redirectTo?: string;
-  description?: string;
-  customBackground?: string;
-  contractAddr?: string;
-  lightModeForced?: boolean;
+  contractAddr: string;
+  tokenId: string;
+  redirectTo: string;
+  
   listings?: PartialDeep<TxActivity>[];
   nft?: PartialDeep<DetailedNft>;
-  price?: string;
-  secondPrice?: string;
-  ednDay?: string;
-  tokenId?: string;
-  isOnSale?: boolean;
   isOwnedByMe?: boolean;
   visible?: boolean;
   onVisibleToggle?: (visible: boolean) => void;
   onClick?: () => void;
-  nftsDescriptionsVisible?: boolean;
+  descriptionVisible?: boolean;
   preventDefault?: boolean;
-  fallbackImage?: string;
 }
 
 export function NftCard(props: NftCardProps) {
@@ -114,7 +107,7 @@ export function NftCard(props: NftCardProps) {
   return (
     <div className={tw(
       'group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-xl overflow-hidden cursor-p relative w-full mb-3',
-      props.nftsDescriptionsVisible != false ? '' : 'h-max'
+      props.descriptionVisible != false ? '' : 'h-max'
     )}>
       {
         props.visible != null &&
@@ -241,7 +234,9 @@ export function NftCard(props: NftCardProps) {
                           toggleCartSidebar('Buy');
                         }}
                         className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#ffffff] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-[#F9D54C]">
-                        <ShopIcon/>
+                        <div className='w-6 h-6'>
+                          <ShopIcon/>
+                        </div>
                       </button>
                     </>
                     : null}
@@ -250,7 +245,7 @@ export function NftCard(props: NftCardProps) {
             </div>
           </div>
 
-          {props.nftsDescriptionsVisible != false &&
+          {props.descriptionVisible != false &&
             <div className="sm:h-[auto] h-[190px] p-[18px] bg-white font-noi-grotesk">
               <div
                 className="sm:leading-[18px] sm:h-[54px] h-[94px] flex flex-col text-[20px] leading-[28px] font-[600] list-none border-b-[1px] border-[#F2F2F2] pb-[8px] mb-[8px]">
