@@ -54,6 +54,7 @@ export interface NftCardProps {
   fallbackImage?: string;
   skipNftQuery?: boolean;
   isGKMinted?: boolean;
+  onGetNFTHeight?: boolean;
 }
 
 export function NftCard(props: NftCardProps) {
@@ -89,11 +90,8 @@ export function NftCard(props: NftCardProps) {
   };
   
   useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setCardHeightForRWGrid(refNFTCard && refNFTCard?.current?.offsetHeight);
-    }, 500);
-    return () => clearTimeout(delayDebounceFn);
-  }, [setCardHeightForRWGrid]);
+    props.onGetNFTHeight && setCardHeightForRWGrid(refNFTCard && refNFTCard?.current?.offsetHeight);
+  }, [props.onGetNFTHeight, setCardHeightForRWGrid]);
 
   const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth;
 

@@ -118,7 +118,9 @@ export default function CollectionsPage() {
               contractAddr={itemData.document.contractAddr}
               images={[itemData.document.imageURL]}
               collectionName={itemData.document.contractName}
-              redirectTo={`/app/nft/${itemData.document.contractAddr}/${itemData.document.tokenId}`}/>
+              redirectTo={`/app/nft/${itemData.document.contractAddr}/${itemData.document.tokenId}`}
+              onGetNFTHeight={rowIndex == 0}
+            />
           );}}
       </CardsGrid>
     );

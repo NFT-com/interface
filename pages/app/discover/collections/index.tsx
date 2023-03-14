@@ -139,7 +139,6 @@ export default function CollectionsPage() {
               'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
               'minxl:grid-cols-3 minmd:grid-cols-2 minhd:grid-cols-4 w-full')}>
             {({ itemData, rowIndex, cellIndex }) => {
-              console.log('itemData fdo', itemData);
               return(
                 <CollectionCard
                   key={''+ rowIndex + cellIndex}

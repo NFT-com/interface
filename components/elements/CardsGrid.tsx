@@ -118,7 +118,7 @@ export default function CardsGrid(props: CardsGridProps) {
             overscanRowCount={3}
             onItemsRendered={(itemsRendered) => {
               if (gridData && ((gridData.length < totalItems && gridData?.length > 0) || totalItems != 0))
-                itemsRendered.visibleStartIndex % 2 == 0 && loadMoreItems();
+                itemsRendered.visibleStartIndex % 3 == 0 && loadMoreItems();
             }}
             ref={ref}
           >

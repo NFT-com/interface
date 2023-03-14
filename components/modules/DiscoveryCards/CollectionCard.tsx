@@ -73,7 +73,6 @@ export function CollectionCard(props: CollectionCardProps) {
     return convertedValue.slice(1);
   };
   
-  console.log('props fdo', props);
   useEffect(() => {
     setCardHeightForRWGrid(refCollectionCard && refCollectionCard?.current?.offsetHeight);
   }, [setCardHeightForRWGrid]);
