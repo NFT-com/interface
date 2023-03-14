@@ -71,8 +71,7 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
     <div className={tw(
       'sm:h-[auto] p-[18px] bg-white font-noi-grotesk',
       'h-max',
-      'flex flex-row w-full max-w-full',
-      !props.bestListing && 'rounded-b-2xl'
+      'flex flex-row w-full max-w-full rounded-b-2xl'
     )}
     >
       <div
@@ -82,7 +81,7 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
         )}
       >
         <div className='flex w-full justify-between'>
-          <div className="p-0 m-0 whitespace-nowrap text-ellipsis overflow-hidden flex mr-5">
+          <div className="p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden flex mr-5">
             <p className='whitespace-nowrap text-ellipsis overflow-hidden'>{props.name}</p>
             {(props.nft?.isGKMinted ?? nftProfileData?.profile?.isGKMinted) &&
               <div className='h-4 w-4 minlg:h-6 minlg:w-6 ml-2 min-w-[24px] flex items-center'>
