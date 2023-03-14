@@ -1,6 +1,6 @@
 import { tw } from 'utils/tw';
 
-import Heart from 'public/heart.svg';
+import Heart from 'public/heart.svg?svgr';
 
 type LikeCountProps = {
   count?: number;
