@@ -85,7 +85,7 @@ export function NFTCard(props: NftCardProps) {
           )}>
             <NFTCardImage {...props} bestListing={bestListing} nft={nft} isOwnedByMe={isOwnedByMe} currencyData={currencyData} />
             {props.descriptionVisible != false &&
-              <NFTCardDescription {...props} bestListing={bestListing} nft={nft} currencyData={currencyData} />
+              <NFTCardDescription {...props} bestListing={bestListing} nft={props?.nft ?? nft} currencyData={currencyData} />
             }
             {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && props?.descriptionVisible !== false && !isOwnedByMe ?
               <NFTCardButton {...props} bestListing={bestListing} nft={nft} currencyData={currencyData} />
