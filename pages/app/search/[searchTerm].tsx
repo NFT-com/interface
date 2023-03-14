@@ -1,6 +1,7 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
+import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
 import { SideNav } from 'components/modules/Search/SideNav';
@@ -216,16 +217,23 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 {searchedData && searchedData.map((item, index) => {
                   return (
                     <div key={index} className='DiscoverCollectionItem'>
-                      {<NftCard
-                        name={item.document.nftName}
-                        images={[item.document.imageURL]}
-                        contractAddr={item.document.contractAddr}
-                        tokenId={item.document.tokenId}
-                        collectionName={item.document.contractName}
-                        redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-                        description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-                        customBackground={'white'}
-                        lightModeForced/>
+                      {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+                        <NftCard
+                          name={item.document.nftName}
+                          images={[item.document.imageURL]}
+                          contractAddr={item.document.contractAddr}
+                          tokenId={item.document.tokenId}
+                          collectionName={item.document.contractName}
+                          redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+                        /> :
+                        <NFTCard
+                          name={item.document.nftName}
+                          images={[item.document.imageURL]}
+                          contractAddr={item.document.contractAddr}
+                          tokenId={item.document.tokenId}
+                          collectionName={item.document.contractName}
+                          redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+                        />
                       }
                     </div>);
                 })}

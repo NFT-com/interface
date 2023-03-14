@@ -2,9 +2,11 @@ import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
+import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -63,22 +65,35 @@ export default function CollectionsPage() {
   const showNftView = () => {
     return (
       <div className={tw(
-        'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-        sideNavOpen ? 'minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2 minmd:grid-cols-2 grid-cols-1 w-full' : 'minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1 w-full')}>
+        'gap-2 minmd:grid minmd:gap-4 minmd:space-x-0 minlg:gap-4',
+        sideNavOpen
+          ? 'minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2 minmd:grid-cols-2 grid-cols-1 w-full' :
+          'minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1 w-full')}
+      >
         {nftSData && nftSData?.length > 0 && nftSData?.map((item, index) => {
-          return (
-            <NftCard
-              key={index}
-              name={item.document.nftName}
-              tokenId={item.document.tokenId}
-              contractAddr={item.document.contractAddr}
-              images={[item.document.imageURL]}
-              collectionName={item.document.contractName}
-              redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-              description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-              customBackground={'white'}
-              lightModeForced/>
-          );
+          return !getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)
+            ? (
+              <NftCard
+                key={index}
+                name={item.document.nftName}
+                tokenId={item.document.tokenId}
+                contractAddr={item.document.contractAddr}
+                images={[item.document.imageURL]}
+                collectionName={item.document.contractName}
+                redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+              />
+            )
+            : (
+              <NFTCard
+                key={index}
+                name={item.document.nftName}
+                tokenId={item.document.tokenId}
+                contractAddr={item.document.contractAddr}
+                images={[item.document.imageURL]}
+                collectionName={item.document.contractName}
+                redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+              />
+            );
         })}
       </div>
     );
@@ -115,7 +130,7 @@ export default function CollectionsPage() {
                 </div>
               </div>
               <div className="flex">
-                <div className="flex-auto">
+                <div className="flex-auto w-full">
                   <div className='flex items-start justify-center'>
                     <div className={'hidden minlg:block'}>
                       <SideNav onSideNav={() => null} filtersData={filters}/>

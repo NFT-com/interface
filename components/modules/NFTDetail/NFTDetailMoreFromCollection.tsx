@@ -4,9 +4,10 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
+import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { useFetchCollectionNFTs } from 'graphql/hooks/useFetchCollectionNFTs';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -55,7 +56,8 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 <div className={tw(
                   'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
                 )} key={nft?.id ?? index}>
-                  <NftCard
+                  {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+                    <NftCard
                     contractAddr={props.contract}
                     tokenId={nft.tokenId}
                     name={nft.metadata.name}
@@ -65,6 +67,17 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                     collectionName={props.collectionName}
                     redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
                   />
+                    :
+                    <NFTCard
+                      contractAddr={props.contract}
+                      tokenId={nft.tokenId}
+                      name={nft.metadata.name}
+                      nft={nft}
+                      images={[nft.metadata.imageURL]}
+                      collectionName={props.collectionName}
+                      redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
+                    />
+                  }
                 </div>
               );
             })}
@@ -99,15 +112,19 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 'delay': 4500,
                 'disableOnInteraction': false
               }}
+              className={tw(
+                'flex overflow-y-visible',
+                getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && 'h-max'
+              )}
               modules={[Autoplay]}
-              className="flex overflow-y-visible"
             >
               {data?.map((nft, index) => {
                 return (
                   <SwiperSlide className={tw(
                     'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
                   )} key={nft?.id ?? index}>
-                    <NftCard
+                    {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+                      <NftCard
                       contractAddr={props.contract}
                       tokenId={nft.tokenId}
                       name={nft.metadata.name}
@@ -118,7 +135,19 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                       fallbackImage={nft.metadata.imageURL}
                       collectionName={props.collectionName}
                       redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
-                    />
+                    /> :
+                      <NFTCard
+                        contractAddr={props.contract}
+                        tokenId={nft.tokenId}
+                        name={nft.metadata.name}
+                        nft={nft}
+                        isOwnedByMe={nft?.isOwnedByMe}
+                        listings={nft?.listings?.items || []}
+                        images={[nft.metadata.imageURL]}
+                        collectionName={props.collectionName}
+                        redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
+                      />
+                    }
                   </SwiperSlide>
                 );
               })}
