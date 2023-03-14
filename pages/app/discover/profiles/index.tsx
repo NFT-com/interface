@@ -10,7 +10,7 @@ import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import _ from 'lodash';
-import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
+import LeaderBoardIcon from 'public/leaderBoardIcon.svg?svgr';
 import React, { useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 

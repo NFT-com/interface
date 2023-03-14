@@ -2,8 +2,8 @@ import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
 
-import Hidden from 'public/Hidden.svg';
-import Visible from 'public/Visible.svg';
+import Hidden from 'public/Hidden.svg?svgr';
+import Visible from 'public/Visible.svg?svgr';
 import { useContext } from 'react';
 
 export interface GalleryToggleAllButtonsProps {

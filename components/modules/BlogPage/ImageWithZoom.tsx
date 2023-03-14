@@ -10,7 +10,7 @@ type ImageWithZoomProps = {
 
 export default function ImageWithZoom({ src, alt }: ImageWithZoomProps) {
   return (
-    <Zoom wrapElement="span" wrapStyle={{ display: 'flex', justifyContent: 'center' }} overlayBgColorStart='white' overlayBgColorEnd='white'>
+    <Zoom wrapElement="span">
       <img className="block h-max max-h-96 w-auto relative justify-center items-center mx-auto mb-4 hover:cursor-pointer" src={`https:${src}`} alt={alt} />
     </Zoom>
   );

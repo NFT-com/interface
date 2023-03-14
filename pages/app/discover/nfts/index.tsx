@@ -11,7 +11,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
-import NoActivityIcon from 'public/no_activity.svg';
+import NoActivityIcon from 'public/no_activity.svg?svgr';
 import React, { useEffect, useRef, useState } from 'react';
 function usePrevious(value) {
   const ref = useRef(value);
@@ -34,7 +34,7 @@ export default function CollectionsPage() {
   useEffect(() => {
     isDiscoverCollections && setIsDiscoverCollections(false);
   }, [isDiscoverCollections, setIsDiscoverCollections]);
-  
+
   useEffect(() => {
     if (page > 1 && nftsResultsFilterBy !== prevFilters){
       setPage(1);

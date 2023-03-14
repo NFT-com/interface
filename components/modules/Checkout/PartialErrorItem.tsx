@@ -7,10 +7,10 @@ import { tw } from 'utils/tw';
 import { ListAllResult, ListingTarget, NFTListingsContext, StagedListing } from './NFTListingsContext';
 
 import { WarningCircle } from 'phosphor-react';
-import LooksrareIcon from 'public/looksrare-icon.svg';
-import NFTLogo from 'public/nft_logo_yellow.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
+import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
+import NFTLogo from 'public/nft_logo_yellow.svg?svgr';
+import OpenseaIcon from 'public/opensea-icon.svg?svgr';
+import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
 import { useCallback, useContext, useState } from 'react';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
 
@@ -100,7 +100,7 @@ export function PartialErrorItem({ listing, target } : PartialErrorItemProps) {
                               protocol === ExternalProtocol.NFTCOM
                                 ? stagedListing?.isApprovedForNFTCOM :
                                 stagedListing?.isApprovedForSeaport;
-      
+
                           if (!approved && protocol === ExternalProtocol.LooksRare) {
                             const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
                               .then(result => {

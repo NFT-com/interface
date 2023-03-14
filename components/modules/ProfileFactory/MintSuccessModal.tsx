@@ -54,19 +54,18 @@ export default function MintProfileSuccessModal() {
                   color="black"
                   weight="fill"
                 />
-                
+
                 <div className='relative h-full flex flex-col minmd:flex-row'>
                   <div className='w-full minmd:w-2/5 h-[160px] minmd:h-full text-center bg-gradient-to-r from-[#FAC213] to-[#FF9B37] relative'>
                     <Image
                       src='/success-modal.svg'
-                      layout='fill'
+                      fill
                       priority
-                      objectFit='cover'
-                      objectPosition='center'
+                      className="object-cover object-center"
                       alt='Mint Success'
                     />
                   </div>
-                 
+
                   <div className='w-full minmd:w-3/5 pt-9 minmd:pt-[158px] pb-8 minmd:pb-[178px]  text-center'>
                     <h3 className='text-[32px] mt minmd:text-[42px] font-medium'>Congratulations!</h3>
                     <div className='mt-9 minmd:mt-5 font-medium text-xl minmd:text-[22px]'>
@@ -88,7 +87,7 @@ export default function MintProfileSuccessModal() {
                       />
                     </div>
 
-                    <Link href='/app/mint-profiles' passHref>
+                    <Link href='/app/mint-profiles' passHref legacyBehavior>
                       <a onClick={() => isNullOrEmpty(me?.email) && setEmailCaptureModalOpen(true)} className='block mt-8 minmd:mt-9 underline font-medium text-lg text-[#E4BA18]'>Mint another NFT Profile</a>
                     </Link>
                   </div>
@@ -101,4 +100,3 @@ export default function MintProfileSuccessModal() {
     </Transition>
   );
 }
-    

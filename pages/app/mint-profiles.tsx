@@ -1,3 +1,4 @@
+import ClientOnly from 'components/elements/ClientOnly';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
 import MintPaidProfileCard from 'components/modules/ProfileFactory/MintPaidProfileCard';
@@ -11,11 +12,11 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
 import { ArrowCircleLeft } from 'phosphor-react';
-import NFTLogo from 'public/nft_logo.svg';
-import NFTLogoSmall from 'public/nft_logo_small.svg';
-import ProfileClickIcon from 'public/profile-click-icon.svg';
-import ProfileIcon from 'public/profile-icon.svg';
-import ProfileKeyIcon from 'public/profile-key-icon.svg';
+import NFTLogo from 'public/nft_logo.svg?svgr';
+import NFTLogoSmall from 'public/nft_logo_small.svg?svgr';
+import ProfileClickIcon from 'public/profile-click-icon.svg?svgr';
+import ProfileIcon from 'public/profile-icon.svg?svgr';
+import ProfileKeyIcon from 'public/profile-key-icon.svg?svgr';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -34,7 +35,7 @@ export default function MintProfilesPage() {
   const { address: currentAddress } = useAccount();
   const [mintType, setMintType] = useState('paid');
   const hasGk = useHasGk();
-  
+
   useMaybeCreateUser();
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function MintProfilesPage() {
       openConnectModal();
     }
   }, [currentAddress, openConnectModal]);
-  
+
   return (
     <div
       className={tw(
@@ -63,14 +64,14 @@ export default function MintProfilesPage() {
         >
         </Player>
         <div className='justify-end mt-10 mr-5 hidden minmd:flex'>
-          {currentAddress && <ConnectButton />}
+          <ClientOnly>
+            {currentAddress && <ConnectButton />}
+          </ClientOnly>
         </div>
-        
+
         <div className='w-full max-w-nftcom mx-auto relative mt-10 minmd:mt-4 z-50'>
           <Link href='/'>
-            <a>
-              <NFTLogoSmall className='mx-auto block minmd:hidden hover:cursor-pointer' />
-            </a>
+            <NFTLogoSmall className='mx-auto block minmd:hidden hover:cursor-pointer' />
           </Link>
           <div className='absolute bottom-2 minmd:top-2 left-6 minlg:right-1 hover:cursor-pointer w-7 h-7 bg-black rounded-full'></div>
           <Link href='/'>
@@ -78,17 +79,17 @@ export default function MintProfilesPage() {
           </Link>
 
           <Link href='/'>
-            <a>
-              <NFTLogo className='mx-auto hidden minmd:block hover:cursor-pointer' />
-            </a>
+            <NFTLogo className='mx-auto hidden minmd:block hover:cursor-pointer' />
           </Link>
           <div className=' justify-end mt-10 mr-5 flex minmd:hidden'>
-            {currentAddress && <ConnectButton />}
+            <ClientOnly>
+              {currentAddress && <ConnectButton />}
+            </ClientOnly>
           </div>
-          
+
         </div>
         {/* Mint Card Component */}
-        
+
         <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
           <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
             <>
@@ -117,10 +118,10 @@ export default function MintProfilesPage() {
             </>
           </div>
         </div>
-        
+
         <span className='absolute w-full h-[460px] left-0 bottom-0 bg-img-shadow'></span>
       </div>
-      
+
       {/* 3 Col Component */}
       <div className='bg-black grid grid-cols-1 minlg:grid-cols-3 gap-6 minlg:gap-24 text-white py-16 minlg:py-[100px] w-full max-w-nftcom mx-auto px-5'>
         <div className='pt-[14px]'>

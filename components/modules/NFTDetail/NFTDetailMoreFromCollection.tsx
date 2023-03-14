@@ -1,8 +1,7 @@
 /* eslint-disable import/no-unresolved */
 // Import Swiper styles
-import 'swiper/swiper.min.css';
-import 'swiper/components/pagination/pagination.min.css';
-import 'swiper/components/navigation/navigation.min.css';
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { NFTCard } from 'components/modules/NFTCard/NFTCard';
@@ -13,14 +12,12 @@ import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber, BigNumberish } from 'ethers';
-import RightSlider from 'public/right-slider.svg';
+import RightSlider from 'public/right-slider.svg?svgr';
 import { useState } from 'react';
-import SwiperCore, { Autoplay, Navigation } from 'swiper/core';
+import { Autoplay, Swiper as SwiperClass } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
-
-SwiperCore.use([Autoplay, Navigation]);
 
 export interface NFTDetailMoreFromCollectionProps {
   contract: string;
@@ -30,7 +27,7 @@ export interface NFTDetailMoreFromCollectionProps {
 
 export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionProps) {
   const { width: screenWidth } = useWindowDimensions();
-  const [my_swiper, set_my_swiper] = useState({} as SwiperCore);
+  const [my_swiper, set_my_swiper] = useState<SwiperClass>();
   const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
   const { chain } = useNetwork();
   const { data } = useSWR('NFTDetailMoreFromCollection' + props.contract + props.hideTokenId, async () => {
@@ -47,7 +44,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
   if (isNullOrEmpty(data)) {
     return null;
   }
-  
+
   return <div className='bg-[#ECECEC] w-screen flex items-center justify-center'>
     <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
       <div className='flex flex-col w-full px-[16px]'>
@@ -59,17 +56,17 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 <div className={tw(
                   'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
                 )} key={nft?.id ?? index}>
-
                   {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
                     <NftCard
-                      contractAddr={props.contract}
-                      tokenId={nft.tokenId}
-                      name={nft.metadata.name}
-                      nft={nft}
-                      images={[nft.metadata.imageURL]}
-                      collectionName={props.collectionName}
-                      redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
-                    />
+                    contractAddr={props.contract}
+                    tokenId={nft.tokenId}
+                    name={nft.metadata.name}
+                    nft={nft as any}
+                    images={[nft.metadata.imageURL]}
+                    fallbackImage={nft.metadata.imageURL}
+                    collectionName={props.collectionName}
+                    redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
+                  />
                     :
                     <NFTCard
                       contractAddr={props.contract}
@@ -81,7 +78,6 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                       redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
                     />
                   }
-                  
                 </div>
               );
             })}
@@ -120,6 +116,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 'flex overflow-y-visible',
                 getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && 'h-max'
               )}
+              modules={[Autoplay]}
             >
               {data?.map((nft, index) => {
                 return (
@@ -128,16 +125,17 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                   )} key={nft?.id ?? index}>
                     {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
                       <NftCard
-                        contractAddr={props.contract}
-                        tokenId={nft.tokenId}
-                        name={nft.metadata.name}
-                        nft={nft}
-                        isOwnedByMe={nft?.isOwnedByMe}
-                        listings={nft?.listings?.items || []}
-                        images={[nft.metadata.imageURL]}
-                        collectionName={props.collectionName}
-                        redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
-                      /> :
+                      contractAddr={props.contract}
+                      tokenId={nft.tokenId}
+                      name={nft.metadata.name}
+                      nft={nft as any}
+                      isOwnedByMe={nft?.isOwnedByMe}
+                      listings={nft?.listings?.items || []}
+                      images={[nft.metadata.imageURL]}
+                      fallbackImage={nft.metadata.imageURL}
+                      collectionName={props.collectionName}
+                      redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
+                    /> :
                       <NFTCard
                         contractAddr={props.contract}
                         tokenId={nft.tokenId}

@@ -7,6 +7,8 @@ declare module 'react-timeseries-charts';
 declare module 'd3-format';
 declare module 'pondjs';
 declare module 'remarkable';
+declare module "*.svg?svgr"; // Allows react svg react imports
+
 declare global {
   interface Window {
     analytics: SegmentAnalytics.AnalyticsJS;

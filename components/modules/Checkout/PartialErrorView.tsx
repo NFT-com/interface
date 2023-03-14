@@ -6,10 +6,10 @@ import { tw } from 'utils/tw';
 import { StagedListing } from './NFTListingsContext';
 import { PartialErrorItem } from './PartialErrorItem';
 
-import LooksrareIcon from 'public/looksrare-icon.svg';
-import NFTLogo from 'public/nft_logo_yellow.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
+import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
+import NFTLogo from 'public/nft_logo_yellow.svg?svgr';
+import OpenseaIcon from 'public/opensea-icon.svg?svgr';
+import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
 
 export interface PartialErrorViewProps {
   listing: StagedListing
@@ -73,9 +73,9 @@ export function PartialErrorView({ listing } : PartialErrorViewProps) {
               </div>
             </div>
             <div className='flex flex-col'>
-              {listing.targets.map((target) => (
+              {listing.targets.map((target, index) => (
                 target.listingError &&
-                <PartialErrorItem listing={listing} target={target} />
+                <PartialErrorItem key={`listingError-${index}`} listing={listing} target={target} />
               ))}
             </div>
           </div>

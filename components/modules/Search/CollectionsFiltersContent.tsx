@@ -4,7 +4,7 @@ import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
 import { Button,ButtonSize,ButtonType } from 'components/elements/Button';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
-import EllipseX from 'public/ellipse-x.svg';
+import EllipseX from 'public/ellipse-x.svg?svgr';
 import { useState } from 'react';
 
 const IdFilter = (props: {

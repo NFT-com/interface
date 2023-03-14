@@ -10,7 +10,8 @@ import OnboardingInput from './OnboardingInput';
 import { Dialog, Transition } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { X } from 'phosphor-react';
-import NftGoldLogo from 'public/nft_gold_logo.svg';
+// TODO: Optimize image size down from 2MB
+import NftGoldLogo from 'public/nft_gold_logo.svg?svgr';
 import { Fragment, useEffect, useState } from 'react';
 
 type OnboardingItemProps = {
@@ -140,4 +141,3 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
     </Transition>
   );
 }
-    

@@ -28,7 +28,7 @@ import { ProfileScrollContextProvider } from './ProfileScrollContext';
 import { BigNumber } from 'ethers';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
-import CameraIconEdit from 'public/camera_icon.svg';
+import CameraIconEdit from 'public/camera_icon.svg?svgr';
 import { useCallback, useContext } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
@@ -88,7 +88,7 @@ export function MintedProfile(props: MintedProfileProps) {
   const { data: associatedCollectionWithDeployer } = useAssociatedCollectionForProfile(profileURI);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
-      
+
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
       alert('only 1 picture is allowed at a time');

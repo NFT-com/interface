@@ -12,7 +12,7 @@ import { getAddress } from 'utils/httpHooks';
 import { Dialog, Transition } from '@headlessui/react';
 import { BigNumber, utils } from 'ethers';
 import { useRouter } from 'next/router';
-import ETHIcon from 'public/eth_icon.svg';
+import ETHIcon from 'public/eth_icon.svg?svgr';
 import { Fragment, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 import useSWR from 'swr';
@@ -246,7 +246,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
       return 0;
     }
   }, [isOpen, feeData?.gasPrice, transactionCost, data?.request.gasLimit]);
-  
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-[110]" onClose={() => setIsOpen(false)}>
@@ -315,7 +315,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                       }
                     </div>
                   ))}
-                  
+
                   <div className='flex justify-between'>
                     <p className="font-medium">
                       Estimated Gas
@@ -373,4 +373,3 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
     </Transition>
   );
 }
-    

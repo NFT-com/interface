@@ -1,4 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import ClientOnly from 'components/elements/ClientOnly';
 import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import maxProfilesABI from 'constants/abis/MaxProfiles.json';
@@ -19,7 +20,7 @@ import { BigNumber, utils } from 'ethers';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Info, MinusCircle, PlusCircle } from 'phosphor-react';
-import ErrorIcon from 'public/red-error-icon.svg';
+import ErrorIcon from 'public/red-error-icon.svg?svgr';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
@@ -68,7 +69,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       const feeData = await provider.getFeeData();
       return feeData;
     });
-    
+
   const { data } = usePrepareContractWrite({
     address: contractAddress as `0x${string}`,
     abi: maxProfilesABI,
@@ -108,7 +109,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       mutateProfileClaimHash();
     }
   }, [currentAddress, mutateProfileClaimHash]);
-  
+
   const getMintCost = useCallback(() => {
     if (feeData?.gasPrice){
       if (data?.request.gasLimit && registrationFee) {
@@ -163,7 +164,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
     setError(null);
     setProfileURI(input);
   }, []);
-  
+
   return (
     <>
       <>
@@ -191,7 +192,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
             <p className='text-[#707070] font-normal mb-2 relative'>
               Specify your profile name and duration. Don’t worry, you can extend the duration at any time through the settings page.
             </p>
-            
+
             <MintProfileInputField
               minting={minting}
               setFreeProfile={updateProfileValue}
@@ -244,49 +245,49 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
               }
             </div>
           </div>
-          
+
           {hasListings ?
             <Link href={`/app/nft/0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D/${profileTokenId?.toNumber()}`}>
-              <a>
-                <Button
-                  label='View NFT.com listing'
-                  type={ButtonType.PRIMARY}
-                  size={ButtonSize.XLARGE}
-                  stretch
-                  onClick={() => null}
-                />
-              </a>
+              <Button
+                label='View NFT.com listing'
+                type={ButtonType.PRIMARY}
+                size={ButtonSize.XLARGE}
+                stretch
+                onClick={() => null}
+              />
             </Link>
             :
-            <Button
-              type={ButtonType.PRIMARY}
-              size={ButtonSize.XLARGE}
-              loading={minting}
-              stretch
-              label={isNullOrEmpty(currentAddress)
-                ? 'Connect Wallet' :
-                type === 'mint' ?
-                  'Purchase' :
-                  'Renew License'
-              }
-              disabled={ type === 'mint' ? input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') || !isNullOrEmpty(error) : !isNullOrEmpty(error) }
-              onClick={async () => {
-                if (
-                  minting
-                ) {
-                  return;
+            <ClientOnly>
+              <Button
+                type={ButtonType.PRIMARY}
+                size={ButtonSize.XLARGE}
+                loading={minting}
+                stretch
+                label={isNullOrEmpty(currentAddress)
+                  ? 'Connect Wallet' :
+                  type === 'mint' ?
+                    'Purchase' :
+                    'Renew License'
                 }
-                if(isNullOrEmpty(currentAddress)){
-                  openConnectModal();
-                  return;
-                }
-                setModalOpen(true);
-                setMinting(true);
-              }}
-            />
+                disabled={ type === 'mint' ? input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') || !isNullOrEmpty(error) : !isNullOrEmpty(error) }
+                onClick={async () => {
+                  if (
+                    minting
+                  ) {
+                    return;
+                  }
+                  if(isNullOrEmpty(currentAddress)){
+                    openConnectModal();
+                    return;
+                  }
+                  setModalOpen(true);
+                  setMinting(true);
+                }}
+              />
+            </ClientOnly>
           }
         </div>
-        <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4'>
+        <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4' legacyBehavior>
           <a target="_blank" >
             <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
             Learn more about <span className='text-black inline font-medium'>NFT Profiles</span>
@@ -298,4 +299,3 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
     </>
   );
 }
-    

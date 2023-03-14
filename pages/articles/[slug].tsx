@@ -2,11 +2,11 @@ import DefaultLayout from 'components/layouts/DefaultLayout';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
-import contentfulBackupData from 'constants/contenful_backup_data.json';
+import contentfulBackupData from 'constants/contentful_backup_data.json';
 import NotFoundPage from 'pages/404';
 import { PostData } from 'types/blogs';
 
-import { getAllPostsWithSlug, getPost } from 'lib/contentful/api';
+import { getPost } from 'lib/contentful/api';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -62,7 +62,7 @@ export default function Post({ post, preview }: PostProps) {
               <p className='font-grotesk text-black text-sm minmd:text-base'>Back to Blog</p>
             </div>
           </Link>
-          
+
           <BlogHeader post={post} />
 
           <BlogHeroImage
@@ -100,7 +100,6 @@ Post.getLayout = function getLayout(page) {
     </DefaultLayout>
   );
 };
-
 
 export async function getServerSideProps({ params, preview = false }) {
   const data = await getPost(params.slug, preview);

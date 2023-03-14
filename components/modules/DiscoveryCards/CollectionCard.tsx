@@ -12,8 +12,8 @@ import {
 } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 
-import VerifiedIcon from 'public/verifiedIcon.svg';
-import VolumeIcon from 'public/volumeIcon.svg';
+import VerifiedIcon from 'public/verifiedIcon.svg?svgr';
+import VolumeIcon from 'public/volumeIcon.svg?svgr';
 import { PartialDeep } from 'type-fest';
 
 export type DetailedNft = Nft & { hidden?: boolean };
