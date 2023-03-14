@@ -58,15 +58,14 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 )} key={nft?.id ?? index}>
                   {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
                     <NftCard
-                    contractAddr={props.contract}
-                    tokenId={nft.tokenId}
-                    name={nft.metadata.name}
-                    nft={nft as any}
-                    images={[nft.metadata.imageURL]}
-                    fallbackImage={nft.metadata.imageURL}
-                    collectionName={props.collectionName}
-                    redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
-                  />
+                      contractAddr={props.contract}
+                      tokenId={nft.tokenId}
+                      name={nft.metadata.name}
+                      nft={nft as any}
+                      images={[nft.metadata.imageURL]}
+                      collectionName={props.collectionName}
+                      redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
+                    />
                     :
                     <NFTCard
                       contractAddr={props.contract}
@@ -125,17 +124,16 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                   )} key={nft?.id ?? index}>
                     {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
                       <NftCard
-                      contractAddr={props.contract}
-                      tokenId={nft.tokenId}
-                      name={nft.metadata.name}
-                      nft={nft as any}
-                      isOwnedByMe={nft?.isOwnedByMe}
-                      listings={nft?.listings?.items || []}
-                      images={[nft.metadata.imageURL]}
-                      fallbackImage={nft.metadata.imageURL}
-                      collectionName={props.collectionName}
-                      redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
-                    /> :
+                        contractAddr={props.contract}
+                        tokenId={nft.tokenId}
+                        name={nft.metadata.name}
+                        nft={nft as any}
+                        isOwnedByMe={nft?.isOwnedByMe}
+                        listings={nft?.listings?.items || []}
+                        images={[nft.metadata.imageURL]}
+                        collectionName={props.collectionName}
+                        redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
+                      /> :
                       <NFTCard
                         contractAddr={props.contract}
                         tokenId={nft.tokenId}
