@@ -1568,6 +1568,12 @@ export enum ProfileViewType {
   Gallery = 'Gallery'
 }
 
+export type ProfileVisibleNftCount = {
+  __typename?: 'ProfileVisibleNFTCount';
+  id: Scalars['String'];
+  visibleNFTs: Scalars['Int'];
+};
+
 export type ProfilesActionsOutput = {
   __typename?: 'ProfilesActionsOutput';
   action?: Maybe<Array<Maybe<ProfileActionType>>>;
@@ -1672,6 +1678,7 @@ export type Query = {
   profile: Profile;
   profileFollowers: FollowersOutput;
   profilePassive: Profile;
+  profileVisibleNFTCount: Array<ProfileVisibleNftCount>;
   profilesByDisplayNft: ProfilesOutput;
   /** AUTHENTICATED */
   profilesFollowedByMe: ProfilesOutput;
@@ -1918,6 +1925,12 @@ export type QueryProfileFollowersArgs = {
 export type QueryProfilePassiveArgs = {
   chainId?: InputMaybe<Scalars['String']>;
   url: Scalars['String'];
+};
+
+
+export type QueryProfileVisibleNftCountArgs = {
+  chainId?: InputMaybe<Scalars['String']>;
+  profileIds: Array<Scalars['String']>;
 };
 
 
@@ -3241,12 +3254,13 @@ export type ProfileNfTsMutationVariables = Exact<{
 
 export type ProfileNfTsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, previewLink?: string | null, contract?: any | null, id: string, tokenId: any, isGKMinted?: boolean | null, type: NftType, collection?: { __typename?: 'Collection', contract?: any | null, name?: string | null } | null, listings?: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', id: string, chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, nftContract: string, nftId: Array<string | null>, status: ActivityStatus, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, nonce?: number | null, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'NFTCOMProtocolData', swapTransactionId?: string | null, acceptedAt?: number | null, rejectedAt?: number | null, listingId?: string | null, buyNowTaker?: string | null, auctionType?: AuctionType | null, salt?: number | null, start?: number | null, end?: number | null, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } } | null> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } } | null> | null, orderSignature?: { __typename?: 'Signature', v: number, r: any, s: any } | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | { __typename?: 'X2Y2ProtocolData', side?: number | null, type?: string | null, erc_type?: number | null, status?: string | null, maker?: string | null, contract?: string | null, price?: string | null, tokenId?: string | null, currencyAddress?: string | null, id?: number | null, created_at?: number | null, updated_at?: number | null, end_at?: number | null, royalty_fee?: number | null, is_collection_offer?: boolean | null, is_bundle?: boolean | null, is_private?: boolean | null, X2Y2Amount?: number | null } | null } | null, cancel?: { __typename?: 'TxCancel', id: string, exchange: string, foreignType: string, foreignKeyId: string, transactionHash: string, blockNumber: string } | null, transaction?: { __typename?: 'TxTransaction', id: string, chainId?: string | null, transactionHash: string, blockNumber: string, nftContractAddress: string, nftContractTokenId: string, maker: string, taker: string, protocol: string, exchange: string, protocolData?: { __typename?: 'TxLooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'TxNFTCOMProtocolData' } | { __typename?: 'TxSeaportProtocolData', offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | { __typename?: 'TxX2Y2ProtocolData', amount?: string | null, currency?: string | null, data?: string | null, deadline?: string | null, delegateType?: string | null, intent?: string | null, orderSalt?: string | null, settleSalt?: string | null } | null } | null } | null> | null } | null, metadata?: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } | null }> } };
 
-export type ProfileNfTsTotalItemsMutationVariables = Exact<{
-  input?: InputMaybe<UpdateNfTsForProfileInput>;
+export type ProfileVisibleNftCountQueryVariables = Exact<{
+  profileIds: Array<Scalars['String']> | Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ProfileNfTsTotalItemsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null } };
+export type ProfileVisibleNftCountQuery = { __typename?: 'Query', profileVisibleNFTCount: Array<{ __typename?: 'ProfileVisibleNFTCount', visibleNFTs: number }> };
 
 export type ProfilesByDisplayedNftQueryVariables = Exact<{
   input: ProfilesByDisplayNftInput;
@@ -5607,10 +5621,10 @@ export const ProfileNfTsDocument = gql`
   }
 }
     `;
-export const ProfileNfTsTotalItemsDocument = gql`
-    mutation ProfileNFTsTotalItems($input: UpdateNFTsForProfileInput) {
-  updateNFTsForProfile(input: $input) {
-    totalItems
+export const ProfileVisibleNftCountDocument = gql`
+    query ProfileVisibleNFTCount($profileIds: [String!]!, $chainId: String) {
+  profileVisibleNFTCount(profileIds: $profileIds, chainId: $chainId) {
+    visibleNFTs
   }
 }
     `;
@@ -6035,8 +6049,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     ProfileNFTs(variables?: ProfileNfTsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileNfTsMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileNfTsMutation>(ProfileNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileNFTs', 'mutation');
     },
-    ProfileNFTsTotalItems(variables?: ProfileNfTsTotalItemsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileNfTsTotalItemsMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ProfileNfTsTotalItemsMutation>(ProfileNfTsTotalItemsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileNFTsTotalItems', 'mutation');
+    ProfileVisibleNFTCount(variables: ProfileVisibleNftCountQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileVisibleNftCountQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfileVisibleNftCountQuery>(ProfileVisibleNftCountDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileVisibleNFTCount', 'query');
     },
     ProfilesByDisplayedNft(variables: ProfilesByDisplayedNftQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfilesByDisplayedNftQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfilesByDisplayedNftQuery>(ProfilesByDisplayedNftDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfilesByDisplayedNft', 'query');

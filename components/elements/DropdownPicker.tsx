@@ -2,7 +2,7 @@ import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
-import KeyIcon from 'public/mint-key.svg';
+import KeyIcon from 'public/mint-key.svg?svgr';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -31,10 +31,10 @@ export interface DropdownPickerProps {
 /**
  * Drop-down picker component. Provided the options and selected option,
  * this will render the selected option with a v or ^ symbol.
- * 
+ *
  * When clicked, the rest of the options will appear above or below the component,
  * using absolute positioning (so expect them to overflow and cover the surrounding UI).
- * 
+ *
  * Configuration:
  * - above:     add this if you want the options to appear above the component
  * - constrain: add this to use a self-constrained width and height, with no guarantees about
@@ -79,9 +79,6 @@ export function DropdownPicker(props: DropdownPickerProps) {
           setSelected(item);
         }}
       >
-        {/* {item.icon &&
-          <Image className="h-full mr-2" src={item.icon} alt={item.label} />
-        } */}
         {item.label}
       </div>
     );
@@ -128,8 +125,8 @@ export function DropdownPicker(props: DropdownPickerProps) {
           {props?.options[selectedIndex]?.icon &&
             <div className={`mr-1 relative w-[${props?.options[selectedIndex]?.imageSize || 26}px] h-[${props?.options[selectedIndex]?.imageSize || 26}px] flex items-center justify-center ${props?.options[selectedIndex]?.customIconClass || ''}`}>
               <Image
-                layout='fill'
-                objectFit='contain'
+                fill
+                style={{ objectFit: 'contain' }}
                 src={props?.options[selectedIndex]?.icon}
                 alt={props?.options[selectedIndex]?.label} />
             </div>
@@ -149,7 +146,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
             collapsedIcon
           )}
       </div>
-      
+
       {expanded &&
         <div
           style={{
@@ -168,7 +165,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
             'max-h-[200px] overflow-auto'
           )}
         >
-            
+
           {props.options?.map((item, index) => {
             return getOptionRow(item, index);
           })}

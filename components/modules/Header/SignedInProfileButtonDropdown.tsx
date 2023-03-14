@@ -99,7 +99,7 @@ export function SignedInProfileButtonDropdown() {
                       {user.currentProfileUrl}
                     </p>
                   </Link>
-                 
+
                   <CaretDown
                     onClick={() => {
                       setExpanded(!expanded);
@@ -172,7 +172,7 @@ export function SignedInProfileButtonDropdown() {
               </div>
             </>
             }
-            
+
             {myOwnedProfileTokens?.length > 0 && myOwnedProfileTokens.map((profile) => (
               user.currentProfileUrl === profile.title ?
                 <Link key={profile.title} href={`/${profile.title}`}>
@@ -189,9 +189,8 @@ export function SignedInProfileButtonDropdown() {
                   </div>
                 </Link>
                 :
-                <Link href={`/${profile.title}`}>
+                <Link key={profile.title} href={`/${profile.title}`}>
                   <div
-                    key={profile.title}
                     className={'flex flex-row w-full px-4 py-2 items-center text-primary-txt font-medium h-10'}
                     onClick={() => setCurrentProfileUrl(profile.title)}
                   >
@@ -221,4 +220,3 @@ export function SignedInProfileButtonDropdown() {
     </div>
   );
 }
-

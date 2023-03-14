@@ -16,8 +16,8 @@ import { tw } from 'utils/tw';
 
 import dynamic from 'next/dynamic';
 import { SlidersHorizontal, X } from 'phosphor-react';
-import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
-import NoActivityIcon from 'public/no_activity.svg';
+import LeaderBoardIcon from 'public/leaderBoardIcon.svg?svgr';
+import NoActivityIcon from 'public/no_activity.svg?svgr';
 import React, { useEffect, useRef, useState } from 'react';
 
 function usePrevious(value) {
@@ -40,7 +40,6 @@ export default function CollectionsPage() {
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
   const prevFilters = usePrevious(collectionsResultsFilterBy);
-  const [rowHeight, setRowHeight] = useState(400);
 
   useEffect(() => {
     !isDiscoverCollections && setIsDiscoverCollections(true);
@@ -139,9 +138,11 @@ export default function CollectionsPage() {
             rowClass={tw(
               'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
               'minxl:grid-cols-3 minmd:grid-cols-2 minhd:grid-cols-4 w-full')}>
-            {({ itemData }) => {
+            {({ itemData, rowIndex, cellIndex }) => {
+              console.log('itemData fdo', itemData);
               return(
                 <CollectionCard
+                  key={''+ rowIndex + cellIndex}
                   redirectTo={`/app/collection/${itemData.document?.contractAddr}/`}
                   contractAddress={itemData.document?.contractAddr}
                   contract={itemData.document?.contractAddr}

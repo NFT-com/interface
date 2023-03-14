@@ -19,8 +19,8 @@ import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 import { BigNumber, ethers } from 'ethers';
 import { useRouter } from 'next/router';
 import RemoveIcon from 'public/close-circle-icon-gray.svg';
-import InfoIcon from 'public/gray-info-icon.svg';
-import DeleteRowIcon from 'public/trash-icon.svg';
+import InfoIcon from 'public/gray-info-icon.svg?svgr';
+import DeleteRowIcon from 'public/trash-icon.svg?svgr';
 import { useContext, useMemo, useRef } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -69,10 +69,10 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const X2Y2Enabled = useMemo(() => getTarget(props.listing, ExternalProtocol.X2Y2) != null, [getTarget, props.listing]);
   const NFTCOMEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.NFTCOM) != null, [getTarget, props.listing]);
 
-  const LooksRareIcon = '/looksrare-icon.svg';
-  const NFTCOMIcon = '/nft_logo_yellow.svg';
-  const OpenseaIcon = '/opensea-icon.svg';
-  const X2Y2Icon = '/x2y2-icon.svg';
+  const LooksRareIcon = '/looksrare-icon.svg?svgr';
+  const NFTCOMIcon = '/nft_logo_yellow.svg?svgr';
+  const OpenseaIcon = '/opensea-icon.svg?svgr';
+  const X2Y2Icon = '/x2y2-icon.svg?svgr';
 
   const generateMarketPlaceOptions = (dropDownNumber: number, hasPredefinedSelectedOption?: boolean) => {
     let selectedOptionForDropdown = dropDownNumber === 0 ? selectedOptionDropdown0 : dropDownNumber === 1 ? selectedOptionDropdown1 : selectedOptionDropdown2;
@@ -316,7 +316,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       auctionTypeForPrice={auctionTypeForPrice.current}
     />;
   };
-  
+
   return (
     <div className='minlg:min-h-[11rem] flex flex-col minlg:flex-row mb-8'>
       <div className='w-2/5 minlg:basis-2/12 minxxl:max-w-[10rem] flex flex-col justify-start items-start px-2 minxl:pl-0 minxl:pr-8'>

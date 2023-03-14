@@ -1,11 +1,13 @@
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import DraggableGridItem from 'components/modules/Draggable/DraggableGridItem';
 import { GridContext } from 'components/modules/Draggable/GridContext';
+import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { Nft } from 'graphql/generated/types';
 import { useIsProfileCustomized } from 'graphql/hooks/useIsProfileCustomized';
 import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { ClaimProfileCard } from './ClaimProfileCard';
@@ -13,7 +15,6 @@ import { ProfileContext } from './ProfileContext';
 
 import { BigNumber } from 'ethers';
 import { useContext } from 'react';
-import { useThemeColors } from 'styles/theme/useThemeColors';
 import { PartialDeep } from 'type-fest';
 
 export type DetailedNft = Nft & { hidden?: boolean };
@@ -34,7 +35,6 @@ export function NftGrid(props: NftGridProps) {
   const { user } = useUser();
   const defaultChainId = useDefaultChainId();
   const { data: profileCustomizationStatus } = useIsProfileCustomized(user?.currentProfileUrl, defaultChainId.toString());
-  const { tileBackgroundSecondary } = useThemeColors();
   const { width: screenWidth } = useWindowDimensions();
 
   const mosaicArray = [0];
@@ -52,25 +52,6 @@ export function NftGrid(props: NftGridProps) {
   }
 
   const savedLayoutType = 'Default';
-
-  const mosaicCardType = (layoutType, index) => {
-    if (layoutType === 'Mosaic') {
-      if (screenWidth > 1199) {
-        if (index % 7 === 0 )
-          return 'LargeMosaicLargeCard';
-        if ((index-4) % 7 === 0)
-          return 'LargeMosaicMediumCard';
-        if (index % 7 !== 0 && (index-4) % 7 !== 0)
-          return 'LargeMosaicSmallCard';
-      } else if (screenWidth > 900 && screenWidth <= 1199) {
-        return mosaicArray2.includes(index) ? 'MediumMosaicMediumCard' : 'MediumMosaicSmallCard';
-      } else if(screenWidth > 600 && screenWidth <= 899) {
-        return mosaicArray.includes(index) ? 'SmallMosaicMediumCard' : 'SmallMosaicSmallCard';
-      }
-    }
-
-    return '';
-  };
 
   return <div
     className={tw(
@@ -106,36 +87,64 @@ export function NftGrid(props: NftGridProps) {
             (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'col-start-2 minlg:col-start-3 col-span-2 minlg:col-span-4 mb-4' : '',
           )}
         >
-          <NftCard
-            name={nft?.metadata?.name}
-            images={[nft?.previewLink || nft?.metadata?.imageURL]}
-            collectionName={nft?.collection?.name}
-            isOwnedByMe={nft?.isOwnedByMe}
-            listings={nft?.listings?.items || []}
-            nft={nft}
-            fallbackImage={nft?.metadata?.imageURL}
-            contractAddr={nft?.contract}
-            tokenId={nft?.tokenId}
-            // only show the eye icons to the owner in edit mode
-            visible={editMode ?
-              !nft?.hidden :
-              null
-            }
-            onVisibleToggle={() => {
-              if (editMode) {
-                toggleHidden(nft?.id, !nft?.hidden);
+          {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+            <NftCard
+              name={nft?.metadata?.name}
+              images={[nft?.previewLink || nft?.metadata?.imageURL]}
+              collectionName={nft?.collection?.name}
+              isOwnedByMe={nft?.isOwnedByMe}
+              listings={nft?.listings?.items || []}
+              nft={nft}
+              contractAddr={nft?.contract}
+              tokenId={nft?.tokenId}
+              // only show the eye icons to the owner in edit mode
+              visible={editMode ?
+                !nft?.hidden :
+                null
               }
-            }}
-            onClick={() => {
-              if (editMode) {
-                toggleHidden(nft?.id, !nft?.hidden);
+              onVisibleToggle={() => {
+                if (editMode) {
+                  toggleHidden(nft?.id, !nft?.hidden);
+                }
+              }}
+              onClick={() => {
+                if (editMode) {
+                  toggleHidden(nft?.id, !nft?.hidden);
+                }
+              }}
+              redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
+              descriptionVisible={draftNftsDescriptionsVisible}
+              preventDefault={editMode}
+            /> :
+            <NFTCard
+              name={nft?.metadata?.name}
+              images={[nft?.previewLink || nft?.metadata?.imageURL]}
+              collectionName={nft?.collection?.name}
+              isOwnedByMe={nft?.isOwnedByMe}
+              listings={nft?.listings?.items || []}
+              nft={nft}
+              contractAddr={nft?.contract}
+              tokenId={nft?.tokenId}
+              // only show the eye icons to the owner in edit mode
+              visible={editMode ?
+                !nft?.hidden :
+                null
               }
-            }}
-            redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
-            customBackground={tileBackgroundSecondary}
-            nftsDescriptionsVisible={draftNftsDescriptionsVisible}
-            preventDefault={editMode}
-          />
+              onVisibleToggle={() => {
+                if (editMode) {
+                  toggleHidden(nft?.id, !nft?.hidden);
+                }
+              }}
+              onClick={() => {
+                if (editMode) {
+                  toggleHidden(nft?.id, !nft?.hidden);
+                }
+              }}
+              redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
+              descriptionVisible={draftNftsDescriptionsVisible}
+              preventDefault={editMode}
+            />
+          }
         </div>
       </DraggableGridItem>
     ))}

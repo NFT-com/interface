@@ -1,17 +1,13 @@
 /* eslint-disable import/no-unresolved */
 // Import Swiper styles
-import 'swiper/swiper.min.css';
-import 'swiper/components/pagination/pagination.min.css';
-import 'swiper/components/navigation/navigation.min.css';
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 import { ProfileCard } from 'components/modules/Profile/ProfileCard';
 import { ProfileQuery } from 'graphql/generated/types';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
-import SwiperCore, { Autoplay, Navigation } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-SwiperCore.use([Autoplay, Navigation]);
 
 interface ProfileFeedProps {
   profiles: ProfileQuery[];
@@ -22,6 +18,7 @@ export const ProfileFeed = ({ profiles }: ProfileFeedProps) => {
 
   return (
     <Swiper
+      navigation
       slidesPerView={screenWidth < 600 ? 1.2 : screenWidth >= 600 && screenWidth < 900 ? 3.2 : 4.2}
       centeredSlides={false}
       loop={true}

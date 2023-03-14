@@ -80,6 +80,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
                 href={'/' + profileToken?.tokenUri?.raw?.split('/').pop()}
                 key={profileToken.id.tokenId ?? index}
                 passHref
+                legacyBehavior
               >
                 <a
                   key={profileToken.id.tokenId ?? index}

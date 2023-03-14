@@ -10,6 +10,7 @@ import InfiniteLoader from 'react-window-infinite-loader';
 interface CellInfo {
   itemData: any;
   rowIndex: number;
+  cellIndex: number;
 }
 
 interface CardsGridProps {
@@ -25,7 +26,7 @@ interface CardsGridProps {
 
 export default function CardsGrid(props: CardsGridProps) {
   const { children, gridData, sideNavOpen, loadMoreItems, totalItems, cardType, rowClass, defaultRowHeight } = props;
-  const childParams = useMemo(() => ({ itemData: null, rowIndex: null } ),[]);
+  const childParams = useMemo(() => ({ itemData: null, rowIndex: null, cellIndex: null } ),[]);
   const [dataPerRows, setDataPerRows] = useState([]);
   const [columnCount, setColumnCount] = useState(5);
   const { cardHeightForRWGrid } = useSearchModal();
@@ -82,8 +83,9 @@ export default function CardsGrid(props: CardsGridProps) {
     
     return (
       <div style={style} className={rowClass}>
-        {row && row?.map((item) => {
+        {row && row?.map((item, cellIndex) => {
           childParams.itemData = item;
+          childParams.cellIndex = cellIndex;
           return item && children(childParams);
         })}
       </div>

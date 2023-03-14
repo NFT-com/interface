@@ -1,0 +1,13 @@
+# *
+User-agent: *
+Allow: /$
+Allow: /articles
+Allow: /articles/*
+Allow: /*.xml
+Disallow: /*
+
+# Host
+Host: https://www.nft.com
+
+# Sitemaps
+Sitemap: https://www.nft.com/sitemap.xml

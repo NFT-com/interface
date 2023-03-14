@@ -116,7 +116,9 @@ module.exports = {
         'alert-grey-bg': '#F2F2F2',
         'button-bg-disabled': '#E6E6E6',
         'button-text-disabled': '#969696',
-        'button-tertiary-hover': '#4D4D4D'
+        'button-tertiary-hover': '#4D4D4D',
+        'button-secondary-hover': '#282828',
+
       },
       fontFamily: {
         'rubik': ['Rubik'],

@@ -669,7 +669,7 @@ export function NFTListingsContextProvider(
           };
         }
       }));
-      
+
       return {
         ...stagedNft,
         targets: preparedTargets

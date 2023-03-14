@@ -13,7 +13,7 @@ import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import _ from 'lodash';
-import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
+import LeaderBoardIcon from 'public/leaderBoardIcon.svg?svgr';
 import React, { useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
@@ -89,9 +89,10 @@ export default function ProfilePage() {
         rowClass={tw(
           'grid grid-cols-1 minlg:space-x-0 gap-1 minmd:gap-4',
           'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
-        {({ itemData }) => {
+        {({ itemData, rowIndex,cellIndex }) => {
           return(
             <ProfileCard
+              key={'' + rowIndex + cellIndex}
               profile={itemData}
             />
           );}}

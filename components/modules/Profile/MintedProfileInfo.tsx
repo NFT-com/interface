@@ -1,13 +1,15 @@
 import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import LikeCount from 'components/elements/LikeCount';
 import Toast from 'components/elements/Toast';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
 import { ProfileMenu } from './ProfileMenu';
 
-import GK from 'public/Badge_Key.svg';
+import GK from 'public/Badge_Key.svg?svgr';
 import { useContext } from 'react';
 
 export interface MintedProfileInfoProps {
@@ -27,7 +29,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   } = useContext(ProfileContext);
 
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
-  
+
   const handleBioChange = (event) => {
     let bioValue = event.target.value;
     if(bioValue.length === 0) {
@@ -50,18 +52,23 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           <div
             id="MintedProfileNameContainer"
             className={tw(
-              'font-bold text-lg minlg:text-[44px] minlg:font-medium',
-              'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4 minmd:mt-4 flex items-center'
+              'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left minmd:mt-4 flex items-center space-x-2'
             )}>
-            <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl minlg:text-[40px] mr-1'>/</span>
-            {profileURI}
+            <div className='font-bold text-lg minlg:text-[44px] minlg:font-medium'>
+              <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl minlg:text-[40px] mr-1'>/</span>
+              {profileURI}
+            </div>
             {profileData?.profile?.isGKMinted &&
             <div className='h-5 w-5 minlg:h-7 minlg:w-7 ml-2'>
               <GK />
             </div>
             }
+            {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
+              <LikeCount count={10} isLiked={false} onClick={() => null} />
+            }
           </div>
         </div>
+        
         <div className='hidden minlg:block'>
           <ProfileMenu profileURI={profileURI} />
         </div>
@@ -90,9 +97,14 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       }
 
       {editMode && userIsAdmin &&
-        <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A] group">
+        <div className={tw(
+          'w-full minlg:w-1/2 flex flex-col text-[#6A6A6A] group',
+          getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ? 'items-start' : 'items-end'
+        )}
+        >
           <CustomTooltip2
             orientation='top'
+            width='full'
             tooltipComponent={
               <div
                 className="w-max"

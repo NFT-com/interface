@@ -33,8 +33,8 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
                     src={props.profileOwner?.profile?.photoURL ?? 'https://cdn.nft.com/profile-image-default.svg'}
                     alt='featured profile main image'
                     className="rounded-full"
-                    width="100%"
-                    height="100%"
+                    width="40"
+                    height="40"
                   />
                 </Link>
                 :
@@ -53,7 +53,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
           'minmd:min-h-[250px] min-h-[410px] minmd:max-h-[400px] max-h-max',
           'minmd:overscroll-auto overscroll-x-contain'
         )}>
-          <Link href={`/app/nft/${props.featuredNfts[0]?.contract}/${props.featuredNfts[0]?.tokenId}`} passHref>
+          <Link href={`/app/nft/${props.featuredNfts[0]?.contract}/${props.featuredNfts[0]?.tokenId}`} passHref legacyBehavior>
             <a className='flex flex-col w-full minmd:row-span-2 row-auto minmd:aspect-auto aspect-square minmd:h-auto h-full'>
               <RoundedCornerMedia priority={true} src={processIPFSURL(props.featuredNfts[0]?.previewLink || props.featuredNfts[0]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full w-full' />
               {props.featuredNfts[0] && (
@@ -65,7 +65,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
             </a>
           </Link>
           <div className='h-full w-full row-span-1 col-span-1'>
-            <Link href={`/app/nft/${props.featuredNfts[1]?.contract}/${props.featuredNfts[1]?.tokenId}`} passHref>
+            <Link href={`/app/nft/${props.featuredNfts[1]?.contract}/${props.featuredNfts[1]?.tokenId}`} passHref legacyBehavior>
               <a className='flex flex-col w-full row-auto minmd:aspect-auto aspect-square h-full justify-start'>
                 <RoundedCornerMedia priority={true} src={processIPFSURL(props.featuredNfts[1]?.previewLink ||props.featuredNfts[1]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full max-h-[77%] sm:max-h-full sm:w-full' />
                 {props.featuredNfts[1] && (
@@ -78,7 +78,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
             </Link>
           </div>
           <div className='h-full w-full row-span-1 col-span-1'>
-            <Link href={`/app/nft/${props.featuredNfts[2]?.contract}/${props.featuredNfts[2]?.tokenId}`} passHref>
+            <Link href={`/app/nft/${props.featuredNfts[2]?.contract}/${props.featuredNfts[2]?.tokenId}`} passHref legacyBehavior>
               <a className='flex flex-col w-full row-auto minmd:aspect-auto aspect-square h-full justify-end'>
                 <RoundedCornerMedia priority={true} src={processIPFSURL(props.featuredNfts[2]?.previewLink || props.featuredNfts[2]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full max-h-[77%] sm:max-h-full sm:w-full' />
                 {props.featuredNfts[2] && (

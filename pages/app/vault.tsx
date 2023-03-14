@@ -7,9 +7,9 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
-import DiscordIcon from 'public/discord_black_icon.svg';
+import DiscordIcon from 'public/discord_black_icon.svg?svgr';
 import tokenHeroBg from 'public/token-hero2.jpg';
-import TwitterIcon from 'public/twitter_black_icon.svg';
+import TwitterIcon from 'public/twitter_black_icon.svg?svgr';
 import { useRef } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -17,7 +17,7 @@ import { useAccount } from 'wagmi';
 export default function RoadmapPage() {
   const contentRef = useRef<HTMLDivElement>();
   const [firstLoaded, setFirstLoaded] = useState(false);
-  
+
   const { address: currentAddress } = useAccount();
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const { data: ownedGKTokens, loading: loadingOwnedGKs } = useOwnedGenesisKeyTokens(currentAddress);
@@ -54,7 +54,7 @@ export default function RoadmapPage() {
             `,
           }}
         >
-          
+
           {/* HERO */}
           <div className="token-hero-bg" style={{
             backgroundImage: `
@@ -147,7 +147,7 @@ export default function RoadmapPage() {
               </div>
             </div>
           </div>
-         
+
           {/* SOCIAL */}
           <div className="relative text-center text-white py-8 pb-8"
             style={{
@@ -175,7 +175,7 @@ export default function RoadmapPage() {
       </div>
     );
   }, []);
-  
+
   return (
     <div
       ref={contentRef}

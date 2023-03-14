@@ -1,6 +1,8 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import LikeCount from 'components/elements/LikeCount';
 import { NFTCard } from 'components/elements/NFTCard';
 import { CollectionActivity } from 'components/modules/Analytics/CollectionActivity';
+import { NFTCard as NFTCardNew } from 'components/modules/NFTCard/NFTCard';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
@@ -156,16 +158,23 @@ export function Collection(props: CollectionProps) {
         />
       </div>
       <div className='font-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
-        <h2 className="text-3xl font-bold">
-          {isNullOrEmpty(collectionName) && isNullOrEmpty(collectionData?.collection?.name) ?
-            (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
-              <div className="w-full">
-                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4"></div>
-              </div>
-              <span className="sr-only">Loading...</span>
-            </div>)
-            : ( collectionData?.collection?.name || collectionName)}
-        </h2>
+        <div className='flex'>
+          <h2 className="text-3xl font-bold">
+            {isNullOrEmpty(collectionName) && isNullOrEmpty(collectionData?.collection?.name) ?
+              (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+                <div className="w-full">
+                  <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4"></div>
+                </div>
+                <span className="sr-only">Loading...</span>
+              </div>)
+              : ( collectionData?.collection?.name || collectionName)}
+          </h2>
+          {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
+          <div className='ml-3'>
+            <LikeCount count={10} isLiked={false} onClick={() => null} />
+          </div>
+          }
+        </div>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
           <div className='flex'>
             {collectionPreferredOwnerData &&
@@ -355,18 +364,32 @@ export function Collection(props: CollectionProps) {
                   }
                   <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
                     {collectionNfts.map((nft, index) => {
-                      return (
-                        <div className="NftCollectionItem" key={index}>
-                          <NFTCard
-                            contractAddress={nft.document.contractAddr}
-                            tokenId={nft.document.tokenId}
-                            title={nft.document.nftName}
-                            collectionName={nft.document.contractName}
-                            images={[]}
-                            redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
-                            description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
-                          />
-                        </div>);}
+                      return !getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)
+                        ? (
+                          <div className="NftCollectionItem" key={index}>
+                            <NFTCard
+                              contractAddress={nft.document.contractAddr}
+                              tokenId={nft.document.tokenId}
+                              title={nft.document.nftName}
+                              collectionName={nft.document.contractName}
+                              images={[]}
+                              redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
+                              description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
+                            />
+                          </div>) :
+                        (
+                          <div className="NftCollectionItem" key={index}>
+                            <NFTCardNew
+                              contractAddr={nft.document.contractAddr}
+                              tokenId={nft.document.tokenId}
+                              name={nft.document.nftName}
+                              collectionName={nft.document.contractName}
+                              images={[]}
+                              redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
+                            />
+                          </div>
+                        );
+                    }
                     )}
                   </div>
                   {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">

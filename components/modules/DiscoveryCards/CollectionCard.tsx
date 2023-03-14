@@ -1,8 +1,10 @@
+import LikeCount from 'components/elements/LikeCount';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft, TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { Doppler, getEnvBool } from 'utils/env';
 import {
   getGenesisKeyThumbnail,
   isNullOrEmpty,
@@ -14,7 +16,7 @@ import { tw } from 'utils/tw';
 
 import VerifiedIcon from 'public/verifiedIcon.svg';
 import VolumeIcon from 'public/volumeIcon.svg';
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { PartialDeep } from 'type-fest';
 
 export type DetailedNft = Nft & { hidden?: boolean };
@@ -71,6 +73,7 @@ export function CollectionCard(props: CollectionCardProps) {
     return convertedValue.slice(1);
   };
   
+  console.log('props fdo', props);
   useEffect(() => {
     setCardHeightForRWGrid(refCollectionCard && refCollectionCard?.current?.offsetHeight);
   }, [setCardHeightForRWGrid]);
@@ -80,6 +83,11 @@ export function CollectionCard(props: CollectionCardProps) {
       props.customHeight ?? ' min-h-[100%] ',
       'sm:mb-4 block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden')}>
       <div className="h-44 relative ">
+        {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
+          <div className='absolute top-4 right-4 z-50'>
+            <LikeCount count={10} isLiked={false} onClick={() => null} />
+          </div>
+        }
         <RoundedCornerMedia
           variant={RoundedCornerVariant.None}
           width={600}

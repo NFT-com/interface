@@ -18,12 +18,12 @@ import delay from 'delay';
 import { useRouter } from 'next/router';
 import { ArrowClockwise, Check } from 'phosphor-react';
 import { ShareNetwork, TwitterLogo, X } from 'phosphor-react';
-import LinkIcon from 'public/icon_link.svg';
-import FeaturedIcon from 'public/layout_icon_featured.svg';
-import GridIcon from 'public/layout_icon_grid.svg';
-import MosaicIcon from 'public/layout_icon_mosaic.svg';
-import SpotlightIcon from 'public/layout_icon_spotlight.svg';
-import GearIcon from 'public/settings_icon.svg';
+import LinkIcon from 'public/icon_link.svg?svgr';
+import FeaturedIcon from 'public/layout_icon_featured.svg?svgr';
+import GridIcon from 'public/layout_icon_grid.svg?svgr';
+import MosaicIcon from 'public/layout_icon_mosaic.svg?svgr';
+import SpotlightIcon from 'public/layout_icon_spotlight.svg?svgr';
+import GearIcon from 'public/settings_icon.svg?svgr';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -127,7 +127,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   return (
     <div className='w-full flex justify-end items-center mt-5 minlg:mt-0 font-noi-grotesk'>
       <div ref={inputRef} className={tw(
-        'w-full flex flex-row border-[#ECECEC] rounded-full justify-center items-center',
+        'flex flex-row border-[#ECECEC] rounded-full justify-center items-center',
         'focus-within:border focus-within:border-[#F9D54C] focus-within:ring-1 focus-within:ring-[#F9D54C] ',
         searchVisible && !editMode ? 'w-full minlg:w-[320px] minlg:max-w-[320px] p-[10px] border-[1.3px] transition-[width] h-10 minlg:h-12' : 'w-0 p-0 border-0'
       )}>
@@ -154,7 +154,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             setSearchQuery('');
           }} />
       </div>
-        
+
       <div className={tw(
         'flex flex-row items-center space-x-1 minlg:space-x-3',
         searchVisible && 'hidden minlg:flex',
@@ -278,7 +278,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                       newHeader: draftHeaderImg?.preview ? true : false,
                       newDescription: draftBio,
                     });
-    
+
                     saveProfile();
                     setTimeout(() => {
                       setEditMode(false);

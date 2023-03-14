@@ -60,7 +60,7 @@ export default function MintFreeProfileCard() {
   useEffect(() => {
     setProfileStatus(profileTokenId ? nft?.listings?.totalItems > 0 ? 'Listed' : 'Owned' : 'Available');
   }, [profileTokenId, nft]);
-  
+
   return (
     <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
       <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
@@ -75,18 +75,16 @@ export default function MintFreeProfileCard() {
           name={'input-Free'}
           type="Free"
         />
-            
+
         <div className='mt-12 minlg:mt-[59px]'>
           {hasListings ?
             <Link href={`/app/nft/0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D/${profileTokenId?.toNumber()}`}>
-              <a>
-                <Button
-                  type={ButtonType.PRIMARY}
-                  size={ButtonSize.LARGE}
-                  label='View NFT.com listing'
-                  onClick={() => null}
-                />
-              </a>
+              <Button
+                type={ButtonType.PRIMARY}
+                size={ButtonSize.LARGE}
+                label='View NFT.com listing'
+                onClick={() => null}
+              />
             </Link>
             :
             <Button
@@ -106,7 +104,7 @@ export default function MintFreeProfileCard() {
             />
           }
         </div>
-        <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4'>
+        <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4' legacyBehavior>
           <a target="_blank" >
             <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
             Learn more about <span className='text-black inline font-medium'>NFT Profiles</span>
@@ -118,4 +116,3 @@ export default function MintFreeProfileCard() {
     </div>
   );
 }
-    

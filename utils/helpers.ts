@@ -293,6 +293,7 @@ export const sliceString = (description: string, maxCount: number, isStringCut: 
   }
   return newDescription;
 };
+
 export const checkImg = (images) => {
   if(!images) return;
   const convertedImages = images.map(image => {

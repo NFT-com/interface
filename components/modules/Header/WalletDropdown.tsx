@@ -9,7 +9,7 @@ import { tw } from 'utils/tw';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
-import ETHIcon from 'public/eth_icon.svg';
+import ETHIcon from 'public/eth_icon.svg?svgr';
 import { PropsWithChildren, useCallback, useContext, useRef, useState } from 'react';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
 
@@ -154,7 +154,7 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
             <p className='font-medium text-[#B2B2B2] whitespace-normal w-1/3'>Token Balance</p>
 
             <div className='w-2/3 flex justify-end items-end text-lg font-medium'>
-              
+
               <p className='items-center justify-center flex'>
                 <ETHIcon className='inline mb-0.5 mr-3' stroke="black" />
                 {(+utils.formatEther(balanceData?.value ?? 0)).toFixed(4)}

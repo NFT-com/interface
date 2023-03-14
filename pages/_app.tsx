@@ -1,30 +1,9 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
-import CustomAvatar from 'components/elements/CustomAvatar';
-import Disclaimer from 'components/elements/Disclaimer';
-import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListingsContext';
-import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
-import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
-import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
+import RootProvider from 'context';
 import useAnalyticsOnRouteChange from 'hooks/useAnalyticsOnRouteChange';
-import { Doppler, getEnv } from 'utils/env';
-import { DeploymentEnv, isNotEnv, isProd } from 'utils/isEnv';
 
-import {
-  connectorsForWallets,
-  RainbowKitProvider,
-} from '@rainbow-me/rainbowkit';
-import {
-  argentWallet,
-  coinbaseWallet,
-  ledgerWallet,
-  metaMaskWallet,
-  rainbowWallet,
-  trustWallet,
-  walletConnectWallet,
-} from '@rainbow-me/rainbowkit/wallets';
-import { AnimatePresence } from 'framer-motion';
 import * as gtag from 'lib/gtag';
 import * as segment from 'lib/segment';
 import type { NextPage } from 'next';
@@ -32,13 +11,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import { DefaultSeo } from 'next-seo';
-import { ReactElement, ReactNode, useMemo } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { rainbowLight } from 'styles/RainbowKitThemes';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { goerli, mainnet } from 'wagmi/chains';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { ReactElement, ReactNode } from 'react';
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -55,58 +28,6 @@ export default function MyApp({
 }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
-
-  const { chains, provider } = useMemo(() => {
-    return configureChains(
-      !isProd
-        ? [mainnet, goerli]
-        : [mainnet],
-      [
-        jsonRpcProvider({
-          rpc: (chain) => {
-            const url = new URL(
-              getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc'
-            );
-            url.searchParams.set('chainId', chain?.id.toString());
-            return {
-              http: url.toString(),
-            };
-          },
-        }),
-      ]
-    );
-  }, []);
-
-  const connectors = useMemo(() => {
-    return connectorsForWallets([
-      {
-        groupName: 'Recommended',
-        wallets: [
-          metaMaskWallet({ chains, shimDisconnect: true }),
-          // safeWallet({ chains }),
-          rainbowWallet({ chains }),
-        ],
-      },
-      {
-        groupName: 'Others',
-        wallets: [
-          walletConnectWallet({ chains }),
-          coinbaseWallet({ chains, appName: 'NFT.com' }),
-          trustWallet({ chains }),
-          ledgerWallet({ chains }),
-          argentWallet({ chains }),
-        ],
-      },
-    ]);
-  }, [chains]);
-
-  const wagmiClient = useMemo(() => {
-    return createClient({
-      autoConnect: true,
-      connectors,
-      provider,
-    });
-  }, [connectors, provider]);
 
   useAnalyticsOnRouteChange();
 
@@ -169,39 +90,12 @@ export default function MyApp({
           cardType: 'summary_large_image',
         }}
       />
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider
-          appInfo={{
-            appName: 'NFT.com',
-            learnMoreUrl: 'https://docs.nft.com/what-is-a-wallet',
-            disclaimer: Disclaimer,
-          }}
-          theme={rainbowLight}
-          chains={chains}
-          initialChain={
-            isNotEnv([DeploymentEnv.STAGING, DeploymentEnv.PRODUCTION])
-              ? goerli
-              : mainnet
-          }
-          avatar={CustomAvatar}
-        >
-          <AnimatePresence exitBeforeEnter>
-            <GraphQLProvider>
-              <DndProvider backend={HTML5Backend}>
-                <NotificationContextProvider>
-                  <NFTPurchaseContextProvider>
-                    <NFTListingsContextProvider>
-                      {getLayout(
-                        <Component {...pageProps} key={router.pathname} />
-                      )}
-                    </NFTListingsContextProvider>
-                  </NFTPurchaseContextProvider>
-                </NotificationContextProvider>
-              </DndProvider>
-            </GraphQLProvider>
-          </AnimatePresence>
-        </RainbowKitProvider>
-      </WagmiConfig>
+      <RootProvider>
+        {getLayout(
+          <Component {...pageProps} key={router.pathname} />
+        )}
+      </RootProvider>
+
     </>
   );
 }
