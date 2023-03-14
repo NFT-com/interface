@@ -51,10 +51,6 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
     }
   }, [minVal, maxVal]);
 
-  useEffect(() => {
-    isDiscoverCollections && props.changeCurrency('ETH');
-  },[isDiscoverCollections, props]);
-
   return (
     <div ref={wrapperRef}>
       <div className="flex justify-between items-center mb-2.5 mt-4">
