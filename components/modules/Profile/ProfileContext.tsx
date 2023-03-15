@@ -1,4 +1,4 @@
-import { Maybe, Nft, PageInfo, ProfileDisplayType, ProfileLayoutType } from 'graphql/generated/types';
+import { Maybe, Nft, ProfileDisplayType, ProfileLayoutType } from 'graphql/generated/types';
 import { useFileUploadMutation } from 'graphql/hooks/useFileUploadMutation';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
@@ -135,7 +135,7 @@ export interface ProfileContextProviderProps {
   profileURI: string;
 }
 
-const PUBLIC_PROFILE_LOAD_COUNT = 20;
+const PUBLIC_PROFILE_LOAD_COUNT = !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ? 8 : 20;
 
 /**
  * This context provides state management and helper functions for viewing and editing Profiles.
