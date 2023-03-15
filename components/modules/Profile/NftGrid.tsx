@@ -200,6 +200,7 @@ export function NftGrid(props: NftGridProps) {
               descriptionVisible={draftNftsDescriptionsVisible}
               preventDefault={editMode}
               onGetItemHight={rowIndex == 0 && getItemHeight}
+              isGKMinted={itemData?.GKMinted}
             /> :
             <NFTCard
               name={itemData?.metadata?.name}

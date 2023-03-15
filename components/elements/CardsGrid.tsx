@@ -85,7 +85,7 @@ export default function CardsGrid(props: CardsGridProps) {
   const Row = useCallback(({ index, style, data }: any) => {
     childParams.rowIndex = index;
     const row = data[index];
-    
+
     return (
       <div style={style} className={rowClass}>
         {row && row?.map((item, cellIndex) => {
@@ -94,7 +94,7 @@ export default function CardsGrid(props: CardsGridProps) {
           childParams.getItemHeight = getRowHeight;
           if (!skeletonEnabled) {
             return children(childParams);
-          } else {
+          } else if (hasNextPage && skeletonEnabled) {
             setTimeout(() => {
               setSkeletonEnabled(false);
             }, 1000);
@@ -109,7 +109,7 @@ export default function CardsGrid(props: CardsGridProps) {
         )}
       </div>
     );
-  }, [childParams, children, getRowHeight, rowClass, skeletonEnabled]);
+  }, [childParams, children, getRowHeight, hasNextPage, rowClass, skeletonEnabled]);
 
   return (
     <div className='grid-cols-1 w-full'

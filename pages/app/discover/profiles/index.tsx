@@ -153,11 +153,13 @@ export default function ProfilePage() {
         </div>
       );
     }else {
-      return (
-        <div className="flex items-center justify-center min-h-[16rem] w-full">
-          <Loader />
-        </div>
-      );
+      return !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)
+        ? (
+          <div className="flex items-center justify-center min-h-[16rem] w-full">
+            <Loader />
+          </div>
+        )
+        : null;
     }
   };
   return(
