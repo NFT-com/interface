@@ -1,6 +1,8 @@
 import { tw } from 'utils/tw';
 
+import { Player } from '@lottiefiles/react-lottie-player';
 import Heart from 'public/heart.svg?svgr';
+import { useState } from 'react';
 
 type LikeCountProps = {
   count?: number;
@@ -9,33 +11,64 @@ type LikeCountProps = {
 }
 
 export default function LikeCount({ count = 0, isLiked = false, onClick }: LikeCountProps) {
+  const [clicked, setClicked] = useState(false);
+  const [liked, setLiked] = useState(isLiked);
+  const [likeCount, setLikeCount] = useState(count);
+
   return (
     <div
-      onClick={(e) => {
-        e.preventDefault();
+      onClick={() => {
         onClick && onClick();
-      }}
+        if(!liked) {
+          setClicked(true);
+          setLikeCount(likeCount + 1);
+          setTimeout(() => {
+            setLiked(true);
+            setClicked(false);
+          }, 700);
+        } else {
+          setLiked(false);
+          setLikeCount(likeCount - 1);
+        }
+      }
+      }
       className={tw(
-        isLiked ? 'bg-alert-red-bg-light hover:bg-alert-red-bg' : 'bg-footer-bg hover:bg-[#ECECEC]',
+        liked ? 'bg-alert-red-bg-light hover:bg-alert-red-bg' : 'bg-footer-bg hover:bg-[#ECECEC]',
         ' w-max relative h-10 rounded-[10px] hover:cursor-pointer px-3'
       )}
     >
       <div className='h-full flex flex-row items-center justify-center space-x-2'>
-        <div className='w-[18px] h-5 flex'>
-          <Heart
-            fill={isLiked ? '#E45E47' : '#4D4D4D'}
-          />
-        </div>
-        {count > 0 &&
+        
+        {clicked && !liked ?
+          <>
+            <div className='w-[18px] h-5 flex'></div>
+            <div className='absolute -top-[0.17rem] -left-[11px]'>
+              <Player
+                autoplay
+                controls={false}
+                src="/anim/heart.json"
+                style={{ height: '100%', width: '100%' }}
+              />
+            </div>
+          </>
+          :
+          <div className='w-[18px] h-5 flex'>
+            <Heart
+              fill={liked ? '#E45E47' : '#4D4D4D'}
+            />
+          </div>
+        }
+        
+        {likeCount > 0 &&
             <p className={tw(
               'font-noi-grotesk font-medium tracking-normal',
-              isLiked ? 'text-alert-red-light' : 'text-key-bg'
+              liked ? 'text-alert-red-light' : 'text-key-bg',
             )}>
               {
                 new Intl.NumberFormat('en-US', {
                   notation: 'compact',
                   compactDisplay: 'short'
-                }).format(count)
+                }).format(likeCount)
               }
             </p>
         }
