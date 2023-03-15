@@ -126,7 +126,7 @@ export default function AssetTableRow({
       <td className="text-body leading-body pr-8 minmd:pr-4" >
         <div className='flex items-center h-full -mt-1 truncate ... text-ellipsis'>
           <RoundedCornerMedia
-            containerClasses='w-[32px] h-[32px] mr-2'
+            containerClasses='min-w-[32px] w-[32px] h-[32px] mr-2'
             src={processedImageURLs[0]}
             variant={RoundedCornerVariant.Asset}
           />
