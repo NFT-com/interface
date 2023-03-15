@@ -113,7 +113,7 @@ export default function CardsGrid(props: CardsGridProps) {
         )}
       </div>
     );
-  }, [childParams, children, getRowHeight, hasNextPage, rowClass, skeletonEnabled]);
+  }, [cardType, childParams, children, getRowHeight, hasNextPage, rowClass, skeletonEnabled]);
 
   return (
     <div className='grid-cols-1 w-full'
