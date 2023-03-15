@@ -263,11 +263,17 @@ export function ProfileContextProvider(
         }
       }
 
-      if (publicProfileNfts && prevPublicProfileNfts !== publicProfileNfts && afterCursor !== '') {
-        setPubliclyVisibleNftsNoEdit([...publiclyVisibleNftsNoEdit || [], ...publicProfileNfts]);
+      if (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
+        if (publicProfileNfts && prevPublicProfileNfts !== publicProfileNfts && afterCursor !== '') {
+          setPubliclyVisibleNftsNoEdit([...publiclyVisibleNftsNoEdit || [], ...publicProfileNfts]);
+        }
+      } else {
+        if (publicProfileNfts && afterCursor !== pageInfo?.lastCursor && publicProfileNftsCount != 0) {
+          setPubliclyVisibleNftsNoEdit([...publiclyVisibleNftsNoEdit || [], ...publicProfileNfts]);
+        }
       }
     }
-  }, [afterCursor, editMode, loading, prevPublicProfileNfts, publicProfileNfts, publiclyVisibleNftsNoEdit]);
+  }, [afterCursor, editMode, loading, pageInfo, prevPublicProfileNfts, publicProfileNfts, publicProfileNftsCount, publiclyVisibleNftsNoEdit]);
 
   // Rendering of Edit mode NFTS only - for pagination, toggling and drop/dragging visibility
   useEffect(() => {

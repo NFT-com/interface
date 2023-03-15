@@ -169,10 +169,11 @@ export function NftGrid(props: NftGridProps) {
       )}
       hasNextPage={publicProfileNftsCount != 0}
     >
-      {({ itemData, rowIndex, getItemHeight }) => {
+      {({ itemData, rowIndex, cellIndex, getItemHeight }) => {
         return(
           !getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
             <NftCard
+              key={''+ rowIndex + cellIndex}
               name={itemData?.metadata?.name}
               images={[itemData?.previewLink || itemData?.metadata?.imageURL]}
               collectionName={itemData?.collection?.name}
@@ -203,6 +204,7 @@ export function NftGrid(props: NftGridProps) {
               isGKMinted={itemData?.GKMinted}
             /> :
             <NFTCard
+              key={''+ rowIndex + cellIndex}
               name={itemData?.metadata?.name}
               images={[itemData?.previewLink || itemData?.metadata?.imageURL]}
               collectionName={itemData?.collection?.name}

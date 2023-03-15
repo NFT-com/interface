@@ -55,13 +55,13 @@ export default function CardsGrid(props: CardsGridProps) {
         if (screenWidth > 1600) {
           setColumnCount(cardType == 'nfts' || cardType == 'profileDiscover' ? 5 : cardType == 'profiles' ? 6 : 3);
         } else if (screenWidth > 1200 && screenWidth <= 1600) {
-          setColumnCount(cardType == 'nfts' ? 4 : cardType == 'profileDiscover' ? 5: 3);
+          setColumnCount(cardType == 'nfts' ? 4 : cardType == 'profileDiscover' || cardType == 'profiles' ? 5 : 3);
         } else if (screenWidth > 900 && screenWidth <= 1200) {
-          setColumnCount(cardType == 'nfts' || cardType == 'profileDiscover'? 3 : 2);
+          setColumnCount(cardType == 'nfts' || cardType == 'profileDiscover'? 3 : cardType == 'profiles' ? 4 : 2);
         } else if (screenWidth > 600 && screenWidth <= 900) {
-          setColumnCount(2);
+          setColumnCount(cardType == 'profiles' ? 3 : 2);
         } else {
-          setColumnCount(1);
+          setColumnCount(cardType == 'profiles' ? 2 : 1);
         }
       } else {
         if (screenWidth > 1600) {
@@ -97,7 +97,7 @@ export default function CardsGrid(props: CardsGridProps) {
           } else if (hasNextPage && skeletonEnabled) {
             setTimeout(() => {
               setSkeletonEnabled(false);
-            }, 1000);
+            }, 10);
             return (
               <div key={''+index+cellIndex} className='rounded-[16px] shadow-xl overflow-hidden w-full cursor-p relative mb-3'>
                 <div className='animate-pulse w-full bg-gray-400 h-2/3'></div>
@@ -138,7 +138,7 @@ export default function CardsGrid(props: CardsGridProps) {
             ref={ref}
             useIsScrolling={true}
             onScroll={(scrollInfo) => {
-              setSkeletonEnabled(scrollInfo.scrollOffset % 225 > 20 && scrollInfo.scrollOffset % 225 < 200);
+              cardType != 'profiles' && setSkeletonEnabled(scrollInfo.scrollOffset % 225 > 20 && scrollInfo.scrollOffset % 225 < 200);
             }}
           >
             {Row}
