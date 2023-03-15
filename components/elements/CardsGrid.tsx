@@ -18,7 +18,6 @@ interface CardsGridProps {
   gridData: any[];
   sideNavOpen?: boolean;
   loadMoreItems: () => void;
-  totalItems: number;
   cardType: string;
   rowClass?: string;
   defaultRowHeight?: number
@@ -26,10 +25,11 @@ interface CardsGridProps {
 }
 
 export default function CardsGrid(props: CardsGridProps) {
-  const { children, gridData, sideNavOpen, loadMoreItems, totalItems, cardType, rowClass, defaultRowHeight, hasNextPage } = props;
+  const { children, gridData, sideNavOpen, loadMoreItems, cardType, rowClass, defaultRowHeight, hasNextPage } = props;
   const childParams = useMemo(() => ({ itemData: null, rowIndex: null, cellIndex: null, getItemHeight: null } ),[]);
   const [dataPerRows, setDataPerRows] = useState([]);
   const [rowHeight, setRowhHeight] = useState(550);
+  const [skeletonEnabled, setSkeletonEnabled] = useState(false);
 
   let windowObject;
   if (typeof window !== 'undefined') {
@@ -86,21 +86,28 @@ export default function CardsGrid(props: CardsGridProps) {
     childParams.rowIndex = index;
     const row = data[index];
     
-    console.log('!isItemLoaded(index) fdo', !isItemLoaded(index));
     return (
       <div style={style} className={rowClass}>
-        {(!isItemLoaded(index)) ?
-          (<div className='border bg-gray-400 h-40 w-20' >asdfasdfasdfsd</div>)
-          :
-          (row && row?.map((item, cellIndex) => {
-            childParams.itemData = item;
-            childParams.cellIndex = cellIndex;
-            childParams.getItemHeight = getRowHeight;
-            return item && children(childParams);
-          }))}
+        {row && row?.map((item, cellIndex) => {
+          childParams.itemData = item;
+          childParams.cellIndex = cellIndex;
+          childParams.getItemHeight = getRowHeight;
+          if (!skeletonEnabled) {
+            return children(childParams);
+          } else {
+            setTimeout(() => {
+              setSkeletonEnabled(false);
+            }, 1000);
+            return (<div key={''+index+cellIndex} className='rounded-[16px] shadow-xl overflow-hidden w-full cursor-p relative mb-3'>
+              <div className='animate-pulse w-full bg-gray-400 h-2/3'></div>
+              <div className='w-full h-1/3'></div>
+            </div>);
+          }
+        }
+        )}
       </div>
     );
-  }, [childParams, children, getRowHeight, isItemLoaded, rowClass]);
+  }, [childParams, children, getRowHeight, rowClass, skeletonEnabled]);
 
   return (
     <div className='grid-cols-1 w-full'
@@ -114,7 +121,6 @@ export default function CardsGrid(props: CardsGridProps) {
         isItemLoaded={isItemLoaded}
         itemCount={itemCount}
         loadMoreItems={loadMoreItems}
-        threshold={10}
       >
         {({ ref, onItemsRendered }) => (
           (rowHeight || defaultRowHeight) &&< FixedSizeList
@@ -128,6 +134,10 @@ export default function CardsGrid(props: CardsGridProps) {
             overscanRowCount={3}
             onItemsRendered={onItemsRendered}
             ref={ref}
+            useIsScrolling={true}
+            onScroll={(scrollInfo) => {
+              setSkeletonEnabled(scrollInfo.scrollOffset % 225 > 20 && scrollInfo.scrollOffset % 225 < 200);
+            }}
           >
             {Row}
           </FixedSizeList>

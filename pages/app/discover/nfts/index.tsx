@@ -56,7 +56,6 @@ export default function CollectionsPage() {
         setTotalFound(results?.found);
         page > 1 ? setNftsData([...nftSData,...(results ? results.hits : [])]) : setNftsData(results?.hits);
         filters.length < 1 && !isNullOrEmpty(results?.facet_counts) && setFilters([...results.facet_counts]);
-        console.log('results fdo', results);
       });
     }
     return () => {
@@ -106,7 +105,6 @@ export default function CollectionsPage() {
       <CardsGrid
         gridData={nftSData}
         sideNavOpen={sideNavOpen}
-        totalItems={found}
         loadMoreItems={loadMoreItems}
         cardType='nfts'
         rowClass='flex flex-row justify-between w-full gap-4'
