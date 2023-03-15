@@ -89,8 +89,7 @@ export default function CardsGrid(props: CardsGridProps) {
     return (
       <div style={{
         ...style,
-        position: cardType == 'profiles' ? 'relative' : 'absolute',
-        marginTop: cardType == 'profiles' && index != 0 ? '-311px' : '0px',
+        top: cardType == 'profiles' ? ((rowHeight * index) + 16*index) + 'px' : style.top,
       }}className={rowClass}>
         {row && row?.map((item, cellIndex) => {
           childParams.itemData = item;
@@ -113,7 +112,7 @@ export default function CardsGrid(props: CardsGridProps) {
         )}
       </div>
     );
-  }, [cardType, childParams, children, getRowHeight, hasNextPage, rowClass, skeletonEnabled]);
+  }, [cardType, childParams, children, getRowHeight, hasNextPage, rowClass, rowHeight, skeletonEnabled]);
 
   return (
     <div className='grid-cols-1 w-full'
