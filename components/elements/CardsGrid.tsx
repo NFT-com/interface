@@ -87,7 +87,11 @@ export default function CardsGrid(props: CardsGridProps) {
     const row = data[index];
 
     return (
-      <div style={style} className={rowClass}>
+      <div style={{
+        ...style,
+        position: cardType == 'profiles' ? 'relative' : 'absolute',
+        marginTop: cardType == 'profiles' && index != 0 ? '-311px' : '0px',
+      }}className={rowClass}>
         {row && row?.map((item, cellIndex) => {
           childParams.itemData = item;
           childParams.cellIndex = cellIndex;
