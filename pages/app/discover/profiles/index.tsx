@@ -86,6 +86,7 @@ export default function ProfilePage() {
         loadMoreItems={loadMoreProfilesFunc}
         cardType='profileDiscover'
         defaultRowHeight={225}
+        hasNextPage={loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor !== null}
         rowClass={tw(
           'grid grid-cols-1 minlg:space-x-0 gap-1 minmd:gap-4',
           'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>

@@ -72,7 +72,7 @@ export default function CollectionsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, filters]);
 
-  const loadMoreItemss = () => {
+  const loadMoreItems = () => {
     setPage(page + 1);
   };
   
@@ -133,8 +133,9 @@ export default function CollectionsPage() {
             gridData={collections}
             sideNavOpen={sideNavOpen}
             totalItems={found}
-            loadMoreItems={loadMoreItemss}
+            loadMoreItems={loadMoreItems}
             cardType='collections'
+            hasNextPage={collections && collections.length < found && collections?.length > 0}
             rowClass={tw(
               'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
               'minxl:grid-cols-3 minmd:grid-cols-2 minhd:grid-cols-4 w-full')}>

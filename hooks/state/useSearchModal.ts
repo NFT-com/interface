@@ -46,7 +46,6 @@ export function useSearchModal() {
       dropDownSearchResults: null,
       keyword: '',
       isDiscoverCollections: false,
-      cardHeightForRWGrid: 0,
     } });
 
   const loading = !data;
@@ -145,14 +144,6 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
-  const setCardHeightForRWGrid = useCallback((cardHeightForRWGrid: number) => {
-    mutate({
-      ...data,
-      cardHeightForRWGrid
-    });
-  },[data, mutate]);
-
-
   const setDropDownSearchResults = useCallback((dropDownSearchResults: any, keyword?: string) => {
     mutate({
       ...data,
@@ -232,7 +223,6 @@ export function useSearchModal() {
     nftSFilters: data.nftSFilters,
     isLeaderBoard: data.isLeaderBoard,
     isDiscoverCollections: data.isDiscoverCollections,
-    cardHeightForRWGrid: data.cardHeightForRWGrid,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     changeTimePeriod: useChangeTimePeriod,
@@ -248,7 +238,6 @@ export function useSearchModal() {
     setClearedFilters,
     setDropDownSearchResults,
     setIsDiscoverCollections,
-    setCardHeightForRWGrid
   };
 }
 

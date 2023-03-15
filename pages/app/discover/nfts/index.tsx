@@ -56,6 +56,7 @@ export default function CollectionsPage() {
         setTotalFound(results?.found);
         page > 1 ? setNftsData([...nftSData,...(results ? results.hits : [])]) : setNftsData(results?.hits);
         filters.length < 1 && !isNullOrEmpty(results?.facet_counts) && setFilters([...results.facet_counts]);
+        console.log('results fdo', results);
       });
     }
     return () => {
@@ -64,7 +65,7 @@ export default function CollectionsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
 
-  const loadMoreItemss = () => {
+  const loadMoreItems = () => {
     setPage(page + 1);
   };
 
@@ -106,9 +107,11 @@ export default function CollectionsPage() {
         gridData={nftSData}
         sideNavOpen={sideNavOpen}
         totalItems={found}
-        loadMoreItems={loadMoreItemss}
+        loadMoreItems={loadMoreItems}
         cardType='nfts'
-        rowClass='flex flex-row justify-between w-full gap-4'>
+        rowClass='flex flex-row justify-between w-full gap-4'
+        hasNextPage={nftSData && nftSData.length < found && nftSData?.length > 0 }
+      >
         {({ itemData, rowIndex, cellIndex, getItemHeight }) => {
           return(
             <NftCard

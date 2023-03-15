@@ -1,4 +1,3 @@
-import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
 import { outerElementType } from './outerElementType';
@@ -23,13 +22,13 @@ interface CardsGridProps {
   cardType: string;
   rowClass?: string;
   defaultRowHeight?: number
+  hasNextPage?: boolean;
 }
 
 export default function CardsGrid(props: CardsGridProps) {
-  const { children, gridData, sideNavOpen, loadMoreItems, totalItems, cardType, rowClass, defaultRowHeight } = props;
+  const { children, gridData, sideNavOpen, loadMoreItems, totalItems, cardType, rowClass, defaultRowHeight, hasNextPage } = props;
   const childParams = useMemo(() => ({ itemData: null, rowIndex: null, cellIndex: null, getItemHeight: null } ),[]);
   const [dataPerRows, setDataPerRows] = useState([]);
-  const { cardHeightForRWGrid } = useSearchModal();
   const [rowHeight, setRowhHeight] = useState(550);
 
   let windowObject;
@@ -80,23 +79,28 @@ export default function CardsGrid(props: CardsGridProps) {
     }
   },[sideNavOpen, screenWidth, cardType]);
 
-  const isItemLoaded = index => index < dataPerRows.length;
+  const itemCount = hasNextPage ? dataPerRows.length + 1 : dataPerRows.length;
+  const isItemLoaded = useCallback( index => !hasNextPage || index < dataPerRows.length, [dataPerRows.length, hasNextPage]);
 
   const Row = useCallback(({ index, style, data }: any) => {
     childParams.rowIndex = index;
     const row = data[index];
     
+    console.log('!isItemLoaded(index) fdo', !isItemLoaded(index));
     return (
       <div style={style} className={rowClass}>
-        {row && row?.map((item, cellIndex) => {
-          childParams.itemData = item;
-          childParams.cellIndex = cellIndex;
-          childParams.getItemHeight = getRowHeight;
-          return item && children(childParams);
-        })}
+        {(!isItemLoaded(index)) ?
+          (<div className='border bg-gray-400 h-40 w-20' >asdfasdfasdfsd</div>)
+          :
+          (row && row?.map((item, cellIndex) => {
+            childParams.itemData = item;
+            childParams.cellIndex = cellIndex;
+            childParams.getItemHeight = getRowHeight;
+            return item && children(childParams);
+          }))}
       </div>
     );
-  }, [childParams, children, getRowHeight, rowClass]);
+  }, [childParams, children, getRowHeight, isItemLoaded, rowClass]);
 
   return (
     <div className='grid-cols-1 w-full'
@@ -108,11 +112,11 @@ export default function CardsGrid(props: CardsGridProps) {
       }}>
       <InfiniteLoader
         isItemLoaded={isItemLoaded}
-        itemCount={dataPerRows.length}
-        loadMoreItems={() => loadMoreItems()}
+        itemCount={itemCount}
+        loadMoreItems={loadMoreItems}
         threshold={10}
       >
-        {({ ref }) => (
+        {({ ref, onItemsRendered }) => (
           (rowHeight || defaultRowHeight) &&< FixedSizeList
             className="grid no-scrollbar"
             outerElementType={outerElementType}
@@ -122,10 +126,7 @@ export default function CardsGrid(props: CardsGridProps) {
             itemData={dataPerRows}
             itemSize={defaultRowHeight ?? (rowHeight + (screenWidth < 600 && cardType == 'nfts' ? 65 : 12))}
             overscanRowCount={3}
-            onItemsRendered={(itemsRendered) => {
-              if (gridData && ((gridData.length < totalItems && gridData?.length > 0) || totalItems != 0))
-                itemsRendered.visibleStartIndex % 3 == 0 && loadMoreItems();
-            }}
+            onItemsRendered={onItemsRendered}
             ref={ref}
           >
             {Row}
