@@ -1,4 +1,4 @@
-import { Maybe, Nft, ProfileDisplayType, ProfileLayoutType } from 'graphql/generated/types';
+import { Maybe, Nft, PageInfo, ProfileDisplayType, ProfileLayoutType } from 'graphql/generated/types';
 import { useFileUploadMutation } from 'graphql/hooks/useFileUploadMutation';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
@@ -76,6 +76,7 @@ export interface ProfileContextType {
   searchQuery: string;
   setSearchQuery: (val: string) => void;
   debouncedSearchQuery: string;
+  publicProfileNftsCount: number
 }
 
 // initialize with default values
@@ -126,14 +127,15 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   currentLayoutType: ProfileLayoutType.Default,
   searchQuery: null,
   setSearchQuery: () => null,
-  debouncedSearchQuery: null
+  debouncedSearchQuery: null,
+  publicProfileNftsCount: null,
 });
 
 export interface ProfileContextProviderProps {
   profileURI: string;
 }
 
-const PUBLIC_PROFILE_LOAD_COUNT = 8;
+const PUBLIC_PROFILE_LOAD_COUNT = 20;
 
 /**
  * This context provides state management and helper functions for viewing and editing Profiles.
@@ -528,7 +530,7 @@ export function ProfileContextProvider(
     publiclyVisibleNftsNoEdit: publiclyVisibleNftsNoEdit ?? [],
     loadMoreNfts: () => {
       if (!editMode) {
-        pageInfo.lastCursor && setAfterCursor(pageInfo.lastCursor);
+        pageInfo?.lastCursor && setAfterCursor(pageInfo.lastCursor);
       }
     },
     loadMoreNftsEditMode: () => {
@@ -641,7 +643,8 @@ export function ProfileContextProvider(
     currentLayoutType,
     searchQuery,
     setSearchQuery,
-    debouncedSearchQuery: debouncedSearch
+    debouncedSearchQuery: debouncedSearch,
+    publicProfileNftsCount
   }}>
     {props.children}
   </ProfileContext.Provider>;

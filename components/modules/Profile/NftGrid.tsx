@@ -1,3 +1,4 @@
+import CardsGrid from 'components/elements/CardsGrid';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import DraggableGridItem from 'components/modules/Draggable/DraggableGridItem';
 import { GridContext } from 'components/modules/Draggable/GridContext';
@@ -7,7 +8,7 @@ import { useIsProfileCustomized } from 'graphql/hooks/useIsProfileCustomized';
 import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { Doppler, getEnvBool } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { ClaimProfileCard } from './ClaimProfileCard';
@@ -30,6 +31,8 @@ export function NftGrid(props: NftGridProps) {
     editMode,
     draftNftsDescriptionsVisible,
     draftLayoutType,
+    loadMoreNfts,
+    publicProfileNftsCount
   } = useContext(ProfileContext);
   const { items, moveItem } = useContext(GridContext);
   const { user } = useUser();
@@ -53,101 +56,180 @@ export function NftGrid(props: NftGridProps) {
 
   const savedLayoutType = 'Default';
 
-  return <div
-    className={tw(
-      'grid w-full',
-      'gap-4 mt-4 minlg:mt-0',
-      (draftLayoutType ?? savedLayoutType) === 'Default' ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-5 minxxl:grid-cols-6' : '',
-      (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
-      (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-2 minmd:grid-cols-4 minlg:grid-cols-6' : '',
-      (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'grid-cols-4 minlg:grid-cols-8' : '',
-    )}
-    data-testid={savedLayoutType+'-layout-option'}
-  >
-    {user?.currentProfileUrl === props.profileURI && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
+  return !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ?
+    <div
+      className={tw(
+        'grid w-full',
+        'gap-4 mt-4 minlg:mt-0',
+        (draftLayoutType ?? savedLayoutType) === 'Default' ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-5 minxxl:grid-cols-6' : '',
+        (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
+        (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-2 minmd:grid-cols-4 minlg:grid-cols-6' : '',
+        (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'grid-cols-4 minlg:grid-cols-8' : '',
+      )}
+      data-testid={savedLayoutType+'-layout-option'}
+    >
+      {user?.currentProfileUrl === props.profileURI && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
       <div className='hidden minlg:block'>
         <ClaimProfileCard />
       </div>
-    }
-    {items?.map((nft: PartialDeep<DetailedNft>, index) => (
-      <DraggableGridItem
-        key={`${nft?.contract}-${nft?.tokenId}`}
-        item={{ id: nft?.id, hidden: nft?.hidden, draggable: props.draggable ?? true }}
-        onMoveItem={nft?.hidden ? null : moveItem}
-      >
-        <div
-          className={tw(
-            'NFTCardContainer',
-            'flex justify-center mb-2 minmd:mb-0',
-            (draftLayoutType ?? savedLayoutType) === 'Default' ? 'mb-10' : '',
-            (draftLayoutType ?? savedLayoutType) === 'Featured' ? `${[0,1,2].includes(index) ? 'col-span-2 row-span-2':'col-span-1'} mb-10` : '',
-            (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 1199 ? `${index % 7 === 0 ? 'row-span-3 col-span-3' : '' } ${(index-4) % 7 === 0? 'row-span-2 col-span-2' : '' }` : '',
-            (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 900 && screenWidth <= 1199 ? `${mosaicArray2.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
-            (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 600 && screenWidth <= 899 ? `${ mosaicArray.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
-            (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'col-start-2 minlg:col-start-3 col-span-2 minlg:col-span-4 mb-4' : '',
-          )}
+      }
+      {items?.map((nft: PartialDeep<DetailedNft>, index) => (
+        <DraggableGridItem
+          key={`${nft?.contract}-${nft?.tokenId}`}
+          item={{ id: nft?.id, hidden: nft?.hidden, draggable: props.draggable ?? true }}
+          onMoveItem={nft?.hidden ? null : moveItem}
         >
-          {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+          <div
+            className={tw(
+              'NFTCardContainer',
+              'flex justify-center mb-2 minmd:mb-0',
+              (draftLayoutType ?? savedLayoutType) === 'Default' ? 'mb-10' : '',
+              (draftLayoutType ?? savedLayoutType) === 'Featured' ? `${[0,1,2].includes(index) ? 'col-span-2 row-span-2':'col-span-1'} mb-10` : '',
+              (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 1199 ? `${index % 7 === 0 ? 'row-span-3 col-span-3' : '' } ${(index-4) % 7 === 0? 'row-span-2 col-span-2' : '' }` : '',
+              (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 900 && screenWidth <= 1199 ? `${mosaicArray2.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
+              (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 600 && screenWidth <= 899 ? `${ mosaicArray.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
+              (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'col-start-2 minlg:col-start-3 col-span-2 minlg:col-span-4 mb-4' : '',
+            )}
+          >
+            {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+              <NftCard
+                name={nft?.metadata?.name}
+                images={[nft?.previewLink || nft?.metadata?.imageURL]}
+                collectionName={nft?.collection?.name}
+                isOwnedByMe={nft?.isOwnedByMe}
+                listings={nft?.listings?.items || []}
+                nft={nft}
+                contractAddr={nft?.contract}
+                tokenId={nft?.tokenId}
+                // only show the eye icons to the owner in edit mode
+                visible={editMode ?
+                  !nft?.hidden :
+                  null
+                }
+                onVisibleToggle={() => {
+                  if (editMode) {
+                    toggleHidden(nft?.id, !nft?.hidden);
+                  }
+                }}
+                onClick={() => {
+                  if (editMode) {
+                    toggleHidden(nft?.id, !nft?.hidden);
+                  }
+                }}
+                redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
+                descriptionVisible={draftNftsDescriptionsVisible}
+                preventDefault={editMode}
+              /> :
+              <NFTCard
+                name={nft?.metadata?.name}
+                images={[nft?.previewLink || nft?.metadata?.imageURL]}
+                collectionName={nft?.collection?.name}
+                isOwnedByMe={nft?.isOwnedByMe}
+                listings={nft?.listings?.items || []}
+                nft={nft}
+                contractAddr={nft?.contract}
+                tokenId={nft?.tokenId}
+                // only show the eye icons to the owner in edit mode
+                visible={editMode ?
+                  !nft?.hidden :
+                  null
+                }
+                onVisibleToggle={() => {
+                  if (editMode) {
+                    toggleHidden(nft?.id, !nft?.hidden);
+                  }
+                }}
+                onClick={() => {
+                  if (editMode) {
+                    toggleHidden(nft?.id, !nft?.hidden);
+                  }
+                }}
+                redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
+                descriptionVisible={draftNftsDescriptionsVisible}
+                preventDefault={editMode}
+              />
+            }
+          </div>
+        </DraggableGridItem>
+      ))}
+
+    </div>
+    :
+    <CardsGrid
+      gridData={items}
+      loadMoreItems={loadMoreNfts}
+      cardType='profiles'
+      rowClass={tw(
+        'grid w-full',
+        'gap-4 mt-4 minlg:mt-0',
+        (draftLayoutType ?? savedLayoutType) === 'Default' ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-5 minxxl:grid-cols-6' : '',
+        (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
+        (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-2 minmd:grid-cols-4 minlg:grid-cols-6' : '',
+        (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'grid-cols-4 minlg:grid-cols-8' : '',
+      )}
+      hasNextPage={publicProfileNftsCount != 0}
+    >
+      {({ itemData, rowIndex, getItemHeight }) => {
+        return(
+          !getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
             <NftCard
-              name={nft?.metadata?.name}
-              images={[nft?.previewLink || nft?.metadata?.imageURL]}
-              collectionName={nft?.collection?.name}
-              isOwnedByMe={nft?.isOwnedByMe}
-              listings={nft?.listings?.items || []}
-              nft={nft}
-              contractAddr={nft?.contract}
-              tokenId={nft?.tokenId}
+              name={itemData?.metadata?.name}
+              images={[itemData?.previewLink || itemData?.metadata?.imageURL]}
+              collectionName={itemData?.collection?.name}
+              isOwnedByMe={itemData?.isOwnedByMe}
+              listings={itemData?.listings?.items || []}
+              nft={itemData}
+              contractAddr={itemData?.contract}
+              tokenId={itemData?.tokenId}
               // only show the eye icons to the owner in edit mode
               visible={editMode ?
-                !nft?.hidden :
+                !itemData?.hidden :
                 null
               }
               onVisibleToggle={() => {
                 if (editMode) {
-                  toggleHidden(nft?.id, !nft?.hidden);
+                  toggleHidden(itemData?.id, !itemData?.hidden);
                 }
               }}
               onClick={() => {
                 if (editMode) {
-                  toggleHidden(nft?.id, !nft?.hidden);
+                  toggleHidden(itemData?.id, !itemData?.hidden);
                 }
               }}
-              redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
+              redirectTo={!editMode && ('/app/nft/' + itemData?.contract + '/' + BigNumber.from(itemData?.tokenId).toString())}
               descriptionVisible={draftNftsDescriptionsVisible}
               preventDefault={editMode}
+              onGetItemHight={rowIndex == 0 && getItemHeight}
             /> :
             <NFTCard
-              name={nft?.metadata?.name}
-              images={[nft?.previewLink || nft?.metadata?.imageURL]}
-              collectionName={nft?.collection?.name}
-              isOwnedByMe={nft?.isOwnedByMe}
-              listings={nft?.listings?.items || []}
-              nft={nft}
-              contractAddr={nft?.contract}
-              tokenId={nft?.tokenId}
+              name={itemData?.metadata?.name}
+              images={[itemData?.previewLink || itemData?.metadata?.imageURL]}
+              collectionName={itemData?.collection?.name}
+              isOwnedByMe={itemData?.isOwnedByMe}
+              listings={itemData?.listings?.items || []}
+              nft={itemData}
+              contractAddr={itemData?.contract}
+              tokenId={itemData?.tokenId}
               // only show the eye icons to the owner in edit mode
               visible={editMode ?
-                !nft?.hidden :
+                !itemData?.hidden :
                 null
               }
               onVisibleToggle={() => {
                 if (editMode) {
-                  toggleHidden(nft?.id, !nft?.hidden);
+                  toggleHidden(itemData?.id, !itemData?.hidden);
                 }
               }}
               onClick={() => {
                 if (editMode) {
-                  toggleHidden(nft?.id, !nft?.hidden);
+                  toggleHidden(itemData?.id, !itemData?.hidden);
                 }
               }}
-              redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
+              redirectTo={!editMode && ('/app/nft/' + itemData?.contract + '/' + BigNumber.from(itemData?.tokenId).toString())}
               descriptionVisible={draftNftsDescriptionsVisible}
               preventDefault={editMode}
+              onGetItemHight={rowIndex == 0 && getItemHeight}
             />
-          }
-        </div>
-      </DraggableGridItem>
-    ))}
-
-  </div>;
+        );}}
+    </CardsGrid>;
 }

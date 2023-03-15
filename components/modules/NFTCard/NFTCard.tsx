@@ -6,6 +6,7 @@ import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getListingCurrencyAddress, getLowestPriceListing } from 'utils/listingUtils';
@@ -17,6 +18,7 @@ import { NFTCardDescription } from './NFTCardDescription';
 import { NFTCardEditMode } from './NFTCardEditMode';
 import { NFTCardImage } from './NFTCardImage';
 
+import { useEffect, useRef } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftCardProps {
@@ -35,6 +37,7 @@ export interface NftCardProps {
   onClick?: () => void;
   descriptionVisible?: boolean;
   preventDefault?: boolean;
+  onGetItemHight?: (height: number) => void;
 }
 
 export function NFTCard(props: NftCardProps) {
@@ -51,6 +54,12 @@ export function NFTCard(props: NftCardProps) {
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
   const isOwnedByMe = props?.isOwnedByMe || (props?.nft?.wallet?.address ?? props?.nft?.owner) === currentAddress;
   const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
+  const { width: screenWidth } = useWindowDimensions();
+  const refNFTCard = useRef(null);
+  
+  useEffect(() => {
+    props.onGetItemHight && props.onGetItemHight(refNFTCard && refNFTCard?.current?.offsetHeight);
+  }, [props, props.onGetItemHight, screenWidth]);
 
   return (
     <div className='relative w-full h-full'>
@@ -65,7 +74,7 @@ export function NFTCard(props: NftCardProps) {
         props.descriptionVisible != false ? '' : 'h-max'
       )}>
         <NFTCardEditMode {...props} />
-        <a
+        <a ref={refNFTCard}
           href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'}
           onClick={(e) => {
             // TODO: move to helper / logger class at some point
@@ -79,9 +88,9 @@ export function NFTCard(props: NftCardProps) {
             props.onClick && props.onClick();
           }}
         >
-          <div className={tw(
+          <div ref={refNFTCard} className={tw(
             'relative object-cover w-full h-max flex flex-col',
-            !bestListing && 'mb-10'
+            !bestListing && 'pb-10'
           )}>
             <NFTCardImage {...props} bestListing={bestListing} nft={nft} isOwnedByMe={isOwnedByMe} currencyData={currencyData} />
             {props.descriptionVisible != false &&

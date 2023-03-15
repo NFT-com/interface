@@ -132,7 +132,6 @@ export default function CollectionsPage() {
           (!isLeaderBoard && <CardsGrid
             gridData={collections}
             sideNavOpen={sideNavOpen}
-            totalItems={found}
             loadMoreItems={loadMoreItems}
             cardType='collections'
             hasNextPage={collections && collections.length < found && collections?.length > 0}

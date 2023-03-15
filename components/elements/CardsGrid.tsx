@@ -53,7 +53,7 @@ export default function CardsGrid(props: CardsGridProps) {
     if (screenWidth) {
       if (!sideNavOpen) {
         if (screenWidth > 1600) {
-          setColumnCount(cardType == 'nfts' || cardType == 'profileDiscover' ? 5 : 3);
+          setColumnCount(cardType == 'nfts' || cardType == 'profileDiscover' ? 5 : cardType == 'profiles' ? 6 : 3);
         } else if (screenWidth > 1200 && screenWidth <= 1600) {
           setColumnCount(cardType == 'nfts' ? 4 : cardType == 'profileDiscover' ? 5: 3);
         } else if (screenWidth > 900 && screenWidth <= 1200) {
@@ -98,10 +98,12 @@ export default function CardsGrid(props: CardsGridProps) {
             setTimeout(() => {
               setSkeletonEnabled(false);
             }, 1000);
-            return (<div key={''+index+cellIndex} className='rounded-[16px] shadow-xl overflow-hidden w-full cursor-p relative mb-3'>
-              <div className='animate-pulse w-full bg-gray-400 h-2/3'></div>
-              <div className='w-full h-1/3'></div>
-            </div>);
+            return (
+              <div key={''+index+cellIndex} className='rounded-[16px] shadow-xl overflow-hidden w-full cursor-p relative mb-3'>
+                <div className='animate-pulse w-full bg-gray-400 h-2/3'></div>
+                <div className='w-full h-1/3'></div>
+              </div>
+            );
           }
         }
         )}
@@ -130,7 +132,7 @@ export default function CardsGrid(props: CardsGridProps) {
             height={windowObject?.innerHeight ?? 0}
             itemCount={dataPerRows.length}
             itemData={dataPerRows}
-            itemSize={defaultRowHeight ?? (rowHeight + (screenWidth < 600 && cardType == 'nfts' ? 65 : 12))}
+            itemSize={defaultRowHeight ?? (rowHeight + (screenWidth < 600 && cardType == 'nfts' ? 65 : cardType == 'profiles' ? 0 : 12))}
             overscanRowCount={3}
             onItemsRendered={onItemsRendered}
             ref={ref}

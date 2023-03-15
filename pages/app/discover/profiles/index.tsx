@@ -82,7 +82,6 @@ export default function ProfilePage() {
       :
       <CardsGrid
         gridData={uniqData}
-        totalItems={loadedProfilesNextPage?.latestProfiles?.totalItems}
         loadMoreItems={loadMoreProfilesFunc}
         cardType='profileDiscover'
         defaultRowHeight={225}
