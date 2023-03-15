@@ -154,7 +154,7 @@ export default function CollectionsPage() {
                   countOfElements={itemData.document.actualNumberOfNFTs}
                   maxSymbolsInString={180}
                   images={[itemData.document.bannerUrl]}
-                  customHeight='h-[20rem]'
+                  customHeight='h-[20.5rem]'
                   onGetItemHight={rowIndex == 0 && getItemHeight}
                 />
               );}}

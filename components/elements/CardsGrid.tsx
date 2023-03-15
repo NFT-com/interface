@@ -120,7 +120,7 @@ export default function CardsGrid(props: CardsGridProps) {
             height={windowObject?.innerHeight ?? 0}
             itemCount={dataPerRows.length}
             itemData={dataPerRows}
-            itemSize={defaultRowHeight ?? (rowHeight + (screenWidth > 600 ? 12 : 65))}
+            itemSize={defaultRowHeight ?? (rowHeight + (screenWidth < 600 && cardType == 'nfts' ? 65 : 12))}
             overscanRowCount={3}
             onItemsRendered={(itemsRendered) => {
               if (gridData && ((gridData.length < totalItems && gridData?.length > 0) || totalItems != 0))
