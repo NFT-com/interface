@@ -30,9 +30,9 @@ describe('Unit test our seaport functions', () => {
     it('returns the expected value', () => {
       expect(getTypedDataDomain(1)).to.deep.eq({
         name: 'Seaport',
-        version: '1.1',
+        version: '1.4',
         chainId: 1,
-        verifyingContract: '0x00000000006c3852cbef3e08e8df289169ede581',
+        verifyingContract: '0x00000000000001ad428e4906ae43d8f9852d0dd6',
       });
     });
   });
@@ -93,9 +93,9 @@ describe('Unit test our seaport functions', () => {
         },
         'domain': {
           'name':'Seaport',
-          'version':'1.1',
+          'version':'1.4',
           'chainId':'1',
-          'verifyingContract':'0x00000000006c3852cbef3e08e8df289169ede581'
+          'verifyingContract':'0x00000000000001ad428e4906ae43d8f9852d0dd6'
         },
         'primaryType':'OrderComponents',
         'message':{

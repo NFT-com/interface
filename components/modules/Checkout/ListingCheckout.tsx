@@ -1,6 +1,7 @@
 import 'rc-slider/assets/index.css';
 
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import ClientOnly from 'components/elements/ClientOnly';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Switch } from 'components/elements/Switch';
@@ -405,7 +406,9 @@ export function ListingCheckout() {
           </span>
           <h1 className='text-2xl minlg:text-3xl pl-12 minlg:pl-0 font-semibold font-noi-grotesk'>Create Listings</h1>
         </div>
-        {ListingCheckoutInfo()}
+        <ClientOnly>
+          {ListingCheckoutInfo()}
+        </ClientOnly>
         {NFTCOMAtLeastOneEnabled && decreasingPriceError ?
           <div className='px-2 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4'>
             <ErrorIcon className='relative shrink-0 mr-2' />
