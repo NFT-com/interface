@@ -1,5 +1,7 @@
 import ImageWithZoom from 'components/modules/BlogPage/ImageWithZoom';
 
+import YouTubeEmbed from './YoutubeEmbed';
+
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -7,9 +9,9 @@ const theme = {
   p: (props: any) => {
     const { children } = props;
     return (
-      <p className="font-grotesk mb-8 minlg:text-xll minmd:text-lg text-base text-blog-text-reskin">
+      <div className="font-grotesk mb-8 minlg:text-xll minmd:text-lg text-base text-blog-text-reskin">
         {children}
-      </p>
+      </div>
     );
   },
   h1: (props: any) => {
@@ -44,6 +46,10 @@ const theme = {
   },
   a: (props: any) => {
     const { children } = props;
+    const isYouTube = props?.href.match(/https:\/\/(www\.)?youtube.com\/watch\?v=([a-zA-Z0-9_-]+)/) || props?.href.match(/https:\/\/(www\.)?youtu.be\/([a-zA-Z0-9_-]+)/);
+    if (isYouTube) {
+      return <YouTubeEmbed embedId={isYouTube[2]} />;
+    }
     return (
       <a
         className="font-grotesk minlg:text-xll minmd:text-lg text-base underline text-blog-text-reskin"
