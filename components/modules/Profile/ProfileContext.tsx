@@ -9,8 +9,9 @@ import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation
 import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileImagesMutation';
 import useDebounce from 'hooks/useDebounce';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler,getEnv } from 'utils/env';
-import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
+import { getPerPage, isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
 
 import { DetailedNft } from './NftGrid';
 
@@ -133,8 +134,6 @@ export interface ProfileContextProviderProps {
   profileURI: string;
 }
 
-const PUBLIC_PROFILE_LOAD_COUNT = 8;
-
 /**
  * This context provides state management and helper functions for viewing and editing Profiles.
  */
@@ -154,6 +153,9 @@ export function ProfileContextProvider(
   const [paginatedAllOwnerNfts, setPaginatedAllOwnerNfts] = useState([]);
   const [afterCursor, setAfterCursor] = useState('');
   const [afterCursorEditMode, setAfterCursorEditMode] = useState('');
+  const { width: screenWidth } = useWindowDimensions();
+  const PUBLIC_PROFILE_LOAD_COUNT = getPerPage('profilePage', screenWidth);
+
   const {
     nfts: publicProfileNfts,
     totalItems: publicProfileNftsCount,
@@ -239,7 +241,6 @@ export function ProfileContextProvider(
   const [isToggling, setIsToggling] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
-  const prevPublicProfileNfts = usePrevious(publicProfileNfts);
   const prevAllOwnerNfts = usePrevious(allOwnerNfts);
   const prevPubliclyVisibleNfts = usePrevious(publiclyVisibleNfts);
 
@@ -247,25 +248,22 @@ export function ProfileContextProvider(
   const [hideAllNFTsValue, setHideAllNFTsValue] = useState(publicProfileNftsCount === 0);
 
   const [savedCount, setSavedCount] = useAtom(profileSaveCounter);
+  const [lastAddedPage, setLastAddedPage] = useState('');
 
   // Profile page NO Edit Mode ONLY
   useEffect(() => {
     if(!loading && !editMode) {
       setPubliclyVisibleNfts(null);
       setEditModeNfts(null);
-      if (isNullOrEmpty(publiclyVisibleNftsNoEdit)) {
-        if (isNullOrEmpty(publicProfileNfts)) {
-          setAfterCursor('');
-        } else {
-          setPubliclyVisibleNftsNoEdit([...publicProfileNfts]);
-        }
-      }
-
-      if (publicProfileNfts && prevPublicProfileNfts !== publicProfileNfts && afterCursor !== '') {
+      if (
+        publicProfileNfts?.length > 0 &&
+        lastAddedPage !== pageInfo?.firstCursor
+      ) {
         setPubliclyVisibleNftsNoEdit([...publiclyVisibleNftsNoEdit || [], ...publicProfileNfts]);
+        setLastAddedPage(pageInfo?.firstCursor);
       }
     }
-  }, [afterCursor, editMode, loading, prevPublicProfileNfts, publicProfileNfts, publiclyVisibleNftsNoEdit]);
+  }, [editMode, lastAddedPage, loading, pageInfo?.firstCursor, publicProfileNfts, publiclyVisibleNftsNoEdit]);
 
   // Rendering of Edit mode NFTS only - for pagination, toggling and drop/dragging visibility
   useEffect(() => {
