@@ -134,8 +134,6 @@ export interface ProfileContextProviderProps {
   profileURI: string;
 }
 
-// const PUBLIC_PROFILE_LOAD_COUNT = 8;
-
 /**
  * This context provides state management and helper functions for viewing and editing Profiles.
  */
