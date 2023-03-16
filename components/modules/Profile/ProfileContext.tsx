@@ -255,16 +255,31 @@ export function ProfileContextProvider(
   useEffect(() => {
     if(!loading && !editMode) {
       setEditModeNfts(null);
-      if (
-        publicProfileNfts?.length > 0 &&
-        lastAddedPage !== pageInfo?.firstCursor
-      ) {
-        setPubliclyVisibleNftsNoEdit([...publiclyVisibleNftsNoEdit || [], ...publicProfileNfts]);
-        // toggleLoadState(false);
-        setLastAddedPage(pageInfo?.firstCursor);
+      
+      if (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
+        setPubliclyVisibleNfts(null);
+        if (isNullOrEmpty(publiclyVisibleNftsNoEdit)) {
+          if (isNullOrEmpty(publicProfileNfts)) {
+            setAfterCursor('');
+          } else {
+            setPubliclyVisibleNftsNoEdit([...publicProfileNfts]);
+          }
+        }
+  
+        if (publicProfileNfts && prevPublicProfileNfts !== publicProfileNfts && afterCursor !== '') {
+          setPubliclyVisibleNftsNoEdit([...publiclyVisibleNftsNoEdit || [], ...publicProfileNfts]);
+        }
+      } else {
+        if (
+          publicProfileNfts?.length > 0 &&
+          lastAddedPage !== pageInfo?.firstCursor
+        ) {
+          setPubliclyVisibleNftsNoEdit([...publiclyVisibleNftsNoEdit || [], ...publicProfileNfts]);
+          setLastAddedPage(pageInfo?.firstCursor);
+        }
       }
     }
-  }, [editMode, lastAddedPage, loading, pageInfo?.firstCursor, publicProfileNfts, publiclyVisibleNftsNoEdit]);
+  }, [afterCursor, editMode, lastAddedPage, loading, pageInfo?.firstCursor, prevPublicProfileNfts, publicProfileNfts, publiclyVisibleNftsNoEdit]);
 
   // Rendering of Edit mode NFTS only - for pagination, toggling and drop/dragging visibility
   useEffect(() => {

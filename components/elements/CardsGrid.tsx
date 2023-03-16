@@ -28,7 +28,7 @@ export default function CardsGrid(props: CardsGridProps) {
   const { children, gridData, sideNavOpen, loadMoreItems, cardType, rowClass, defaultRowHeight, hasNextPage } = props;
   const childParams = useMemo(() => ({ itemData: null, rowIndex: null, cellIndex: null, getItemHeight: null } ),[]);
   const [dataPerRows, setDataPerRows] = useState([]);
-  const [rowHeight, setRowhHeight] = useState(550);
+  const [rowHeight, setRowhHeight] = useState(cardType == 'profiles' ? 332 : 550);
 
   let windowObject;
   if (typeof window !== 'undefined') {
