@@ -38,45 +38,41 @@ export default function CardsGrid(props: CardsGridProps) {
   const getRowHeight = useCallback((height: number) => {
     setRowhHeight(height);
   }, []);
+  
   const { width: screenWidth } = useWindowDimensions();
-  const [columnCount, setColumnCount] = useState(cardType == 'profiles' ? 6 : screenWidth < 600 ? 1 : screenWidth > 600 && screenWidth <= 900 ? 2 : screenWidth > 900 && screenWidth <= 1600 ? 3 : 4);
 
-  useEffect(() => {
-    const flatData = [...gridData];
-    const data2D = [];
-    while(flatData.length) data2D.push(flatData.splice(0,columnCount));
-    setDataPerRows(data2D);
-  },[columnCount, gridData]);
+  const getColumns = useCallback(() => {
+    const columns = {
+      'nfts': !sideNavOpen ?
+        (screenWidth > 1600 ? 5 : screenWidth > 1200 && screenWidth <= 1600 ? 4 : screenWidth > 900 && screenWidth <= 1200 ? 3 : screenWidth > 600 && screenWidth <= 900 ? 2 : 1)
+        :
+        (screenWidth > 1600 ? 4 : screenWidth > 1200 && screenWidth <= 1600 ? 3 : screenWidth > 900 && screenWidth <= 1200 ? 2 : screenWidth > 600 && screenWidth <= 900 ? 2 : 1),
+      'collections': !sideNavOpen ?
+        (screenWidth > 1600 ? 3 : screenWidth > 1200 && screenWidth <= 1600 ? 3 : screenWidth > 900 && screenWidth <= 1200 ? 2 : screenWidth > 600 && screenWidth <= 900 ? 2 : 1)
+        :
+        (screenWidth > 1600 ? 3 : screenWidth > 1200 && screenWidth <= 1600 ? 3 : screenWidth > 900 && screenWidth <= 1200 ? 2 : screenWidth > 600 && screenWidth <= 900 ? 2 : 1),
+      'profileDiscover': (screenWidth > 1600 ? 5 : screenWidth > 1200 && screenWidth <= 1600 ? 5 : screenWidth > 900 && screenWidth <= 1200 ? 3 : screenWidth > 600 && screenWidth <= 900 ? 2 : 1),
+      'profiles': (screenWidth > 1600 ? 6 : screenWidth > 1200 && screenWidth <= 1600 ? 5 : screenWidth > 900 && screenWidth <= 1200 ? 4 : screenWidth > 600 && screenWidth <= 900 ? 3 : 2)
+    };
+    return columns[cardType];
+  }, [cardType, screenWidth, sideNavOpen]);
+
+  const [columnCount, setColumnCount] = useState(screenWidth && getColumns());
 
   useEffect(() => {
     if (screenWidth) {
-      if (!sideNavOpen) {
-        if (screenWidth > 1600) {
-          setColumnCount(cardType == 'nfts' || cardType == 'profileDiscover' ? 5 : cardType == 'profiles' ? 6 : 3);
-        } else if (screenWidth > 1200 && screenWidth <= 1600) {
-          setColumnCount(cardType == 'nfts' ? 4 : cardType == 'profileDiscover' || cardType == 'profiles' ? 5 : 3);
-        } else if (screenWidth > 900 && screenWidth <= 1200) {
-          setColumnCount(cardType == 'nfts' || cardType == 'profileDiscover'? 3 : cardType == 'profiles' ? 4 : 2);
-        } else if (screenWidth > 600 && screenWidth <= 900) {
-          setColumnCount(cardType == 'profiles' ? 3 : 2);
-        } else {
-          setColumnCount(cardType == 'profiles' ? 2 : 1);
-        }
-      } else {
-        if (screenWidth > 1600) {
-          setColumnCount(cardType == 'nfts' ? 4 : 3);
-        } else if (screenWidth > 1200 && screenWidth <= 1600) {
-          setColumnCount(3);
-        } else if (screenWidth > 900 && screenWidth <= 1200) {
-          setColumnCount(2);
-        } else if (screenWidth > 600 && screenWidth <= 900) {
-          setColumnCount(2);
-        } else {
-          setColumnCount(1);
-        }
-      }
+      setColumnCount(getColumns());
     }
-  },[sideNavOpen, screenWidth, cardType]);
+  }, [getColumns, screenWidth]);
+
+  useEffect(() => {
+    if (columnCount > 0) {
+      const flatData = [...gridData];
+      const data2D = [];
+      while(flatData.length) data2D.push(flatData.splice(0,columnCount));
+      setDataPerRows(data2D);
+    }
+  },[columnCount, gridData]);
 
   const itemCount = hasNextPage ? dataPerRows.length + 1 : dataPerRows.length;
   const isItemLoaded = useCallback( index => !hasNextPage || index < dataPerRows.length, [dataPerRows.length, hasNextPage]);
@@ -102,7 +98,7 @@ export default function CardsGrid(props: CardsGridProps) {
   }, [cardType, childParams, children, getRowHeight, rowClass, rowHeight]);
 
   return (
-    (rowHeight || defaultRowHeight) &&<div className='grid-cols-1 w-full'
+    (rowHeight || defaultRowHeight) && <div className='grid-cols-1 w-full'
       style={{
         minHeight: '100vh',
         backgroundColor: 'inherit',
@@ -113,7 +109,7 @@ export default function CardsGrid(props: CardsGridProps) {
         isItemLoaded={isItemLoaded}
         itemCount={itemCount}
         loadMoreItems={loadMoreItems}
-        threshold={cardType == 'profiles' ? 8 : 4}
+        threshold={cardType == 'profiles' ? 2 : 4}
       >
         {({ ref, onItemsRendered }) => (
           < FixedSizeList
@@ -124,7 +120,6 @@ export default function CardsGrid(props: CardsGridProps) {
             itemCount={dataPerRows.length}
             itemData={dataPerRows}
             itemSize={defaultRowHeight ?? (rowHeight + (screenWidth < 600 && cardType == 'nfts' ? 65 : cardType == 'profiles' ? 0 : 12))}
-            overscanRowCount={3}
             onItemsRendered={onItemsRendered}
             ref={ref}
             useIsScrolling={true}
