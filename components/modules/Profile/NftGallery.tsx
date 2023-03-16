@@ -3,6 +3,7 @@ import Loader from 'components/elements/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useScrollToBottom } from 'graphql/hooks/useScrollToBottom';
+import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { NftGrid } from './NftGrid';
@@ -113,7 +114,7 @@ export function NftGallery(props: NftGalleryProps) {
           </div>
         </div>
       }
-      {(loading || loadingAllOwnerNfts) &&
+      {(loading || loadingAllOwnerNfts) && !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) &&
       <div className= 'min-h-[25rem] minmd:min-h-[20rem] text-primary-txt flex flex-col items-center justify-center'>
         <div className="mb-2">Loading...</div>
         <Loader />
