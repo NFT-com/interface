@@ -11,7 +11,7 @@ import useDebounce from 'hooks/useDebounce';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler,getEnv } from 'utils/env';
-import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
+import { getPerPage, isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
 
 import { DetailedNft } from './NftGrid';
 
@@ -154,7 +154,7 @@ export function ProfileContextProvider(
   const [afterCursor, setAfterCursor] = useState('');
   const [afterCursorEditMode, setAfterCursorEditMode] = useState('');
   const { width: screenWidth } = useWindowDimensions();
-  const PUBLIC_PROFILE_LOAD_COUNT = screenWidth > 1600 ? 24 : screenWidth > 1200 && screenWidth <= 1600 ? 20 : screenWidth > 900 && screenWidth <= 1200 ? 16 : screenWidth > 600 && screenWidth <= 900 ? 12 : 8;
+  const PUBLIC_PROFILE_LOAD_COUNT = getPerPage('profilePage', screenWidth);
 
   const {
     nfts: publicProfileNfts,
