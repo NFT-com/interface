@@ -29,7 +29,6 @@ export default function CardsGrid(props: CardsGridProps) {
   const childParams = useMemo(() => ({ itemData: null, rowIndex: null, cellIndex: null, getItemHeight: null } ),[]);
   const [dataPerRows, setDataPerRows] = useState([]);
   const [rowHeight, setRowhHeight] = useState(550);
-  const [skeletonEnabled, setSkeletonEnabled] = useState(false);
 
   let windowObject;
   if (typeof window !== 'undefined') {
@@ -40,7 +39,7 @@ export default function CardsGrid(props: CardsGridProps) {
     setRowhHeight(height);
   }, []);
   const { width: screenWidth } = useWindowDimensions();
-  const [columnCount, setColumnCount] = useState(screenWidth < 600 ? 1 : screenWidth > 600 && screenWidth <= 900 ? 2 : screenWidth > 900 && screenWidth <= 1600 ? 3 : 4);
+  const [columnCount, setColumnCount] = useState(cardType == 'profiles' ? 6 : screenWidth < 600 ? 1 : screenWidth > 600 && screenWidth <= 900 ? 2 : screenWidth > 900 && screenWidth <= 1600 ? 3 : 4);
 
   useEffect(() => {
     const flatData = [...gridData];
@@ -95,27 +94,15 @@ export default function CardsGrid(props: CardsGridProps) {
           childParams.itemData = item;
           childParams.cellIndex = cellIndex;
           childParams.getItemHeight = getRowHeight;
-          if (!skeletonEnabled) {
-            return children(childParams);
-          } else if (hasNextPage && skeletonEnabled) {
-            setTimeout(() => {
-              setSkeletonEnabled(false);
-            }, 10);
-            return (
-              <div key={''+index+cellIndex} className='rounded-[16px] shadow-xl overflow-hidden w-full cursor-p relative mb-3'>
-                <div className='animate-pulse w-full bg-gray-400 h-2/3'></div>
-                <div className='w-full h-1/3'></div>
-              </div>
-            );
-          }
+          return children(childParams);
         }
         )}
       </div>
     );
-  }, [cardType, childParams, children, getRowHeight, hasNextPage, rowClass, rowHeight, skeletonEnabled]);
+  }, [cardType, childParams, children, getRowHeight, rowClass, rowHeight]);
 
   return (
-    <div className='grid-cols-1 w-full'
+    (rowHeight || defaultRowHeight) &&<div className='grid-cols-1 w-full'
       style={{
         minHeight: '100vh',
         backgroundColor: 'inherit',
@@ -126,9 +113,10 @@ export default function CardsGrid(props: CardsGridProps) {
         isItemLoaded={isItemLoaded}
         itemCount={itemCount}
         loadMoreItems={loadMoreItems}
+        threshold={cardType == 'profiles' ? 8 : 4}
       >
         {({ ref, onItemsRendered }) => (
-          (rowHeight || defaultRowHeight) &&< FixedSizeList
+          < FixedSizeList
             className="grid no-scrollbar"
             outerElementType={outerElementType}
             width={windowObject?.innerWidth ?? 0}
@@ -140,9 +128,6 @@ export default function CardsGrid(props: CardsGridProps) {
             onItemsRendered={onItemsRendered}
             ref={ref}
             useIsScrolling={true}
-            onScroll={(scrollInfo) => {
-              cardType != 'profiles' && setSkeletonEnabled(scrollInfo.scrollOffset % 225 > 20 && scrollInfo.scrollOffset % 225 < 200);
-            }}
           >
             {Row}
           </FixedSizeList>
