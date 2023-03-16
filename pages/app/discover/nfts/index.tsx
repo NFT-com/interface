@@ -8,7 +8,7 @@ import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { getPerPage, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
@@ -33,10 +33,7 @@ export default function CollectionsPage() {
   const prevFilters = usePrevious(nftsResultsFilterBy);
   const { width: screenWidth } = useWindowDimensions();
 
-  const NFTS_LOAD_COUNT = !sideNavOpen
-    ? screenWidth > 1200 ? 20 : screenWidth > 900 && screenWidth <= 1200 ? 12 : screenWidth > 600 && screenWidth <= 900 ? 8 : 4
-    :
-    (screenWidth > 1600 ? 20 : screenWidth > 1200 && screenWidth <= 1600 ? 15 : screenWidth > 600 && screenWidth <= 1200 ? 10 : 5);
+  const NFTS_LOAD_COUNT = getPerPage('discoverNFTs', screenWidth, sideNavOpen);
 
   useEffect(() => {
     isDiscoverCollections && setIsDiscoverCollections(false);

@@ -90,7 +90,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
     nftsForCollections && nftsForCollections.length > 0 && setPaginatedAddresses([...sortedPaginatedAddresses]);
   },[nftsForCollections, page, screenWidth, sideNavOpen]);
 
-  const PROFILE_LOAD_COUNT = screenWidth > 1200 ? 20 : screenWidth > 900 && screenWidth <= 1200 ? 12 : screenWidth > 600 && screenWidth <= 900 ? 8 : 4;
+  const PROFILE_LOAD_COUNT = getPerPage('discoverProfiles', screenWidth);
 
   const {
     nextPage,

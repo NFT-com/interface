@@ -9,7 +9,7 @@ import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeader
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { isNullOrEmpty } from 'utils/helpers';
+import { getPerPage, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
@@ -37,7 +37,7 @@ export default function CollectionsPage() {
 
   const { width: screenWidth } = useWindowDimensions();
 
-  const COLLECTIONS_LOAD_COUNT = screenWidth > 1200 ? 18 : screenWidth > 600 && screenWidth <= 1200 ? 12 : 6;
+  const COLLECTIONS_LOAD_COUNT = getPerPage('discoverCollections', screenWidth, sideNavOpen);
 
   useEffect(() => {
     !isDiscoverCollections && setIsDiscoverCollections(true);

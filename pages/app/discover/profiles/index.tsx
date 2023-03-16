@@ -7,7 +7,7 @@ import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { usePaginator } from 'hooks/usePaginator';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { filterNulls } from 'utils/helpers';
+import { filterNulls, getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import _ from 'lodash';
@@ -21,7 +21,7 @@ export default function ProfilePage() {
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
   const { width: screenWidth } = useWindowDimensions();
 
-  const PROFILE_LOAD_COUNT = screenWidth > 1200 ? 20 : screenWidth > 900 && screenWidth <= 1200 ? 12 : screenWidth > 600 && screenWidth <= 900 ? 8 : 4;
+  const PROFILE_LOAD_COUNT = getPerPage('discoverProfiles', screenWidth);
 
   const {
     nextPage,
