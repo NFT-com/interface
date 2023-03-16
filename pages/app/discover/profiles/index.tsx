@@ -6,6 +6,7 @@ import { Profile } from 'graphql/generated/types';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { usePaginator } from 'hooks/usePaginator';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -18,8 +19,9 @@ export default function ProfilePage() {
   const [isLoading, toggleLoadState] = useState(false);
   const [isLeaderBoard, toggleLeaderBoardState] = useState(false);
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
+  const { width: screenWidth } = useWindowDimensions();
 
-  const PROFILE_LOAD_COUNT = 20;
+  const PROFILE_LOAD_COUNT = screenWidth > 1200 ? 20 : screenWidth > 900 && screenWidth <= 1200 ? 12 : screenWidth > 600 && screenWidth <= 900 ? 8 : 4;
 
   const {
     nextPage,

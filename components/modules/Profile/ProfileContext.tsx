@@ -243,7 +243,6 @@ export function ProfileContextProvider(
   const [isToggling, setIsToggling] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
-  const prevPublicProfileNfts = usePrevious(publicProfileNfts);
   const prevAllOwnerNfts = usePrevious(allOwnerNfts);
   const prevPubliclyVisibleNfts = usePrevious(publiclyVisibleNfts);
 
