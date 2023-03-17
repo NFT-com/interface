@@ -10,7 +10,7 @@ import { PropsWithChildren, useCallback, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 
 export interface PickerOption {
-  label: string;
+  label?: string;
   onSelect: () => void;
   color?: string;
   icon?: string | any;
@@ -62,8 +62,10 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
         key={item.label || index}
         style={{ height: '10%' }}
         className={`flex flex-row w-full px-3 py-3 items-center
-          ${index === optionHoverIndex ? ' text-primary-txt font-medium' : 'text-secondary-txt' }
+          ${index === optionHoverIndex ? ' text-primary-txt font-medium hover:bg-[#FFF4CA]' : 'text-secondary-txt' }
           ${isNullOrEmpty(item.label) && 'justify-evenly'}
+          ${index == 0 && 'rounded-t-xl'}
+          ${index == props.options.length-1 && 'rounded-b-xl'}
         `}
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
@@ -76,7 +78,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
         {item.label}
       </div>
     );
-  }, [optionHoverIndex, props.closeModalOnClick]);
+  }, [optionHoverIndex, props.closeModalOnClick, props.options.length]);
 
   return (
     <>
@@ -100,7 +102,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
             'h-full',
             'justify-between rounded-xl w-full',
           )}
-          key={props.options[props.selectedIndex].label}
+          key={props.options[props.selectedIndex].label || props.options[props.selectedIndex].icon}
           onClick={() => {
             setExpanded(!expanded);
           }}
@@ -117,7 +119,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
             'rounded-xl',
             'bg-white dark:bg-secondary-dk',
             'absolute z-50 drop-shadow-md',
-            props.disableMinWidth ? 'min-w-max' :'min-w-[14rem]',
+            props.disableMinWidth || !props.options[0]?.label ? 'min-w-max' :'min-w-[14rem]',
             props.align === 'center' && 'left-1/2 -translate-x-1/2',
             props.align === 'right' && 'right-0',
             props.align === 'left' && 'left-0'
@@ -131,8 +133,8 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
               className={tw(
                 'absolute -top-[18px]',
                 props.align === 'center' && ' left-1/2 -translate-x-1/2',
-                props.align === 'right' && 'right-8',
-                props.align === 'left' && 'left-8'
+                props.align === 'right' && (props.options[0]?.label ? 'right-8' : 'right-2.5'),
+                props.align === 'left' && (props.options[0]?.label ? 'left-8' : 'left-2.5'),
               )}
             />
           }
