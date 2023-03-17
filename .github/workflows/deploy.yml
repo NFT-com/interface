@@ -103,15 +103,12 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --immutable
 
-      - name: Deploy Site to Netlify
-        run: netlify deploy --build --prod --message "main@${{ github.sha }}"
-
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel Sandbox
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --archive=tgz --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
   deploy-staging:
     if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'staging') }}
@@ -127,15 +124,12 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --immutable
 
-      - name: Deploy Site to Netlify
-        run: netlify deploy --build --prod --message "staging@${{ github.sha }}"
-
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel Staging
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --archive=tgz --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
   deploy-prod:
     if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'prod') }}
@@ -151,12 +145,9 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --immutable
 
-      - name: Deploy Site to Netlify
-        run: netlify deploy --build --prod --message "prod@${{ github.sha }}"
-
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel Production
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --archive=tgz --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
