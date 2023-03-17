@@ -60,3 +60,6 @@ instrumented
 public/robots.txt
 public/sitemap*
 .idea/*
+
+# storybook
+storybook-static
