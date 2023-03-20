@@ -13,7 +13,6 @@ type LikeCountProps = {
 export default function LikeCount({ count = 0, isLiked = false, onClick }: LikeCountProps) {
   const [clicked, setClicked] = useState(false);
   const [liked, setLiked] = useState(isLiked);
-  const [likeCount, setLikeCount] = useState(count);
 
   return (
     <div
@@ -22,14 +21,14 @@ export default function LikeCount({ count = 0, isLiked = false, onClick }: LikeC
         onClick && onClick();
         if(!liked) {
           setClicked(true);
-          setLikeCount(likeCount + 1);
+          //mutate
           setTimeout(() => {
             setLiked(true);
             setClicked(false);
           }, 700);
         } else {
           setLiked(false);
-          setLikeCount(likeCount - 1);
+          //mutate
         }
       }
       }
@@ -60,7 +59,7 @@ export default function LikeCount({ count = 0, isLiked = false, onClick }: LikeC
           </div>
         }
         
-        {likeCount > 0 &&
+        {count > 0 &&
             <p className={tw(
               'font-noi-grotesk font-medium tracking-normal',
               liked ? 'text-alert-red-light' : 'text-key-bg',
@@ -69,7 +68,7 @@ export default function LikeCount({ count = 0, isLiked = false, onClick }: LikeC
                 new Intl.NumberFormat('en-US', {
                   notation: 'compact',
                   compactDisplay: 'short'
-                }).format(likeCount)
+                }).format(count)
               }
             </p>
         }
