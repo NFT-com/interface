@@ -3,6 +3,7 @@ import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/Ro
 import { LikeableType, Profile } from 'graphql/generated/types';
 import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
 import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
+import { useUnsetLikeMutation } from 'graphql/hooks/useUnsetLikeMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { Doppler, getEnvBool } from 'utils/env';
 
@@ -42,6 +43,10 @@ export function ProfileCard(props: ProfileCardProps) {
   const { setLike } = useSetLikeMutation(
     props?.id ?? props?.profile?.id,
     LikeableType.Profile
+  );
+
+  const { unsetLike } = useUnsetLikeMutation(
+    props?.id ?? props?.profile?.id,
   );
 
   if(isLeaderBoard){

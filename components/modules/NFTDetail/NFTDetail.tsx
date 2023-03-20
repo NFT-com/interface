@@ -10,6 +10,7 @@ import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
+import { useUnsetLikeMutation } from 'graphql/hooks/useUnsetLikeMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getContractMetadata } from 'utils/alchemyNFT';
@@ -76,6 +77,10 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const { setLike } = useSetLikeMutation(
     props?.nft?.id,
     LikeableType.Nft
+  );
+
+  const { unsetLike } = useUnsetLikeMutation(
+    props?.nft?.id,
   );
 
   const refreshNftCallback = useCallback(() => {

@@ -4,6 +4,7 @@ import Toast from 'components/elements/Toast';
 import { LikeableType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
+import { useUnsetLikeMutation } from 'graphql/hooks/useUnsetLikeMutation';
 import { useUser } from 'hooks/state/useUser';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
@@ -33,6 +34,10 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { setLike } = useSetLikeMutation(
     profileData?.profile?.id,
     LikeableType.Profile
+  );
+
+  const { unsetLike } = useUnsetLikeMutation(
+    profileData?.profile?.id,
   );
 
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;

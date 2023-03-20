@@ -4,6 +4,7 @@ import { WETH } from 'constants/tokens';
 import { LikeableType, TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
+import { useUnsetLikeMutation } from 'graphql/hooks/useUnsetLikeMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
@@ -56,6 +57,10 @@ export function NFTCard(props: NftCardProps) {
   const { setLike } = useSetLikeMutation(
     nft?.id ?? props?.nft?.id,
     LikeableType.Nft
+  );
+
+  const { unsetLike } = useUnsetLikeMutation(
+    nft?.id ?? props?.nft?.id,
   );
  
   return (

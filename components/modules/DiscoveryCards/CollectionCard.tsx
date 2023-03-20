@@ -4,6 +4,7 @@ import { LikeableType, Nft, TxActivity } from 'graphql/generated/types';
 import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeCountQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
+import { useUnsetLikeMutation } from 'graphql/hooks/useUnsetLikeMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { Doppler, getEnvBool } from 'utils/env';
 import {
@@ -58,6 +59,10 @@ export function CollectionCard(props: CollectionCardProps) {
   const { setLike } = useSetLikeMutation(
     props?.collectionId,
     LikeableType.Collection
+  );
+
+  const { unsetLike } = useUnsetLikeMutation(
+    props?.collectionId,
   );
 
   const checkMinPrice = (price) => {

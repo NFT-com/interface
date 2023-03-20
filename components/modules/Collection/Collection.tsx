@@ -13,6 +13,7 @@ import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
+import { useUnsetLikeMutation } from 'graphql/hooks/useUnsetLikeMutation';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
@@ -70,6 +71,10 @@ export function Collection(props: CollectionProps) {
   const { setLike } = useSetLikeMutation(
     collectionData?.collection?.id,
     LikeableType.Collection
+  );
+
+  const { unsetLike } = useUnsetLikeMutation(
+    collectionData?.collection?.id
   );
 
   const tabs = {
