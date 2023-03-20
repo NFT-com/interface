@@ -659,9 +659,7 @@ export function NFTListingsContextProvider(
             (stagedNft?.endingPrice ?? target.endingPrice) ?? (stagedNft.startingPrice ?? target.startingPrice),
             stagedNft.currency ?? target.currency,
             stagedNft.duration ?? target.duration,
-            collectionFee,
-            defaultChainId,
-            // listing.takerAddress
+            collectionFee
           );
           return {
             ...target,
