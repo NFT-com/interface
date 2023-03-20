@@ -1,8 +1,9 @@
 import LikeCount from 'components/elements/LikeCount';
 import { DetailedNft } from 'components/modules/DiscoveryCards/CollectionCard';
 import { WETH } from 'constants/tokens';
-import { TxActivity } from 'graphql/generated/types';
+import { LikeableType, TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
+import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
@@ -52,11 +53,16 @@ export function NFTCard(props: NftCardProps) {
   const isOwnedByMe = props?.isOwnedByMe || (props?.nft?.wallet?.address ?? props?.nft?.owner) === currentAddress;
   const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
 
+  const { setLike } = useSetLikeMutation(
+    nft?.id ?? props?.nft?.id,
+    LikeableType.Nft
+  );
+ 
   return (
     <div className='relative w-full h-full'>
       {props?.visible !== true && props?.visible !== false &&
        <div className='absolute top-4 right-4 z-50'>
-         <LikeCount onClick={() => null} />
+         <LikeCount onClick={setLike} />
        </div>
       }
       
