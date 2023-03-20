@@ -112,3 +112,10 @@ export type DiscoverPageProps = {
 export type HomePageProps = {
   data: HomePageV2[]
 };
+
+export type SitemapField = {
+  loc: string,
+  lastmod: string,
+  priority: 0.7,
+  changefreq: 'daily'
+}

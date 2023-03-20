@@ -510,6 +510,22 @@ export type LeaderboardProfile = {
   url: Scalars['String'];
 };
 
+export type Like = {
+  __typename?: 'Like';
+  createdAt?: Maybe<Scalars['DateTime']>;
+  id?: Maybe<Scalars['String']>;
+  likedById?: Maybe<Scalars['String']>;
+  likedId?: Maybe<Scalars['String']>;
+  likedType?: Maybe<LikeableType>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export enum LikeableType {
+  Collection = 'Collection',
+  Nft = 'NFT',
+  Profile = 'Profile'
+}
+
 export type ListNftLooksrareInput = {
   chainId?: InputMaybe<Scalars['String']>;
   looksrareOrder?: InputMaybe<Scalars['String']>;
@@ -678,6 +694,7 @@ export type Mutation = {
   sendReferEmail: SendReferEmailOutput;
   /** AUTHETICATED - set by curation + profile owner */
   setCuration: Profile;
+  setLike?: Maybe<Like>;
   /** AUTHENTICATED */
   setProfilePreferences: Array<Bid>;
   /** AUTHENTICATED */
@@ -903,6 +920,11 @@ export type MutationSendReferEmailArgs = {
 
 export type MutationSetCurationArgs = {
   input: SetCurationInput;
+};
+
+
+export type MutationSetLikeArgs = {
+  input: SetLikeInput;
 };
 
 
@@ -1386,6 +1408,55 @@ export type NftsForCollectionsInput = {
   count: Scalars['Int'];
 };
 
+/**
+ * Basic collection type of `isOfficial=true` only collections.
+ * (Used for generating sitemaps)
+ */
+export type OfficialCollection = {
+  __typename?: 'OfficialCollection';
+  chainId?: Maybe<Scalars['String']>;
+  contract?: Maybe<Scalars['Address']>;
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type OfficialCollectionNft = {
+  __typename?: 'OfficialCollectionNFT';
+  contract?: Maybe<Scalars['Address']>;
+  id: Scalars['ID'];
+  tokenId: Scalars['Uint256'];
+};
+
+export type OfficialCollectionNfTsInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  collectionAddress: Scalars['Address'];
+  offsetPageInput?: InputMaybe<OffsetPageInput>;
+};
+
+export type OfficialCollectionNfTsOutput = {
+  __typename?: 'OfficialCollectionNFTsOutput';
+  items: Array<OfficialCollectionNft>;
+  pageCount?: Maybe<Scalars['Int']>;
+  totalItems?: Maybe<Scalars['Int']>;
+};
+
+export type OfficialCollectionsInput = {
+  offsetPageInput?: InputMaybe<OffsetPageInput>;
+};
+
+export type OfficialCollectionsOutput = {
+  __typename?: 'OfficialCollectionsOutput';
+  items: Array<OfficialCollection>;
+  pageCount?: Maybe<Scalars['Int']>;
+  totalItems?: Maybe<Scalars['Int']>;
+};
+
+/** Offset pagination input */
+export type OffsetPageInput = {
+  page?: InputMaybe<Scalars['Int']>;
+  pageSize?: InputMaybe<Scalars['Int']>;
+};
+
 export type OpenseaCollectionV1 = {
   __typename?: 'OpenseaCollectionV1';
   banner_image_url?: Maybe<Scalars['String']>;
@@ -1468,6 +1539,7 @@ export type PageInfo = {
   lastCursor?: Maybe<Scalars['String']>;
 };
 
+/** Pagination input type */
 export type PageInput = {
   afterCursor?: InputMaybe<Scalars['String']>;
   beforeCursor?: InputMaybe<Scalars['String']>;
@@ -1675,6 +1747,8 @@ export type Query = {
   nftById: Nft;
   nftsForCollections: Array<CollectionNft>;
   numberOfNFTs?: Maybe<Scalars['Int']>;
+  officialCollectionNFTs: OfficialCollectionNfTsOutput;
+  officialCollections?: Maybe<OfficialCollectionsOutput>;
   profile: Profile;
   profileFollowers: FollowersOutput;
   profilePassive: Profile;
@@ -1911,6 +1985,16 @@ export type QueryNumberOfNfTsArgs = {
 };
 
 
+export type QueryOfficialCollectionNfTsArgs = {
+  input: OfficialCollectionNfTsInput;
+};
+
+
+export type QueryOfficialCollectionsArgs = {
+  input: OfficialCollectionsInput;
+};
+
+
 export type QueryProfileArgs = {
   chainId?: InputMaybe<Scalars['String']>;
   url: Scalars['String'];
@@ -2110,6 +2194,12 @@ export type SentReferralEmailsOutput = {
 export type SetCurationInput = {
   curationId: Scalars['ID'];
   profileId: Scalars['ID'];
+};
+
+export type SetLikeInput = {
+  likedById: Scalars['String'];
+  likedId: Scalars['String'];
+  likedType: LikeableType;
 };
 
 export type SignHashInput = {
@@ -3218,6 +3308,20 @@ export type NumberOfNfTsQueryVariables = Exact<{
 
 
 export type NumberOfNfTsQuery = { __typename?: 'Query', numberOfNFTs?: number | null };
+
+export type OfficialCollectionNfTsQueryVariables = Exact<{
+  input: OfficialCollectionNfTsInput;
+}>;
+
+
+export type OfficialCollectionNfTsQuery = { __typename?: 'Query', officialCollectionNFTs: { __typename?: 'OfficialCollectionNFTsOutput', totalItems?: number | null, pageCount?: number | null, items: Array<{ __typename?: 'OfficialCollectionNFT', id: string, contract?: any | null, tokenId: any }> } };
+
+export type OfficialCollectionsQueryVariables = Exact<{
+  input: OfficialCollectionsInput;
+}>;
+
+
+export type OfficialCollectionsQuery = { __typename?: 'Query', officialCollections?: { __typename?: 'OfficialCollectionsOutput', pageCount?: number | null, totalItems?: number | null, items: Array<{ __typename?: 'OfficialCollection', id?: string | null, contract?: any | null, name?: string | null, chainId?: string | null }> } | null };
 
 export type MyPreferencesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5318,6 +5422,33 @@ export const NumberOfNfTsDocument = gql`
   numberOfNFTs(contract: $contract, chainId: $chainId)
 }
     `;
+export const OfficialCollectionNfTsDocument = gql`
+    query OfficialCollectionNFTs($input: OfficialCollectionNFTsInput!) {
+  officialCollectionNFTs(input: $input) {
+    items {
+      id
+      contract
+      tokenId
+    }
+    totalItems
+    pageCount
+  }
+}
+    `;
+export const OfficialCollectionsDocument = gql`
+    query OfficialCollections($input: OfficialCollectionsInput!) {
+  officialCollections(input: $input) {
+    items {
+      id
+      contract
+      name
+      chainId
+    }
+    pageCount
+    totalItems
+  }
+}
+    `;
 export const MyPreferencesDocument = gql`
     query MyPreferences {
   me {
@@ -6032,6 +6163,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     NumberOfNFTs(variables: NumberOfNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NumberOfNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<NumberOfNfTsQuery>(NumberOfNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NumberOfNFTs', 'query');
+    },
+    OfficialCollectionNFTs(variables: OfficialCollectionNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<OfficialCollectionNfTsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<OfficialCollectionNfTsQuery>(OfficialCollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'OfficialCollectionNFTs', 'query');
+    },
+    OfficialCollections(variables: OfficialCollectionsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<OfficialCollectionsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<OfficialCollectionsQuery>(OfficialCollectionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'OfficialCollections', 'query');
     },
     MyPreferences(variables?: MyPreferencesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyPreferencesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<MyPreferencesQuery>(MyPreferencesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyPreferences', 'query');

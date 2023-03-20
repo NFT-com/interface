@@ -1,7 +1,7 @@
 
 const { withSentryConfig } = require('@sentry/nextjs');
 const path = require('path');
-// const withImages = require('next-images');
+const v8 = require('v8');
 const withTM = require('next-transpile-modules')([
   'react-dnd',
   'dnd-core',
@@ -9,9 +9,18 @@ const withTM = require('next-transpile-modules')([
   '@react-dnd/asap',
   '@react-dnd/shallowequal',
 ]);
-
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
+});
+
+// Return current node stats
+const totalHeapSize = v8.getHeapStatistics().total_available_size;
+const totalHeapSizeInMB = (totalHeapSize / 1024 / 1024).toFixed(2);
+
+console.log('V8 Total Heap Size', totalHeapSizeInMB, 'MB');
+console.log('V8 Heap Size Stats: \n');
+Object.entries(v8.getHeapStatistics()).forEach(([key, value]) => {
+  console.log(`\t${key}: ${(value / 1024 / 1024).toFixed(2)} MB`);
 });
 
 const sentryWebpackPluginOptions = {
