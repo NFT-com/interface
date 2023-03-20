@@ -14,7 +14,7 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType): Se
   const sdk = useGraphQLSDK();
   const [error, setError] = useState<Maybe<string>>(null);
   const [loading, setLoading] = useState(false);
-  const { currentProfileId } = useUser();
+  const { currentProfileId, user } = useUser();
 
   const setLike = useCallback(
     async () => {
@@ -33,6 +33,12 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType): Se
         }
 
         setLoading(false);
+        analytics.track(`Liked a ${likedType}`, {
+          likedById: currentProfileId,
+          likedByProfile: user?.currentProfileUrl,
+          likedId,
+          likedType
+        });
         return result?.setLike;
       } catch (err) {
         setLoading(false);
@@ -40,7 +46,7 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType): Se
         return null;
       }
     },
-    [currentProfileId, likedId, likedType, sdk]
+    [currentProfileId, likedId, likedType, sdk, user?.currentProfileUrl]
   );
 
   return {
