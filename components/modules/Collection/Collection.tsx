@@ -14,7 +14,6 @@ import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -178,7 +177,7 @@ export function Collection(props: CollectionProps) {
           </h2>
           {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
           <div className='ml-3'>
-            <LikeCount count={10} isLiked={false} onClick={setLike} />
+            <LikeCount count={collectionData?.collection?.likeCount} isLiked={false} onClick={setLike} />
           </div>
           }
         </div>

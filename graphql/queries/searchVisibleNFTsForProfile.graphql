@@ -13,6 +13,7 @@ query SearchVisibleNFTsForProfile($input: SearchVisibleNFTsForProfileInput!) {
       }
       contract
       tokenId
+      likeCount
       id
       type
       listings {

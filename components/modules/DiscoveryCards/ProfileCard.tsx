@@ -83,7 +83,7 @@ export function ProfileCard(props: ProfileCardProps) {
         <div className="bg-black h-[99px] relative">
           {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
             <div className='absolute top-4 right-4 z-50'>
-              <LikeCount count={10} isLiked={false} onClick={setLike} />
+              <LikeCount count={props?.profile?.likeCount} isLiked={false} onClick={setLike} />
             </div>
           }
           {

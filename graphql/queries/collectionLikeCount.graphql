@@ -1,0 +1,7 @@
+query CollectionLikeCount($input: CollectionInput!) {
+  collection(input: $input) {
+    collection {
+      likeCount
+    }
+  }
+}

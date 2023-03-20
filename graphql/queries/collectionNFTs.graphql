@@ -6,6 +6,7 @@ query CollectionNFTs($input: CollectionNFTsInput!) {
       type
       isOwnedByMe
       previewLink
+      likeCount
       metadata {
         name
         description

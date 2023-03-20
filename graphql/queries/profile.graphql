@@ -7,6 +7,7 @@ query Profile($url: String!, $chainId: String!) {
     photoURL
     description
     gkIconVisible
+    likeCount
     nftsDescriptionsVisible
     deployedContractsVisible
     layoutType

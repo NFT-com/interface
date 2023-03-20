@@ -4,6 +4,7 @@ query NftsForCollections($input: NftsForCollectionsInput!) {
       id
       tokenId
       type
+      likeCount
       isOwnedByMe
       previewLink
       metadata {

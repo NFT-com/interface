@@ -13,6 +13,7 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
       tokenId
       isGKMinted
       type
+      likeCount
       collection {
           contract
           name

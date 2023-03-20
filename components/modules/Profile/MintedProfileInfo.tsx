@@ -71,7 +71,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             </div>
             }
             {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-              <LikeCount count={10} isLiked={false} onClick={setLike} />
+              <LikeCount count={profileData?.profile?.likeCount} isLiked={false} onClick={setLike} />
             }
           </div>
         </div>
