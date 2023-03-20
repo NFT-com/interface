@@ -104,7 +104,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
         >
           <CustomTooltip2
             orientation='top'
-            width='full'
+            useFullWidth
             tooltipComponent={
               <div
                 className="w-max"
@@ -116,7 +116,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             <textarea
               className={tw(
                 'w-full resize-none',
-                'text-left py-1 px-2 -ml-1 m-2 w-full rounded-xl h-32',
+                'text-left py-1 px-2 -ml-1 m-2 rounded-xl h-32',
                 'mt-3 text-[#6A6A6A] border-2 border-[#ECECEC]',
                 'hover:outline-3 focus:border-[#F9D54C] focus:ring-0 hover:cursor-pointer focus:cursor-auto'
               )}
