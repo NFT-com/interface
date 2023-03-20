@@ -12,9 +12,8 @@ import {
   ONE_HUNDRED_PERCENT_BP,
   OPENSEA_CONDUIT_KEY, OrderType,SEAPORT_CONTRACT_NAME,
   SEAPORT_CONTRACT_VERSION,
-  SEAPORT_FEE_COLLLECTION_ADDRESS, SEAPORT_ZONE,
+  SEAPORT_FEE_COLLLECTION_ADDRESS,
   SEAPORT_ZONE_HASH,
-  SEAPORT_ZONE_RINKEBY,
   SeaportConsiderationItem,
   SeaportOrderComponents,
   SeaportOrderParameters } from 'types/seaport';
@@ -108,8 +107,6 @@ export function createSeaportParametersForNFTListing(
   currency: string,
   duration: BigNumberish,
   collectionFee: Maybe<Fee>,
-  chainId: string,
-  // takerAddress: string,
 ): SeaportOrderParameters {
   // This is what the seller will accept for their NFT.
   // For now, we support a single currency.
@@ -146,7 +143,7 @@ export function createSeaportParametersForNFTListing(
 
   return {
     offerer: offerer ?? NULL_ADDRESS,
-    zone: chainId === '4' ? SEAPORT_ZONE_RINKEBY : SEAPORT_ZONE,
+    zone: NULL_ADDRESS,
     offer: [{
       itemType: nft?.type == NftType.Erc721 ? ItemType.ERC721 : ItemType.ERC1155,
       token: nft?.contract,
