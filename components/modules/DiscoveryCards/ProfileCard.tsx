@@ -1,6 +1,7 @@
 import LikeCount from 'components/elements/LikeCount';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
-import { Profile } from 'graphql/generated/types';
+import { LikeableType, Profile } from 'graphql/generated/types';
+import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import Image from 'next/image';
@@ -31,7 +32,12 @@ export interface ProfileCardProps {
 export function ProfileCard(props: ProfileCardProps) {
   const isLeaderBoard = props.isLeaderBoard;
 
-  if (isLeaderBoard) {
+  const { setLike } = useSetLikeMutation(
+    props?.id ?? props?.profile?.id,
+    LikeableType.Profile
+  );
+
+  if(isLeaderBoard){
     return (
       <div className='flex justify-center'>
         <a href={'/' + props?.url} className="max-w-[320px] minmd:max-w-[100%] flex-col minmd:flex-row py-4 minmd:py-0 px-6 font-noi-grotesk w-full flex justify-between items-start minmd:items-center hover:scale-[1.01] transition-all cursor-pointer rounded-[16px] minmd:h-[6.25rem] shadow-lg overflow-hidden">
@@ -70,7 +76,7 @@ export function ProfileCard(props: ProfileCardProps) {
         <div className="bg-black h-[99px] relative">
           {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
             <div className='absolute top-4 right-4 z-50'>
-              <LikeCount count={10} isLiked={false} onClick={() => null} />
+              <LikeCount count={10} isLiked={false} onClick={setLike} />
             </div>
           }
           {

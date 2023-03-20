@@ -1,7 +1,8 @@
 import LikeCount from 'components/elements/LikeCount';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
-import { Nft, TxActivity } from 'graphql/generated/types';
+import { LikeableType, Nft, TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
+import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -46,6 +47,7 @@ export interface CollectionCardProps {
   isOfficial?: boolean;
   customHeight?: string;
   onGetItemHight?: (height: number) => void;
+  collectionId?: string;
 }
 
 export function CollectionCard(props: CollectionCardProps) {
@@ -57,6 +59,11 @@ export function CollectionCard(props: CollectionCardProps) {
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props?.images?.length > 0 ? props?.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
+
+  const { setLike } = useSetLikeMutation(
+    props?.collectionId,
+    LikeableType.Collection
+  );
 
   const checkMinPrice = (price) => {
     if(!price){
@@ -85,7 +92,7 @@ export function CollectionCard(props: CollectionCardProps) {
       <div className="h-44 relative ">
         {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
           <div className='absolute top-4 right-4 z-50'>
-            <LikeCount count={10} isLiked={false} onClick={() => null} />
+            <LikeCount count={10} isLiked={false} onClick={setLike} />
           </div>
         }
         <RoundedCornerMedia

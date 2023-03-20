@@ -17,7 +17,8 @@ export default function LikeCount({ count = 0, isLiked = false, onClick }: LikeC
 
   return (
     <div
-      onClick={() => {
+      onClick={(e) => {
+        e.preventDefault();
         onClick && onClick();
         if(!liked) {
           setClicked(true);

@@ -289,6 +289,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                             key={index}
                             redirectTo={`/app/collection/${item.document?.contractAddr}/`}
                             contractAddress={item.document?.collectionAddress}
+                            collectionId={item?.document?.id}
                             contract={item.document?.contractAddr}
                             userName={item.document.contractName}
                             contractAddr={item.document.contractAddr}
