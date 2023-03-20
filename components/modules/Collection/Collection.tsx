@@ -5,13 +5,16 @@ import { CollectionActivity } from 'components/modules/Analytics/CollectionActiv
 import { NFTCard as NFTCardNew } from 'components/modules/NFTCard/NFTCard';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { SideNav } from 'components/modules/Search/SideNav';
+import { LikeableType } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useGetContractSalesStatisticsQuery } from 'graphql/hooks/useGetContractSalesStatisticsQuery';
 import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -64,6 +67,10 @@ export function Collection(props: CollectionProps) {
   );
   const { profileData: collectionPreferredOwnerData } = useProfileQuery(
     collectionOwnerData?.profile?.owner?.preferredProfile?.url
+  );
+  const { setLike } = useSetLikeMutation(
+    collectionData?.collection?.id,
+    LikeableType.Collection
   );
 
   const tabs = {
@@ -171,7 +178,7 @@ export function Collection(props: CollectionProps) {
           </h2>
           {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
           <div className='ml-3'>
-            <LikeCount count={10} isLiked={false} onClick={() => null} />
+            <LikeCount count={10} isLiked={false} onClick={setLike} />
           </div>
           }
         </div>

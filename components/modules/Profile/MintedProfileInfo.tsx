@@ -1,7 +1,9 @@
 import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import LikeCount from 'components/elements/LikeCount';
 import Toast from 'components/elements/Toast';
+import { LikeableType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
 import { useUser } from 'hooks/state/useUser';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
@@ -27,6 +29,11 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     setDraftBio,
     draftGkIconVisible,
   } = useContext(ProfileContext);
+
+  const { setLike } = useSetLikeMutation(
+    profileData?.profile?.id,
+    LikeableType.Profile
+  );
 
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
 
@@ -64,7 +71,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             </div>
             }
             {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-              <LikeCount count={10} isLiked={false} onClick={() => null} />
+              <LikeCount count={10} isLiked={false} onClick={setLike} />
             }
           </div>
         </div>
