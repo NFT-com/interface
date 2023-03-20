@@ -10,8 +10,9 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeaderBoardQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { getPerPage, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import dynamic from 'next/dynamic';
@@ -41,6 +42,10 @@ export default function CollectionsPage() {
   const [loading, setLoading] = useState(false);
   const prevFilters = usePrevious(collectionsResultsFilterBy);
 
+  const { width: screenWidth } = useWindowDimensions();
+
+  const COLLECTIONS_LOAD_COUNT = getPerPage('discoverCollections', screenWidth, sideNavOpen);
+
   useEffect(() => {
     !isDiscoverCollections && setIsDiscoverCollections(true);
   }, [isDiscoverCollections, setIsDiscoverCollections]);
@@ -57,7 +62,7 @@ export default function CollectionsPage() {
         q: '*',
         query_by: 'contractAddr,contractName',
         filter_by: collectionsResultsFilterBy ? `isOfficial:true && ${collectionsResultsFilterBy}` : 'isOfficial:true',
-        per_page: getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ? 10 : 20,
+        per_page: COLLECTIONS_LOAD_COUNT,
         page: page,
       }).then((results) => {
         setLoading(false);

@@ -351,15 +351,15 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
               'minlg:w-[55%] minxl:w-[58.5%] minlg:h-screen'
             )}>
               <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                'text-[2.5rem] minmd:text-[5.2rem] minlg:text-[3.3rem] minxl:text-[5.2rem] minxxl:text-[6.8rem] leading-[1.15]',
+                'text-[2.5rem] minmd:text-[5.2rem] minlg:text-[3.3rem] minxl:text-[5.2rem] minxxl:text-[6.8rem] leading-[1.5] minmd:leading-[1.15]',
                 'text-black font-normal tracking-tight mb-14'
               )}>
-                Create a Profile
+                Join Your NFT
                 <span className='inline-block rotate-[40deg]'>
                   <img
                     className={tw(
                       'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s]',
-                      'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[4.5rem]',
+                      'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
                       'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl'
                     )}
                     src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(data_v2?.heroNfTsCollection?.items[0]?.url)}`}
@@ -367,19 +367,20 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   />
                 </span>
                 <br />
-                Get
+                Community
                 <span className='inline-block rotate-[40deg]'>
                   <img className={tw(
                     'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
-                    'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[4.5rem]',
+                    'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
                     'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl',
                   )}
                   src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(data_v2?.heroNfTsCollection?.items[1]?.url)}`}
                   alt="NFT image" />
                 </span>
+                on{' '}
                 <span data-aos="fade-left" data-aos-delay="200"
                   className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>
-                    Low Fees
+                    NFT.com
                 </span>
               </h2>
 

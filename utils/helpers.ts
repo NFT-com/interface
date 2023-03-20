@@ -197,7 +197,7 @@ export function getChainIdString(chainId: Maybe<number | string>): Maybe<string>
   return (chainId == null ? null : String(chainId));
 }
 
-export function getPerPage(index: string, screenWidth: number, sideNavOpen: boolean): number {
+export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boolean): number {
   let perPage;
 
   if (index === 'collections') {
@@ -220,6 +220,17 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen: bool
     } else {
       perPage = 2;
     }
+  } else if (index === 'discoverProfiles') {
+    perPage = screenWidth > 1200 ? 20 : screenWidth > 900 && screenWidth <= 1200 ? 12 : screenWidth > 600 && screenWidth <= 900 ? 8 : 4;
+  } else if (index === 'discoverNFTs') {
+    perPage = !sideNavOpen ?
+      screenWidth > 1200 ? 20 : screenWidth > 900 && screenWidth <= 1200 ? 12 : screenWidth > 600 && screenWidth <= 900 ? 8 : 4
+      :
+      (screenWidth > 1600 ? 20 : screenWidth > 1200 && screenWidth <= 1600 ? 15 : screenWidth > 600 && screenWidth <= 1200 ? 10 : 5);
+  } else if (index === 'discoverCollections') {
+    perPage = screenWidth > 1200 ? 18 : screenWidth > 600 && screenWidth <= 1200 ? 12 : 6;
+  } else if (index === 'profilePage') {
+    perPage = screenWidth > 1600 ? 24 : screenWidth > 1200 && screenWidth <= 1600 ? 20 : screenWidth > 900 && screenWidth <= 1200 ? 16 : screenWidth > 600 && screenWidth <= 900 ? 12 : 8;
   } else {
     if (screenWidth >= 1200) {
       perPage = sideNavOpen ? 9 : 12;

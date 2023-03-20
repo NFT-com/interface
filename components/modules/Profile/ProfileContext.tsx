@@ -9,8 +9,9 @@ import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation
 import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileImagesMutation';
 import useDebounce from 'hooks/useDebounce';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { Doppler,getEnv } from 'utils/env';
-import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
+import useWindowDimensions from 'hooks/useWindowDimensions';
+import { Doppler,getEnv, getEnvBool } from 'utils/env';
+import { getPerPage, isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
 
 import { DetailedNft } from './NftGrid';
 
@@ -135,8 +136,6 @@ export interface ProfileContextProviderProps {
   profileURI: string;
 }
 
-const PUBLIC_PROFILE_LOAD_COUNT = !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ? 8 : 20;
-
 /**
  * This context provides state management and helper functions for viewing and editing Profiles.
  */
@@ -156,6 +155,9 @@ export function ProfileContextProvider(
   const [paginatedAllOwnerNfts, setPaginatedAllOwnerNfts] = useState([]);
   const [afterCursor, setAfterCursor] = useState('');
   const [afterCursorEditMode, setAfterCursorEditMode] = useState('');
+  const { width: screenWidth } = useWindowDimensions();
+  const PUBLIC_PROFILE_LOAD_COUNT = getPerPage('profilePage', screenWidth);
+
   const {
     nfts: publicProfileNfts,
     totalItems: publicProfileNftsCount,
@@ -241,22 +243,22 @@ export function ProfileContextProvider(
   const [isToggling, setIsToggling] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
-  const prevPublicProfileNfts = usePrevious(publicProfileNfts);
   const prevAllOwnerNfts = usePrevious(allOwnerNfts);
   const prevPubliclyVisibleNfts = usePrevious(publiclyVisibleNfts);
+  const prevPublicProfileNfts = usePrevious(publicProfileNfts);
 
   const [showAllNFTsValue, setShowAllNFTsValue] = useState(publicProfileNftsCount === allOwnerNftCount);
   const [hideAllNFTsValue, setHideAllNFTsValue] = useState(publicProfileNftsCount === 0);
 
   const [savedCount, setSavedCount] = useAtom(profileSaveCounter);
-
   const [lastAddedPage, setLastAddedPage] = useState('');
+
   // Profile page NO Edit Mode ONLY
   useEffect(() => {
     if(!loading && !editMode) {
       setEditModeNfts(null);
       
-      if (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
+      if (!getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
         setPubliclyVisibleNfts(null);
         if (isNullOrEmpty(publiclyVisibleNftsNoEdit)) {
           if (isNullOrEmpty(publicProfileNfts)) {

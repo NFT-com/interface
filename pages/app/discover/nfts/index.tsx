@@ -6,8 +6,9 @@ import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import useWindowDimensions from 'hooks/useWindowDimensions';
+import { Doppler, getEnvBool } from 'utils/env';
+import { getPerPage, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
@@ -31,6 +32,9 @@ export default function CollectionsPage() {
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
   const prevFilters = usePrevious(nftsResultsFilterBy);
+  const { width: screenWidth } = useWindowDimensions();
+
+  const NFTS_LOAD_COUNT = getPerPage('discoverNFTs', screenWidth, sideNavOpen);
 
   useEffect(() => {
     isDiscoverCollections && setIsDiscoverCollections(false);
@@ -49,7 +53,7 @@ export default function CollectionsPage() {
         sort_by: 'score:desc',
         query_by: '',
         filter_by: nftsResultsFilterBy,
-        per_page: 20,
+        per_page: NFTS_LOAD_COUNT,
         page: page,
       }).then((results) => {
         setLoading(false);
@@ -69,7 +73,7 @@ export default function CollectionsPage() {
   };
 
   const showNftView = () => {
-    return (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ?
+    return (!getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ?
       <div className={tw(
         'gap-2 minmd:grid minmd:gap-4 minmd:space-x-0 minlg:gap-4',
         sideNavOpen
@@ -176,11 +180,11 @@ export default function CollectionsPage() {
                     }
                     {nftSData?.length > 0 && showNftView()}
                   </div>
-                  {!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && (loading) &&
+                  {!getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && (loading) &&
                     (<div className="flex items-center justify-center min-h-[16rem] w-full">
                       <Loader />
                     </div>)}
-                  { !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && nftSData && nftSData.length < found && nftSData?.length > 0 &&
+                  { !getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && nftSData && nftSData.length < found && nftSData?.length > 0 &&
                     <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
                       <Button
                         size={ButtonSize.LARGE}

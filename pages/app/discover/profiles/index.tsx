@@ -8,8 +8,9 @@ import { Profile } from 'graphql/generated/types';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { usePaginator } from 'hooks/usePaginator';
-import { Doppler, getEnv } from 'utils/env';
-import { filterNulls } from 'utils/helpers';
+import useWindowDimensions from 'hooks/useWindowDimensions';
+import { Doppler, getEnvBool } from 'utils/env';
+import { filterNulls, getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import _ from 'lodash';
@@ -22,8 +23,9 @@ export default function ProfilePage() {
   const [isLeaderBoard, toggleLeaderBoardState] = useState(false);
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
   const [afterCursorRW, setAfterCursorRW] = useState('');
+  const { width: screenWidth } = useWindowDimensions();
 
-  const PROFILE_LOAD_COUNT = 20;
+  const PROFILE_LOAD_COUNT = getPerPage('discoverProfiles', screenWidth);
 
   const {
     nextPage,
@@ -36,11 +38,11 @@ export default function ProfilePage() {
   const [allLoadedProfiles, setAllLoadedProfiles] = useState<PartialDeep<Profile>[]>([]);
   const { data: loadedProfilesNextPage } = useRecentProfilesQuery({
     first: PROFILE_LOAD_COUNT,
-    afterCursor: !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ? afterCursor : afterCursorRW,
+    afterCursor: !getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ? afterCursor : afterCursorRW,
   });
 
   const loadMoreProfiles = useCallback(() => {
-    if (!getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
+    if (!getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)) {
       nextPage(loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor);
     } else {
       loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor && setAfterCursorRW(loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor);
@@ -58,7 +60,7 @@ export default function ProfilePage() {
       ]);
       toggleLoadState(false);
       setLastAddedPage(loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor);
-      !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && setTotalCount(loadedProfilesNextPage?.latestProfiles?.totalItems);
+      !getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) && setTotalCount(loadedProfilesNextPage?.latestProfiles?.totalItems);
     }
   }, [allLoadedProfiles, lastAddedPage, loadedProfilesNextPage?.latestProfiles?.items, loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor, loadedProfilesNextPage?.latestProfiles?.totalItems, setTotalCount]);
 
@@ -70,7 +72,7 @@ export default function ProfilePage() {
   const filterUniqProfiles = () => {
     if(!allLoadedProfiles && !allLoadedProfiles.length) return;
     const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
-    return !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)
+    return !getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)
       ? uniqData.map((profile, index) => {
         return (
           <ProfileCard
@@ -105,7 +107,7 @@ export default function ProfilePage() {
         <div>
           <div className={tw(
             'grid grid-cols-1 minlg:space-x-0 gap-1 minmd:gap-4',
-            isLeaderBoard ? 'minxl:grid-cols-1' : getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ? '' : 'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
+            isLeaderBoard ? 'minxl:grid-cols-1' : getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED) ? '' : 'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
             {
               !isLeaderBoard
                 ? filterUniqProfiles()
@@ -130,7 +132,7 @@ export default function ProfilePage() {
                 )
             }
           </div>
-          {getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)
+          {getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)
             ? <div className="w-full flex justify-center pb-32 mt-12">
               {
                 isLoading
@@ -153,7 +155,7 @@ export default function ProfilePage() {
         </div>
       );
     }else {
-      return !getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)
+      return !getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)
         ? (
           <div className="flex items-center justify-center min-h-[16rem] w-full">
             <Loader />
@@ -191,7 +193,7 @@ export default function ProfilePage() {
 
 ProfilePage.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout hideFooter={getEnv(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)} showDNavigation={true}>
+    <DefaultLayout hideFooter={getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)} showDNavigation={true}>
       { page }
     </DefaultLayout>
   );
