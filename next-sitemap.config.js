@@ -13,7 +13,15 @@ module.exports = {
       {
         userAgent: '*',
         disallow: ['/*'],
-        allow: ['/$', '/articles', '/articles/*', '/*.xml'],
+        allow: [
+          '/$',
+          '/app/discover',
+          '/app/discover/*',
+          '/app/collection/*',
+          '/articles',
+          '/articles/*',
+          '/*.xml',
+        ],
       }
     ]
   },
