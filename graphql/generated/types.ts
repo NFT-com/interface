@@ -2950,6 +2950,13 @@ export type SendReferEmailMutationVariables = Exact<{
 
 export type SendReferEmailMutation = { __typename?: 'Mutation', sendReferEmail: { __typename?: 'SendReferEmailOutput', confirmedEmails: Array<string | null>, message?: string | null, sentEmails: Array<string | null>, unconfirmedEmails: Array<string | null> } };
 
+export type SetLikeMutationVariables = Exact<{
+  input: SetLikeInput;
+}>;
+
+
+export type SetLikeMutation = { __typename?: 'Mutation', setLike?: { __typename?: 'Like', id?: string | null, createdAt?: any | null, updatedAt?: any | null, likedById?: string | null, likedId?: string | null, likedType?: LikeableType | null } | null };
+
 export type SignHashMutationVariables = Exact<{
   input: SignHashInput;
 }>;
@@ -3569,6 +3576,18 @@ export const SendReferEmailDocument = gql`
     message
     sentEmails
     unconfirmedEmails
+  }
+}
+    `;
+export const SetLikeDocument = gql`
+    mutation SetLike($input: SetLikeInput!) {
+  setLike(input: $input) {
+    id
+    createdAt
+    updatedAt
+    likedById
+    likedId
+    likedType
   }
 }
     `;
@@ -6010,6 +6029,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     SendReferEmail(variables: SendReferEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SendReferEmailMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SendReferEmailMutation>(SendReferEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SendReferEmail', 'mutation');
+    },
+    SetLike(variables: SetLikeMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SetLikeMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SetLikeMutation>(SetLikeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SetLike', 'mutation');
     },
     SignHash(variables: SignHashMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SignHashMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SignHashMutation>(SignHashDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignHash', 'mutation');

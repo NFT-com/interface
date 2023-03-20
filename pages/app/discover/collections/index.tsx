@@ -109,6 +109,7 @@ export default function CollectionsPage() {
                 key={index}
                 redirectTo={`/app/collection/${collection.document?.contractAddr}/`}
                 contractAddress={collection.document?.contractAddr}
+                collectionId={collection?.document?.id}
                 contract={collection.document?.contractAddr}
                 floorPrice={collection.document?.floor}
                 totalVolume={collection.document?.volume}

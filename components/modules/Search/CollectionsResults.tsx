@@ -38,6 +38,7 @@ export const CollectionsResults = (props:
         return (<CollectionCard
           key={'collection'+i}
           redirectTo={`/app/collection/${collection.document?.contractAddr}/`}
+          collectionId={collection?.document?.id}
           contractAddress={collection.document?.collectionAddress}
           contract={collection.document?.collectionAddress}
           description={collection?.document.description}

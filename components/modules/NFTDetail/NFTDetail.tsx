@@ -4,11 +4,12 @@ import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { getAddressForChain, nftProfile } from 'constants/contracts';
-import { Nft, NftType, Profile } from 'graphql/generated/types';
+import { LikeableType, Nft, NftType, Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
+import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getContractMetadata } from 'utils/alchemyNFT';
@@ -72,6 +73,11 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const { refreshNft, loading, success } = useRefreshNftMutation();
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
 
+  const { setLike } = useSetLikeMutation(
+    props?.nft?.id,
+    LikeableType.Nft
+  );
+
   const refreshNftCallback = useCallback(() => {
     (async () => {
       const result = await refreshNft(props.nft?.id);
@@ -121,7 +127,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                   }
                   {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
                     <div className='ml-3'>
-                      <LikeCount count={10} isLiked={false} onClick={() => null} />
+                      <LikeCount count={10} isLiked={false} onClick={setLike} />
                     </div>
                   }
                 </>
