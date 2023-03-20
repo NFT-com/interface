@@ -82,10 +82,8 @@ export default function CardsGrid(props: CardsGridProps) {
     const row = data[index];
 
     return (
-      <div style={{
-        ...style,
-        top: cardType == 'profiles' ? ((rowHeight * index) + 16*index) + 'px' : style.top,
-      }}className={rowClass}>
+      <div style={style}
+        className={rowClass}>
         {row && row?.map((item, cellIndex) => {
           childParams.itemData = item;
           childParams.cellIndex = cellIndex;
@@ -95,7 +93,7 @@ export default function CardsGrid(props: CardsGridProps) {
         )}
       </div>
     );
-  }, [cardType, childParams, children, getRowHeight, rowClass, rowHeight]);
+  }, [childParams, children, getRowHeight, rowClass]);
 
   return (
     (rowHeight || defaultRowHeight) && <div className='grid-cols-1 w-full'
@@ -109,7 +107,7 @@ export default function CardsGrid(props: CardsGridProps) {
         isItemLoaded={isItemLoaded}
         itemCount={itemCount}
         loadMoreItems={loadMoreItems}
-        threshold={cardType == 'profiles' ? 2 : 4}
+        threshold={cardType == 'profiles' ? 10 : 5}
       >
         {({ ref, onItemsRendered }) => (
           < FixedSizeList

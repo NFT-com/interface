@@ -159,6 +159,7 @@ export function NftGrid(props: NftGridProps) {
       gridData={items}
       loadMoreItems={loadMoreNfts}
       cardType='profiles'
+      defaultRowHeight={350}
       rowClass={tw(
         'grid w-full',
         'gap-4 mt-4 minlg:mt-0',
@@ -232,6 +233,7 @@ export function NftGrid(props: NftGridProps) {
               descriptionVisible={draftNftsDescriptionsVisible}
               preventDefault={editMode}
               onGetItemHight={rowIndex == 0 && getItemHeight}
+              customPadding='pb-[13px]'
             />
         );}}
     </CardsGrid>;

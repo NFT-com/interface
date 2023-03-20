@@ -38,6 +38,7 @@ export interface NftCardProps {
   descriptionVisible?: boolean;
   preventDefault?: boolean;
   onGetItemHight?: (height: number) => void;
+  customPadding?: string;
 }
 
 export function NFTCard(props: NftCardProps) {
@@ -62,7 +63,7 @@ export function NFTCard(props: NftCardProps) {
   }, [props, props.onGetItemHight, screenWidth]);
 
   return (
-    <div className='relative w-full h-full'>
+    <div className={`relative w-full h-full ${props.customPadding}`}>
       {props?.visible !== true && props?.visible !== false &&
        <div className='absolute top-4 right-4 z-50'>
          <LikeCount onClick={() => null} />
