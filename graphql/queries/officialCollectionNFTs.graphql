@@ -2,7 +2,6 @@ query OfficialCollectionNFTs($input: OfficialCollectionNFTsInput!) {
   officialCollectionNFTs(input: $input) {
     items {
       id
-      contract
       tokenId
       updatedAt
     }
