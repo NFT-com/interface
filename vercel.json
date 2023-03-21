@@ -1,4 +1,15 @@
 {
+  "functions": {
+    "server-sitemap-index.xml": {
+      "maxDuration": 120
+    },
+    "sitemaps/*.xml": {
+      "maxDuration": 120
+    },
+    "sitemaps/**/*.xml": {
+      "maxDuration": 120
+    }
+  },
   "redirects": [
     {
       "source": "/whitelist",
