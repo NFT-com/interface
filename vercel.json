@@ -1,12 +1,12 @@
 {
   "functions": {
-    "*.xml": {
+    "pages/server-sitemap-index.xml": {
       "maxDuration": 120
     },
-    "sitemaps/*.xml": {
+    "pages/sitemaps/*.xml": {
       "maxDuration": 120
     },
-    "sitemaps/**/*.xml": {
+    "pages/sitemaps/**/*.xml": {
       "maxDuration": 120
     }
   },
