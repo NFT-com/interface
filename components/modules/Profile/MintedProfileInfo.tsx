@@ -2,9 +2,8 @@ import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import LikeCount from 'components/elements/LikeCount';
 import Toast from 'components/elements/Toast';
 import { LikeableType } from 'graphql/generated/types';
+import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
-import { useUnsetLikeMutation } from 'graphql/hooks/useUnsetLikeMutation';
 import { useUser } from 'hooks/state/useUser';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
@@ -31,12 +30,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     draftGkIconVisible,
   } = useContext(ProfileContext);
 
-  const { setLike } = useSetLikeMutation(
-    profileData?.profile?.id,
-    LikeableType.Profile
-  );
-
-  const { unsetLike } = useUnsetLikeMutation(
+  const { setLike, unsetLike } = useSetLikeMutation(
     profileData?.profile?.id,
     LikeableType.Profile
   );
