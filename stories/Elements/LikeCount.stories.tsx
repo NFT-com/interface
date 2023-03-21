@@ -1,7 +1,7 @@
 import LikeCount from 'components/elements/LikeCount';
 
 import { useArgs } from '@storybook/client-api';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
 
 export default {
@@ -12,15 +12,19 @@ export default {
       action: 'clicked',
     }
   }
-} as ComponentMeta<typeof LikeCount>;
+} as Meta<typeof LikeCount>;
 
-const Template: ComponentStory<typeof LikeCount> = (args) => {
+const Template: StoryFn<typeof LikeCount> = (args) => {
   const [, updateArgs] = useArgs();
-  const handle = () => {
+  function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  const handle = async() => {
+    await timeout(700);
     updateArgs({ ...args, isLiked: !args.isLiked, count: args.isLiked ? args.count - 1 : args.count + 1 });
   };
 
-  return <LikeCount {...args} onClick={handle} />;
+  return <LikeCount {...args} onClick={handle} mutate={() => null} />;
 };
 
 export const Liked = Template.bind({});
