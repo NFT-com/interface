@@ -6,7 +6,6 @@ query NftById($id: ID!) {
     contract
     tokenId
     type
-    likeCount
     previewLink
     wallet {
       address

@@ -1,18 +1,16 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { CollectionInfo } from 'graphql/generated/types';
 
 import useSWR, { mutate } from 'swr';
-import { PartialDeep } from 'type-fest';
 
 export interface CollectionLikeCountData {
-  data: PartialDeep<CollectionInfo>;
+  data: { __typename?: 'CollectionInfo'; collection?: { __typename?: 'Collection'; likeCount?: number; isLikedByUser?: boolean; }; }
   loading: boolean;
   mutate: () => void;
 }
 
 export function useCollectionLikeCountQuery(chainId: string, contract: string): CollectionLikeCountData {
   const sdk = useGraphQLSDK();
-  const keyString = 'CollectionQuery ' + contract + chainId;
+  const keyString = 'CollectionLikeQuery' + contract + chainId;
 
   const { data } = useSWR(keyString, async () => {
     if (!chainId || !contract) {

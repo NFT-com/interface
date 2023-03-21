@@ -23,6 +23,7 @@ mutation UpdateNFTProfileId($nftId: ID!, $profileId: ID!) {
       followersCount
       isFollowedByMe
       isOwnedByMe
+      isLikedByUser
       gkIconVisible
       nftsDescriptionsVisible
       deployedContractsVisible

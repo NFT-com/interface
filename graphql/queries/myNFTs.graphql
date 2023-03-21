@@ -15,7 +15,6 @@ query MyNFTs($input: NFTsInput) {
       tokenId
       id
       type
-      likeCount
       listings {
         totalItems
         pageInfo {

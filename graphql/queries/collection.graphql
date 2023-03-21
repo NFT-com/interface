@@ -11,7 +11,6 @@ query Collection($input: CollectionInput!) {
       description
       isCurated
       isSpam
-      likeCount
     }
     nftPortResults {
       name

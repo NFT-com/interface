@@ -23,7 +23,7 @@ export interface MintedProfileInfoProps {
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { user } = useUser();
-  const { profileData } = useProfileQuery(profileURI);
+  const { profileData, mutate: mutateProfileData } = useProfileQuery(profileURI);
   const {
     editMode,
     draftBio,
@@ -38,6 +38,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
 
   const { unsetLike } = useUnsetLikeMutation(
     profileData?.profile?.id,
+    LikeableType.Profile
   );
 
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
@@ -76,7 +77,12 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             </div>
             }
             {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-              <LikeCount count={profileData?.profile?.likeCount} isLiked={false} onClick={setLike} />
+              <LikeCount
+                count={profileData?.profile?.likeCount}
+                isLiked={profileData?.profile?.isLikedByUser}
+                onClick={profileData?.profile?.isLikedByUser ? unsetLike : setLike}
+                mutate={mutateProfileData}
+              />
             }
           </div>
         </div>

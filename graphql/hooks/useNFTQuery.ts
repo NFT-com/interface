@@ -23,6 +23,7 @@ export function useNftQuery(contract: string, id: BigNumberish, listingsOwner?: 
   const { chain } = useNetwork();
 
   const mutateThis = useCallback(() => {
+    console.log('mutate');
     mutate(keyString);
   }, [keyString]);
 
