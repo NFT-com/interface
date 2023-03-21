@@ -1,6 +1,6 @@
 {
   "functions": {
-    "server-sitemap-index.xml": {
+    "*.xml": {
       "maxDuration": 120
     },
     "sitemaps/*.xml": {
