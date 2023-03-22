@@ -15,7 +15,7 @@ export interface NftLikeData {
 
 export function useNftLikeQuery(contract: string, id: BigNumberish): NftLikeData {
   const sdk = useGraphQLSDK();
-  const keyString = 'NftLikeQuery' + contract + id.toString();
+  const keyString = 'NftLikeQuery' + contract + id?.toString();
 
   const { chain } = useNetwork();
 
