@@ -109,10 +109,6 @@ class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=DM+Mono:300,400,500&display=swap"
             rel="stylesheet"
           />
-          <link
-            href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap"
-            rel="stylesheet"
-          />
           <script
             data-partytown-config
             dangerouslySetInnerHTML={{

@@ -68,7 +68,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
                   key={detailTab}
                   className={({ selected }) =>
                     tw(
-                      'flex items-center justify-center w-1/2 rounded-3xl py-2.5 text-[#6F6F6F] font-grotesk text-base font-semibold leading-6',
+                      'flex items-center justify-center w-1/2 rounded-3xl py-2.5 text-[#6F6F6F] font-noi-grotesk text-base font-semibold leading-6',
                       selected && 'bg-black text-[#F8F8F8]'
                     )
                   }

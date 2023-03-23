@@ -22,7 +22,7 @@ export function SignOutModal(props: SignOutModalProps) {
         )}>
           We{'\''}ve signed you out of NFT.com. However, to completely detach your wallet information from our site, you must disconnect your wallet.
         </div>
-        <div className="font-hero-heading1 mx-0 minlg:mx-[20%] mb-0 minlg:mb-5 flex w-full">
+        <div className="font-noi-grotesk mx-0 minlg:mx-[20%] mb-0 minlg:mb-5 flex w-full">
           <div className='mx-2 flex grow'>
             <Button
               type={ButtonType.PRIMARY}
