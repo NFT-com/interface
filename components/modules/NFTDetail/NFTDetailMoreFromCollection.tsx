@@ -56,7 +56,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 <div className={tw(
                   'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
                 )} key={nft?.id ?? index}>
-                  {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+                  {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
                     <NftCard
                       contractAddr={props.contract}
                       tokenId={nft.tokenId}

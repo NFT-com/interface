@@ -12,7 +12,7 @@
     "dev:local": "yarn typechain:gen & next dev",
     "build": "yarn typechain:gen && doppler run -- next build",
     "postbuild": "next-sitemap",
-    "build:vercel": "yarn typechain:gen && next build",
+    "build:vercel": "yarn typechain:gen && next build && yarn postbuild",
     "start": "doppler run -- next start",
     "lint": "next lint",
     "analyze": "ANALYZE=true next build",

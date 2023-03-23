@@ -167,6 +167,7 @@ const nextConfig = {
     return config;
   },
   images: {
+    unoptimized: true,
     domains: [
       'cdn.nft.com',
       'nft-llc.mypinata.cloud',
