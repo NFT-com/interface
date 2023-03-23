@@ -14,14 +14,14 @@ import ProfilePreview from 'public/profilePreview.png';
 import { PartialDeep } from 'type-fest';
 
 export interface ProfileCardProps {
-  profile: PartialDeep<Profile>,
-  isLeaderBoard: boolean
-  id?: string,
-  number?: number,
-  itemsVisible?: number,
-  photoURL?: string,
-  url?: string,
-  isGkMinted?: boolean
+  profile?: PartialDeep<Profile>;
+  isLeaderBoard?: boolean;
+  id?: string;
+  number?: number;
+  itemsVisible?: number;
+  photoURL?: string;
+  url?: string;
+  isGkMinted?: boolean;
 }
 
 export function ProfileCard(props: ProfileCardProps) {
