@@ -1,6 +1,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
-import { TxActivity, TxLooksrareProtocolData, TxSeaportProtocolData, TxX2Y2ProtocolData } from 'graphql/generated/types';
+import { ActivityType, TxActivity, TxLooksrareProtocolData, TxSeaportProtocolData, TxX2Y2ProtocolData } from 'graphql/generated/types';
 import { useUpdateReadByIdsMutation } from 'graphql/hooks/useUpdateReadByIdsMutation';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
@@ -9,7 +9,7 @@ import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 
-import { NotificationButton } from './NotificationButton';
+import { NotificationItem } from './NotificationItem';
 
 import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
@@ -97,7 +97,14 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
       const nftId = nft?.nftId[0]?.split('/')[2] ? BigNumber.from(nft?.nftId[0]?.split('/')[2]).toString() : null;
       return (
         {
-          text: `You purchased an NFT ${!isNullOrEmpty(nftId) ? 'for': ''} ${getPriceFields(nft, 'price')} ${getPriceFields(nft, 'currency')} ${!isNullOrEmpty(nftId) ? '.': ''}`,
+          text: null,
+          nft: {
+            nftId,
+            collection: nft?.nftContract,
+            price: getPriceFields(nft, 'price'),
+            currency: getPriceFields(nft, 'currency'),
+            type: ActivityType.Purchase
+          },
           onClick: () => {
             setVisible(false);
             setSidebarOpen(false);
@@ -118,7 +125,14 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
       const nftId = nft?.nftId[0]?.split('/')[2] ? BigNumber.from(nft?.nftId[0]?.split('/')[2]).toString() : null;
       return(
         {
-          text: `Your NFT sold ${!isNullOrEmpty(nftId) ? 'for': ''} ${getPriceFields(nft, 'price')} ${getPriceFields(nft, 'currency')} ${!isNullOrEmpty(nftId) ? '.': ''}`,
+          text: null,
+          nft: {
+            nftId,
+            collection: nft?.nftContract,
+            price: getPriceFields(nft, 'price'),
+            currency: getPriceFields(nft, 'currency'),
+            type: ActivityType.Sale
+          },
           onClick: () => {
             setVisible(false);
             setSidebarOpen(false);
@@ -139,6 +153,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     profileExpiringSoon ?
       {
         text: `Your licensing for your Profile ${user?.currentProfileUrl} is going to expire soon! Renew here`,
+        nft: null,
         onClick: () => {
           setVisible(false);
           setSidebarOpen(false);
@@ -150,6 +165,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     activeNotifications.hasExpiredListings ?
       {
         text: getEnvBool(Doppler.NEXT_PUBLIC_ACTIVITY_PAGE_ENABLED) ? 'Listing Expired. View My Activity' : 'Listing Expired.',
+        nft: null,
         onClick: () => {
           setVisible(false);
           setSidebarOpen(false);
@@ -161,6 +177,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     activeNotifications.hasPendingAssociatedProfiles && pendingAssociationCount > 0 ?
       {
         text: `${pendingAssociationCount} NFT Profile Connection request${pendingAssociationCount > 1 ? 's' : ''}`,
+        nft: null,
         onClick: () => {
           setVisible(false);
           setSidebarOpen(false);
@@ -172,6 +189,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     activeNotifications.associatedProfileRemoved ?
       {
         text: 'Associated Profile Removed',
+        nft: null,
         onClick: () => {
           setRemovedAssociationNotifClicked(true);
           setVisible(false);
@@ -182,6 +200,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     activeNotifications.associatedProfileAdded ?
       {
         text: 'Associated Profile Added',
+        nft: null,
         onClick: () => {
           setAddedAssociatedNotifClicked(true);
           setVisible(false);
@@ -192,6 +211,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     activeNotifications.profileNeedsCustomization ?
       {
         text: 'Your NFT Profile needs attention',
+        nft: null,
         onClick: () => {
           setVisible(false);
           router.push(`/${user?.currentProfileUrl}`);
@@ -202,6 +222,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     hasUnclaimedProfiles ?
       {
         text: `${totalClaimableForThisAddress} Profile${totalClaimableForThisAddress > 1 ? 's' : ''} Available to Mint`,
+        nft: null,
         onClick: () => {
           setVisible(false);
           setSidebarOpen(false);
@@ -244,11 +265,12 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
         :
         <div className='flex flex-col w-full items-center max-h-screen minlg:max-h-[350px] overflow-auto'>
           {filterNulls([...notificationData, ...purchaseNotifications, ...soldNotifications]).sort((a, b) => moment(b.date).diff(a.date)).map((item, index) => (
-            <NotificationButton
+            <NotificationItem
               key={index}
               buttonText={item.text}
               date={item.date}
               onClick={item.onClick}
+              nft={item?.nft ?? null}
             />
           ))}
         </div>

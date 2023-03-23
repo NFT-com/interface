@@ -2,7 +2,7 @@ import { ActivityType, TxActivity } from 'graphql/generated/types';
 import { useExpiredNotificationsQuery } from 'graphql/hooks/useExpiredNotificationsQuery';
 import { useIsProfileCustomized } from 'graphql/hooks/useIsProfileCustomized';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
-import { useTxNotificationsQuery } from 'graphql/hooks/useSaleNotificationsQuery';
+import { useTxNotificationsQuery } from 'graphql/hooks/useTxNotificationsQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';

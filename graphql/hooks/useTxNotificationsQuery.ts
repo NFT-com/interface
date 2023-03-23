@@ -33,7 +33,7 @@ export function useTxNotificationsQuery(address: string, chainId: string, activi
         activityType,
         chainId,
         status: ActivityStatus.Valid,
-        // read: false,
+        read: false,
         expirationType: ActivityExpiration.Both
       }
     });

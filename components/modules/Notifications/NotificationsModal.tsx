@@ -1,7 +1,7 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
-import { Notifications } from 'components/modules/Sidebar/Notifications';
+import { Notifications } from 'components/modules/Notifications/Notifications';
 
 import { X } from 'phosphor-react';
 import { useContext } from 'react';
