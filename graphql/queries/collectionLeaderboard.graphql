@@ -3,6 +3,7 @@ query CollectionLeaderboard($input: CollectionLeaderboardInput){
     items {
     contract
     logoUrl
+    likeCount
     name
       stats {
         one_day_volume

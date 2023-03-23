@@ -10,11 +10,10 @@ import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useGetContractSalesStatisticsQuery } from 'graphql/hooks/useGetContractSalesStatisticsQuery';
 import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
+import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -53,7 +52,7 @@ export function Collection(props: CollectionProps) {
   const prevPage = usePrevious(currentPage);
   const prevId_nftName = usePrevious(id_nftName);
   const defaultChainId = useDefaultChainId();
-  const { data: collectionData } = useCollectionQuery(defaultChainId, props.contract?.toString());
+  const { data: collectionData, mutate: mutateCollectionData } = useCollectionQuery(defaultChainId, props.contract?.toString());
   const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contract, async () => {
     return await getContractMetadata(props.contract, defaultChainId);
   });
@@ -68,7 +67,7 @@ export function Collection(props: CollectionProps) {
   const { profileData: collectionPreferredOwnerData } = useProfileQuery(
     collectionOwnerData?.profile?.owner?.preferredProfile?.url
   );
-  const { setLike } = useSetLikeMutation(
+  const { setLike, unsetLike } = useSetLikeMutation(
     collectionData?.collection?.id,
     LikeableType.Collection
   );
@@ -178,7 +177,12 @@ export function Collection(props: CollectionProps) {
           </h2>
           {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
           <div className='ml-3'>
-            <LikeCount count={10} isLiked={false} onClick={setLike} />
+            <LikeCount
+              count={collectionData?.collection?.likeCount}
+              isLiked={collectionData?.collection?.isLikedByUser}
+              onClick={collectionData?.collection?.isLikedByUser ? unsetLike :setLike}
+              mutate={mutateCollectionData}
+            />
           </div>
           }
         </div>

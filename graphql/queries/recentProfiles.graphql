@@ -4,6 +4,7 @@ query RecentProfiles($input: LatestProfilesInput) {
       id
       bannerURL
       isGKMinted
+      likeCount
       owner {
         address
       }
