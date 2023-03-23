@@ -68,10 +68,6 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
   const { user } = useUser();
   const { profileData } = useProfileQuery(user.currentProfileUrl);
-  const {
-    purchasedNfts,
-    setPurchasedNfts
-  } = useContext(NotificationContext);
 
   const { data: looksrareProtocolFeeBps } = useSWR(
     'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
@@ -327,7 +323,6 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
               if (result) {
                 setSuccess(true);
-                setPurchasedNfts(buyNowActive ? [...purchasedNfts, toBuyNow[0]] : [...purchasedNfts, ...toBuy]);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
                 clear();
                 clearBuyNow();

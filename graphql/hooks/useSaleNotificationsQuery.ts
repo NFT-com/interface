@@ -7,17 +7,18 @@ import { mutate } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 import { PartialDeep } from 'type-fest';
 
-export interface SaleActivitiesData {
+export interface TxNotificationsData {
   data: Array<PartialDeep<TxActivity>>;
   loading: boolean;
   mutate: () => void;
 }
 
-export function useSaleNotificationsQuery(address: string, chainId: string): SaleActivitiesData {
+export function useTxNotificationsQuery(address: string, chainId: string, activityType: ActivityType): TxNotificationsData {
   const sdk = useGraphQLSDK();
-  const keyString = 'SaleActivitiesQuery ' +
+  const keyString = 'TxActivitiesQuery' +
     chainId +
-    address;
+    address +
+    activityType;
     
   const { data } = useSWRImmutable(keyString, async () => {
     if (isNullOrEmpty(address) || isNullOrEmpty(chainId)) {
@@ -29,10 +30,10 @@ export function useSaleNotificationsQuery(address: string, chainId: string): Sal
           first: 50,
         },
         walletAddress: address,
-        activityType: ActivityType.Sale,
+        activityType,
         chainId,
         status: ActivityStatus.Valid,
-        read: false,
+        // read: false,
         expirationType: ActivityExpiration.Both
       }
     });

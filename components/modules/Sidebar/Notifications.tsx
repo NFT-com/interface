@@ -36,7 +36,6 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     expiredActivityDate,
     profileExpiringSoon,
     purchasedNfts,
-    setPurchasedNfts,
     soldNfts
   } = useContext(NotificationContext);
   const router = useRouter();
@@ -94,18 +93,24 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
   },[getByContractAddress]);
 
   const purchaseNotifications = !isNullOrEmpty(purchasedNfts) ?
-    purchasedNfts.map((purchase) => (
-      {
-        text: `You purchased ${purchase.nft.metadata.name} for ${ethers.utils.formatEther(BigNumber.from(purchase?.price ?? 0))} ${getByContractAddress(purchase?.currency)?.name}.`,
-        onClick: () => {
-          setVisible(false);
-          setSidebarOpen(false);
-          router.push(`/app/nft/${purchase.nft.contract}/${purchase.nft.tokenId}`);
-          setPurchasedNfts([]);
-        },
-        date: null
-      }
-    ))
+    purchasedNfts.map((nft) => {
+      const nftId = nft?.nftId[0]?.split('/')[2] ? BigNumber.from(nft?.nftId[0]?.split('/')[2]).toString() : null;
+      return (
+        {
+          text: `You purchased an NFT ${!isNullOrEmpty(nftId) ? 'for': ''} ${getPriceFields(nft, 'price')} ${getPriceFields(nft, 'currency')} ${!isNullOrEmpty(nftId) ? '.': ''}`,
+          onClick: () => {
+            setVisible(false);
+            setSidebarOpen(false);
+            !isNullOrEmpty(nftId)
+              ? router.push(`/app/nft/${nft.nftContract}/${nftId}`)
+              : window.open(
+                `https://etherscan.io/tx/${nft.transaction.transactionHash?.split(':')?.[0]}`,
+                '_blank'
+              );
+          },
+          date: nft?.timestamp
+        }
+      );})
     : [];
 
   const soldNotifications = !isNullOrEmpty(soldNfts) ?
@@ -238,7 +243,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
         </div>
         :
         <div className='flex flex-col w-full items-center max-h-screen minlg:max-h-[350px] overflow-auto'>
-          {filterNulls([...notificationData, ...purchaseNotifications, ...soldNotifications]).sort((a, b) => moment(b.date, 'MM-DD-YYYY').diff(moment(a.date, 'MM-DD-YYYY'))).map((item, index) => (
+          {filterNulls([...notificationData, ...purchaseNotifications, ...soldNotifications]).sort((a, b) => moment(b.date).diff(a.date)).map((item, index) => (
             <NotificationButton
               key={index}
               buttonText={item.text}
