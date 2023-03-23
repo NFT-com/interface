@@ -92,10 +92,7 @@ export default function ProfilePage() {
                         number={i}
                         isLeaderBoard
                         id={item.id}
-                        index={item.index}
                         itemsVisible={item.itemsVisible}
-                        numberOfCollections={item.numberOfCollections}
-                        numberOfGenesisKeys={item.numberOfGenesisKeys}
                         photoURL={item.photoURL}
                         url={item.url}
                         isGkMinted={item.isGKMinted}
