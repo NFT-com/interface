@@ -1,5 +1,5 @@
 
-// const { withSentryConfig } = require('@sentry/nextjs');
+const { withSentryConfig } = require('@sentry/nextjs');
 const path = require('path');
 const v8 = require('v8');
 const withTM = require('next-transpile-modules')([
@@ -205,4 +205,4 @@ const nextConfig = {
 
 const moduleExports = withTM(nextConfig);
 
-module.exports = withBundleAnalyzer(moduleExports);
+module.exports = withBundleAnalyzer(withSentryConfig(moduleExports, sentryWebpackPluginOptions));
