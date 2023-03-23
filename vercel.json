@@ -1,4 +1,14 @@
 {
+  "crons": [
+    {
+      "path": "/api/sitemaps/server-sitemap-index?teamKey=eB7q1HKpTLA",
+      "schedule": "59 23 * * *"
+    },
+    {
+      "path": "/api/sitemaps/collection?teamKey=eB7q1HKpTLA",
+      "schedule": "59 23 * * *"
+    }
+  ],
   "functions": {
     "pages/*.xml": {
       "maxDuration": 120
@@ -26,3 +36,4 @@
   ],
   "$schema": "https://openapi.vercel.sh/vercel.json"
 }
+s

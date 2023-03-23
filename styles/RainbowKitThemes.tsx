@@ -2,7 +2,7 @@ import {
   darkTheme,
   lightTheme,
   Theme } from '@rainbow-me/rainbowkit';
-import merge from 'lodash.merge';
+import merge from 'lodash/merge';
 
 export const rainbowDark = merge(darkTheme(), {
   colors: {
