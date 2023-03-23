@@ -13,6 +13,7 @@ import { useContext, useState } from 'react';
 import useSWR from 'swr';
 export interface NftGalleryProps {
   profileURI: string;
+  parentRef?: any;
 }
 
 export function NftGallery(props: NftGalleryProps) {
@@ -31,7 +32,7 @@ export function NftGallery(props: NftGalleryProps) {
     loadingAllOwnerNfts,
     loadMoreNfts,
     loadMoreNftsEditMode,
-    draftLayoutType
+    draftLayoutType,
   } = useContext(ProfileContext);
   const { closeToBottom, currentScrollPosition } = useScrollToBottom();
 
@@ -80,11 +81,17 @@ export function NftGallery(props: NftGalleryProps) {
       t => t.id === obj.id
     ) === index
   );
+  console.log('setNFTs fdo', setNFTs);
 
   return (
     <>
       <GridContextProvider items={setNFTs} key={JSON.stringify(setNFTs)}>
-        <NftGrid profileURI={profileURI} />
+        <NftGrid profileURI={profileURI} parentRef={props.parentRef}/>
+        {/* <Virtuoso
+          useWindowScroll={true}
+        totalCount={200}
+        itemContent={index => <div>Item {index}</div>}
+      /> */}
       </GridContextProvider>
       {
         (draftLayoutType ?? savedLayoutType) === 'Spotlight' && <div className={tw(

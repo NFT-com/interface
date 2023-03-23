@@ -11,7 +11,7 @@ import { ProfileContext } from './ProfileContext';
 import { ProfileLayoutEditorModalContent } from './ProfileLayoutEditorModalContent';
 
 import dynamic from 'next/dynamic';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 export interface MintedProfileGalleryProps {
@@ -39,13 +39,14 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const isGroupedByCollection = draftDisplayType === ProfileDisplayType.Collection;
 
   const [groupByCollectionNotOwner, setGroupByCollectionNotOwner] = useState(isGroupedByCollection);
+  const parentRef = useRef(null);
 
   useEffect(() => {
     setGroupByCollectionNotOwner(false);
   }, [editMode]);
 
   return (
-    <div className={tw(
+    <div ref={parentRef} className={tw(
       'flex flex-col align-items',
       'minlg:px-16',
     )}>
@@ -94,7 +95,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
       {
         (editMode ? isGroupedByCollection : groupByCollectionNotOwner) ?
           <CollectionGallery profileURI={props.profileURI} /> :
-          <NftGallery profileURI={props.profileURI} />
+          <NftGallery profileURI={props.profileURI} parentRef={parentRef}/>
       }
     </div>
   );
