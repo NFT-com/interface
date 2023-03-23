@@ -33,6 +33,7 @@ export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCount
         if(!liked) {
           setClicked(true);
           setLikeCount(likeCount + 1);
+          //await timeout is used here to allow the animation to fully animate before hiding it again
           await timeout(700);
           setLiked(true);
           setClicked(false);
