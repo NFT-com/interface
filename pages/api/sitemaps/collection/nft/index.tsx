@@ -38,7 +38,7 @@ export default async function handler(req: NextRequest) {
       }).then(data => data.officialCollectionNFTs).catch((err) => console.error(err));
 
     if (officialCollectionNfts && officialCollectionNfts?.items) {
-      officialCollectionNfts.items.forEach(({ tokenId, updatedAt }, i) => {
+      officialCollectionNfts.items.forEach(({ tokenId, updatedAt }) => {
         sitemapFields.push({
           loc: `${siteUrlHost}/${collection}/${BigNumber.from(tokenId).toString()}`,
           lastmod: updatedAt,
