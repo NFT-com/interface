@@ -27,7 +27,7 @@
     },
     "pages/sitemaps/**/*.xml": {
       "maxDuration": 120
-    },
+    }
   },
   "redirects": [
     {
