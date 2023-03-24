@@ -71,13 +71,13 @@ export default function ActivityPages() {
   }, [lastAddedPage, setTotalCount, activityData, loadedActivitiesNextPage, afterCursor, loadedActivitiesNextPage?.getActivities?.items]);
   
   return (
-    <div className='flex flex-col justify-between minlg:pt-28 px-4 font-grotesk'>
+    <div className='flex flex-col justify-between minlg:pt-28 px-4 font-noi-grotesk'>
       <div className='w-full max-w-nftcom mx-auto relative'>
         <h2 className='font-bold text-black text-[40px] mb-6'>
           <span className='text-[#F9D963]'>/</span>
           My Activity
         </h2>
-        <div className="my-8 font-grotesk rounded-md pt-4 pb-8 overflow-x-auto min-h-[380px]">
+        <div className="my-8 font-noi-grotesk rounded-md pt-4 pb-8 overflow-x-auto min-h-[380px]">
           <table className="border-collapse table-auto w-full">
             <thead className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>
               <tr className='pt-0 pb-3 text-left ...'>

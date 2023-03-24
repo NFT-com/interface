@@ -21,8 +21,8 @@ export function NftDetailCard(props: NftDetailCardProps) {
       className={tw(
         'NftDetailCard',
         'flex w-full',
-        props?.highlighted && 'bg-[#FFF4CA] border border-[#F9D54C]',
-        'bg-white px-3 py-4 shadow-xl rounded-[18px]',
+        props?.highlighted ? 'bg-[#FFF4CA] border border-[#F9D54C]' : 'bg-white ',
+        'px-3 py-4 shadow-xl rounded-[18px]',
         'overflow-hidden cursor-pointer',
         props.onClick &&
        'cursor-pointer transition hover:scale-[0.97] transition-spacing duration-100 ease-in-out'
@@ -52,7 +52,7 @@ export function NftDetailCard(props: NftDetailCardProps) {
         )}>
           {isCopied ? 'Copied!' : props?.value?.toLowerCase()}
         </span>
-        {!isNullOrEmpty(props.subtitle) && <span className='font-grotesk font-normal text-xs leading-5 text-[#6F6F6F]'>{props.subtitle}</span>}
+        {!isNullOrEmpty(props.subtitle) && <span className='font-noi-grotesk font-normal text-xs leading-5 text-[#6F6F6F]'>{props.subtitle}</span>}
       </div>
     </div>
   );

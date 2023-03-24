@@ -40,7 +40,7 @@ export default function SettingsForm({ buttonText, inputVal, changeHandler, subm
     if(isSelf && error) {
       return (
         <>
-          <p className='text-[#DD0F70] mt-1 text-xs font-grotesk'>This is your current address</p>
+          <p className='text-[#DD0F70] mt-1 text-xs font-noi-grotesk'>This is your current address</p>
           <Warning size={25} className='mr-3 rounded-full absolute box-border top-[31%] -translate-y-1/2 right-0' weight="fill" color='#DD0F70' />
         </>
       );}
@@ -48,7 +48,7 @@ export default function SettingsForm({ buttonText, inputVal, changeHandler, subm
     if(isAssociatedOrPending && error) {
       return (
         <>
-          <p className='text-[#D8771F] mt-1 text-xs font-grotesk'>Request exists on chain</p>
+          <p className='text-[#D8771F] mt-1 text-xs font-noi-grotesk'>Request exists on chain</p>
           <Info size={25} className='mr-3 rounded-full absolute box-border top-[31%] -translate-y-1/2 right-0' weight="fill" color='#D8771F' />
         </>
       );
@@ -57,7 +57,7 @@ export default function SettingsForm({ buttonText, inputVal, changeHandler, subm
     if(error){
       return (
         <>
-          <p className='text-[#DD0F70] mt-1 text-xs font-grotesk'>Address is not valid</p>
+          <p className='text-[#DD0F70] mt-1 text-xs font-noi-grotesk'>Address is not valid</p>
           <Warning size={25} className='mr-3 rounded-full absolute box-border top-[31%] -translate-y-1/2 right-0' weight="fill" color='#DD0F70' />
         </>
       );
@@ -65,7 +65,7 @@ export default function SettingsForm({ buttonText, inputVal, changeHandler, subm
 
     return (
       <>
-        <p className='text-[#0E8344] mt-1 text-xs font-grotesk'>Valid wallet address</p>
+        <p className='text-[#0E8344] mt-1 text-xs font-noi-grotesk'>Valid wallet address</p>
         <CheckCircle size={25} className='mr-3 rounded-full absolute box-border top-[31%] -translate-y-1/2 right-0' color='green' weight="fill" />
       </>
     );
@@ -91,7 +91,7 @@ export default function SettingsForm({ buttonText, inputVal, changeHandler, subm
         disabled={error || inputVal === '' || isAssociatedOrPending}
         onClick={() => submitHandler()}
       />
-      <div className='flex items-center font-grotesk text-[#6F6F6F] justify-center mt-2 text-sm'>
+      <div className='flex items-center font-noi-grotesk text-[#6F6F6F] justify-center mt-2 text-sm'>
         <GasPump size={20} weight="fill" />
         <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
       </div>

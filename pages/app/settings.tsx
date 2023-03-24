@@ -126,18 +126,18 @@ export default function Settings() {
           <SettingsSidebar isOwner={ownsProfilesAndSelectedProfile} />
           <div className='w-full bg-white mx-auto minlg:pt-28 minlg:pl-80 max-w-[900px]'>
             <div className='pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pr-0 minlg:pl-0'>
-              <h2 className='font-bold text-black text-[40px] font-grotesk block minlg:hidden'>
+              <h2 className='font-bold text-black text-[40px] font-noi-grotesk block minlg:hidden'>
                 <span className='text-[#F9D963]'>/</span>
                 Settings
               </h2>
               {ownsProfilesAndSelectedProfile
                 ? (
                   <>
-                    <h3 className='mt-10 minlg:mt-24 mb-4 text-xs uppercase font-extrabold font-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>Profile Settings for {selectedProfile}</h3>
+                    <h3 className='mt-10 minlg:mt-24 mb-4 text-xs uppercase font-extrabold font-noi-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>Profile Settings for {selectedProfile}</h3>
                     <ConnectedAccounts associatedAddresses={associatedAddresses} selectedProfile={selectedProfile} />
                     <DisplayMode selectedProfile={selectedProfile}/>
-                    <div className='mt-10 font-grotesk' id="licensing">
-                      <h2 className='text-black mb-2 font-bold text-2xl tracking-wide font-grotesk'>Profile Licensing</h2>
+                    <div className='mt-10 font-noi-grotesk' id="licensing">
+                      <h2 className='text-black mb-2 font-bold text-2xl tracking-wide font-noi-grotesk'>Profile Licensing</h2>
                       {expiry && <p>{selectedProfile} expires: {expiry}</p>}
                       <MintPaidProfileCard profile={selectedProfile} type='renew' />
                     </div>
@@ -147,7 +147,7 @@ export default function Settings() {
                 : null }
             </div>
             <div className='bg-[#F8F8F8] pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pr-5 minlg:pl-5 pb-10 minlg:mb-24 minmd:rounded-[10px]'>
-              <h3 className='mt-10 pt-10 minlg:mt-10 mb-4 text-xs uppercase font-extrabold font-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>
+              <h3 className='mt-10 pt-10 minlg:mt-10 mb-4 text-xs uppercase font-extrabold font-noi-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>
                 Address Settings for {shortenAddress(currentAddress, 4)}
               </h3>
               {ownsProfilesAndSelectedProfile
