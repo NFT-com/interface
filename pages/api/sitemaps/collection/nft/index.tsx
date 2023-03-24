@@ -3,26 +3,32 @@ import { SitemapField } from 'types';
 
 import { BigNumber } from 'ethers';
 import { client, gqlQueries, siteUrl, teamAuthToken } from 'lib/sitemap';
-import { NextRequest, NextResponse } from 'next/server';
+// import { NextRequest, NextResponse } from 'next/server';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export const config = {
-  runtime: 'edge',
-  regions: ['iad1'], // us-east-1
-};
+// export const config = {
+//   runtime: 'edge',
+//   regions: ['iad1'], // us-east-1
+// };
 
-export default async function handler(req: NextRequest) {
+// export default async function handler(req: NextRequest) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Setup variables
-  let page: string | number = req.nextUrl.searchParams.get('page');
-  const chainId: string = req.nextUrl.searchParams.get('chainId');
-  const collection: string = req.nextUrl.searchParams.get('collection');
+  // let page: string | number = req.nextUrl.searchParams.get('page');
+  // const chainId: string = req.nextUrl.searchParams.get('chainId');
+  // const collection: string = req.nextUrl.searchParams.get('collection');
+  // eslint-disable-next-line prefer-const
+  const { chainId, collection, page: pageCtx, teamKey } = req.query;
   try {
-    page = parseInt(page);
+    // page = parseInt(page);
+    const page = parseInt(pageCtx as string);
     const sitemapFields: SitemapField[] = [];
     const siteUrlHost = `${siteUrl}app/nft`;
-    const teamKey: string = req.nextUrl.searchParams.get('teamKey');
+    // const teamKey: string = req.nextUrl.searchParams.get('teamKey');
 
     if (teamKey !== teamAuthToken) {
-      return new NextResponse('', { status: 404 });
+      // return new NextResponse('', { status: 404 });
+      return res.status(404).end();
     }
 
     client.setHeader('teamKey', teamKey);
@@ -47,26 +53,33 @@ export default async function handler(req: NextRequest) {
         });
       });
     }
-    return new NextResponse(
-      JSON.stringify({ sitemapFields }),
-      {
-        status: 200,
-        headers: {
-          'Cache-Control': 's-maxage=86340, stale-while-revalidate'
-        }
-      }
-    );
+    res.setHeader('Cache-Control', 's-maxage=86340, stale-while-revalidate');
+    return res.status(200).json({ sitemapFields });
+    // return new NextResponse(
+    //   JSON.stringify({ sitemapFields }),
+    //   {
+    //     status: 200,
+    //     headers: {
+    //       'Cache-Control': 's-maxage=86340, stale-while-revalidate'
+    //     }
+    //   }
+    // );
   } catch (err) {
     console.error(err);
-    return new NextResponse(
-      JSON.stringify(
-        {
-          error: {
-            message: `An error occurred fetching the following sitemap collection page of nfts, ${JSON.stringify({ chainId, collection, page, err }, null, 2)}`
-          }
-        }),
-      { status: 500 }
-    );
+    return res.status(500).json({
+      error: {
+        message: `An error occurred fetching the following sitemap collection page of nfts, ${JSON.stringify({ chainId, collection, page: pageCtx, err }, null, 2)}`
+      }
+    });
+    // return new NextResponse(
+    //   JSON.stringify(
+    //     {
+    //       error: {
+    //         message: `An error occurred fetching the following sitemap collection page of nfts, ${JSON.stringify({ chainId, collection, page, err }, null, 2)}`
+    //       }
+    //     }),
+    //   { status: 500 }
+    // );
   }
 }
 
