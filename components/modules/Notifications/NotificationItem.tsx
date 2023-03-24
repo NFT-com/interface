@@ -41,11 +41,11 @@ export const NotificationItem = ({ buttonText, onClick, date, nft }: Notificatio
       onClick={onClick}
       >
         {isNullOrEmpty(nft?.nftId) ?
-          <p>{buttonText}</p> :
+          <p className='w-full'>{buttonText}</p> :
           nft?.type === ActivityType.Purchase ?
-            <p>You purchased {nftMetadata?.title} for {nft?.price} {nft?.currency}</p>
+            <p className='w-full truncate'>You purchased {nftMetadata?.title} for {nft?.price} {nft?.currency}</p>
             :
-            <p>You sold {nftMetadata?.title} for {nft?.price} {nft?.currency}</p>
+            <p className='w-full truncate'>You sold {nftMetadata?.title} for {nft?.price} {nft?.currency}</p>
         }
         {!isNullOrEmpty(date) && <p className='text-[#6F6F6F] text-[10px] uppercase -mt-1'>{moment(date).fromNow()}</p>}
       </button>

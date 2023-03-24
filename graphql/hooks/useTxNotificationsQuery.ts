@@ -15,7 +15,7 @@ export interface TxNotificationsData {
 
 export function useTxNotificationsQuery(address: string, chainId: string, activityType: ActivityType): TxNotificationsData {
   const sdk = useGraphQLSDK();
-  const keyString = 'TxActivitiesQuery' +
+  const keyString = 'TxNotificationsQuery' +
     chainId +
     address +
     activityType;
