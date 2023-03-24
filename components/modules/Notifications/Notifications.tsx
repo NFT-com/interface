@@ -1,5 +1,4 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { ActivityType, TxActivity, TxLooksrareProtocolData, TxSeaportProtocolData, TxX2Y2ProtocolData } from 'graphql/generated/types';
 import { useUpdateReadByIdsMutation } from 'graphql/hooks/useUpdateReadByIdsMutation';
 import { useSidebar } from 'hooks/state/useSidebar';
@@ -10,12 +9,13 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 
 import { NotificationItem } from './NotificationItem';
+import { useNotifications } from './useNotifications';
 
 import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import NoActivityIcon from 'public/no_activity.svg?svgr';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
 import { useAccount } from 'wagmi';
 
@@ -25,6 +25,7 @@ type NotificationsProps = {
 
 export const Notifications = ({ setVisible }: NotificationsProps) => {
   const { user } = useUser();
+  const context = useNotifications();
   const {
     count,
     activeNotifications,
@@ -37,7 +38,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     profileExpiringSoon,
     purchasedNfts,
     soldNfts
-  } = useContext(NotificationContext);
+  } = context;
   const router = useRouter();
   const { setSidebarOpen } = useSidebar();
   const { getByContractAddress } = useSupportedCurrencies();
