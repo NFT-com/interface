@@ -1,14 +1,11 @@
 import { gql, GraphQLClient } from 'graphql-request';
 
-import fetch from 'node-fetch';
-
 export { siteUrl } from 'next-sitemap.config';
 
 export const client = new GraphQLClient(process.env.NEXT_PUBLIC_GRAPHQL_URL, {
   cache: 'default',
-  fetch: fetch,
   headers: {
-    'Cache-Control': 's-maxage=86400, stale-while-revalidate',
+    'Cache-Control': 's-maxage=86340, stale-while-revalidate',
     'Connection': 'keep-alive',
     'Keep-Alive': 'timeout=120'
   }
