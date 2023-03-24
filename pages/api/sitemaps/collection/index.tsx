@@ -14,9 +14,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     // Setup variables
-    const sitemapFields: SitemapField[] = [];
-    const siteUrlHost = `${siteUrl}app/collection`;
     const { teamKey } = req.query;
+    const sitemapFields: SitemapField[] = [];
+    const siteUrlHost = `${req.headers.host}/app/collection`;
     // const teamKey: string = req.nextUrl.searchParams.get('teamKey');
 
     if (teamKey !== teamAuthToken) {

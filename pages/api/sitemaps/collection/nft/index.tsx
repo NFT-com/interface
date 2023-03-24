@@ -2,7 +2,7 @@
 import { SitemapField } from 'types';
 
 import { BigNumber } from 'ethers';
-import { client, gqlQueries, siteUrl, teamAuthToken } from 'lib/sitemap';
+import { client, gqlQueries, teamAuthToken } from 'lib/sitemap';
 // import { NextRequest, NextResponse } from 'next/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // page = parseInt(page);
     const page = parseInt(pageCtx as string);
     const sitemapFields: SitemapField[] = [];
-    const siteUrlHost = `${siteUrl}app/nft`;
+    const siteUrlHost = `${req.headers.host}/app/nft`;
     // const teamKey: string = req.nextUrl.searchParams.get('teamKey');
 
     if (teamKey !== teamAuthToken) {
