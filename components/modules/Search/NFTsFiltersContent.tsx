@@ -297,7 +297,7 @@ const Filter = (props: any) => {
           setIsCollapsing(true);
         }}
         className="flex justify-between items-center cursor-pointer">
-        <div className="text-xl text-black minmd:text-base font-grotesk font-semibold">{titles[filter.field_name]}</div>
+        <div className="text-xl text-black minmd:text-base font-noi-grotesk font-semibold">{titles[filter.field_name]}</div>
         <CaretUp
           color='#4D4D4D'
           className={tw('cursor-pointer transition-transform font-bold', isFilterCollapsed ? 'rotate-180' : '')}

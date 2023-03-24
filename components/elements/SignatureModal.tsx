@@ -28,7 +28,7 @@ export function SignatureModal(props: SignatureModalProps) {
         )}>
           NFT.com uses this signature to verify that you{'\''}re the owner of this Ethereum address.
         </div>
-        <div className="font-hero-heading1 minmd:mx-[20%] minmd:mb-5 flex w-full">
+        <div className="font-noi-grotesk minmd:mx-[20%] minmd:mb-5 flex w-full">
           {props.showRetry &&
             <div className='mx-2 flex grow'>
               <Button

@@ -95,10 +95,10 @@ export function EditListingsModal(props: EditListingsModalProps) {
           variant={RoundedCornerVariant.None}
         />
         <div className="flex flex-col px-8">
-          <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127]">
+          <div className="whitespace-nowrap text-lg font-normal font-noi-grotesk leading-6 tracking-wide text-[#1F2127]">
             {isNullOrEmpty(nft?.metadata?.name) ? 'Unknown Name' : nft?.metadata?.name}
           </div>
-          <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127]">
+          <div className="whitespace-nowrap text-lg font-normal font-noi-grotesk leading-6 tracking-wide text-[#1F2127]">
             {isNullOrEmpty(collectionName) ? 'Unknown Collection' : collectionName}
           </div>
         </div>
@@ -116,7 +116,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
           })
         }
         <div className="flex flex-col items-center w-full p-4">
-          <span className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>List item on another marketplace</span>
+          <span className='font-noi-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>List item on another marketplace</span>
           <Button
             stretch
             size={ButtonSize.LARGE}

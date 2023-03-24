@@ -127,7 +127,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
     <div
       className={tw(
         isHeader ? 'absolute left-0 max-w-[27rem]' : '',
-        'flex flex-col w-full text-rubik',
+        'flex flex-col w-full font-noi-grotesk',
         extraClasses)}>
       {searchResults.length > 0 && <>
         {searchResults[0].found === 0 && searchResults[1].found === 0 ?

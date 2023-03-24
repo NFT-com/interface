@@ -52,7 +52,7 @@ export function NftDetailCard(props: NftDetailCardProps) {
         )}>
           {isCopied ? 'Copied!' : props?.value?.toLowerCase()}
         </span>
-        {!isNullOrEmpty(props.subtitle) && <span className='font-grotesk font-normal text-xs leading-5 text-[#6F6F6F]'>{props.subtitle}</span>}
+        {!isNullOrEmpty(props.subtitle) && <span className='font-noi-grotesk font-normal text-xs leading-5 text-[#6F6F6F]'>{props.subtitle}</span>}
       </div>
     </div>
   );

@@ -51,7 +51,7 @@ describe('Profile Card', () => {
         />
       </WagmiConfig>
     );
-    cy.get('.font-grotesk').should('have.text', 'lucasgoerli');
+    cy.get('.font-noi-grotesk').should('have.text', 'lucasgoerli');
     cy.get('[data-cy="profileCardSwitch"]').should('have.text', 'Switch');
   });
 
@@ -74,7 +74,7 @@ describe('Profile Card', () => {
         />
       </WagmiConfig>
     );
-    cy.get('.font-grotesk').should('have.text', 'lucasgoerli2');
+    cy.get('.font-noi-grotesk').should('have.text', 'lucasgoerli2');
     cy.get('[data-cy="profileCardSwitchSidebar"]').should('have.text', 'Switch');
   });
 });

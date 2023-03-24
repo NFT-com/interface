@@ -34,7 +34,7 @@ export default function DisplayMode({ selectedProfile }: DisplayModeProps) {
   };
 
   return (
-    <div id="display" className='mt-10 font-grotesk'>
+    <div id="display" className='mt-10 font-noi-grotesk'>
       <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>Select Display Mode</h2>
       <p className='text-[#6F6F6F]'>Choose how you plan to use your NFT Profile.</p>
   

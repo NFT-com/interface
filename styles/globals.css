@@ -211,7 +211,7 @@ html,
 input,
 textarea,
 button {
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Noi Grotesk Trial', sans-serif;
   letter-spacing: -0.018em;
   font-display: fallback;
 }
@@ -222,7 +222,7 @@ button {
   input,
   textarea,
   button {
-    font-family: 'Rubik', sans-serif;
+    font-family: 'Noi Grotesk Trial', sans-serif;
   }
 }
 
@@ -250,7 +250,7 @@ html {
 
 body {
   margin: 0;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Noi Grotesk Trial', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

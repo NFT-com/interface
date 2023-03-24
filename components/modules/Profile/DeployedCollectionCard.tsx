@@ -52,9 +52,9 @@ export function DeployedCollectionCard(props: DeployedCollectionCardProps) {
           })}
       </div>
       <div className="flex flex-col mt-3">
-        <span className='text-secondary-txt text-sm font-grotesk'>Collection</span>
+        <span className='text-secondary-txt text-sm font-noi-grotesk'>Collection</span>
         <span className={tw(
-          'text-base font-semibold truncate font-grotesk',
+          'text-base font-semibold truncate font-noi-grotesk',
           'text-primary-txt'
         )}>
           {props.collection?.name ?? 'Unknown Name'}

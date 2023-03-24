@@ -10,7 +10,7 @@ export const rainbowDark = merge(darkTheme(), {
     modalBackground: '#222222',
   },
   fonts: {
-    body: 'Rubik',
+    body: 'Noi Grotesk Trial',
   },
   radii: {
     modal: '10px',
@@ -26,7 +26,7 @@ export const rainbowLight = merge(lightTheme(), {
     modalBackground: 'white',
   },
   fonts: {
-    body: 'Rubik',
+    body: 'Noi Grotesk Trial',
   },
   radii: {
     modal: '10px',
