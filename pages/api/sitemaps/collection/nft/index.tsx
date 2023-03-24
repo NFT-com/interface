@@ -2,32 +2,27 @@
 import { SitemapField } from 'types';
 
 import { BigNumber } from 'ethers';
-import { client, gqlQueries, teamAuthToken } from 'lib/sitemap';
-// import { NextRequest, NextResponse } from 'next/server';
+import { client, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-// export const config = {
-//   runtime: 'edge',
-//   regions: ['iad1'], // us-east-1
-// };
-
-// export default async function handler(req: NextRequest) {
+/**
+ * Serverless API route for querying collection nfts sitemap data,
+ * by the provided collection, chainId, and page.
+ * @param {NextApiRequest} req - The request object.
+ * @param {NextApiResponse} res - The response object.
+ * @returns {{sitemapFields: SitemapField[]}} res - 200 response with array of sitemap fields
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Setup variables
-  // let page: string | number = req.nextUrl.searchParams.get('page');
-  // const chainId: string = req.nextUrl.searchParams.get('chainId');
-  // const collection: string = req.nextUrl.searchParams.get('collection');
-  // eslint-disable-next-line prefer-const
   const { chainId, collection, page: pageCtx, teamKey } = req.query;
   try {
-    // page = parseInt(page);
     const page = parseInt(pageCtx as string);
     const sitemapFields: SitemapField[] = [];
-    const siteUrlHost = `https://${req.headers.host}/app/nft`;
-    // const teamKey: string = req.nextUrl.searchParams.get('teamKey');
+    const siteUrlHost = getSitemapUrl({
+      host: req.headers.host,
+      path: '/app/nft'
+    });
 
     if (teamKey !== teamAuthToken) {
-      // return new NextResponse('', { status: 404 });
       return res.status(404).end();
     }
 
@@ -55,32 +50,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     res.setHeader('Cache-Control', 's-maxage=86340, stale-while-revalidate');
     return res.status(200).json({ sitemapFields });
-    // return new NextResponse(
-    //   JSON.stringify({ sitemapFields }),
-    //   {
-    //     status: 200,
-    //     headers: {
-    //       'Cache-Control': 's-maxage=86340, stale-while-revalidate'
-    //     }
-    //   }
-    // );
   } catch (err) {
-    console.error(err);
+    console.error(err?.message);
     return res.status(500).json({
       error: {
-        message: `An error occurred fetching the following sitemap collection page of nfts, ${JSON.stringify({ chainId, collection, page: pageCtx, err }, null, 2)}`
+        message: `An error occurred fetching the following sitemap collection page of nfts, ${JSON.stringify({ chainId, collection, page: pageCtx, message: err?.message }, null, 2)}`
       }
     });
-    // return new NextResponse(
-    //   JSON.stringify(
-    //     {
-    //       error: {
-    //         message: `An error occurred fetching the following sitemap collection page of nfts, ${JSON.stringify({ chainId, collection, page, err }, null, 2)}`
-    //       }
-    //     }),
-    //   { status: 500 }
-    // );
   }
 }
-
-// Default export to prevent next.js errors
