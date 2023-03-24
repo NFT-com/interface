@@ -22,6 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       path: '/app/nft'
     });
 
+    // Verify api has proper auth token
     if (teamKey !== teamAuthToken) {
       return res.status(404).end();
     }
@@ -48,7 +49,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
       });
     }
+
+    // Cache API response for 23hrs 59min
     res.setHeader('Cache-Control', 's-maxage=86340, stale-while-revalidate');
+
     return res.status(200).json({ sitemapFields });
   } catch (err) {
     console.error(err?.message);
