@@ -10,15 +10,6 @@
     }
   ],
   "functions": {
-    "api/sitemaps/collection/nft/*.ts": {
-      "maxDuration": 120
-    },
-    "api/sitemaps/collection/*.ts": {
-      "maxDuration": 120
-    },
-    "api/sitemaps/server-sitemap-index/*ts": {
-      "maxDuration": 120
-    },
     "pages/*.xml": {
       "maxDuration": 120
     },
