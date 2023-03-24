@@ -119,3 +119,10 @@ export type SitemapField = {
   priority: 0.7,
   changefreq: 'daily'
 }
+
+export type SitemapQueryVariables = {
+  chainId: string
+  contract: string,
+  document: string,
+  variables: Record<string, any>,
+}

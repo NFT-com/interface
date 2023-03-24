@@ -10,7 +10,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { filterNulls, getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import _ from 'lodash';
+import uniqBy from 'lodash/uniqBy';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg?svgr';
 import React, { useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
@@ -63,7 +63,7 @@ export default function ProfilePage() {
 
   const filterUniqProfiles = () => {
     if(!allLoadedProfiles && !allLoadedProfiles.length) return;
-    const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
+    const uniqData = uniqBy(allLoadedProfiles, (e) => e.id);
     return uniqData.map((profile, index) => {
       return (
         <ProfileCard
