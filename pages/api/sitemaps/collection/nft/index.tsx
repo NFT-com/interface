@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // page = parseInt(page);
     const page = parseInt(pageCtx as string);
     const sitemapFields: SitemapField[] = [];
-    const siteUrlHost = `${req.headers.host}/app/nft`;
+    const siteUrlHost = `${req.headers.origin}/app/nft`;
     // const teamKey: string = req.nextUrl.searchParams.get('teamKey');
 
     if (teamKey !== teamAuthToken) {

@@ -7,7 +7,7 @@ import { siteUrl } from 'next-sitemap.config';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   // Setup variables
-  const res = await fetch(`${ctx.req.headers.host}/api/sitemaps/server-sitemap-index?teamKey=${teamAuthToken}`, {
+  const res = await fetch(`${ctx.req.headers.origin}/api/sitemaps/server-sitemap-index?teamKey=${teamAuthToken}`, {
     headers: {
       'Cache-Control': 's-maxage=86340, stale-while-revalidate'
     }

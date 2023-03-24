@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Setup variables
     const { teamKey } = req.query;
     const sitemapFields: SitemapField[] = [];
-    const siteUrlHost = `${req.headers.host}/app/collection`;
+    const siteUrlHost = `${req.headers.origin}/app/collection`;
     // const teamKey: string = req.nextUrl.searchParams.get('teamKey');
 
     if (teamKey !== teamAuthToken) {
