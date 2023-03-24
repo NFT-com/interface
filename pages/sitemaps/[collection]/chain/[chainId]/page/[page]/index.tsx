@@ -9,7 +9,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { params: { chainId, collection, page: pageCtx } } = ctx;
   const page = parseInt((pageCtx as string).replace('.xml', ''));
 
-  const { sitemapFields } = await fetch(`${ctx.req.headers.origin}/api/sitemaps/collection/nft?teamKey=${teamAuthToken}&chainId=${chainId}&collection=${collection}&page=${page}`).then((res) => res.json());
+  const { sitemapFields } = await fetch(`https://${ctx.req.headers.host}/api/sitemaps/collection/nft?teamKey=${teamAuthToken}&chainId=${chainId}&collection=${collection}&page=${page}`).then((res) => res.json());
 
   return getServerSideSitemapLegacy(ctx, sitemapFields || []);
 };

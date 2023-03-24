@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     client.setHeader('teamKey', teamKey);
 
-    sitemapUrls.push(`${req.headers.origin}/sitemaps/collection-sitemap.xml`);
+    sitemapUrls.push(`https://${req.headers.host}/sitemaps/collection-sitemap.xml`);
     // console.time('server-sitemap-index');
     const officialCollections = await client.request(
       gqlQueries.officialCollections,
@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       };
 
-      sitemapUrls.push(`${req.headers.origin}/sitemaps/${contract}/chain/${chainId}/page/${1}.xml`);
+      sitemapUrls.push(`https://${req.headers.host}/sitemaps/${contract}/chain/${chainId}/page/${1}.xml`);
 
       collectionNftFirstPagePromises.push({
         chainId,
@@ -74,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { contract, chainId, pageCount } = result;
         if (pageCount > 1) {
           for (let pgIndex = 0; pgIndex < pageCount - 1; pgIndex += 1) {
-            sitemapUrls.push(`${req.headers.origin}/sitemaps/${contract}/chain/${chainId}/page/${pgIndex + 2}.xml`);
+            sitemapUrls.push(`${req.headers.host}/sitemaps/${contract}/chain/${chainId}/page/${pgIndex + 2}.xml`);
           }
         }
       }
