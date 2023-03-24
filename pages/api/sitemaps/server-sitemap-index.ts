@@ -92,7 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.setHeader('Cache-Control', 's-maxage=86340, stale-while-revalidate');
     return res.status(200).json({ sitemapUrls });
   } catch (err) {
-    console.trace(err);
+    // console.trace(err);
     // return new NextResponse(
     //   JSON.stringify(
     //     {
