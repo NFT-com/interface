@@ -3,6 +3,7 @@ import LikeCount from 'components/elements/LikeCount';
 import Toast from 'components/elements/Toast';
 import { LikeableType } from 'graphql/generated/types';
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
+import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -22,7 +23,8 @@ export interface MintedProfileInfoProps {
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { user } = useUser();
-  const { profileData, mutate: mutateProfileData } = useProfileQuery(profileURI);
+  const { profileData } = useProfileQuery(profileURI);
+  const { profileData: profileLikeData, mutate: mutateProfileLikeData } = useProfileLikeQuery(profileURI);
   const {
     editMode,
     draftBio,
@@ -72,10 +74,10 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             }
             {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
               <LikeCount
-                count={profileData?.profile?.likeCount}
-                isLiked={profileData?.profile?.isLikedByUser}
-                onClick={profileData?.profile?.isLikedByUser ? unsetLike : setLike}
-                mutate={mutateProfileData}
+                count={profileLikeData?.profile?.likeCount}
+                isLiked={profileLikeData?.profile?.isLikedByUser}
+                onClick={profileLikeData?.profile?.isLikedByUser ? unsetLike : setLike}
+                mutate={mutateProfileLikeData}
               />
             }
           </div>
