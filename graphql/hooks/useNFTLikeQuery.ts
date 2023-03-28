@@ -1,4 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
+import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
 import { Doppler, getEnv } from 'utils/env';
 import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 
@@ -15,7 +16,9 @@ export interface NftLikeData {
 
 export function useNftLikeQuery(contract: string, id: BigNumberish): NftLikeData {
   const sdk = useGraphQLSDK();
-  const keyString = 'NftLikeQuery' + contract + id?.toString();
+  const { isForceReload } = useNonProfileModal();
+
+  const keyString = 'NftLikeQuery' + contract + id?.toString() + isForceReload.toString();
 
   const { chain } = useNetwork();
 

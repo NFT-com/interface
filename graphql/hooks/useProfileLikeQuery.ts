@@ -1,5 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileLikeCountQuery } from 'graphql/generated/types';
+import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
 import { Doppler, getEnv } from 'utils/env';
 import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 
@@ -18,8 +19,9 @@ export function useProfileLikeQuery(
 ): ProfileLikeData {
   const sdk = useGraphQLSDK();
   const { chain } = useNetwork();
-  
-  const keyString = 'ProfileLikeQuery' + url + chain?.id;
+  const { isForceReload } = useNonProfileModal();
+
+  const keyString = 'ProfileLikeQuery' + url + chain?.id + isForceReload.toString();
 
   const { data, error } = useSWR(keyString, async () => {
     if (isNullOrEmpty(url)) {

@@ -5,6 +5,7 @@ export function useNonProfileModal() {
   const { data, mutate } = useSWR('nonProfile', {
     fallbackData: {
       isOpen: false,
+      isForceReload: false,
       likeData: {
         likedId: '',
         likedType: '',
@@ -12,7 +13,12 @@ export function useNonProfileModal() {
       }
     }
   });
-
+  const useForceReloadData = () => {
+    mutate({
+      ...data,
+      isForceReload: !data.isForceReload
+    });
+  };
   const setLikeData = useCallback((isOpen: boolean, likeData?: {likedId: string, likedType: string}) => {
     mutate({
       ...data,
@@ -24,6 +30,8 @@ export function useNonProfileModal() {
   return {
     isOpen: data.isOpen,
     likeData: data.likeData,
+    isForceReload: data.isForceReload,
+    forceReload: useForceReloadData,
     setLikeData
   };
 }
