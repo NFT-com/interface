@@ -451,6 +451,10 @@ export type GetOrders = {
   totalItems?: Maybe<Scalars['Int']>;
 };
 
+export type GetSeaportSignaturesInput = {
+  orderHashes: Array<Scalars['String']>;
+};
+
 export type GetTxByContract = {
   __typename?: 'GetTxByContract';
   items?: Maybe<Array<Maybe<NftPortTxByContractTransactions>>>;
@@ -673,6 +677,7 @@ export type Mutation = {
   orderingUpdates: Profile;
   /** AUTHENTICATED */
   profileClaimed: Profile;
+  recordView?: Maybe<Scalars['Boolean']>;
   /** AUTHETICATED */
   refreshCollectionRarity: Scalars['String'];
   /** AUTHETICATED */
@@ -863,6 +868,11 @@ export type MutationOrderingUpdatesArgs = {
 
 export type MutationProfileClaimedArgs = {
   input: ProfileClaimedInput;
+};
+
+
+export type MutationRecordViewArgs = {
+  input: RecordViewInput;
 };
 
 
@@ -1576,6 +1586,7 @@ export type Profile = {
   expireAt?: Maybe<Scalars['DateTime']>;
   followersCount?: Maybe<Scalars['Int']>;
   gkIconVisible?: Maybe<Scalars['Boolean']>;
+  hideCustomization?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   index?: Maybe<Scalars['Int']>;
   isFollowedByMe?: Maybe<Scalars['Boolean']>;
@@ -1708,6 +1719,7 @@ export type Query = {
   fetchEthUsd: Scalars['Float'];
   filterListings: GetOrders;
   getActivities: TxActivitiesOutput;
+  /** AUTHENTICATED */
   getActivitiesByType?: Maybe<Array<Maybe<TxActivity>>>;
   /** AUTHENTICATED */
   getActivitiesByWalletAddress?: Maybe<Array<Maybe<TxActivity>>>;
@@ -1732,6 +1744,7 @@ export type Query = {
   /** AUTHENTICATED */
   getRemovedAssociationsForSender: Array<Maybe<RemovedAssociationsForSenderOutput>>;
   getSales?: Maybe<Array<Maybe<TransactionSales>>>;
+  getSeaportSignatures?: Maybe<Array<Maybe<TxOrder>>>;
   /** AUTHENTICATED */
   getSentReferralEmails: Array<Maybe<SentReferralEmailsOutput>>;
   getSwaps: GetMarketSwap;
@@ -1890,6 +1903,11 @@ export type QueryGetRemovedAssociationsForSenderArgs = {
 
 export type QueryGetSalesArgs = {
   input?: InputMaybe<TransactionSalesInput>;
+};
+
+
+export type QueryGetSeaportSignaturesArgs = {
+  input?: InputMaybe<GetSeaportSignaturesInput>;
 };
 
 
@@ -2070,6 +2088,13 @@ export type QueryValidateProfileGkOwnersArgs = {
 
 export type QueryWatchlistArgs = {
   userId: Scalars['ID'];
+};
+
+export type RecordViewInput = {
+  viewedId: Scalars['ID'];
+  viewedType: ViewableType;
+  viewerId: Scalars['ID'];
+  viewerType: ViewerType;
 };
 
 export type RefreshMyNfTsOutput = {
@@ -2670,6 +2695,7 @@ export type UpdateProfileInput = {
   displayType?: InputMaybe<ProfileDisplayType>;
   gkIconVisible?: InputMaybe<Scalars['Boolean']>;
   hideAllNFTs?: InputMaybe<Scalars['Boolean']>;
+  hideCustomization?: InputMaybe<Scalars['Boolean']>;
   hideNFTIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   id: Scalars['ID'];
   layoutType?: InputMaybe<ProfileLayoutType>;
@@ -2764,6 +2790,18 @@ export type ValidateProfileGkOwners = {
   gkIconVisible?: Maybe<Scalars['Boolean']>;
   id: Scalars['String'];
 };
+
+export enum ViewableType {
+  Collection = 'Collection',
+  Nft = 'NFT',
+  Profile = 'Profile'
+}
+
+export enum ViewerType {
+  ProfileHolder = 'ProfileHolder',
+  User = 'User',
+  Visitor = 'Visitor'
+}
 
 export type Wallet = {
   __typename?: 'Wallet';
@@ -3384,7 +3422,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, ownerWalletId?: string | null, ownerUserId?: string | null, likeCount?: number | null, isLikedByUser?: boolean | null, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, ownerWalletId?: string | null, ownerUserId?: string | null, likeCount?: number | null, isLikedByUser?: boolean | null, profileView?: ProfileViewType | null, hideCustomization?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -5594,6 +5632,7 @@ export const ProfileDocument = gql`
       userId
       action
     }
+    hideCustomization
   }
 }
     `;
