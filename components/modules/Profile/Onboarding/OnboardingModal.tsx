@@ -1,7 +1,6 @@
 import { ProfileActionType } from 'graphql/generated/types';
 import { useGetSentReferralEmailsQuery } from 'graphql/hooks/useGetSentReferralEmailsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
