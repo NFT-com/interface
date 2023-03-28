@@ -39,6 +39,7 @@ export function ProfileCard(props: ProfileCardProps) {
 
   const { profileData: profileLikeData, mutate } = useProfileLikeQuery(props?.profile?.url);
   useEffect(() => {
+    if(!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)) return;
     if(currentProfileId && user.currentProfileUrl) {
       mutate();
     }

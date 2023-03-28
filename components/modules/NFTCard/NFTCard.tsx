@@ -10,6 +10,7 @@ import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getListingCurrencyAddress, getLowestPriceListing } from 'utils/listingUtils';
@@ -63,6 +64,7 @@ export function NFTCard(props: NftCardProps) {
   const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
 
   useEffect(() => {
+    if(!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)) return;
     if(currentProfileId && user.currentProfileUrl) {
       mutateNftLike();
     }

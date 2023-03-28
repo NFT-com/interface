@@ -63,6 +63,7 @@ export function CollectionCard(props: CollectionCardProps) {
     : props?.images?.length > 0 ? props?.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
 
   useEffect(() => {
+    if(!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)) return;
     if(currentProfileId && user.currentProfileUrl) {
       mutateCollectionData();
     }
