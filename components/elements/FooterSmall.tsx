@@ -1,18 +1,28 @@
 /* eslint-disable @next/next/no-img-element */
 import Toast from 'components/elements/Toast';
+import { Doppler, getEnv } from 'utils/env';
 import { filterNulls, getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { Button, ButtonSize, ButtonType } from './Button';
+
+import { Dialog, Transition } from '@headlessui/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Link from 'next/link';
+import { X } from 'phosphor-react';
 import DiscordLogo from 'public/discord.svg?svgr';
 import TwitterLogo from 'public/twitter.svg?svgr';
-import React from 'react';
+import { Fragment } from 'react';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const FooterSmall = () => {
+  const [subscribeModalOpen, setSubscribeModalOpen] = useState(false);
+  const [email, setEmail] = useState<string>('');
+  const isValidEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
   const footerData = [
     {
       title: 'Learn',
@@ -103,7 +113,7 @@ export const FooterSmall = () => {
           'pt-10 pb-10 minlg:pb-0 px-5 minlg:pl-0'
         )}>
           <div className={tw(
-            'minlg:max-w-[35%] minlg:flex-shrink-0 minlg:basis-2/4 flex flex-col',
+            'minlg:max-w-[35%] minxxl:max-w-[50%] minlg:flex-shrink-0 minlg:basis-2/4 flex flex-col',
             'items-start justify-between minlg:justify-start text-base minlg:pl-14 minlg:pt-4'
           )}>
             {/* Logo */}
@@ -140,6 +150,7 @@ export const FooterSmall = () => {
                 )} viewBox="0 0 39 38" fill="currentColor" />
               </a>
               <button
+                onClick={() => setSubscribeModalOpen(true)}
                 type="submit"
                 className={tw(
                   'text-sm',
@@ -165,7 +176,7 @@ export const FooterSmall = () => {
                     {item.title}
                   </span>
                   <div className={tw(
-                    'flex flex-col text-base minlg:grid minlg:auto-cols-max',
+                    'flex flex-col text-base minlg:text-lg minlg:grid minlg:auto-cols-max',
                     index === 1 ? 'grid-cols-1 grid-rows-2 grid-flow-col gap-2' : 'grid-cols-[min-content_2fr] grid-rows-2 grid-flow-col gap-y-2 gap-x-7'
                   )}>
                     {item.links?.map((item, index) => {
@@ -222,9 +233,97 @@ export const FooterSmall = () => {
               'mr-5 ml-auto minlg:ml-24 minlg:-mt-5 minlg:mr-0'
             )}></span>
           </div>
-
         </div>
       </div>
+
+      <Transition appear show={subscribeModalOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-[105]" onClose={() => setSubscribeModalOpen(false)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full relative max-w-[547px] min-h-[311px] transform overflow-hidden rounded-[20px] bg-white text-left align-middle shadow-xl transition-all">
+                  <X
+                    onClick={() => {
+                      setSubscribeModalOpen(false);
+                    }}
+                    className='z-10 absolute top-5 right-5 hover:cursor-pointer'
+                    size={30}
+                    color="black"
+                    weight="fill"
+                  />
+
+                  <div className='relative w-full h-full flex flex-col minmd:flex-row pt-10 px-10 pb-12'>
+                    <div className='w-full'>
+                      <h2 className='font-medium text-[32px] mt-2 mb-8'>Get notifications</h2>
+                      <input
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className={tw(
+                          'text-lg w-full min-w-full',
+                          'text-left px-3 py-3 w-full rounded-lg font-medium border-0',
+                          'bg-[#F8F8F8] mb-10'
+                        )}
+                        placeholder="Enter your email"
+                        autoFocus={true}
+                        spellCheck={false}
+                        type="email"
+                      />
+                      <Button
+                        stretch
+                        onClick={async () => {
+                          try {
+                            const result = await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/subscribe/${email?.toLowerCase()}`, {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                            });
+        
+                            if (result.status == 200) {
+                              toast.success('Success! Please check your email to verify ownership.');
+                              setEmail('');
+                            } else {
+                              toast.error(`Error while submitting email: ${(await result.json()).message}`);
+                            }
+                          } catch (err) {
+                            toast.error(`Error while submitting email: ${err.response}`);
+                            console.log('error while subscribing: ', err);
+                          }
+                          setSubscribeModalOpen(false);
+                        }}
+                        label="Subscribe"
+                        type={ButtonType.PRIMARY}
+                        size={ButtonSize.XLARGE}
+                        disabled={!email.match(isValidEmail)}
+                      />
+                    </div>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </footer>
   );
 };
