@@ -1,8 +1,10 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
+import { NonAuthLikeModal } from 'components/elements/nonAuthLikeModal';
 import RootProvider from 'context';
 import useAnalyticsOnRouteChange from 'hooks/useAnalyticsOnRouteChange';
+import { Doppler, getEnvBool } from 'utils/env';
 
 import * as gtag from 'lib/gtag';
 import * as segment from 'lib/segment';
@@ -11,7 +13,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import { DefaultSeo } from 'next-seo';
-import { ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -94,6 +96,7 @@ export default function MyApp({
         {getLayout(
           <Component {...pageProps} key={router.pathname} />
         )}
+        {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && <NonAuthLikeModal/>}
       </RootProvider>
 
     </>

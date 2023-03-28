@@ -1,4 +1,5 @@
 import Loader from 'components/elements/Loader';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -21,6 +22,7 @@ export interface ModalProps {
   dark?: boolean;
   longModal?: boolean;
   noCancelBtn?: boolean;
+  showCLoseBtn?: boolean;
   fullModal?: boolean;
   bgColor?: string;
   transparentOverlay?: boolean;
@@ -105,6 +107,22 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
                       {typeof(props.title) === 'string' && props.title}
                     </Dialog.Title>
 
+                  }
+                  {
+                    getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && props.showCLoseBtn
+                      ? (
+                        <div className='pt-4 pr-4 absolute right-0 top-0'>
+                          <button
+                            type="button"
+                            className="rounded-md focus:outline-none
+                        text-primary-txt dark:text-primary-txt-dk"
+                            onClick={props.onClose}
+                          >
+                            <XIcon className="h-6 w-6" aria-hidden="true" />
+                          </button>
+                        </div>
+                      )
+                      : null
                   }
                   <div className={tw('mt-2', props.pure ? 'hidden' : '',)}>
                     {!props.noCancelBtn && <div className='hidden pt-4 pr-4 absolute right-0 top-0'>
