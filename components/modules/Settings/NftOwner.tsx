@@ -96,7 +96,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
   };
 
   return (
-    <div id="owner" className='font-grotesk'>
+    <div id="owner" className='font-noi-grotesk'>
       {showToastOnSuccess && <Toast />}
       {!isSidebar &&
       <>

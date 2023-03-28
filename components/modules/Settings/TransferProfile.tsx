@@ -65,7 +65,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
 
   return (
     <div id="transfer" className='mt-10 bg-[#FFF1F1] p-4 rounded-[10px]'>
-      <h2 className='font-grotesk tracking-wide font-bold text-black text-2xl mb-1'>
+      <h2 className='font-noi-grotesk tracking-wide font-bold text-black text-2xl mb-1'>
         Transfer Profile
       </h2>
       <p className='text-blog-text-reskin mb-4'>
@@ -148,7 +148,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                         onClick={() => submitHandler()}
                         stretch
                       />
-                      <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 text-sm'>
+                      <div className='flex items-center font-noi-grotesk text-blog-text-reskin justify-center mt-2 text-sm'>
                         <GasPump size={20} weight="fill" />
                         <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
                       </div>

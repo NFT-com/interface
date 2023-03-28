@@ -25,11 +25,11 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
         />
       </div>
         }
-        <h3 className="font-grotesk font-bold minxl:text-xl minlg:text-lg minmd:text-base text-sm mt-2">
+        <h3 className="font-noi-grotesk font-bold minxl:text-xl minlg:text-lg minmd:text-base text-sm mt-2">
           {post?.title}
         </h3>
         {post?.description && (
-          <p className="font-grotesk minlg:text-base text-xs mt-1 minlg:leading-5.5 leading-4 text-blog-text">
+          <p className="font-noi-grotesk minlg:text-base text-xs mt-1 minlg:leading-5.5 leading-4 text-blog-text">
             {post.description.length > 75
               ? post.description.substring(0, 75) + '...'
               : post.description}
@@ -47,10 +47,10 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
             </span>
           )}
           <div>
-            <p className="font-grotesk minlg:text-base text-xs leading-5">
+            <p className="font-noi-grotesk minlg:text-base text-xs leading-5">
               {post?.author?.name}
             </p>
-            <div className="font-grotesk flex text-blog-text">
+            <div className="font-noi-grotesk flex text-blog-text">
               <p className="minlg:text-sm text-xxs3">
                 {moment(post?.publishDate).format('MMM Do, YYYY')}
               </p>

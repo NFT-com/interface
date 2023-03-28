@@ -34,7 +34,7 @@ export default function RoadmapPage() {
 
   const getVaultContent = useCallback(() => {
     return (
-      <div className="bg-pagebg-dk text-white rubik vault-lp">
+      <div className="bg-pagebg-dk text-white font-noi-grotesk vault-lp">
         <div
           style={{
             backgroundImage: `

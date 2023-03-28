@@ -245,7 +245,7 @@ export function getMaxRoyaltyFeesUSD(
 export function filterValidListings(listings: PartialDeep<TxActivity>[]): PartialDeep<TxActivity>[] {
   return listings?.filter(listing => {
     const seaportValid = (listing.order?.protocolData as SeaportProtocolData)?.parameters &&
-      (listing.order?.protocolData as SeaportProtocolData)?.signature != null && (listing.order?.protocolData as SeaportProtocolData)?.parameters?.consideration?.length;
+      (listing.order?.protocolData as SeaportProtocolData)?.parameters?.consideration?.length;
     const looksrareValid = (listing.order?.protocolData as LooksrareProtocolData)?.price != null;
     const X2Y2Valid = (listing.order?.protocolData as X2Y2ProtocolData)?.price != null;
     const NFTCOMValid = (listing.order?.protocolData as NftcomProtocolData)?.takeAsset &&

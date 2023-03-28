@@ -9,7 +9,7 @@ const theme = {
   p: (props: any) => {
     const { children } = props;
     return (
-      <div className="font-grotesk mb-8 minlg:text-xll minmd:text-lg text-base text-blog-text-reskin">
+      <div className="font-noi-grotesk mb-8 minlg:text-xll minmd:text-lg text-base text-blog-text-reskin">
         {children}
       </div>
     );
@@ -17,7 +17,7 @@ const theme = {
   h1: (props: any) => {
     const { children } = props;
     return (
-      <h1 className="font-grotesk font-bold mb-4 minlg:text-4xl minmd:text-2xl text-md">
+      <h1 className="font-noi-grotesk font-bold mb-4 minlg:text-4xl minmd:text-2xl text-md">
         {children}
       </h1>
     );
@@ -25,7 +25,7 @@ const theme = {
   h2: (props: any) => {
     const { children } = props;
     return (
-      <h2 className="font-grotesk font-bold mb-4 minlg:text-3xll minmd:text-xl text-base">
+      <h2 className="font-noi-grotesk font-bold mb-4 minlg:text-3xll minmd:text-xl text-base">
         {children}
       </h2>
     );
@@ -33,7 +33,7 @@ const theme = {
   h3: (props: any) => {
     const { children } = props;
     return (
-      <h3 className="font-grotesk mb-4 minlg:text-2xl minmd:text-lg text-base font-bold">
+      <h3 className="font-noi-grotesk mb-4 minlg:text-2xl minmd:text-lg text-base font-bold">
         {children}
       </h3>
     );
@@ -52,7 +52,7 @@ const theme = {
     }
     return (
       <a
-        className="font-grotesk minlg:text-xll minmd:text-lg text-base underline text-blog-text-reskin"
+        className="font-noi-grotesk minlg:text-xll minmd:text-lg text-base underline text-blog-text-reskin"
         href={props.href}
         target="_blank"
         rel="noreferrer"
@@ -64,7 +64,7 @@ const theme = {
   li: (props: any) => {
     const { children } = props;
     return (
-      <li className="font-grotesk minlg:text-xll minmd:text-lg text-base text-blog-text-reskin">
+      <li className="font-noi-grotesk minlg:text-xll minmd:text-lg text-base text-blog-text-reskin">
         {children}
       </li>
     );

@@ -77,7 +77,7 @@ export const CollectionAnalyticsContainer = ({ contract }: CollectionAnalyticsCo
                 key={timeFrame}
                 className={({ selected }) =>
                   tw(
-                    'font-grotesk w-full rounded-lg p-1 text-xs font-semibold leading-5 text-[#6F6F6F] ',
+                    'font-noi-grotesk w-full rounded-lg p-1 text-xs font-semibold leading-5 text-[#6F6F6F] ',
                     'ring-white ring-opacity-60 ring-offset-2 focus:outline-none focus:ring-2',
                     selected
                       ? 'bg-white shadow text-[#1F2127] font-medium'

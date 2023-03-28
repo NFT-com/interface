@@ -32,7 +32,7 @@ export default function BlogSliderCard({ post }: BlogSliderPostProps) {
       <div className="flex flex-col minlg:w-3/5 w-full minlg:ml-8 ml-0 minxl:pt-12 minlg:pt-2 pt-4 px-1">
         <Link href={`/articles/${post.slug}`} legacyBehavior>
           <a className="cursor-pointer">
-            <h2 className="font-grotesk font-bold text-white minxl:text-4xl minlg:text-3xl text-lg minmd:w-4/5 w-full">
+            <h2 className="font-noi-grotesk font-bold text-white minxl:text-4xl minlg:text-3xl text-lg minmd:w-4/5 w-full">
               {post.title}
             </h2>
           </a>
@@ -40,7 +40,7 @@ export default function BlogSliderCard({ post }: BlogSliderPostProps) {
         {post?.description && (
           <Link href={`/articles/${post.slug}`} legacyBehavior>
             <a className="cursor-pointer">
-              <p className="font-grotesk text-[#E1E1E1] text-justify minxl:text-xl minlg:text-lg text-sm minlg:w-11/12 minmd:w-10/12 w-full leading-8 minlg:mt-3 mt-2">
+              <p className="font-noi-grotesk text-[#E1E1E1] text-justify minxl:text-xl minlg:text-lg text-sm minlg:w-11/12 minmd:w-10/12 w-full leading-8 minlg:mt-3 mt-2">
                 {post?.description.length > 230
                   ? post.description.substring(0, 230) + '...'
                   : post.description}
@@ -60,18 +60,18 @@ export default function BlogSliderCard({ post }: BlogSliderPostProps) {
             </span>
           )}
           <div className='pt-0.5'>
-            <p className="font-grotesk minxl:text-xl minlg:text-lg text-sm text-white">
+            <p className="font-noi-grotesk minxl:text-xl minlg:text-lg text-sm text-white">
               {post?.author.name}
             </p>
             <div className="flex text-[#B6B6B6]">
-              <p className="font-grotesk minlg:text-sm text-xs">
+              <p className="font-noi-grotesk minlg:text-sm text-xs">
                 {moment(post?.publishDate).format('MMM Do, YYYY')}
               </p>
               <span className="mx-1 minlg:block hidden minlg:text-sm text-xxs3 ">
                 .
               </span>
               {post?.body && (
-                <p className="font-grotesk minlg:block hidden minlg:text-sm text-xxs3">
+                <p className="font-noi-grotesk minlg:block hidden minlg:text-sm text-xxs3">
                   {readingTime(post?.body).minutes} min read
                 </p>
               )}
