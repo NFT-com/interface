@@ -5,6 +5,8 @@ import { LikeableType, TxActivity } from 'graphql/generated/types';
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
+import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
+import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
@@ -19,6 +21,7 @@ import { NFTCardDescription } from './NFTCardDescription';
 import { NFTCardEditMode } from './NFTCardEditMode';
 import { NFTCardImage } from './NFTCardImage';
 
+import { useEffect } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftCardProps {
@@ -28,7 +31,7 @@ export interface NftCardProps {
   contractAddr: string;
   tokenId: string;
   redirectTo: string;
-  
+
   listings?: PartialDeep<TxActivity>[];
   nft?: PartialDeep<DetailedNft>;
   isOwnedByMe?: boolean;
@@ -44,6 +47,10 @@ export function NFTCard(props: NftCardProps) {
   const defaultChainId = useDefaultChainId();
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
+  const { currentProfileId, user } = useUser();
+
+  const { isForceReload } = useNonProfileModal();
+
   const { getByContractAddress } = useSupportedCurrencies();
 
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nft is passed by setting tokenId to null
@@ -55,11 +62,17 @@ export function NFTCard(props: NftCardProps) {
   const isOwnedByMe = props?.isOwnedByMe || (props?.nft?.wallet?.address ?? props?.nft?.owner) === currentAddress;
   const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
 
+  useEffect(() => {
+    if(currentProfileId && user.currentProfileUrl) {
+      mutateNftLike();
+    }
+  }, [currentProfileId, isForceReload, mutateNftLike, user.currentProfileUrl]);
+
   const { setLike, unsetLike } = useSetLikeMutation(
     nft?.id ?? props?.nft?.id,
     LikeableType.Nft
   );
- 
+
   return (
     <div className='relative w-full h-full'>
       {props?.visible !== true && props?.visible !== false &&
@@ -72,7 +85,7 @@ export function NFTCard(props: NftCardProps) {
          />
        </div>
       }
-      
+
       <div className={tw(
         'group/ntfCard transition-all cursor-pointer rounded-2xl shadow-xl relative w-full h-full minmd:mb-0 overflow-visible',
         props.descriptionVisible != false ? '' : 'h-max'

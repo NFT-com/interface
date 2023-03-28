@@ -4,6 +4,8 @@ import { LikeableType, Nft, TxActivity } from 'graphql/generated/types';
 import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
+import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
+import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { Doppler, getEnvBool } from 'utils/env';
 import {
@@ -16,6 +18,7 @@ import { getAddress } from 'utils/httpHooks';
 
 import VerifiedIcon from 'public/verifiedIcon.svg?svgr';
 import VolumeIcon from 'public/volumeIcon.svg?svgr';
+import { useEffect } from 'react';
 import { PartialDeep } from 'type-fest';
 
 export type DetailedNft = Nft & { hidden?: boolean };
@@ -48,12 +51,22 @@ export interface CollectionCardProps {
 
 export function CollectionCard(props: CollectionCardProps) {
   const defaultChainId = useDefaultChainId();
+  const { currentProfileId, user } = useUser();
+
+  const { isForceReload } = useNonProfileModal();
+
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings || props?.nft) ? null : props.tokenId);
   const { data: collectionData, mutate: mutateCollectionData } = useCollectionLikeCountQuery(defaultChainId, props?.contractAddr || props?.contractAddress);
 
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props?.images?.length > 0 ? props?.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
+
+  useEffect(() => {
+    if(currentProfileId && user.currentProfileUrl) {
+      mutateCollectionData();
+    }
+  }, [currentProfileId, isForceReload, mutateCollectionData, user.currentProfileUrl]);
 
   const { setLike, unsetLike } = useSetLikeMutation(
     props?.collectionId,

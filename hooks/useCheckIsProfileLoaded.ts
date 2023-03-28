@@ -1,13 +1,13 @@
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
-import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
 
+import { useNonProfileModal } from './state/useNonProfileModal';
 import { useUser } from './state/useUser';
 
 import { useEffect } from 'react';
 
 export function useCheckIsProfileLoaded() {
+  const { forceReload } = useNonProfileModal();
   const { currentProfileId, user } = useUser();
-  const { mutate } = useProfileLikeQuery(user?.currentProfileUrl);
 
   const checkStoreUserLikes = () => {
     const data = localStorage.getItem('nonAuthLikeObject');
@@ -22,10 +22,8 @@ export function useCheckIsProfileLoaded() {
   useEffect(() => {
     if(currentProfileId && user.currentProfileUrl && likeObject) {
       setLike();
-      setTimeout(() => {
-        mutate();
-        localStorage.removeItem('nonAuthLikeObject');
-      }, 100);
+      localStorage.removeItem('nonAuthLikeObject');
+      forceReload();
     }
-  }, [user, currentProfileId, setLike, likeObject, mutate]);
+  }, [user, currentProfileId, setLike, likeObject, forceReload]);
 }
