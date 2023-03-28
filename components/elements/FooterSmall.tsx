@@ -156,7 +156,7 @@ export const FooterSmall = () => {
                   'text-sm',
                   'rounded-full border-2 border-white',
                   'px-4 h-8 ml-3',
-                  'transition-colors hover:bg-white hover:text-black'
+                  'transition-colors hover:border-alert-grey hover:text-alert-grey'
                 )}>
                 Subscribe
               </button>
@@ -191,7 +191,7 @@ export const FooterSmall = () => {
                               target="_blank"
                               rel="noreferrer noopener"
                               className={tw(
-                                'cursor-pointer text-[#8B8B8B] hover:text-white w-max',
+                                'cursor-pointer text-[#8B8B8B] hover:text-alert-grey w-max',
                                 index === 0 ? 'mt-4 minlg:mt-4' : 'mt-3 minlg:mt-0',
                                 index === 2 && 'minlg:mt-4'
                               )}
@@ -201,7 +201,7 @@ export const FooterSmall = () => {
                             :
                             <a
                               className={tw(
-                                'cursor-pointer text-[#8B8B8B] hover:text-white w-max',
+                                'cursor-pointer text-[#8B8B8B] hover:text-alert-grey w-max',
                                 index === 0 ? 'mt-4 minlg:mt-4' : 'mt-3 minlg:mt-0',
                                 index === 2 && 'minlg:mt-4'
                               )}
