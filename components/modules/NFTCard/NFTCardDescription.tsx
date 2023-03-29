@@ -1,4 +1,4 @@
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import { DetailedNft } from 'components/modules/DiscoveryCards/CollectionCard';
 import { getAddressForChain, nftProfile } from 'constants/contracts';
 import { TxActivity } from 'graphql/generated/types';
@@ -91,8 +91,7 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
           </div>
           {
             (props?.listings?.length || props?.nft?.listings?.items?.length) && props?.bestListing ?
-              <CustomTooltip2
-                noFullHeight={true}
+              <CustomTooltip
                 orientation='top'
                 tooltipComponent={
                   <div
@@ -113,7 +112,7 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
                       &nbsp;
                   {props?.currencyData?.name ?? 'WETH'}
                 </div>
-              </CustomTooltip2>
+              </CustomTooltip>
               : null
           }
         </div>
@@ -140,8 +139,7 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
                       Ends in
                 <span className='text-[#6A6A6A] font-medium'> {checkEndDate()}</span>
               </p>
-              <CustomTooltip2
-                noFullHeight={true}
+              <CustomTooltip
                 orientation='top'
                 tooltipComponent={
                   <div
@@ -162,7 +160,7 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
                    &nbsp;
                   {props?.currencyData?.name ?? 'WETH'}
                 </div>
-              </CustomTooltip2>
+              </CustomTooltip>
             </>
             : null
           }
