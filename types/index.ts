@@ -19,6 +19,7 @@ export type UserNotifications = {
   associatedProfileAdded: boolean;
   associatedProfileRemoved: boolean;
   hasSoldActivity: boolean;
+  hasPurchasedActivity: boolean;
   hasExpiredListings: boolean;
   profileExpiration: boolean;
   nftPurchase: boolean;
