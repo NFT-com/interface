@@ -1,5 +1,5 @@
 import ClientOnly from 'components/elements/ClientOnly';
-import { Footer } from 'components/elements/Footer';
+import { Footer } from 'components/elements/Footer/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';

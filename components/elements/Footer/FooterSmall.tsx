@@ -1,10 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Toast from 'components/elements/Toast';
-import { Doppler, getEnv } from 'utils/env';
+import { useEmailSubscribe } from 'hooks/useEmailSubscribe';
 import { filterNulls, getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
-
-import { Button, ButtonSize, ButtonType } from './Button';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { gsap } from 'gsap';
@@ -20,6 +19,7 @@ import { toast } from 'react-toastify';
 gsap.registerPlugin(ScrollTrigger);
 
 export const FooterSmall = () => {
+  const { subscribe } = useEmailSubscribe();
   const [subscribeModalOpen, setSubscribeModalOpen] = useState(false);
   const [email, setEmail] = useState<string>('');
   const isValidEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
@@ -291,25 +291,13 @@ export const FooterSmall = () => {
                       <Button
                         stretch
                         onClick={async () => {
-                          try {
-                            const result = await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/subscribe/${email?.toLowerCase()}`, {
-                              method: 'POST',
-                              headers: {
-                                'Content-Type': 'application/json',
-                              },
-                            });
-        
-                            if (result.status == 200) {
-                              toast.success('Success! Please check your email to verify ownership.');
+                          await subscribe(email)
+                            .then(() => {
                               setEmail('');
-                            } else {
-                              toast.error(`Error while submitting email: ${(await result.json()).message}`);
-                            }
-                          } catch (err) {
-                            toast.error(`Error while submitting email: ${err.response}`);
-                            console.log('error while subscribing: ', err);
-                          }
-                          setSubscribeModalOpen(false);
+                              setSubscribeModalOpen(false);
+                              toast.success('Success! Please check your email to verify ownership.');
+                            })
+                            .catch(() => toast.error('Error while submitting email'));
                         }}
                         label="Subscribe"
                         type={ButtonType.PRIMARY}

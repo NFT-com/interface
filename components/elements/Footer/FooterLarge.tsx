@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import Toast from 'components/elements/Toast';
+import { useEmailSubscribe } from 'hooks/useEmailSubscribe';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { Doppler, getEnv } from 'utils/env';
 import { filterNulls, getStaticAsset, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -20,6 +20,7 @@ import { useAccount } from 'wagmi';
 gsap.registerPlugin(ScrollTrigger);
 
 export const FooterLarge = () => {
+  const { subscribe } = useEmailSubscribe();
   const { address: currentAddress } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens } = useMyNftProfileTokens();
@@ -272,31 +273,24 @@ export const FooterLarge = () => {
                 'bg-transparent border-none px-0 w-full',
                 'shadow-none focus:border-transparent focus:ring-0'
               )} />
-              <button type="submit" onClick={async () => {
-                try {
-                  const result = await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/subscribe/${email?.toLowerCase()}`, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                  });
-
-                  if (result.status == 200) {
-                    toast.success('Success! Please check your email to verify ownership.');
-                    setEmail('');
-                  } else {
-                    toast.error(`Error while submitting email: ${(await result.json()).message}`);
-                  }
-                } catch (err) {
-                  toast.error(`Error while submitting email: ${err.response}`);
-                  console.log('error while subscribing: ', err);
-                }
-              }} className={tw(
-                'text-sm minxxl:text-lg',
-                'rounded-full border-2 border-white',
-                'px-4 h-9 minxxl:px-6 minxxl:h-11 ml-6',
-                'transition-colors hover:bg-white hover:text-black'
-              )}>Subscribe</button>
+              <button
+                type="submit"
+                onClick={async () => {
+                  await subscribe(email)
+                    .then(() => {
+                      setEmail('');
+                      toast.success('Success! Please check your email to verify ownership.');
+                    })
+                    .catch(() => toast.error('Error while submitting email'));
+                }}
+                className={tw(
+                  'text-sm minxxl:text-lg',
+                  'rounded-full border-2 border-white',
+                  'px-4 h-9 minxxl:px-6 minxxl:h-11 ml-6',
+                  'transition-colors hover:bg-white hover:text-black'
+                )}>
+                  Subscribe
+              </button>
             </div>
             <span className='text-[.875rem] minlg:text-xs minxxl:text-sm text-key-gray/50 block pt-3 mb-[3.75rem] minlg:mb-0'>Subscribe to our notifications</span>
           </div>
