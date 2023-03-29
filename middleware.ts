@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 
-const BLOCKED_COUNTRIES = ['CU', 'IR', 'KP', 'SY', 'RU', 'US'];
+const BLOCKED_COUNTRIES = ['CU', 'IR', 'KP', 'SY', 'RU'];
 
 export function middleware(req: NextRequest) {
   const country = req.geo.country || 'US';
