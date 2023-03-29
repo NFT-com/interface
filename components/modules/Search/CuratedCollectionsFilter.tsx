@@ -22,7 +22,7 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
                 <span
                   key={index}
                   className={tw(
-                    'border border-gray-300 font-grotesk text-sm',
+                    'border border-gray-300 font-noi-grotesk text-sm',
                     'rounded-3xl mr-2 mb-2 py-2 px-3.5 h-fit hover:cursor-pointer',
                     !router.pathname.includes('discover/') && selectedCuratedCollection?.tabTitle === tab.tabTitle ? 'bg-[#000] text-white font-black': 'bg-pagebg text-blog-text-reskin font-bold' )}
                   onClick={() => {
@@ -36,7 +36,7 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
               );
             })}
             <span
-              className="block minlg:hidden font-grotesk font-bold text-blog-text-reskin text-sm border border-gray-300 rounded-3xl bg-pagebg py-2 px-3.5 h-fit mb-3 hover:cursor-pointer mx-auto"
+              className="block minlg:hidden font-noi-grotesk font-bold text-blog-text-reskin text-sm border border-gray-300 rounded-3xl bg-pagebg py-2 px-3.5 h-fit mb-3 hover:cursor-pointer mx-auto"
               onClick={() => {
                 setSearchModalOpen(true);
               }}>

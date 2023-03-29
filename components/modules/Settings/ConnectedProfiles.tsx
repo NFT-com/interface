@@ -24,8 +24,8 @@ type ConnectedProfilesProps = {
 export default function ConnectedProfiles({ associatedProfiles }: ConnectedProfilesProps) {
   const { address: currentAddress } = useAccount();
   return (
-    <div id="profiles" className='w-full font-grotesk'>
-      <h2 className='font-grotesk tracking-wide font-bold text-black text-2xl mb-1'>Manage Address</h2>
+    <div id="profiles" className='w-full font-noi-grotesk'>
+      <h2 className='font-noi-grotesk tracking-wide font-bold text-black text-2xl mb-1'>Manage Address</h2>
       <p className='text-blog-text-reskin mb-4'>
         The following NFT Profiles have requested to associate to your address. Only approve those you would like to give permission to display your NFTs.
       </p>

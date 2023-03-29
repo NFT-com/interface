@@ -1,4 +1,3 @@
-import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import NotificationsModal from 'components/modules/Notifications/NotificationsModal';
 import { useChangeWallet } from 'hooks/state/useChangeWallet';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
@@ -10,7 +9,7 @@ import { utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
 import ETHIcon from 'public/eth_icon.svg?svgr';
-import { PropsWithChildren, useCallback, useContext, useRef, useState } from 'react';
+import { PropsWithChildren, useCallback, useRef, useState } from 'react';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
 
 export interface WalletDropdownProps {
@@ -25,9 +24,6 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
   const { setChangeWallet } = useChangeWallet();
   const { data: balanceData } = useBalance({ address: currentAddress, watch: true });
   const router = useRouter();
-  const {
-    setPurchasedNfts
-  } = useContext(NotificationContext);
   const [notificationsModalVisible, setNotificationModalVisible] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -37,11 +33,8 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
   });
 
   const setModalVisibile = useCallback((input: boolean) => {
-    if(!input) {
-      setPurchasedNfts([]);
-    }
     setNotificationModalVisible(input);
-  }, [setPurchasedNfts]);
+  }, []);
 
   return (
     <div

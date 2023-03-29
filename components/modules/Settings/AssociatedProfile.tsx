@@ -174,7 +174,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
               )
           }
           <div className='w-3/4'>
-            <p onClick={pending ? () => setVisible(true) : null} className='truncate text-black text-sm font-grotesk font-semibold tracking-wide'>{profile.profileUrl || profile.url}</p>
+            <p onClick={pending ? () => setVisible(true) : null} className='truncate text-black text-sm font-noi-grotesk font-semibold tracking-wide'>{profile.profileUrl || profile.url}</p>
             <div className="flex items-center w-full">
               <div className="flex w-full items-center justify-between">
                 <div>
@@ -300,7 +300,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                             onClick={(e) => acceptPendingProfile(e, profile.profileUrl || profile.url)}
                             stretch
                           />
-                          <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
+                          <div className='flex items-center font-noi-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
                             <GasPump size={20} weight="fill" />
                             <p className='ml-1'>This action will require a<span className='border-dashed	border-b border-[#6F6F6F]'> gas fee.</span></p>
                           </div>

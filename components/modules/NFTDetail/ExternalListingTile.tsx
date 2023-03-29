@@ -298,7 +298,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
 
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(listing));
 
-  return <div className="flex flex-col rounded-[10px] my-6 bg-[#F8F8F8] relative pt-12 font-grotesk">
+  return <div className="flex flex-col rounded-[10px] my-6 bg-[#F8F8F8] relative pt-12 font-noi-grotesk">
     <div className="bg-[#FCF1CD] h-8 w-full absolute top-0 rounded-t-[10px] flex items-center pl-6">
       <span className='font-bold text-secondary-txt'>
         {listing?.order?.protocol === ExternalProtocol.NFTCOM ? `${getAuctionTypeDisplayName((listing?.order?.protocolData as NftcomProtocolData).auctionType)}` : 'Fixed Price'}

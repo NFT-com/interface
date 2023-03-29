@@ -19,6 +19,7 @@ export type UserNotifications = {
   associatedProfileAdded: boolean;
   associatedProfileRemoved: boolean;
   hasSoldActivity: boolean;
+  hasPurchasedActivity: boolean;
   hasExpiredListings: boolean;
   profileExpiration: boolean;
   nftPurchase: boolean;
@@ -117,5 +118,12 @@ export type SitemapField = {
   loc: string,
   lastmod: string,
   priority: 0.7,
-  changefreq: 'daily'
+  changefreq: 'monthly' | 'daily' | 'hourly'
+}
+
+export type SitemapQueryVariables = {
+  chainId: string
+  contract: string,
+  document: string,
+  variables: Record<string, any>,
 }

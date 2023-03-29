@@ -105,7 +105,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
                   'p-3 rounded-md absolute left-full minxl:left-1/4 -translate-x-full minxl:translate-x-1',
                   '-translate-y-full opacity-0'
                 )}>
-                <div className='flex flex-row w-full text-[#F9D963] font-grotesk font-semibold text-base leading-6'>
+                <div className='flex flex-row w-full text-[#F9D963] font-noi-grotesk font-semibold text-base leading-6'>
                     Coming Soon
                 </div>
                 <div className='flex flex-row w-32 text-white text-base font-normal leading-6'>
@@ -167,7 +167,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
                   'p-3 rounded-md absolute left-full -translate-x-full',
                   '-translate-y-full opacity-0'
                 )}>
-                <div className='flex flex-row w-full text-[#F9D963] font-grotesk font-semibold text-base leading-6'>
+                <div className='flex flex-row w-full text-[#F9D963] font-noi-grotesk font-semibold text-base leading-6'>
                     Coming Soon
                 </div>
                 <div className='flex flex-row w-32 text-white text-base font-normal leading-6'>

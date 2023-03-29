@@ -28,7 +28,7 @@ export function SelectListingModal(props: SelectListingsModalProps) {
   });
 
   const getModalContent = useCallback(() => {
-    return <div className='flex flex-col font-grotesk'>
+    return <div className='flex flex-col font-noi-grotesk'>
       <div className="flex items-center">
         <RoundedCornerMedia
           containerClasses='w-2/4 aspect-square'
@@ -36,10 +36,10 @@ export function SelectListingModal(props: SelectListingsModalProps) {
           variant={RoundedCornerVariant.None}
         />
         <div className="flex flex-col px-8">
-          <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127]">
+          <div className="whitespace-nowrap text-lg font-normal font-noi-grotesk leading-6 tracking-wide text-[#1F2127]">
             {isNullOrEmpty(nft?.metadata?.name) ? 'Unknown Name' : nft?.metadata?.name}
           </div>
-          <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127]">
+          <div className="whitespace-nowrap text-lg font-normal font-noi-grotesk leading-6 tracking-wide text-[#1F2127]">
             {isNullOrEmpty(collectionName) ? 'Unknown Collection' : collectionName}
           </div>
         </div>

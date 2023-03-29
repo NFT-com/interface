@@ -10,11 +10,10 @@ import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useGetContractSalesStatisticsQuery } from 'graphql/hooks/useGetContractSalesStatisticsQuery';
 import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
+import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -53,7 +52,7 @@ export function Collection(props: CollectionProps) {
   const prevPage = usePrevious(currentPage);
   const prevId_nftName = usePrevious(id_nftName);
   const defaultChainId = useDefaultChainId();
-  const { data: collectionData } = useCollectionQuery(defaultChainId, props.contract?.toString());
+  const { data: collectionData, mutate: mutateCollectionData } = useCollectionQuery(defaultChainId, props.contract?.toString());
   const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contract, async () => {
     return await getContractMetadata(props.contract, defaultChainId);
   });
@@ -68,7 +67,7 @@ export function Collection(props: CollectionProps) {
   const { profileData: collectionPreferredOwnerData } = useProfileQuery(
     collectionOwnerData?.profile?.owner?.preferredProfile?.url
   );
-  const { setLike } = useSetLikeMutation(
+  const { setLike, unsetLike } = useSetLikeMutation(
     collectionData?.collection?.id,
     LikeableType.Collection
   );
@@ -164,7 +163,7 @@ export function Collection(props: CollectionProps) {
           isCollection
         />
       </div>
-      <div className='font-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
+      <div className='font-noi-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
         <div className='flex'>
           <h2 className="text-3xl font-bold">
             {isNullOrEmpty(collectionName) && isNullOrEmpty(collectionData?.collection?.name) ?
@@ -178,7 +177,12 @@ export function Collection(props: CollectionProps) {
           </h2>
           {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
           <div className='ml-3'>
-            <LikeCount count={10} isLiked={false} onClick={setLike} />
+            <LikeCount
+              count={collectionData?.collection?.likeCount}
+              isLiked={collectionData?.collection?.isLikedByUser}
+              onClick={collectionData?.collection?.isLikedByUser ? unsetLike :setLike}
+              mutate={mutateCollectionData}
+            />
           </div>
           }
         </div>
@@ -230,7 +234,7 @@ export function Collection(props: CollectionProps) {
             </div>
           </div>
         </div>
-        <div className='font-grotesk mt-6 text-black flex flex-col minlg:flex-row mb-10'>
+        <div className='font-noi-grotesk mt-6 text-black flex flex-col minlg:flex-row mb-10'>
           {collectionData?.collection?.description && collectionData?.collection?.description !== 'placeholder collection description text' &&
           <div className='minlg:w-1/2'>
             <h3 className='text-[#6F6F6F] font-semibold'>
@@ -311,7 +315,7 @@ export function Collection(props: CollectionProps) {
             <div className='block minlg:flex minlg:flex-row-reverse w-full minlg:w-max mb-6 justify-between items-center'>
               <div className='block minlg:flex items-center mb-6 minlg:mb-0'>
                 <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
-                  <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk minlg:max-w-md minlg:w-[448px]">
+                  <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-noi-grotesk minlg:max-w-md minlg:w-[448px]">
                     {Object.keys(tabs).map((tab) => (
                       <Tab
                         key={tab}
@@ -344,7 +348,7 @@ export function Collection(props: CollectionProps) {
                 <div
                   className={tw(
                     'cursor-pointer w-full minlg:h-10',
-                    'bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px]',
+                    'bg-white text-[#1F2127] font-noi-grotesk font-bold p-1 rounded-[20px]',
                     'flex items-center justify-center border border-[#D5D5D5]')}
                 >
                   <div className='minlg:hidden flex items-center justify-center'>
@@ -412,7 +416,7 @@ export function Collection(props: CollectionProps) {
                     />
                   </div>}
                 </div>
-                : <div className="font-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>}
+                : <div className="font-noi-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>}
             </div>
             }
             {selectedTab === 'Activity' &&

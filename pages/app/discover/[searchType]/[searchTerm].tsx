@@ -241,7 +241,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
             <div className="mt-5 minlg:mt-0">
               {searchType?.toString() === 'allResults' && !isNullOrEmpty(collectionsSliderData) &&
                 <CollectionsResults sideNavOpen={sideNavOpen} searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />}
-              <div className="flex justify-between items-center font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
+              <div className="flex justify-between items-center font-noi-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
                 <div className="text-lg text-blog-text-reskin font-medium">
                   {found.current + ' ' + (searchType?.toString() !== 'collections' ? 'NFT' : 'Collection') + `${found.current === 1 ? '' : 's'}`}
                 </div>

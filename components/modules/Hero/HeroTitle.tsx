@@ -17,7 +17,7 @@ export function HeroTitle(props: HeroTitleProps) {
         props.color === 'pink' && 'text-hero-pink',
         props.color === 'white' && 'text-white',
         'text-2xl minmd:text-5xl minxl:text-6xl',
-        'z-30 text-center font-normal font-grotesk',
+        'z-30 text-center font-normal font-noi-grotesk',
         'max-w-[30rem] minmd:max-w-[43rem] minxl:max-w-[100rem]',
       )}
       style={{

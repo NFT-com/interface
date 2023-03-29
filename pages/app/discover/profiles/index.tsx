@@ -1,6 +1,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import CardsGrid from 'components/elements/CardsGrid';
-import { Footer } from 'components/elements/Footer';
+import { Footer } from 'components/elements/Footer/Footer';
 import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { ProfileCard } from 'components/modules/DiscoveryCards/ProfileCard';
@@ -13,7 +13,7 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import _ from 'lodash';
+import uniqBy from 'lodash/uniqBy';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg?svgr';
 import React, { useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
@@ -71,7 +71,7 @@ export default function ProfilePage() {
 
   const filterUniqProfiles = () => {
     if(!allLoadedProfiles && !allLoadedProfiles.length) return;
-    const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
+    const uniqData = uniqBy(allLoadedProfiles, (e) => e.id);
     return !getEnvBool(Doppler.NEXT_PUBLIC_REACT_WINDOW_ENABLED)
       ? uniqData.map((profile, index) => {
         return (
@@ -119,10 +119,7 @@ export default function ProfilePage() {
                         number={i}
                         isLeaderBoard
                         id={item.id}
-                        index={item.index}
                         itemsVisible={item.itemsVisible}
-                        numberOfCollections={item.numberOfCollections}
-                        numberOfGenesisKeys={item.numberOfGenesisKeys}
                         photoURL={item.photoURL}
                         url={item.url}
                         isGkMinted={item.isGKMinted}

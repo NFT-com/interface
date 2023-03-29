@@ -65,13 +65,10 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<PurchaseErrorResponse['error']>>(null);
   const { saveUserActionForBuyNFTs } = useSaveUserActionForBuyNFTsMutation();
-
+  const { mutatePurchaseActivities } = useContext(NotificationContext);
+  
   const { user } = useUser();
   const { profileData } = useProfileQuery(user.currentProfileUrl);
-  const {
-    purchasedNfts,
-    setPurchasedNfts
-  } = useContext(NotificationContext);
 
   const { data: looksrareProtocolFeeBps } = useSWR(
     'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
@@ -118,6 +115,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
           setLoading(false);
           setError(null);
           clearBuyNow();
+          mutatePurchaseActivities();
           props.onClose();
         }}
         userAddress={currentAddress}
@@ -233,7 +231,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         </div>
       );
     }
-  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, nftsToBuy.length, props, success, toBuy]);
+  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, mutatePurchaseActivities, nftsToBuy.length, props, success, toBuy]);
 
   return (
     <Modal
@@ -327,7 +325,6 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
               if (result) {
                 setSuccess(true);
-                setPurchasedNfts(buyNowActive ? [...purchasedNfts, toBuyNow[0]] : [...purchasedNfts, ...toBuy]);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
                 clear();
                 clearBuyNow();

@@ -1,7 +1,8 @@
 import LikeCount from 'components/elements/LikeCount';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { LikeableType, Profile } from 'graphql/generated/types';
-import { useSetLikeMutation } from 'graphql/hooks/useSetLikeMutation';
+import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
+import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import Image from 'next/image';
@@ -11,28 +12,22 @@ import ProfilePreview from 'public/profilePreview.png';
 import { PartialDeep } from 'type-fest';
 
 export interface ProfileCardProps {
-  name?: string,
-  nftCounter?: string,
-  followLink?: string,
-  btnName?: string
-  isLeaderBoard?: boolean
-  bgImg?: string,
-  id?: string,
-  number?: number,
-  index?: number,
-  itemsVisible?: number,
-  numberOfCollections?: number,
-  numberOfGenesisKeys?: number,
-  photoURL?: string,
-  url?: string,
-  profile?: PartialDeep<Profile>,
-  isGkMinted?: boolean,
+  profile?: PartialDeep<Profile>;
+  isLeaderBoard?: boolean;
+  id?: string;
+  number?: number;
+  itemsVisible?: number;
+  photoURL?: string;
+  url?: string;
+  isGkMinted?: boolean;
 }
 
 export function ProfileCard(props: ProfileCardProps) {
   const isLeaderBoard = props.isLeaderBoard;
 
-  const { setLike } = useSetLikeMutation(
+  const { profileData: profileLikeData, mutate } = useProfileLikeQuery(props?.profile?.url);
+
+  const { setLike, unsetLike } = useSetLikeMutation(
     props?.id ?? props?.profile?.id,
     LikeableType.Profile
   );
@@ -76,7 +71,12 @@ export function ProfileCard(props: ProfileCardProps) {
         <div className="bg-black h-[99px] relative">
           {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
             <div className='absolute top-4 right-4 z-50'>
-              <LikeCount count={10} isLiked={false} onClick={setLike} />
+              <LikeCount
+                count={profileLikeData?.profile?.likeCount || 0}
+                isLiked={profileLikeData?.profile?.isLikedByUser || false}
+                onClick={profileLikeData?.profile?.isLikedByUser ? unsetLike :setLike}
+                mutate={mutate}
+              />
             </div>
           }
           {

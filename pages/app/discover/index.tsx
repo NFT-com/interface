@@ -210,10 +210,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                         number={i}
                         isLeaderBoard
                         id={item.id}
-                        index={item.index}
                         itemsVisible={item.itemsVisible}
-                        numberOfCollections={item.numberOfCollections}
-                        numberOfGenesisKeys={item.numberOfGenesisKeys}
                         photoURL={item.photoURL}
                         url={item.url}
                       />

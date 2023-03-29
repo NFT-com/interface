@@ -1,6 +1,8 @@
 /** @type {import('next-sitemap').IConfig} */
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 module.exports = {
-  siteUrl: 'https://www.nft.com',
+  siteUrl,
   generateRobotsTxt: true,
   generateIndexSitemap: true,
   sitemapSize: 5000, // Will support 250M urls 50K files w/5K urls
@@ -8,7 +10,7 @@ module.exports = {
   exclude: ['/server-sitemap-index.xml'],
   robotsTxtOptions: {
     additionalSitemaps: [
-      'https://www.nft.com/server-sitemap-index.xml',
+      `${siteUrl}server-sitemap-index.xml`,
     ],
     policies: [
       {
@@ -18,7 +20,6 @@ module.exports = {
           '/$',
           '/app/discover',
           '/app/discover/*',
-          '/app/collection/*',
           '/articles',
           '/articles/*',
           '/*.xml',

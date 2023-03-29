@@ -32,11 +32,11 @@ export function ProfileCard(props: ProfileCardProps) {
         amount={RoundedCornerAmount.Medium}
         src={processIPFSURL(props.profile?.photoURL)}
       />
-      <div className="flex w-full font-grotesk my-4">
+      <div className="flex w-full font-noi-grotesk my-4">
         <span className='text-xl font-medium font-dm-mono text-primary-yellow'>/</span>
         <span className='text-xl font-bold ml-1 whitespace-nowrap text-ellipsis overflow-hidden'>{props.profile?.url}</span>
       </div>
-      <div className='flex w-full font-grotesk'>
+      <div className='flex w-full font-noi-grotesk'>
         <span className='text-secondary-txt'>NFTs Displayed:</span>
         <span className='font-bold ml-1'>{totalItems}</span>
       </div>

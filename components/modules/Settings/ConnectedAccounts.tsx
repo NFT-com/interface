@@ -89,7 +89,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   }, [inputVal, associatedAddresses, currentAddress]);
   
   return (
-    <div id="addresses" className='font-grotesk'>
+    <div id="addresses" className='font-noi-grotesk'>
       <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>Associate Addresses</h2>
       <p className='text-blog-text-reskin mb-4'>The NFTs contained or collections deployed by associated Ethereum addresses will display on this NFT Profile.</p>
       

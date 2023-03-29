@@ -67,10 +67,10 @@ export function SidebarProfileCard({ profile, onClick, message, showSwitch, open
                   setSidebarOpen(false);
                 }}>
                 {message &&
-                <p className='font-grotesk text-xs text-[#F9D963] leading-6 font-bold -mb-1 ml-3 tracking-wider uppercase'>{message}</p>
+                <p className='font-noi-grotesk text-xs text-[#F9D963] leading-6 font-bold -mb-1 ml-3 tracking-wider uppercase'>{message}</p>
                 }
                 <div>
-                  <p className='font-grotesk text-base text-white leading-6 font-medium ml-3 tracking-wide w-full'>{profile?.title}</p>
+                  <p className='font-noi-grotesk text-base text-white leading-6 font-medium ml-3 tracking-wide w-full'>{profile?.title}</p>
                   <div className='flex ml-3'>
                     <Wallet size={23} color="#D5D5D5" weight="fill" className='mr-1' />
                     <p className='font-mono text-base text-[#D5D5D5] leading-6 font-medium tracking-wide w-full'>{shortenAddress(currentAddress, 4)}</p>
@@ -101,9 +101,9 @@ export function SidebarProfileCard({ profile, onClick, message, showSwitch, open
             <div className='flex justify-between w-full'>
               <div>
                 {message &&
-                <p className='font-grotesk text-xs text-[#F9D963] leading-6 font-bold -mb-1 ml-3 tracking-wider uppercase'>{message}</p>
+                <p className='font-noi-grotesk text-xs text-[#F9D963] leading-6 font-bold -mb-1 ml-3 tracking-wider uppercase'>{message}</p>
                 }
-                <p className='font-grotesk text-base text-white leading-6 font-medium ml-3 tracking-wide'>{profile?.title}</p>
+                <p className='font-noi-grotesk text-base text-white leading-6 font-medium ml-3 tracking-wide'>{profile?.title}</p>
               </div>
               {showSwitch && <p data-cy='profileCardSwitch' className='text-[#F9D963]'>Switch</p>}
             </div>
