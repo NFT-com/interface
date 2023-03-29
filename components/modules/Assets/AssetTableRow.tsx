@@ -1,4 +1,4 @@
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { RoundedCornerAmount,RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft } from 'graphql/generated/types';
@@ -79,7 +79,7 @@ export default function AssetTableRow({
     }
     return (
       <div className='font-medium flex items-center relative underline text-[#1F2127] decoration-[#B59007] underline-offset-2'>
-        <CustomTooltip2
+        <CustomTooltip
           tooltipClick={() => null}
           orientation='right'
           tooltipComponent={
@@ -106,7 +106,7 @@ export default function AssetTableRow({
             </div>
           }>
           {profiles.length} Profiles
-        </CustomTooltip2>
+        </CustomTooltip>
       </div>
     );
   }, [profiles]);

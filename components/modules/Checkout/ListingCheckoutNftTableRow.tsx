@@ -1,4 +1,4 @@
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { PriceInput } from 'components/elements/PriceInput';
 import { LooksrareProtocolData, NftcomProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
@@ -350,7 +350,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           <div className='w-[26%]'>Marketplace</div>
           <div className='w-[27%] flex flex-row justify-between'>
             <span className='shrink-0'>Type of Auction</span>
-            <CustomTooltip2
+            <CustomTooltip
               tooltipClick={() => router.push('https://docs.nft.com/nft-trading/listing-types')}
               orientation='custom'
               customFullLeftPosition='left-4'
@@ -364,7 +364,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               }
             >
               <InfoIcon className='ml-2' />
-            </CustomTooltip2>
+            </CustomTooltip>
           </div>
           <div className='w-[42%]'>Set Price</div>
           <div className='w-[5%]'>&nbsp;</div>
@@ -440,7 +440,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               />
               <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
               <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[42%] flex flex-row'>
-                <CustomTooltip2
+                <CustomTooltip
                   orientation='custom'
                   customLeftPosition='19'
                   hidden={
@@ -455,7 +455,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                   }
                 >
                   {LooksRarePriceInput()}
-                </CustomTooltip2>
+                </CustomTooltip>
                 <div className='w-full flex minlg:hidden -ml-[16rem] z-10 minlg:z-auto'>
                   <div className='w-full flex items-center justify-end '>
                     <DeleteRowIcon
@@ -504,7 +504,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             />
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
             <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[42%] flex flex-row relative'>
-              <CustomTooltip2
+              <CustomTooltip
                 orientation='custom'
                 customLeftPosition='19'
                 hidden={
@@ -519,7 +519,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 }
               >
                 {X2Y2PriceInput()}
-              </CustomTooltip2>
+              </CustomTooltip>
               <div className='w-full flex minlg:hidden -ml-[16rem] z-10 minlg:z-auto'>
                 <div className='w-full flex items-center justify-end '>
                   <DeleteRowIcon
@@ -568,7 +568,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               Set Price
             </div>
             <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[42%] flex flex-row'>
-              <CustomTooltip2
+              <CustomTooltip
                 orientation='custom'
                 customLeftPosition='19'
                 hidden={
@@ -583,7 +583,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 }
               >
                 {NFTCOMPriceInput()}
-              </CustomTooltip2>
+              </CustomTooltip>
               <div className='w-full flex minlg:hidden -ml-[16rem] z-10 minlg:z-auto'>
                 <div className='w-full flex items-center justify-end '>
                   <DeleteRowIcon

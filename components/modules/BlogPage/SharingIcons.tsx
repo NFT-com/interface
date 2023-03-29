@@ -1,5 +1,4 @@
-import { CustomTooltip } from 'components/elements/CustomTooltip';
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 
 import { Link } from 'phosphor-react';
@@ -33,7 +32,7 @@ export default function SharingIcons({ title }: SharingProps) {
         />
       </TwitterShareButton>
 
-      <CustomTooltip2
+      <CustomTooltip
         orientation='right'
         tooltipComponent={copied ?
           <div
@@ -58,7 +57,7 @@ export default function SharingIcons({ title }: SharingProps) {
           >
           </Link>
         </button>
-      </CustomTooltip2>
+      </CustomTooltip>
     </div>
   );
 }

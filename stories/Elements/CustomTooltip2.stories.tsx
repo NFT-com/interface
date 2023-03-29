@@ -1,4 +1,4 @@
-import Tooltip, { ToolTipProps } from 'components/elements/CustomTooltip2';
+import Tooltip, { ToolTipProps } from 'components/elements/CustomTooltip';
 
 import { Meta } from '@storybook/react';
 import React, { PropsWithChildren } from 'react';

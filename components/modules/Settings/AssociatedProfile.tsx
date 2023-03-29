@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
@@ -122,7 +122,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       <div className='p-1 flex justify-between items-start mb-3'>
         <div className='flex items-start'>
           {pending ?
-            <CustomTooltip2
+            <CustomTooltip
               orientation='right'
               tooltipComponent={
                 <div
@@ -134,7 +134,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
               }
             >
               <Clock data-cy="PendingProfile" size={25} className='mr-3' color='orange' weight='fill' />
-            </CustomTooltip2>
+            </CustomTooltip>
             :
             isRemoved
               ?
@@ -142,7 +142,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                 isRemoved && isCollection ?
                   <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
                   :
-                  <CustomTooltip2
+                  <CustomTooltip
                     orientation='right'
                     tooltipComponent={
                       <div
@@ -154,11 +154,11 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                     }
                   >
                     <XCircle data-cy="RemovedProfile" size={25} className='mr-3' color='#D40909' weight='fill' />
-                  </CustomTooltip2>
+                  </CustomTooltip>
               )
               :
               (
-                <CustomTooltip2
+                <CustomTooltip
                   orientation='right'
                   tooltipComponent={
                     <div
@@ -170,7 +170,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                   }
                 >
                   <CheckCircle data-cy="ApprovedProfile" size={25} className='mr-3 rounded-full' color='green' weight="fill" />
-                </CustomTooltip2>
+                </CustomTooltip>
               )
           }
           <div className='w-3/4'>

@@ -1,4 +1,4 @@
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 
 import { Info } from 'phosphor-react';
 import { Link as ScrollLink } from 'react-scroll';
@@ -20,7 +20,7 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
           <>
             <h3 className='mb-3 text-xs font-extrabold font-noi-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
               PROFILE SETTINGS
-              <CustomTooltip2
+              <CustomTooltip
                 orientation='right'
                 tooltipComponent={
                   <div
@@ -31,7 +31,7 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
                   </div>
                 }>
                 <Info className='ml-1' size={14} />
-              </CustomTooltip2>
+              </CustomTooltip>
             </h3>
             <ScrollLink activeClass='font-bold' to='addresses' spy={true} smooth={true} duration={500} offset={-100} >
               <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-noi-grotesk'>Associate Addresses</p>
@@ -51,7 +51,7 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
 
       <h3 className='mb-3 mt-12 text-xs font-extrabold font-noi-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
         ADDRESS SETTINGS
-        <CustomTooltip2
+        <CustomTooltip
           orientation='right'
           tooltipComponent={
             <div
@@ -62,7 +62,7 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
             </div>
           }>
           <Info className='ml-1' size={14} />
-        </CustomTooltip2>
+        </CustomTooltip>
       </h3>
 
       {isOwner
