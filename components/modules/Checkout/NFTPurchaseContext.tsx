@@ -1,10 +1,11 @@
 import { NULL_ADDRESS } from 'constants/addresses';
 import { LooksrareProtocolData, Nft, NftcomProtocolData, NftType, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { useGetSeaportSignature } from 'graphql/hooks/useGetSeaportSignature';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { ExternalProtocol } from 'types';
-import { filterDuplicates, filterNulls, getBaseUrl, sameAddress } from 'utils/helpers';
+import { filterDuplicates, filterNulls, getBaseUrl, isNull, sameAddress } from 'utils/helpers';
 import { getLooksrareHex } from 'utils/looksrareHelpers';
 import { getNftcomHex } from 'utils/nativeMarketplaceHelpers';
 import { getSeaportHex } from 'utils/seaportHelpers';
@@ -86,6 +87,7 @@ export function NFTPurchaseContextProvider(
   const { aggregator } = useAllContracts();
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const defaultChainId = useDefaultChainId();
+  const { fetchSeaportSignature } = useGetSeaportSignature();
 
   useEffect(() => {
     if (window != null) {
@@ -96,6 +98,59 @@ export function NFTPurchaseContextProvider(
   const togglePurchaseSummaryModal = useCallback(() => {
     setShowPurchaseSummaryModal(!showPurchaseSummaryModal);
   }, [showPurchaseSummaryModal]);
+
+  const fetchAndUpdateSignature = useCallback(async(
+    orderHash: string,
+    id: string,
+    type: 'buy' | 'buyNow'
+  ) => {
+    fetchSeaportSignature([orderHash]).then((response) => {
+      const signature = (response?.getSeaportSignatures[0]?.protocolData as SeaportProtocolData)?.signature;
+      if(type === 'buy'){
+        setToBuy(toBuy.slice().map(stagedNft => {
+          if (id === stagedNft.nft?.id) {
+            return {
+              ...stagedNft,
+              protocolData:{
+                ...(stagedNft?.protocolData as SeaportProtocolData),
+                signature: signature
+              }
+            };
+          }
+          return stagedNft;
+        }));
+      } else {
+        setToBuyNow(toBuyNow.slice().map(stagedNft => {
+          if (id === stagedNft.nft?.id) {
+            return {
+              ...stagedNft,
+              protocolData:{
+                ...(stagedNft?.protocolData as SeaportProtocolData),
+                signature: signature
+              }
+            };
+          }
+          return stagedNft;
+        }));
+      }
+    });
+  }, [fetchSeaportSignature, toBuy, toBuyNow]);
+
+  useEffect(() => {
+    toBuy.forEach((purchase) => {
+      if(purchase?.protocol === ExternalProtocol.Seaport && isNull((purchase?.protocolData as SeaportProtocolData)?.signature)){
+        fetchAndUpdateSignature(purchase.orderHash, purchase?.nft?.id, 'buy');
+      }
+    });
+  }, [fetchAndUpdateSignature, toBuy, currentAddress]);
+  
+  useEffect(() => {
+    toBuyNow.forEach((purchase) => {
+      if(purchase?.protocol === ExternalProtocol.Seaport && isNull((purchase?.protocolData as SeaportProtocolData)?.signature)){
+        fetchAndUpdateSignature(purchase.orderHash, purchase?.nft?.id, 'buyNow');
+      }
+    });
+  }, [fetchAndUpdateSignature, toBuyNow, currentAddress]);
 
   const stagePurchase = useCallback((
     purchase: StagedPurchase
@@ -227,6 +282,7 @@ export function NFTPurchaseContextProvider(
         ) :
         null
     ]);
+    
     const tx = await aggregator.batchTrade(
       erc20Details,
       tradeDetails,
