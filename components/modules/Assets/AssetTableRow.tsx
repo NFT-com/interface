@@ -81,7 +81,7 @@ export default function AssetTableRow({
       <div className='font-medium flex items-center relative underline text-[#1F2127] decoration-[#B59007] underline-offset-2'>
         <CustomTooltip
           tooltipClick={() => null}
-          orientation='right'
+          orientation='top'
           tooltipComponent={
             <div
               className="p-3 w-[200px] flex flex-col space-y-3 bg-black"

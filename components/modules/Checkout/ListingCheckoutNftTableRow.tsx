@@ -348,7 +348,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='basis-8/12 minlg:basis-10/12 pl-2 minlg:pl-0'>
         {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='hidden minlg:flex text-base minlg:text-[0.85rem] minxl:text-base font-normal text-[#A6A6A6] mb-4'>
           <div className='w-[26%]'>Marketplace</div>
-          <div className='w-[27%] flex flex-row justify-between'>
+          <div className='w-[27%] flex flex-row justify-start'>
             <span className='shrink-0'>Type of Auction</span>
             <CustomTooltip
               tooltipClick={() => router.push('https://docs.nft.com/nft-trading/listing-types')}

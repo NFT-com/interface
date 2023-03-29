@@ -33,7 +33,7 @@ export default function SharingIcons({ title }: SharingProps) {
       </TwitterShareButton>
 
       <CustomTooltip
-        orientation='right'
+        orientation='top'
         tooltipComponent={copied ?
           <div
             className="py-1 text-white"
