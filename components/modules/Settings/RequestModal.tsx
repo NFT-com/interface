@@ -69,7 +69,7 @@ export default function RequestModal({ visible, setVisible, address, transaction
                     onClick={() => submitHandler()}
                     stretch
                   />
-                  <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
+                  <div className='flex items-center font-noi-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
                     <GasPump size={20} weight="fill" />
                     <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'> gas fee.</span></p>
                   </div>

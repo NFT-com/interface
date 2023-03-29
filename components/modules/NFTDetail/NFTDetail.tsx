@@ -4,8 +4,10 @@ import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { getAddressForChain, nftProfile } from 'constants/contracts';
-import { Nft, NftType, Profile } from 'graphql/generated/types';
+import { LikeableType, Nft, NftType, Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
+import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
+import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
@@ -52,6 +54,8 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const { profileTokens: creatorTokens } = useNftProfileTokens(collection?.collection?.deployer);
   const { address: currentAddress } = useAccount();
 
+  const { data: nftLikeData, mutate: mutateNftLike } = useNftLikeQuery(props?.nft?.contract, props?.nft?.tokenId);
+
   const { profileData } = useProfileQuery(
     props.nft?.wallet?.preferredProfile == null ?
       profileTokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
@@ -71,6 +75,11 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
   const { refreshNft, loading, success } = useRefreshNftMutation();
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
+
+  const { setLike, unsetLike } = useSetLikeMutation(
+    props?.nft?.id,
+    LikeableType.Nft
+  );
 
   const refreshNftCallback = useCallback(() => {
     (async () => {
@@ -121,7 +130,12 @@ export const NFTDetail = (props: NFTDetailProps) => {
                   }
                   {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
                     <div className='ml-3'>
-                      <LikeCount count={10} isLiked={false} onClick={() => null} />
+                      <LikeCount
+                        onClick={nftLikeData?.isLikedByUser ? unsetLike : setLike}
+                        mutate={mutateNftLike}
+                        count={nftLikeData?.likeCount}
+                        isLiked={nftLikeData?.isLikedByUser}
+                      />
                     </div>
                   }
                 </>

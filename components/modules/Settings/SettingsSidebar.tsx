@@ -1,5 +1,4 @@
-import { CustomTooltip } from 'components/elements/CustomTooltip';
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 
 import { Info } from 'phosphor-react';
 import { Link as ScrollLink } from 'react-scroll';
@@ -11,7 +10,7 @@ type SettingsSidebarProps = {
 export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
   return (
     <div className='hidden minlg:block pt-28 fixed left-[10%] minxl:left-[20%]'>
-      <h2 className='mb-9 font-bold text-black font-grotesk text-[40px]'>
+      <h2 className='mb-9 font-bold text-black font-noi-grotesk text-[40px]'>
         <span className='text-[#F9D963]'>/</span>
         Settings
       </h2>
@@ -19,9 +18,9 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
       {isOwner
         ? (
           <>
-            <h3 className='mb-3 text-xs font-extrabold font-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
+            <h3 className='mb-3 text-xs font-extrabold font-noi-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
               PROFILE SETTINGS
-              <CustomTooltip2
+              <CustomTooltip
                 orientation='right'
                 tooltipComponent={
                   <div
@@ -33,27 +32,27 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
                 }
               >
                 <Info className='ml-1' size={14} />
-              </CustomTooltip2>
+              </CustomTooltip>
             </h3>
             <ScrollLink activeClass='font-bold' to='addresses' spy={true} smooth={true} duration={500} offset={-100} >
-              <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Associate Addresses</p>
+              <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-noi-grotesk'>Associate Addresses</p>
             </ScrollLink>
             <ScrollLink activeClass='font-bold' to='display' spy={true} smooth={true} duration={500} offset={-100}>
-              <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Select Display Mode</p>
+              <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-noi-grotesk'>Select Display Mode</p>
             </ScrollLink>
             <ScrollLink activeClass='font-bold' to='licensing' spy={true} smooth={true} duration={500} offset={-100}>
-              <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Profile Licensing</p>
+              <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-noi-grotesk'>Profile Licensing</p>
             </ScrollLink>
             <ScrollLink to='transfer' activeClass='font-bold' spy={true} smooth={true} duration={500} offset={-100}>
-              <p className='text-[#D40909] hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Transfer Profile</p>
+              <p className='text-[#D40909] hover:cursor-pointer mb-6 tracking-wide font-noi-grotesk'>Transfer Profile</p>
             </ScrollLink>
           </>
         )
         : null}
 
-      <h3 className='mb-3 mt-12 text-xs font-extrabold font-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
+      <h3 className='mb-3 mt-12 text-xs font-extrabold font-noi-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
         ADDRESS SETTINGS
-        <CustomTooltip2
+        <CustomTooltip
           orientation='right'
           tooltipComponent={
             <div
@@ -64,19 +63,19 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
             </div>
           }>
           <Info className='ml-1' size={14} />
-        </CustomTooltip2>
+        </CustomTooltip>
       </h3>
 
       {isOwner
         ? (
           <ScrollLink activeClass='font-bold' to='owner' spy smooth duration={500} offset={-100}>
-            <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Select Primary NFT Owner</p>
+            <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-noi-grotesk'>Select Primary NFT Owner</p>
           </ScrollLink>
         )
         : null}
 
       <ScrollLink activeClass='font-bold' to='profiles' spy smooth duration={500} offset={-100}>
-        <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Manage Address</p>
+        <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-noi-grotesk'>Manage Address</p>
       </ScrollLink>
       
     </div>

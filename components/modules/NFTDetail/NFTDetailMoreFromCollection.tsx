@@ -48,7 +48,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
   return <div className='bg-[#ECECEC] w-screen flex items-center justify-center'>
     <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
       <div className='flex flex-col w-full px-[16px]'>
-        <span className="text-2xl font-bold font-grotesk mb-2">More from collection</span>
+        <span className="text-2xl font-bold font-noi-grotesk mb-2">More from collection</span>
         {screenWidth >= 1200 && data?.length < 5 ?
           <div className='flex py-2 h-full items-stretch mx-auto'>
             {data?.map((nft, index) => {
@@ -56,7 +56,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 <div className={tw(
                   'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
                 )} key={nft?.id ?? index}>
-                  {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
+                  {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
                     <NftCard
                       contractAddr={props.contract}
                       tokenId={nft.tokenId}

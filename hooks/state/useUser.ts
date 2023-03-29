@@ -1,3 +1,4 @@
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
@@ -18,6 +19,8 @@ export function useUser() {
       hiddenProfile: null,
     }
   });
+
+  const { profileData } = useProfileQuery(data.currentProfileUrl);
 
   const loading = !data;
   const setDarkMode = useCallback((darkMode: boolean) => {
@@ -84,6 +87,7 @@ export function useUser() {
 
   return {
     user: data,
+    currentProfileId: profileData?.profile?.id,
     loading,
     setDarkMode,
     setCurrentProfileUrl,

@@ -13,6 +13,8 @@ query Profile($url: String!, $chainId: String!) {
     isGKMinted
     ownerWalletId
     ownerUserId
+    likeCount
+    isLikedByUser
     owner {
       address
       chainId
@@ -28,5 +30,6 @@ query Profile($url: String!, $chainId: String!) {
       userId
       action
     }
+    hideCustomization
   }
 }

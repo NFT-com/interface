@@ -121,11 +121,8 @@ module.exports = {
 
       },
       fontFamily: {
-        'rubik': ['Rubik'],
-        'hero-heading1': ['Stretch Pro'],
-        'dm-mono': ['DM Mono'],
-        'grotesk': ['Grotesk'],
         'noi-grotesk': ['Noi Grotesk Trial', 'Rubik', 'sans-serif'],
+        'dm-mono': ['DM Mono']
       },
       fontSize: {
         'copy-size': '0.825rem',

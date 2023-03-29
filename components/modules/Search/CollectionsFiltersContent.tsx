@@ -69,9 +69,9 @@ export const CollectionsFiltersContent = () => {
           }}>
           <EllipseX />
         </div>
-        <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filter</div>
+        <div className="block minlg:hidden font-noi-grotesk font-black text-4xl self-start px-4">Filter</div>
         <div className="px-4 flex flex-col my-7">
-          <div className="self-start font-black text-xl font-grotesk mb-4">Search for NFTs</div>
+          <div className="self-start font-black text-xl font-noi-grotesk mb-4">Search for NFTs</div>
           <IdFilter
             setId={setId}
             clearedFilters={clearedFilters}
@@ -87,7 +87,7 @@ export const CollectionsFiltersContent = () => {
             setSearchModalOpen(false, 'collectionFilters');
             setCollectionPageAppliedFilters('','', false);
           }}
-          className="px-4 self-start font-black text-xl font-grotesk cursor-pointer text-blog-text-reskin">
+          className="px-4 self-start font-black text-xl font-noi-grotesk cursor-pointer text-blog-text-reskin">
           Clear filter
         </div>
         <span className="minlg:hidden px-5 mt-10 text-xs text-gray-400">Press enter for results</span>

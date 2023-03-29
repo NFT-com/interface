@@ -1,7 +1,9 @@
 import LikeCount from 'components/elements/LikeCount';
 import { DetailedNft } from 'components/modules/DiscoveryCards/CollectionCard';
 import { WETH } from 'constants/tokens';
-import { TxActivity } from 'graphql/generated/types';
+import { LikeableType, TxActivity } from 'graphql/generated/types';
+import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
+import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
@@ -45,6 +47,7 @@ export function NFTCard(props: NftCardProps) {
   const { getByContractAddress } = useSupportedCurrencies();
 
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nft is passed by setting tokenId to null
+  const { data: nftLikeData, mutate: mutateNftLike } = useNftLikeQuery(props.contractAddr, props.tokenId);
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
@@ -52,11 +55,21 @@ export function NFTCard(props: NftCardProps) {
   const isOwnedByMe = props?.isOwnedByMe || (props?.nft?.wallet?.address ?? props?.nft?.owner) === currentAddress;
   const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
 
+  const { setLike, unsetLike } = useSetLikeMutation(
+    nft?.id ?? props?.nft?.id,
+    LikeableType.Nft
+  );
+ 
   return (
     <div className='relative w-full h-full'>
       {props?.visible !== true && props?.visible !== false &&
        <div className='absolute top-4 right-4 z-50'>
-         <LikeCount onClick={() => null} />
+         <LikeCount
+           onClick={nftLikeData?.isLikedByUser ? unsetLike : setLike}
+           mutate={mutateNftLike}
+           count={nftLikeData?.likeCount}
+           isLiked={nftLikeData?.isLikedByUser}
+         />
        </div>
       }
       

@@ -1,4 +1,4 @@
-import { CustomTooltip } from 'components/elements/CustomTooltip';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { useIgnoredEventsQuery } from 'graphql/hooks/useIgnoredEventsQuery';
 import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
@@ -68,7 +68,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
             pending ?
               (
                 <CustomTooltip
-                  mode="hover"
+                  orientation='right'
                   tooltipComponent={
                     <div
                       className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
@@ -83,7 +83,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
               ):
               (
                 <CustomTooltip
-                  mode="hover"
+                  orientation='right'
                   tooltipComponent={
                     <div
                       className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
@@ -98,7 +98,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
               )
             :
             <CustomTooltip
-              mode="hover"
+              orientation='right'
               tooltipComponent={
                 <div
                   className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"

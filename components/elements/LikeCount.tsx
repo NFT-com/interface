@@ -2,31 +2,44 @@ import { tw } from 'utils/tw';
 
 import { Player } from '@lottiefiles/react-lottie-player';
 import Heart from 'public/heart.svg?svgr';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type LikeCountProps = {
-  count?: number;
-  isLiked?: boolean;
-  onClick: () => void;
+  count: number;
+  isLiked: boolean;
+  onClick: any;
+  mutate: () => void;
 }
 
-export default function LikeCount({ count = 0, isLiked = false, onClick }: LikeCountProps) {
+export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCountProps) {
   const [clicked, setClicked] = useState(false);
-  const [liked, setLiked] = useState(isLiked);
-  const [likeCount, setLikeCount] = useState(count);
+  const [liked, setLiked] = useState(null);
+  const [likeCount, setLikeCount] = useState(null);
+
+  useEffect(() => {
+    setLiked(isLiked);
+    setLikeCount(count);
+  }, [count, isLiked]);
+
+  function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   return (
     <div
-      onClick={() => {
+      onClick={async(e) => {
+        e.preventDefault();
         onClick && onClick();
         if(!liked) {
           setClicked(true);
           setLikeCount(likeCount + 1);
-          setTimeout(() => {
-            setLiked(true);
-            setClicked(false);
-          }, 700);
+          //await timeout is used here to allow the animation to fully animate before hiding it again
+          await timeout(700);
+          setLiked(true);
+          setClicked(false);
+          mutate();
         } else {
+          mutate();
           setLiked(false);
           setLikeCount(likeCount - 1);
         }

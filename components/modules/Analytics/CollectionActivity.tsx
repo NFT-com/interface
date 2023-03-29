@@ -61,7 +61,7 @@ export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
     }}, [defaultChainId, collectionData, txs, setTotalCount]);
 
   return (
-    <div className="overflow-x-auto my-8 font-grotesk rounded-md p-4">
+    <div className="overflow-x-auto my-8 font-noi-grotesk rounded-md p-4">
       {isNullOrEmpty(collectionData) ?
         <p className='text-[#6F6F6F] flex items-center justify-center border h-[200px] rounded-[10px]'>No activity available</p> :
         <table className="border-collapse table-auto w-full">

@@ -164,6 +164,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                 redirectTo={`/app/collection/${collection?.collectionAddress}/`}
                 contractAddress={collection?.collectionAddress}
                 contract={collection?.collectionAddress}
+                collectionId={collection?.id}
                 userName={collection.nfts[0].metadata.name}
                 description={collection.nfts[0].metadata.description}
                 countOfElements={collection.actualNumberOfNFTs}
@@ -209,10 +210,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                         number={i}
                         isLeaderBoard
                         id={item.id}
-                        index={item.index}
                         itemsVisible={item.itemsVisible}
-                        numberOfCollections={item.numberOfCollections}
-                        numberOfGenesisKeys={item.numberOfGenesisKeys}
                         photoURL={item.photoURL}
                         url={item.url}
                       />

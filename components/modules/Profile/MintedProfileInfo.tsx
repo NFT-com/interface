@@ -1,6 +1,9 @@
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import LikeCount from 'components/elements/LikeCount';
 import Toast from 'components/elements/Toast';
+import { LikeableType } from 'graphql/generated/types';
+import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
+import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -21,12 +24,18 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { user } = useUser();
   const { profileData } = useProfileQuery(profileURI);
+  const { profileData: profileLikeData, mutate: mutateProfileLikeData } = useProfileLikeQuery(profileURI);
   const {
     editMode,
     draftBio,
     setDraftBio,
     draftGkIconVisible,
   } = useContext(ProfileContext);
+
+  const { setLike, unsetLike } = useSetLikeMutation(
+    profileData?.profile?.id,
+    LikeableType.Profile
+  );
 
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
 
@@ -64,7 +73,12 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             </div>
             }
             {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-              <LikeCount count={10} isLiked={false} onClick={() => null} />
+              <LikeCount
+                count={profileLikeData?.profile?.likeCount}
+                isLiked={profileLikeData?.profile?.isLikedByUser}
+                onClick={profileLikeData?.profile?.isLikedByUser ? unsetLike : setLike}
+                mutate={mutateProfileLikeData}
+              />
             }
           </div>
         </div>
@@ -102,7 +116,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ? 'items-start' : 'items-end'
         )}
         >
-          <CustomTooltip2
+          <CustomTooltip
             orientation='top'
             useFullWidth
             tooltipComponent={
@@ -127,7 +141,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
                 handleBioChange(e);
               }}
             />
-          </CustomTooltip2>
+          </CustomTooltip>
           <div className="text-sm font-medium text-gray-900 dark:text-white w-full flex space-x-2">
             <span className='hidden group-focus-within:block text-[#E4BA18]'>Brief description for your profile.</span><p>{draftBio ? 300 - draftBio.length : '0' } / 300</p>
           </div>

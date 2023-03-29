@@ -1,7 +1,7 @@
 
 const { withSentryConfig } = require('@sentry/nextjs');
 const path = require('path');
-// const withImages = require('next-images');
+const v8 = require('v8');
 const withTM = require('next-transpile-modules')([
   'react-dnd',
   'dnd-core',
@@ -9,9 +9,18 @@ const withTM = require('next-transpile-modules')([
   '@react-dnd/asap',
   '@react-dnd/shallowequal',
 ]);
-
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
+});
+
+// Return current node stats
+const totalHeapSize = v8.getHeapStatistics().total_available_size;
+const totalHeapSizeInMB = (totalHeapSize / 1024 / 1024).toFixed(2);
+
+console.log('V8 Total Heap Size', totalHeapSizeInMB, 'MB');
+console.log('V8 Heap Size Stats: \n');
+Object.entries(v8.getHeapStatistics()).forEach(([key, value]) => {
+  console.log(`\t${key}: ${(value / 1024 / 1024).toFixed(2)} MB`);
 });
 
 const sentryWebpackPluginOptions = {
@@ -27,8 +36,11 @@ const nextConfig = {
     forceSwcTransforms: true,
     nextScriptWorkers: true,
   },
+  httpAgentOptions: {
+    keepAlive: true,
+  },
   sentry: { hideSourceMaps: true },
-  poweredByHeader: false,
+  poweredByHeader: false, // Stops broadcasting stack in header req/resp
   productionBrowserSourceMaps: false,
   async headers() {
     const securityHeaders = [
@@ -101,7 +113,23 @@ const nextConfig = {
           { key: 'Access-Control-Allow-Methods', value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT' },
           { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version' },
         ]
-      }
+      },
+      {
+        source: '/server-sitemap-index.xml',
+        headers: [
+          { key: 'Access-Control-Allow-Credentials', value: 'true' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT' },
+          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version' },
+        ]
+      },
+      { source: '/sitemaps/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Credentials', value: 'true' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT' },
+          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version' },
+        ] }
     ];
   },
   async redirects() {
@@ -158,6 +186,7 @@ const nextConfig = {
     return config;
   },
   images: {
+    unoptimized: true,
     domains: [
       'cdn.nft.com',
       'nft-llc.mypinata.cloud',

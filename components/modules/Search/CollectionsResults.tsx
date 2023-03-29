@@ -38,6 +38,7 @@ export const CollectionsResults = (props:
         return (<CollectionCard
           key={'collection'+i}
           redirectTo={`/app/collection/${collection.document?.contractAddr}/`}
+          collectionId={collection?.document?.id}
           contractAddress={collection.document?.collectionAddress}
           contract={collection.document?.collectionAddress}
           description={collection?.document.description}
@@ -55,7 +56,7 @@ export const CollectionsResults = (props:
   };
   return (
     <>
-      <div className="flex justify-between items-center font-grotesk font-black text-sm text-blog-text-reskin mb-7">
+      <div className="flex justify-between items-center font-noi-grotesk font-black text-sm text-blog-text-reskin mb-7">
         <span className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium"> {found + ' ' + 'Collection' + `${found === 1 ? '' : 's'}`} </span>
         <span
           className="cursor-pointer hover:font-semibold underline text-black text-[#000] text-lg font-medium"

@@ -208,11 +208,11 @@ export function ExternalListings(props: ExternalListingsProps) {
         )}>
           <div className="flex flex-col items-center bg-[#F8F8F8] rounded-[10px] w-full px-4 pb-4 pt-12 relative">
             <div className="bg-[#FCF1CD] h-8 w-full absolute top-0 rounded-t-[10px] flex items-center pl-6">
-              <span className='capital font-grotesk font-bold text-[#6F6F6F]'>
+              <span className='capital font-noi-grotesk font-bold text-[#6F6F6F]'>
                 Unlisted NFT
               </span>
             </div>
-            <span className='font-grotesk text-base items-center text-[#1F2127] mb-4'>You own this NFT</span>
+            <span className='font-noi-grotesk text-base items-center text-[#1F2127] mb-4'>You own this NFT</span>
             <Button
               size={ButtonSize.LARGE}
               stretch

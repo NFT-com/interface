@@ -1,16 +1,29 @@
 /** @type {import('next-sitemap').IConfig} */
-module.exports = {
-  siteUrl: 'https://www.nft.com',
-  generateRobotsTxt: true,
-  exclude: [
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  ],
+module.exports = {
+  siteUrl,
+  generateRobotsTxt: true,
+  generateIndexSitemap: true,
+  sitemapSize: 5000, // Will support 250M urls 50K files w/5K urls
+  changefreq: 'daily', // Default
+  exclude: ['/server-sitemap-index.xml'],
   robotsTxtOptions: {
+    additionalSitemaps: [
+      `${siteUrl}server-sitemap-index.xml`,
+    ],
     policies: [
       {
         userAgent: '*',
         disallow: ['/*'],
-        allow: ['/$', '/articles', '/articles/*', '/*.xml'],
+        allow: [
+          '/$',
+          '/app/discover',
+          '/app/discover/*',
+          '/articles',
+          '/articles/*',
+          '/*.xml',
+        ],
       }
     ]
   },

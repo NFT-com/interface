@@ -62,10 +62,10 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
       />
       <div className='bg-white'>
         <div className='px-2.5 minlg:pt-28 max-w-nftcom mx-auto'>
-          <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{dataFallback?.heroTitle}</h2>
+          <h2 className='font-bold font-noi-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{dataFallback?.heroTitle}</h2>
           {posts && <DynamicBlogSlider posts={dataFallback?.blogSlidesCollection.items} />}
 
-          <h2 className='font-bold font-grotesk minlg:text-4xl text-lg minlg:mb-6 mb-4 mt-10 '>{dataFallback?.listTitle}</h2>
+          <h2 className='font-bold font-noi-grotesk minlg:text-4xl text-lg minlg:mb-6 mb-4 mt-10 '>{dataFallback?.listTitle}</h2>
           <div className="grid minmd:gap-x-4 gap-x-3 gap-y-7 minlg:grid-cols-3 grid-cols-2 minxl:pb-24 pb-12 ">
             {posts && posts.map((post) => (
               <RelatedPostCard key={post.sys.id} post={post} />

@@ -59,7 +59,7 @@ export default function Post({ post, preview }: PostProps) {
           <Link href="/articles">
             <div className='flex content-center items-center hover:cursor-pointer mb-4 minmd:mb-0'>
               <CaretLeft className='mr-1 text-black' />
-              <p className='font-grotesk text-black text-sm minmd:text-base'>Back to Blog</p>
+              <p className='font-noi-grotesk text-black text-sm minmd:text-base'>Back to Blog</p>
             </div>
           </Link>
 
