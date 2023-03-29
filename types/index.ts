@@ -3,6 +3,7 @@ export * from './balanceData';
 export * from './blogs';
 export * from './marketplaces';
 export * from './seaport';
+export * from './search';
 export * from './X2Y2';
 
 export type TickerStat = {
@@ -123,6 +124,7 @@ export type SitemapField = {
 export type SitemapQueryVariables = {
   chainId: string
   contract: string,
+  name: string,
   document: string,
   variables: Record<string, any>,
 }

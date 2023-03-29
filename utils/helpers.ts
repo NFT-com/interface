@@ -1,13 +1,17 @@
-import { Maybe } from 'graphql/generated/types';
+import { Collection, Maybe } from 'graphql/generated/types';
 
 import { Doppler, getEnv } from './env';
 
+// TODO: split up ethers, ipfs, etc. utils into dynamically imported crypto util file
 import { getAddress } from '@ethersproject/address';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
 import { base32cid, cid, multihash } from 'is-ipfs';
 import { atom } from 'jotai';
+import omit from 'lodash/omit';
 import moment, { Moment } from 'moment';
+import slugify from 'slugify';
+import { PartialDeep } from 'type-fest';
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -91,8 +95,8 @@ export function prettify(num: number | string, dec?: number) {
   return formatted;
 }
 export const convertValue = (value: number, first: number, second: number) => {
-  const start = value.toString().slice(0,first);
-  const end = value.toString().slice(first,second);
+  const start = value.toString().slice(0, first);
+  const end = value.toString().slice(first, second);
   return {
     start,
     end
@@ -104,7 +108,7 @@ export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == 
 
 export const isNull = (val: string | any[] | null | undefined) => val == null;
 
-export const isObjEmpty = (obj: Record<string, unknown> | null | undefined) => obj== null || Object.keys(obj).length === 0;
+export const isObjEmpty = (obj: Record<string, unknown> | null | undefined) => obj == null || Object.keys(obj).length === 0;
 
 export const filterNulls = <T>(items: Maybe<T>[]): T[] => items.filter(item => item != null);
 
@@ -180,16 +184,16 @@ export function getEtherscanLink(
   const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`;
 
   switch (type) {
-  case 'transaction': {
-    return `${prefix}/tx/${data}`;
-  }
-  case 'token': {
-    return `${prefix}/token/${data}`;
-  }
-  case 'address':
-  default: {
-    return `${prefix}/address/${data}`;
-  }
+    case 'transaction': {
+      return `${prefix}/tx/${data}`;
+    }
+    case 'token': {
+      return `${prefix}/token/${data}`;
+    }
+    case 'address':
+    default: {
+      return `${prefix}/address/${data}`;
+    }
   }
 }
 
@@ -203,7 +207,7 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boo
   if (index === 'collections') {
     if (screenWidth >= 1200) {
       perPage = sideNavOpen ? 9 : 12;
-    } else if (screenWidth >= 900 ) {
+    } else if (screenWidth >= 900) {
       perPage = sideNavOpen ? 4 : 6;
     } else if (screenWidth >= 600) {
       perPage = 4;
@@ -213,7 +217,7 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boo
   } else if (index === 'discover') {
     if (screenWidth >= 1200) {
       perPage = sideNavOpen ? 9 : 8;
-    } else if (screenWidth >= 900 ) {
+    } else if (screenWidth >= 900) {
       perPage = sideNavOpen ? 6 : 9;
     } else if (screenWidth >= 600) {
       perPage = 4;
@@ -234,7 +238,7 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boo
   } else {
     if (screenWidth >= 1200) {
       perPage = sideNavOpen ? 9 : 12;
-    } else if (screenWidth >= 900 ) {
+    } else if (screenWidth >= 900) {
       perPage = sideNavOpen ? 6 : 8;
     } else if (screenWidth >= 600) {
       perPage = 6;
@@ -264,19 +268,19 @@ export function fetcher(url: string): Promise<any> {
 }
 
 export function getDateFromTimeFrame(timeFrame: string): Moment {
-  if(timeFrame === '1D') {
+  if (timeFrame === '1D') {
     return moment().subtract(1, 'd');
   }
-  if(timeFrame === '7D') {
+  if (timeFrame === '7D') {
     return moment().subtract(7, 'd');
   }
-  if(timeFrame === '1M') {
+  if (timeFrame === '1M') {
     return moment().subtract(1, 'M');
   }
-  if(timeFrame === '3M') {
+  if (timeFrame === '3M') {
     return moment().subtract(3, 'M');
   }
-  if(timeFrame === '1Y') {
+  if (timeFrame === '1Y') {
     return moment().subtract(1, 'year');
   }
 }
@@ -294,28 +298,41 @@ export const getBaseUrl = (override = '') => {
 };
 
 export const sliceString = (description: string, maxCount: number, isStringCut: boolean) => {
-  if(!description) return;
+  if (!description) return;
   let newDescription;
-  if(description?.length > maxCount){
+  if (description?.length > maxCount) {
     const newString = description?.slice(0, !isStringCut ? maxCount : description?.length);
     newDescription = !isStringCut ? `${newString}...` : newString;
-  }else {
+  } else {
     newDescription = description;
   }
   return newDescription;
 };
 
 export const checkImg = (images) => {
-  if(!images) return;
+  if (!images) return;
   const convertedImages = images.map(image => {
-    if(image){
+    if (image) {
       return processIPFSURL(image);
     }
   }).filter(Boolean);
   return convertedImages[0];
 };
 
-export const genereteRandomPreloader = () => {
+export const generateRandomPreloader = () => {
   const index = Math.floor(Math.random() * (4));
   return index;
 };
+
+/**
+ * Determines if the given Collection is an official collection and returns the url slug of the collection name or contract.
+ * @param {PartialDeep<Collection>} collection - The Collection item to check.
+ * @returns {string} - The encoded name of the collection if it is official, otherwise the contract address of the item.
+ */
+export const isOfficialCollection = (collection: PartialDeep<Collection>) => collection?.isOfficial
+  ? `official/${slugify(collection?.name, {
+    lower: true,
+    remove: /[*+~.()'"!:@]/g,
+    trim: true
+  })}`
+  : collection.contract;
