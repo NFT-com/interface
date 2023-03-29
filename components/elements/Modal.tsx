@@ -22,7 +22,7 @@ export interface ModalProps {
   dark?: boolean;
   longModal?: boolean;
   noCancelBtn?: boolean;
-  showCLoseBtn?: boolean;
+  showCloseBtn?: boolean;
   fullModal?: boolean;
   bgColor?: string;
   transparentOverlay?: boolean;
@@ -109,7 +109,7 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
 
                   }
                   {
-                    getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && props.showCLoseBtn
+                    getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && props.showCloseBtn
                       ? (
                         <div className='pt-4 pr-4 absolute right-0 top-0'>
                           <button
