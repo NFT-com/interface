@@ -2,14 +2,16 @@ import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
-import { ActivityStatus, Maybe } from 'graphql/generated/types';
+import { ActivityStatus, ActivityType, Maybe } from 'graphql/generated/types';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useSaveUserActionForBuyNFTsMutation } from 'graphql/hooks/useSaveUserActionForBuyNFTs';
+import { useTxNotificationsQuery } from 'graphql/hooks/useTxNotificationsQuery';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useUser } from 'hooks/state/useUser';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -64,7 +66,13 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<PurchaseErrorResponse['error']>>(null);
   const { saveUserActionForBuyNFTs } = useSaveUserActionForBuyNFTsMutation();
-
+  const defaultChainId = useDefaultChainId();
+  const { mutate: mutatePurchaseActivities } = useTxNotificationsQuery(
+    currentAddress,
+    defaultChainId,
+    ActivityType.Purchase
+  );
+  
   const { user } = useUser();
   const { profileData } = useProfileQuery(user.currentProfileUrl);
 
@@ -113,7 +121,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
           setLoading(false);
           setError(null);
           clearBuyNow();
-          props.onClose();
+          mutatePurchaseActivities();
         }}
         userAddress={currentAddress}
         type={SuccessType.Purchase}
@@ -228,7 +236,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         </div>
       );
     }
-  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, nftsToBuy.length, props, success, toBuy]);
+  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, mutatePurchaseActivities, nftsToBuy.length, success, toBuy]);
 
   return (
     <Modal
