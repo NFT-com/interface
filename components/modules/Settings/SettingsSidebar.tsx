@@ -1,4 +1,3 @@
-import { CustomTooltip } from 'components/elements/CustomTooltip';
 import CustomTooltip2 from 'components/elements/CustomTooltip2';
 
 import { Info } from 'phosphor-react';

@@ -84,7 +84,7 @@ export default function AssetTableRow({
           orientation='right'
           tooltipComponent={
             <div
-            className="p-3 w-[200px] flex flex-col space-y-3 bg-black"
+              className="p-3 w-[200px] flex flex-col space-y-3 bg-black"
             >
               {profiles.map((profile, i) => (
                 <div key={i} className='flex items-center'>

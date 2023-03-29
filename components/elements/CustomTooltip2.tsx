@@ -1,9 +1,8 @@
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { PropsWithChildren, useState } from 'react';
 
-export  type ToolTipProps = {
+export type ToolTipProps = {
   orientation: 'top'| 'left'| 'right' | 'bottom' | 'custom';
   tooltipComponent: React.ReactNode;
   hidden?: boolean;
@@ -114,12 +113,14 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
       )}
       onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
     >
-      <div
-        onClick={() => props.tooltipClick()}
-        className={classContainer} style={{ opacity: opacity }}>
-        <div className={pointerClasses} />
-        {props.tooltipComponent}
-      </div>
+      {props.tooltipComponent
+        ? <div
+          onClick={() => props.tooltipClick()}
+          className={classContainer} style={{ opacity: opacity }}>
+          <div className={pointerClasses} />
+          {props.tooltipComponent}
+        </div>
+        : null}
       {props.children}
     </div>
   );
