@@ -84,7 +84,7 @@ export function Collection(props: CollectionProps) {
       setCollectionNfts([]);
       setCurrentPage(1);
       setFound(0);
-      setCollectionPageAppliedFilters('','', true);
+      setCollectionPageAppliedFilters('','', false);
     }
 
     if (prevId_nftName !== id_nftName){
