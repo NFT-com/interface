@@ -6,6 +6,7 @@ import { tw } from 'utils/tw';
 
 import OnboardingModalItem from './OnboardingModalItem';
 
+import { X } from 'phosphor-react';
 import { CaretDown, CaretUp } from 'phosphor-react';
 // TODO: optimize image down from 2MB
 import NftGoldLogo from 'public/nft_gold_logo.svg?svgr';
@@ -13,9 +14,10 @@ import { useEffect, useMemo, useState } from 'react';
 
 export interface OnboardingModalProps {
   profileURI: string;
+  onClose: () => void;
 }
 
-export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
+export default function OnboardingModal({ profileURI, onClose } : OnboardingModalProps) {
   const { profileData } = useProfileQuery(
     profileURI
   );
@@ -98,6 +100,9 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
 
                     {profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5}/<span className='text-[#6A6A6A]'>{totalPoints || '-'}</span>
                   </div>}
+                  <X
+                    onClick={() => onClose()}
+                    className='hover:cursor-pointer' size={32} color="black" weight="bold" />
                 </div>
                 <p className='mt-3 font-medium w-11/12'>Complete these steps to set up your <span className='bg-gradient-to-r bg-clip-text text-transparent from-[#FAC213] to-[#FF9B37]'>NFT Profile</span></p>
 

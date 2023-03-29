@@ -28,7 +28,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     client.setHeader('teamKey', teamKey);
 
-    sitemapUrls.push(`${sitemapHostUrl}/collection-sitemap.xml`);
+    sitemapUrls.push(
+      `${sitemapHostUrl}/collection-sitemap.xml`,
+      `${sitemapHostUrl}/article-sitemap.xml`
+    );
     const officialCollections = await client.request(
       gqlQueries.officialCollections,
       {
