@@ -27,29 +27,31 @@ export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCount
   function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-
+  const handleClick = async () => {
+    if (!user.currentProfileUrl && !currentProfileId) {
+      return;
+    }else {
+      if(!liked) {
+        setClicked(true);
+        setLikeCount(likeCount + 1);
+        //await timeout is used here to allow the animation to fully animate before hiding it again
+        await timeout(700);
+        setLiked(true);
+        setClicked(false);
+        mutate();
+      } else {
+        mutate();
+        setLiked(false);
+        setLikeCount(likeCount - 1);
+      }
+    }
+  }
   return (
     <div
       onClick={async(e) => {
         e.preventDefault();
         onClick && onClick();
-        if (!user.currentProfileUrl && !currentProfileId) {
-          return;
-        }else {
-          if(!liked) {
-            setClicked(true);
-            setLikeCount(likeCount + 1);
-            //await timeout is used here to allow the animation to fully animate before hiding it again
-            await timeout(700);
-            setLiked(true);
-            setClicked(false);
-            mutate();
-          } else {
-            mutate();
-            setLiked(false);
-            setLikeCount(likeCount - 1);
-          }
-        }
+        await handleClick();
       }
       }
       className={tw(
