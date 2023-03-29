@@ -115,8 +115,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
           setLoading(false);
           setError(null);
           clearBuyNow();
-          props.onClose();
           mutatePurchaseActivities();
+          props.onClose();
         }}
         userAddress={currentAddress}
         type={SuccessType.Purchase}
