@@ -118,7 +118,7 @@ export type SitemapField = {
   loc: string,
   lastmod: string,
   priority: 0.7,
-  changefreq: 'daily'
+  changefreq: 'monthly' | 'daily' | 'hourly'
 }
 
 export type SitemapQueryVariables = {

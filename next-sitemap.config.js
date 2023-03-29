@@ -20,7 +20,6 @@ module.exports = {
           '/$',
           '/app/discover',
           '/app/discover/*',
-          '/app/collection/*',
           '/articles',
           '/articles/*',
           '/*.xml',

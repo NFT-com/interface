@@ -7,10 +7,9 @@ async function fetchGraphQL(query, preview = false) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${
-          preview
-            ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
-            : process.env.CONTENTFUL_ACCESS_TOKEN
+        Authorization: `Bearer ${preview
+          ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
+          : process.env.CONTENTFUL_ACCESS_TOKEN
         }`,
       },
       body: JSON.stringify({ query }),
@@ -48,6 +47,20 @@ export async function getAllPostsWithSlug() {
       blogPostCollection(where: { slug_exists: true }, order: publishDate_DESC) {
         items {
           ${POST_LIST_GRAPHQL_FIELDS}
+        }
+      }
+    }`
+  );
+  return extractPostEntries(entries);
+}
+
+export async function getAllPostSlugs() {
+  const entries = await fetchGraphQL(
+    `query {
+      blogPostCollection(where: { slug_exists: true }, order: publishDate_DESC) {
+        items {
+          slug
+          publishDate
         }
       }
     }`
