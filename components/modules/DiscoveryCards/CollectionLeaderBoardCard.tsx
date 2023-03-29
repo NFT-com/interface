@@ -164,8 +164,8 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
                 <VolumeIcon/>
               </div>
               <div>
-                <div className="text-lg text-[#000000] font-[600] -mb-1">{statsData.volume.toFixed(2).replaceAll('.', ',')}</div>
-                <div className="text-base leading-[18px] text-[#747474] font-[400]">{checkMinPrice(statsData.volume)}</div>
+                <div className="text-lg text-[#000000] font-[600] -mb-1">{statsData?.volume?.toFixed(2).replaceAll('.', ',')}</div>
+                <div className="text-base leading-[18px] text-[#747474] font-[400]">{checkMinPrice(statsData?.volume)}</div>
               </div>
             </div>
           </div>
@@ -179,13 +179,13 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
             <span className='text-[#B2B2B2] leading-6 font-[600]'>FLOOR PRICE</span>
             <div className="flex flex-row items-center">
               <div className="pr-3">
-                {statsData.floor_price && <VolumeIcon/>}
+                {statsData?.floor_price && <VolumeIcon/>}
               </div>
               <div>
-                <div className="text-lg text-[#000000] font-[600] -mb-1">{checkMinPrice(statsData.floor_price)}</div>
+                <div className="text-lg text-[#000000] font-[600] -mb-1">{checkMinPrice(statsData?.floor_price)}</div>
                 <div className="text-base leading-[18px] text-[#747474] font-[400]">
                   {
-                    statsData.floor_price ? convertCurrency(statsData.floor_price) : ''
+                    statsData?.floor_price ? convertCurrency(statsData?.floor_price) : ''
                   }
                 </div>
               </div>
@@ -193,11 +193,11 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
           </div>
           <div className='minmd:w-[auto] w-[50%] flex flex-col justify-between'>
             <div className='text-[#B2B2B2] leading-6 font-[600]'>ITEMS</div>
-            <div className="text-[#B2B2B2] text-lg font-[500]">{statsData.minted}</div>
+            <div className="text-[#B2B2B2] text-lg font-[500]">{statsData?.minted}</div>
           </div>
           <div className='minmd:w-[auto] w-[50%] flex flex-col items-end justify-between'>
             <div className='text-[#B2B2B2] leading-6 font-[600]'>SALES</div>
-            <div className="text-[#000000] text-lg font-[500]">{checkSalesValue(statsData.sales)}</div>
+            <div className="text-[#000000] text-lg font-[500]">{checkSalesValue(statsData?.sales)}</div>
           </div>
         </div>
       </a>
@@ -229,11 +229,11 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
             <VolumeIcon/>
           </div>
           <div>
-            <div className="text-lg text-[#000000] font-[600] -mb-1">{checkMinPrice(statsData.volume)}</div>
+            <div className="text-lg text-[#000000] font-[600] -mb-1">{checkMinPrice(statsData?.volume)}</div>
             <div>
 
             </div>
-            <div className="text-base leading-[18px] text-[#747474] font-[400]">{convertCurrency(statsData.volume)}</div>
+            <div className="text-base leading-[18px] text-[#747474] font-[400]">{convertCurrency(statsData?.volume)}</div>
           </div>
         </div>
         <div className={`${Math.sign(statsData?.change) === -1 ? 'text-[#ff5454]' : 'text-[#26AA73]' } text-lg font-[500] items-center text-center justify-center w-[15%]  pl-1`}>
@@ -241,20 +241,20 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
         </div>
         <div className="flex flex-row items-center justify-center  w-[15%]  pl-1">
           <div className="pr-3">
-            {statsData.floor_price && <VolumeIcon/>}
+            {statsData?.floor_price && <VolumeIcon/>}
           </div>
           <div>
-            <div className="text-lg text-[#000000] font-[600] -mb-1">{checkMinPrice(statsData.floor_price)}</div>
+            <div className="text-lg text-[#000000] font-[600] -mb-1">{checkMinPrice(statsData?.floor_price)}</div>
             <div className="text-base leading-[18px] text-[#747474] font-[400]">
               {
-                statsData.floor_price ? convertCurrency(statsData.floor_price) : ''
+                statsData?.floor_price ? convertCurrency(statsData?.floor_price) : ''
               }
 
             </div>
           </div>
         </div>
-        <div className="text-[#B2B2B2] text-lg font-[500] flex items-center justify-center  w-[10%] pl-1">{statsData.minted}</div>
-        <div className="text-[#000000] text-lg font-[500] flex items-center justify-center w-[10%] pl-1">{checkSalesValue(statsData.sales)}</div>
+        <div className="text-[#B2B2B2] text-lg font-[500] flex items-center justify-center  w-[10%] pl-1">{statsData?.minted}</div>
+        <div className="text-[#000000] text-lg font-[500] flex items-center justify-center w-[10%] pl-1">{checkSalesValue(statsData?.sales)}</div>
       </a>
     </>
   );
