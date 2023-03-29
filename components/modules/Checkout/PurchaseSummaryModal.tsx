@@ -1,5 +1,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
+import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { ActivityStatus, Maybe } from 'graphql/generated/types';
@@ -64,7 +65,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<PurchaseErrorResponse['error']>>(null);
   const { saveUserActionForBuyNFTs } = useSaveUserActionForBuyNFTsMutation();
-
+  const { mutatePurchaseActivities } = useContext(NotificationContext);
+  
   const { user } = useUser();
   const { profileData } = useProfileQuery(user.currentProfileUrl);
 
@@ -113,6 +115,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
           setLoading(false);
           setError(null);
           clearBuyNow();
+          mutatePurchaseActivities();
           props.onClose();
         }}
         userAddress={currentAddress}
@@ -228,7 +231,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         </div>
       );
     }
-  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, nftsToBuy.length, props, success, toBuy]);
+  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, mutatePurchaseActivities, nftsToBuy.length, props, success, toBuy]);
 
   return (
     <Modal

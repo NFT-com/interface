@@ -30,5 +30,6 @@ query Profile($url: String!, $chainId: String!) {
       userId
       action
     }
+    hideCustomization
   }
 }

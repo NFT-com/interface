@@ -8,6 +8,7 @@ import { ProfileViewType } from 'graphql/generated/types';
 import { useAssociatedCollectionForProfile } from 'graphql/hooks/useAssociatedCollectionForProfileQuery';
 import { useIsProfileCustomized } from 'graphql/hooks/useIsProfileCustomized';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -29,7 +30,7 @@ import { BigNumber } from 'ethers';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
 import CameraIconEdit from 'public/camera_icon.svg?svgr';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import useSWR from 'swr';
@@ -57,11 +58,14 @@ export function MintedProfile(props: MintedProfileProps) {
   } = useContext(ProfileContext);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
-  const { profileData } = useProfileQuery(profileURI);
+  const { profileData, mutate: mutateProfile } = useProfileQuery(profileURI);
+  const { updateProfile } = useUpdateProfileMutation();
   const { user } = useUser();
   const { data: profileCustomizationStatus } = useIsProfileCustomized(user?.currentProfileUrl, defaultChainId.toString());
   const { nftResolver } = useAllContracts();
   const isOwnerAndSignedIn = useIsOwnerAndSignedIn(profileURI);
+
+  const [hideModal, setHideModal] = useState(false);
 
   const fetchAssociatedContract = useCallback(async () => {
     if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
@@ -118,6 +122,15 @@ export function MintedProfile(props: MintedProfileProps) {
       <Collection contract={associatedContract?.chainAddr} />
     </div>;
   }
+
+  const onHideCustomization = () => {
+    updateProfile({
+      id: profileData?.profile?.id,
+      hideCustomization: true
+    });
+    mutateProfile();
+    setHideModal(true);
+  };
 
   return (
     <>
@@ -358,8 +371,8 @@ export function MintedProfile(props: MintedProfileProps) {
           </div>
         </div>
       </ProfileScrollContextProvider>
-      {addressOwner === currentAddress && user.currentProfileUrl === profileURI && !editMode &&
-        <OnboardingModal profileURI={profileURI} />
+      {addressOwner === currentAddress && user.currentProfileUrl === profileURI && !editMode && !profileData?.profile?.hideCustomization && !hideModal &&
+        <OnboardingModal profileURI={profileURI} onClose={onHideCustomization} />
       }
     </>
   );
