@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import Loader from 'components/elements/Loader';
 import { Collection } from 'components/modules/Collection/Collection';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
@@ -168,7 +168,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       <div className='absolute inset-0 bg-black opacity-50'></div>
                       <div className='w-10 h-10 absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
-                        <CustomTooltip2
+                        <CustomTooltip
                           orientation='top'
                           tooltipComponent={
                             <div
@@ -179,7 +179,7 @@ export function MintedProfile(props: MintedProfileProps) {
                           }
                         >
                           <CameraIconEdit />
-                        </CustomTooltip2>
+                        </CustomTooltip>
                       </div>
                     </div>}
                   </section>
@@ -247,7 +247,7 @@ export function MintedProfile(props: MintedProfileProps) {
                       >
                         <div className='bg-black opacity-50 absolute top-0 bottom-0 right-0 left-0 rounded-full'></div>
                         <div className='w-[28px] h-[28px] absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
-                          <CustomTooltip2
+                          <CustomTooltip
                             orientation='top'
                             tooltipComponent={
                               <div
@@ -258,7 +258,7 @@ export function MintedProfile(props: MintedProfileProps) {
                             }
                           >
                             <CameraIconEdit />
-                          </CustomTooltip2>
+                          </CustomTooltip>
                         </div>
                       </div>}
 

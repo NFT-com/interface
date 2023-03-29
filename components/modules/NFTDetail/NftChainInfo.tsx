@@ -1,5 +1,5 @@
 import Copy from 'components/elements/Copy';
-import { CustomTooltip } from 'components/elements/CustomTooltip';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import { Nft } from 'graphql/generated/types';
 import { shortenAddress } from 'utils/helpers';
 
@@ -41,8 +41,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
               (
                 <p className='flex items-center relative'>
                   <CustomTooltip
-                    rightPostion={-600}
-                    mode="hover"
+                    orientation='right'
                     tooltipComponent={
                       <div
                         className="rounded-xl p-3 bg-modal-bg-dk text-white w-full"
