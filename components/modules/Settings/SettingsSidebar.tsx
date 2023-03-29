@@ -1,4 +1,5 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 
 import { Info } from 'phosphor-react';
 import { Link as ScrollLink } from 'react-scroll';
@@ -20,19 +21,18 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
           <>
             <h3 className='mb-3 text-xs font-extrabold font-noi-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
               PROFILE SETTINGS
-              <CustomTooltip
-                rightPostion={0}
-                mode="hover"
+              <CustomTooltip2
+                orientation='right'
                 tooltipComponent={
                   <div
-                    className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
+                    className="rounded-xl p-3 w-[200px]"
                   >
                     <p className='mb-3'>Profile Settings</p>
                     <p>These settings control the active profile you are signed-in with.</p>
                   </div>
                 }>
                 <Info className='ml-1' size={14} />
-              </CustomTooltip>
+              </CustomTooltip2>
             </h3>
             <ScrollLink activeClass='font-bold' to='addresses' spy={true} smooth={true} duration={500} offset={-100} >
               <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-noi-grotesk'>Associate Addresses</p>
@@ -52,19 +52,18 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
 
       <h3 className='mb-3 mt-12 text-xs font-extrabold font-noi-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
         ADDRESS SETTINGS
-        <CustomTooltip
-          mode="hover"
-          rightPostion={0}
+        <CustomTooltip2
+          orientation='right'
           tooltipComponent={
             <div
-              className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
+              className="rounded-xl p-3 w-[200px]"
             >
               <p className='mb-3'>Address Settings</p>
               <p>These settings relate to your address and the NFTs it contains across all your NFT Profiles.</p>
             </div>
           }>
           <Info className='ml-1' size={14} />
-        </CustomTooltip>
+        </CustomTooltip2>
       </h3>
 
       {isOwner

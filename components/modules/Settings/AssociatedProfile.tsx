@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import { CustomTooltip } from 'components/elements/CustomTooltip';
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
@@ -122,11 +122,11 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       <div className='p-1 flex justify-between items-start mb-3'>
         <div className='flex items-start'>
           {pending ?
-            <CustomTooltip
-              mode="hover"
+            <CustomTooltip2
+              orientation='right'
               tooltipComponent={
                 <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                  className="p-3 max-w-xs"
                 >
                   <p className='text-[#F2890E] mb-2'>Pending</p>
                   <p>This NFT Profile association is waiting your approval. Click on its name to approve or reject.</p>
@@ -134,7 +134,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
               }
             >
               <Clock data-cy="PendingProfile" size={25} className='mr-3' color='orange' weight='fill' />
-            </CustomTooltip>
+            </CustomTooltip2>
             :
             isRemoved
               ?
@@ -142,11 +142,11 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                 isRemoved && isCollection ?
                   <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
                   :
-                  <CustomTooltip
-                    mode="hover"
+                  <CustomTooltip2
+                    orientation='right'
                     tooltipComponent={
                       <div
-                        className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                        className="p-3 max-w-xs"
                       >
                         <p className='text-[#D40909] mb-2'>Disassociated</p>
                         <p>This NFT Profile has been disassociated from your address. It is safe to remove it from your account.</p>
@@ -154,15 +154,15 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                     }
                   >
                     <XCircle data-cy="RemovedProfile" size={25} className='mr-3' color='#D40909' weight='fill' />
-                  </CustomTooltip>
+                  </CustomTooltip2>
               )
               :
               (
-                <CustomTooltip
-                  mode="hover"
+                <CustomTooltip2
+                  orientation='right'
                   tooltipComponent={
                     <div
-                      className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                      className="p-3 max-w-xs"
                     >
                       <p className='text-[#00AC30] mb-2'>Associated</p>
                       <p>You have associated your address with this NFT Profile.</p>
@@ -170,7 +170,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                   }
                 >
                   <CheckCircle data-cy="ApprovedProfile" size={25} className='mr-3 rounded-full' color='green' weight="fill" />
-                </CustomTooltip>
+                </CustomTooltip2>
               )
           }
           <div className='w-3/4'>

@@ -92,7 +92,6 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
           {
             (props?.listings?.length || props?.nft?.listings?.items?.length) && props?.bestListing ?
               <CustomTooltip2
-                noFullHeight={true}
                 orientation='top'
                 tooltipComponent={
                   <div
@@ -141,7 +140,6 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
                 <span className='text-[#6A6A6A] font-medium'> {checkEndDate()}</span>
               </p>
               <CustomTooltip2
-                noFullHeight={true}
                 orientation='top'
                 tooltipComponent={
                   <div

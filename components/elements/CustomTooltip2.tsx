@@ -3,15 +3,18 @@ import { tw } from 'utils/tw';
 
 import { PropsWithChildren, useState } from 'react';
 
-type ToolTipProps = {
+export  type ToolTipProps = {
   orientation: 'top'| 'left'| 'right' | 'bottom' | 'custom';
   tooltipComponent: React.ReactNode;
   hidden?: boolean;
-  noFullHeight?: boolean;
+  /** Click event enabled in tooltip component */
   tooltipClick?: () => void;
+  /** When w-full needs top be applied to the tooltipComponent */
+  useFullWidth?: boolean;
+  /** Use a number as percentage for left position, orientation prop must have 'custom' value */
   customLeftPosition?: string;
+  /** Use a entire tailwind class of your preference for left position, orientation prop must have 'custom' value */
   customFullLeftPosition?: string;
-  width?: 'full' | 'max';
 };
 
 function Tooltip(props : PropsWithChildren<ToolTipProps>) {
@@ -44,10 +47,10 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
 
     switch (orientation) {
     case orientations.right:
-      classnames = 'top-0 left-full ml-4';
+      classnames = 'top-[50%] translate-y-[-50%] left-full ml-4';
       break;
     case orientations.left:
-      classnames = 'top-0 right-full mr-4';
+      classnames = 'top-[50%] translate-y-[-50%] right-full mr-4';
       break;
     case orientations.top:
       classnames = 'bottom-full left-[50%] translate-x-[-50%] -translate-y-2';
@@ -106,9 +109,8 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
   return (
     <div
       className={tw(
-        `relative flex items-center  z-50 ${props?.noFullHeight ? '' : 'h-full'} ${props.tooltipClick && 'cursor-pointer'}`,
-        getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && !props?.width ? 'w-max' : 'w-full',
-        props?.width === 'max' ? 'w-max' : 'w-full'
+        `relative flex items-center z-50 h-full ${props.tooltipClick ? 'cursor-pointer' : ''}`,
+        props.useFullWidth ? 'w-full' : 'w-max'
       )}
       onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
     >
