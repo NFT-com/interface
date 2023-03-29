@@ -29,8 +29,7 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
                     <p className='mb-3'>Profile Settings</p>
                     <p>These settings control the active profile you are signed-in with.</p>
                   </div>
-                }
-              >
+                }>
                 <Info className='ml-1' size={14} />
               </CustomTooltip>
             </h3>

@@ -6,10 +6,6 @@ module.exports = {
     name: "@storybook/nextjs",
     options: {}
   },
-  env: (config) => ({
-    ...config,
-    NEXT_PUBLIC_SOCIAL_ENABLED: false,
-  }),
   docs: {
     autodocs: true
   },
