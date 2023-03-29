@@ -2,7 +2,7 @@ import { OfficialCollectionNfTsOutput } from 'graphql/generated/types';
 import { SitemapQueryVariables } from 'types';
 import chunkArray from 'utils/chunkArray';
 
-import { client, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
+import { client, encodeCollectionNameURI, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 /**
@@ -39,8 +39,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }).then(data => data.officialCollections);
 
-    officialCollections && officialCollections.items.forEach(officialCollection => {
-      const { chainId, contract } = officialCollection;
+    officialCollections && officialCollections.items.forEach((officialCollection, index) => {
+      const { chainId, contract, name } = officialCollection;
       const collectionNftInput = {
         input: {
           chainId,
@@ -48,12 +48,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           offsetPageInput: { page: 1 }
         }
       };
-
-      sitemapUrls.push(`${sitemapHostUrl}/${contract}/chain/${chainId}/page/${1}.xml`);
+      if (index > 40 && index < 60) {
+        console.log(`${sitemapHostUrl}/collection/official/${encodeCollectionNameURI(name)}/chain/${chainId}/page/${1}.xml`);
+      }
+      sitemapUrls.push(`${sitemapHostUrl}/collection/official/${encodeCollectionNameURI(name) || 'hi;alksdfj'}/chain/${chainId}/page/${1}.xml`);
 
       collectionNftFirstPagePromises.push({
         chainId,
         contract,
+        name,
         document: gqlQueries.collectionNfts,
         variables: collectionNftInput
       });
@@ -66,23 +69,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ...pageResult?.data.officialCollectionNFTs,
           chainId: batchedRequest[index].chainId,
           contract: batchedRequest[index].contract,
+          name: batchedRequest[index].name,
         }))
       )
     ));
 
     results && results.flat(2).forEach((result) => {
       if (result) {
-        const { contract, chainId, pageCount } = result;
+        const { chainId, name, pageCount } = result;
         if (pageCount > 1) {
           for (let pgIndex = 0; pgIndex < pageCount - 1; pgIndex += 1) {
-            sitemapUrls.push(`${sitemapHostUrl}/${contract}/chain/${chainId}/page/${pgIndex + 2}.xml`);
+            sitemapUrls.push(`${sitemapHostUrl}/collection/official/${encodeCollectionNameURI(name)}/chain/${chainId}/page/${pgIndex + 2}.xml`);
           }
         }
       }
     });
 
-    // Cache API response for 23hrs 59min
-    res.setHeader('Cache-Control', 's-maxage=86340, stale-while-revalidate');
+    // Cache API response for 24hrs
+    res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
 
     return res.status(200).json({ sitemapUrls });
   } catch (err) {

@@ -1,5 +1,6 @@
 import { gql, GraphQLClient } from 'graphql-request';
 
+import slugify from 'slugify';
 export { siteUrl } from 'next-sitemap.config';
 import { DeploymentEnv, isNotEnv } from 'utils/isEnv';
 
@@ -51,6 +52,15 @@ export const gqlQueries = {
       }
     }
   `,
+  collectionByName: gql`
+    query Collection($input: CollectionInput!) {
+      collection(input: $input) {
+        collection {
+          contract
+        }
+      }
+    }
+  `,
   collectionNfts: gql`
     query OfficialCollectionNFTs($input: OfficialCollectionNFTsInput!) {
       officialCollectionNFTs(input: $input) {
@@ -63,3 +73,16 @@ export const gqlQueries = {
     }
   `
 };
+
+/**
+ * Encodes the given collection name to be used in a URI.
+ * @param {string} name - The name of the collection to encode.
+ * @returns The encoded collection name.
+ */
+export const encodeCollectionNameURI = (name: string) => slugify(name, {
+  lower: true,
+  remove: /[*+~.()'"!:@]/g,
+  trim: true
+});
+
+export const decodeCollectionNameURI = (name: string) => name.replace(/-/g, ' ');
