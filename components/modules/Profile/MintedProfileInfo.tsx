@@ -1,4 +1,4 @@
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import LikeCount from 'components/elements/LikeCount';
 import Toast from 'components/elements/Toast';
 import { LikeableType } from 'graphql/generated/types';
@@ -116,9 +116,9 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ? 'items-start' : 'items-end'
         )}
         >
-          <CustomTooltip2
+          <CustomTooltip
             orientation='top'
-            width='full'
+            useFullWidth
             tooltipComponent={
               <div
                 className="w-max"
@@ -130,7 +130,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             <textarea
               className={tw(
                 'w-full resize-none',
-                'text-left py-1 px-2 -ml-1 m-2 w-full rounded-xl h-32',
+                'text-left py-1 px-2 -ml-1 m-2 rounded-xl h-32',
                 'mt-3 text-[#6A6A6A] border-2 border-[#ECECEC]',
                 'hover:outline-3 focus:border-[#F9D54C] focus:ring-0 hover:cursor-pointer focus:cursor-auto'
               )}
@@ -141,7 +141,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
                 handleBioChange(e);
               }}
             />
-          </CustomTooltip2>
+          </CustomTooltip>
           <div className="text-sm font-medium text-gray-900 dark:text-white w-full flex space-x-2">
             <span className='hidden group-focus-within:block text-[#E4BA18]'>Brief description for your profile.</span><p>{draftBio ? 300 - draftBio.length : '0' } / 300</p>
           </div>
