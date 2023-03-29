@@ -237,7 +237,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         </div>
       );
     }
-  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, mutatePurchaseActivities, nftsToBuy.length, success, toBuy]);
+  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, mutatePurchaseActivities, nftsToBuy.length, props, success, toBuy]);
 
   return (
     <Modal
