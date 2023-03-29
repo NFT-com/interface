@@ -42,6 +42,7 @@ export interface NotificationContextType {
   profileExpiringSoon: boolean,
   soldNfts: PartialObjectDeep<TxActivity, unknown>[],
   purchasedNfts: PartialObjectDeep<TxActivity, unknown>[]
+  mutatePurchaseActivities: () => void,
 }
 
 export const NotificationContext = React.createContext<NotificationContextType>({
@@ -67,7 +68,8 @@ export const NotificationContext = React.createContext<NotificationContextType>(
   expiredActivityDate: null,
   profileExpiringSoon: null,
   soldNfts: [],
-  purchasedNfts: []
+  purchasedNfts: [],
+  mutatePurchaseActivities: () => null,
 });
 
 export function NotificationContextProvider(
@@ -87,7 +89,7 @@ export function NotificationContextProvider(
     defaultChainId,
     ActivityType.Sale
   );
-  const { data: purchaseActivities } = useTxNotificationsQuery(
+  const { data: purchaseActivities, mutate: mutatePurchaseActivities } = useTxNotificationsQuery(
     currentAddress,
     defaultChainId,
     ActivityType.Purchase
@@ -251,7 +253,8 @@ export function NotificationContextProvider(
         expiredActivityDate: expiredActivityDate,
         profileExpiringSoon: profileExpiringSoon,
         soldNfts: saleActivities,
-        purchasedNfts: purchaseActivities
+        purchasedNfts: purchaseActivities,
+        mutatePurchaseActivities,
       }}>
       {props.children}
     </NotificationContext.Provider>);
