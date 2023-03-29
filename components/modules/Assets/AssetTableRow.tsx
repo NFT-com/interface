@@ -1,4 +1,4 @@
-import { CustomTooltip } from 'components/elements/CustomTooltip';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { RoundedCornerAmount,RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft } from 'graphql/generated/types';
@@ -80,11 +80,11 @@ export default function AssetTableRow({
     return (
       <div className='font-medium flex items-center relative underline text-[#1F2127] decoration-[#B59007] underline-offset-2'>
         <CustomTooltip
-          rightPostion={0}
-          mode="hover"
+          tooltipClick={() => null}
+          orientation='top'
           tooltipComponent={
             <div
-              className="rounded-xl p-3 bg-white text-black w-[200px] flex flex-col space-y-3"
+              className="p-3 w-[200px] flex flex-col space-y-3 bg-black"
             >
               {profiles.map((profile, i) => (
                 <div key={i} className='flex items-center'>

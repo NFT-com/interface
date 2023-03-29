@@ -1,4 +1,4 @@
-import { CustomTooltip } from 'components/elements/CustomTooltip';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 
 import { Link } from 'phosphor-react';
@@ -14,7 +14,7 @@ type SharingProps = {
 };
 
 export default function SharingIcons({ title }: SharingProps) {
-  const [, setCopied] = useCopyClipboard();
+  const [copied, setCopied] = useCopyClipboard();
   return (
     <div className="absolute right-0 bottom-3.5 md:bottom-1 flex row">
       <FacebookShareButton quote={title} url={window.location.href}>
@@ -33,22 +33,24 @@ export default function SharingIcons({ title }: SharingProps) {
       </TwitterShareButton>
 
       <CustomTooltip
-        mode="click"
-        tooltipComponent={
+        orientation='top'
+        tooltipComponent={copied ?
           <div
-            className="rounded-xl p-3 bg-modal-bg-dk text-white"
+            className="py-1 text-white"
             style={{
               minWidth: '7rem',
             }}
           >
             <p>Copied!</p>
           </div>
+          : null
         }
       >
         <button className="w-8 h-8 md:w-6 md:h-6 flex justify-center items-center border border-share-icon rounded-full bg-share-icon-bg">
           <Link
             onClick={() => {
               setCopied(window.location.href);
+              navigator.clipboard.writeText(window.location.href);
             }}
             className="flex-shrink-0 aspect-square w-8 h-5 md:w-6 md:h-4"
             color="#727272"
