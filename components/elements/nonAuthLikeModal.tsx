@@ -40,7 +40,7 @@ export function NonAuthLikeModal(){
     <Modal
       dark={false}
       pure
-      showCloseBtn={true}
+      closeBtnNoPaddings={true}
       visible={isOpen}
       loading={false}
       title={''}

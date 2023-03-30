@@ -22,7 +22,7 @@ export interface ModalProps {
   dark?: boolean;
   longModal?: boolean;
   noCancelBtn?: boolean;
-  showCloseBtn?: boolean;
+  closeBtnNoPaddings?: boolean;
   fullModal?: boolean;
   bgColor?: string;
   transparentOverlay?: boolean;
@@ -109,40 +109,50 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
 
                   }
                   {
-                    getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && props.showCloseBtn
+                    getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)
                       ? (
-                        <div className='pt-4 pr-4 absolute right-0 top-0'>
-                          <button
-                            type="button"
-                            className="rounded-md focus:outline-none
+                        <div className={tw(props.closeBtnNoPaddings ? '': 'mt-2', props.pure && !props.closeBtnNoPaddings ? 'hidden' : '',)}>
+                          {!props.noCancelBtn && <div className={`pt-4 pr-4 absolute right-0 top-0 ${props.closeBtnNoPaddings ? '' : 'hidden'}`}>
+                            <button
+                              type="button"
+                              className="rounded-md focus:outline-none
                         text-primary-txt dark:text-primary-txt-dk"
-                            onClick={props.onClose}
-                          >
-                            <XIcon className="h-6 w-6" aria-hidden="true" />
-                          </button>
-                        </div>
-                      )
-                      : null
-                  }
-                  <div className={tw('mt-2', props.pure ? 'hidden' : '',)}>
-                    {!props.noCancelBtn && <div className='hidden pt-4 pr-4 absolute right-0 top-0'>
-                      <button
-                        type="button"
-                        className="rounded-md focus:outline-none
-                        text-primary-txt dark:text-primary-txt-dk"
-                        onClick={props.onClose}
-                      >
-                        <span className="sr-only">Close</span>
-                        {!props.hideX && <XIcon className="h-6 w-6" aria-hidden="true" />}
-                      </button>
-                    </div>}
-                    {
-                      !isNullOrEmpty(props.subtitle) &&
+                              onClick={props.onClose}
+                            >
+                              <span className="sr-only">Close</span>
+                              {!props.hideX && <XIcon className="h-6 w-6" aria-hidden="true" />}
+                            </button>
+                          </div>}
+                          {
+                            !isNullOrEmpty(props.subtitle) &&
                           <p className="text-sm text-gray-500">
                             {props.subtitle}
                           </p>
-                    }
-                  </div>
+                          }
+                        </div>
+                      )
+                      : (
+                        <div className={tw('mt-2', props.pure ? 'hidden' : '',)}>
+                          {!props.noCancelBtn && <div className='hidden pt-4 pr-4 absolute right-0 top-0'>
+                            <button
+                              type="button"
+                              className="rounded-md focus:outline-none
+                        text-primary-txt dark:text-primary-txt-dk"
+                              onClick={props.onClose}
+                            >
+                              <span className="sr-only">Close</span>
+                              {!props.hideX && <XIcon className="h-6 w-6" aria-hidden="true" />}
+                            </button>
+                          </div>}
+                          {
+                            !isNullOrEmpty(props.subtitle) &&
+                          <p className="text-sm text-gray-500">
+                            {props.subtitle}
+                          </p>
+                          }
+                        </div>
+                      )
+                  }
                   {props.children}
                 </div>
               }
