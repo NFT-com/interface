@@ -74,6 +74,9 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
     }
   }, [fetchAssociatedCollection, selectedProfile, currentAddress]);
 
+  console.log('newCollection debug logs: ', newCollection);
+  console.log('currentAddress: ', currentAddress);
+
   useEffect(() => {
     if(newCollection && !newCollection?.associatedAddressesForContract?.deployerIsAssociated){
       setNotAuthorized(true);
