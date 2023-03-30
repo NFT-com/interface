@@ -5,6 +5,7 @@ import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 
 import useSWR, { mutate,SWRConfiguration } from 'swr';
 import { useNetwork } from 'wagmi';
+import { useNonProfileModal } from '../../hooks/state/useNonProfileModal';
 
 export interface ProfileLikeData {
   profileData: ProfileLikeCountQuery;
@@ -18,8 +19,9 @@ export function useProfileLikeQuery(
 ): ProfileLikeData {
   const sdk = useGraphQLSDK();
   const { chain } = useNetwork();
+  const { likeId } = useNonProfileModal();
 
-  const keyString = 'ProfileLikeQuery' + url + chain?.id;
+  const keyString = 'ProfileLikeQuery' + url + chain?.id + likeId;
 
   const { data, error } = useSWR(keyString, async () => {
     if (isNullOrEmpty(url)) {

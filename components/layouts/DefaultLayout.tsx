@@ -2,6 +2,7 @@ import ClientOnly from 'components/elements/ClientOnly';
 import { Footer } from 'components/elements/Footer/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';
+import { NonAuthLikeModal } from 'components/elements/nonAuthLikeModal';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { DiscoveryNavigation } from 'components/modules/DiscoveryNavigation/DiscoveryNavigation';
 import EmailCaptureModal from 'components/modules/ProfileFactory/EmailCaptureModal';
@@ -15,11 +16,12 @@ import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import dynamic from 'next/dynamic';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 
 type DefaultLayoutProps = {
   children: React.ReactNode;
@@ -83,6 +85,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
 
         {!hideFooter && <Footer />}
       </div>
+      {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && <NonAuthLikeModal/>}
     </div>
   );
 }

@@ -11,9 +11,9 @@ export interface CollectionLikeCountData {
 
 export function useCollectionLikeCountQuery(chainId: string, contract: string): CollectionLikeCountData {
   const sdk = useGraphQLSDK();
-  const { isForceReload } = useNonProfileModal();
+  const { likeId } = useNonProfileModal();
 
-  const keyString = 'CollectionLikeQuery' + contract + chainId + isForceReload.toString();
+  const keyString = 'CollectionLikeQuery' + contract + chainId + likeId;
 
   const { data } = useSWR(keyString, async () => {
     if (!chainId || !contract) {

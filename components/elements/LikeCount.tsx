@@ -45,7 +45,7 @@ export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCount
         setLikeCount(likeCount - 1);
       }
     }
-  }
+  };
   return (
     <div
       onClick={async(e) => {

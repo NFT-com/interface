@@ -4,8 +4,6 @@ import { LikeableType, Profile } from 'graphql/generated/types';
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
 import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
-import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
-import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { Doppler, getEnvBool } from 'utils/env';
 
@@ -13,7 +11,6 @@ import Image from 'next/image';
 import GK from 'public/Badge_Key.svg?svgr';
 import BannerPreview from 'public/banner_1@2x.png';
 import ProfilePreview from 'public/profilePreview.png';
-import { useEffect } from 'react';
 import { PartialDeep } from 'type-fest';
 
 export interface ProfileCardProps {
@@ -30,20 +27,12 @@ export interface ProfileCardProps {
 export function ProfileCard(props: ProfileCardProps) {
   const isLeaderBoard = props.isLeaderBoard;
   const defaultChainId = useDefaultChainId();
-  const { currentProfileId, user } = useUser();
-  const { isForceReload } = useNonProfileModal();
   const { totalItems } = useProfileVisibleNFTCount(
     [props?.profile?.id],
     defaultChainId
   );
 
   const { profileData: profileLikeData, mutate } = useProfileLikeQuery(props?.profile?.url);
-  useEffect(() => {
-    if(!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)) return;
-    if(currentProfileId && user.currentProfileUrl) {
-      mutate();
-    }
-  }, [currentProfileId, isForceReload, mutate, user.currentProfileUrl]);
 
   const { setLike, unsetLike } = useSetLikeMutation(
     props?.id ?? props?.profile?.id,

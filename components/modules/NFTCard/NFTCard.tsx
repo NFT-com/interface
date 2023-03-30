@@ -5,12 +5,9 @@ import { LikeableType, TxActivity } from 'graphql/generated/types';
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
-import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
-import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
-import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getListingCurrencyAddress, getLowestPriceListing } from 'utils/listingUtils';
@@ -22,7 +19,6 @@ import { NFTCardDescription } from './NFTCardDescription';
 import { NFTCardEditMode } from './NFTCardEditMode';
 import { NFTCardImage } from './NFTCardImage';
 
-import { useEffect } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftCardProps {
@@ -48,9 +44,6 @@ export function NFTCard(props: NftCardProps) {
   const defaultChainId = useDefaultChainId();
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
-  const { currentProfileId, user } = useUser();
-
-  const { isForceReload } = useNonProfileModal();
 
   const { getByContractAddress } = useSupportedCurrencies();
 
@@ -62,13 +55,6 @@ export function NFTCard(props: NftCardProps) {
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
   const isOwnedByMe = props?.isOwnedByMe || (props?.nft?.wallet?.address ?? props?.nft?.owner) === currentAddress;
   const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
-
-  useEffect(() => {
-    if(!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)) return;
-    if(currentProfileId && user.currentProfileUrl) {
-      mutateNftLike();
-    }
-  }, [currentProfileId, isForceReload, mutateNftLike, user.currentProfileUrl]);
 
   const { setLike, unsetLike } = useSetLikeMutation(
     nft?.id ?? props?.nft?.id,
