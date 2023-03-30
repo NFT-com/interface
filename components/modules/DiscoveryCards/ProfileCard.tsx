@@ -37,7 +37,7 @@ export function ProfileCard(props: ProfileCardProps) {
   const { setLike, unsetLike } = useSetLikeMutation(
     props?.id ?? props?.profile?.id,
     LikeableType.Profile,
-    props.profile.url
+    props?.profile?.url
   );
 
   if(isLeaderBoard){

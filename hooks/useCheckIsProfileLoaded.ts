@@ -19,13 +19,14 @@ export function useCheckIsProfileLoaded() {
     likeObject?.likedId,
     likeObject?.likedType
   );
+
   useEffect(() => {
     if(currentProfileId && user.currentProfileUrl && likeObject) {
       setLike();
       setTimeout(() => {
-        forceReload(likeObject?.likedId);
+        forceReload(likeObject?.likedId, likeObject?.likedType);
         localStorage.removeItem('nonAuthLikeObject');
-      }, 300);
+      }, 500);
     }
   }, [user, currentProfileId, setLike, likeObject, forceReload]);
 }

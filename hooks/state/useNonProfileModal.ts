@@ -6,6 +6,8 @@ export function useNonProfileModal() {
     fallbackData: {
       isOpen: false,
       likeId: '',
+      likeType: '',
+      successMessage: '',
       likeData: {
         likedId: '',
         likedType: '',
@@ -13,10 +15,11 @@ export function useNonProfileModal() {
       }
     }
   });
-  const useForceReloadData = (id: string) => {
+  const useForceReloadData = (id: string, likeType: string) => {
     mutate({
       ...data,
-      likeId: id
+      likeId: id,
+      likeType: likeType
     });
   };
   const setLikeData = useCallback((isOpen: boolean, likeData?: {likedId: string, likedType: string}) => {
@@ -31,6 +34,8 @@ export function useNonProfileModal() {
     isOpen: data.isOpen,
     likeData: data.likeData,
     likeId: data.likeId,
+    likeType: data.likeType,
+    successMessage: data.successMessage,
     forceReload: useForceReloadData,
     setLikeData
   };
