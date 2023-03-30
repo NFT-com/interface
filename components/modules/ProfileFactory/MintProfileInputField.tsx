@@ -1,5 +1,6 @@
 import { BidStatusIcon } from 'components/elements/BidStatusIcon';
 import Loader from 'components/elements/Loader';
+import { getAddressForChain, nftProfile } from 'constants/contracts';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { ProfileStatus } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
@@ -10,12 +11,14 @@ import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
+import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
+import { BigNumber } from 'ethers';
 import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
 import OpenseaIcon from 'public/opensea-icon.svg?svgr';
-import { useCallback, useEffect, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useState } from 'react';
 
 type MintProfileInputFieldProps = {
   setGKProfile?: (input: string[]) => void
@@ -78,7 +81,16 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
             ? <p className='font-normal flex items-center justify-center mb-3'>
                   This profile is available on
               <span className='font-medium inline-flex items-center mx-1'>
-                <LooksrareIcon className='h-6 w-6 relative shrink-0 mr-1' alt="Opensea logo redirect" layout="fill"/>
+                <LooksrareIcon
+                  onClick={(e: MouseEvent<any>) => {
+                    e.preventDefault();
+                    window.open(
+                      getLooksrareAssetPageUrl(getAddressForChain(nftProfile, defaultChainId), BigNumber.from(profileTokenId).toString()),
+                      '_blank'
+                    );
+                    e.stopPropagation();
+                  }}
+                  className='h-6 w-6 relative shrink-0 mr-1 hover:cursor-pointer' alt="Looksrare logo redirect" layout="fill"/>
                     LooksRare
               </span>
                   and
@@ -97,7 +109,17 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
                 </span>
                 :
                 <span className='font-medium inline-flex items-center mx-1'>
-                  <LooksrareIcon className='h-6 w-6 relative shrink-0 mr-1' alt="Opensea logo redirect" layout="fill"/>
+                  <LooksrareIcon
+                    onClick={(e: MouseEvent<any>) => {
+                      e.preventDefault();
+                      window.open(
+                        getLooksrareAssetPageUrl(getAddressForChain(nftProfile, defaultChainId), BigNumber.from(profileTokenId).toString()),
+                        '_blank'
+                      );
+                      e.stopPropagation();
+                    }}
+                    className='h-6 w-6 relative shrink-0 mr-1 hover:cursor-pointer' alt="Looksrare logo redirect" layout="fill"
+                  />
                       LooksRare
                 </span>
               }
@@ -106,7 +128,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
     default:
       return null;
     }
-  }, [listings]);
+  }, [defaultChainId, listings, profileTokenId]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {

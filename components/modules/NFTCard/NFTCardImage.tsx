@@ -12,6 +12,7 @@ import { ExternalProtocol } from 'types';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
+import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
@@ -21,7 +22,7 @@ import NFTLogo from 'public/nft_logo_yellow.svg?svgr';
 import OpenseaIcon from 'public/OS_gray_card.svg?svgr';
 import ShopIcon from 'public/shop-icon.svg?svgr';
 import X2Y2Gray from 'public/x2y2_gray.svg?svgr';
-import { useCallback, useContext } from 'react';
+import { MouseEvent, useCallback, useContext } from 'react';
 import { PartialDeep } from 'type-fest';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
 import { useAccount } from 'wagmi';
@@ -65,6 +66,14 @@ export function NFTCardImage(props: NFTCardImageProps) {
     case ExternalProtocol.LooksRare:
       return (
         <LooksrareIcon
+          onClick={(e: MouseEvent<any>) => {
+            e.preventDefault();
+            window.open(
+              getLooksrareAssetPageUrl(props.contractAddr, BigNumber.from(props.tokenId).toString()),
+              '_blank'
+            );
+            e.stopPropagation();
+          }}
           className='h-[25px] w-[25px] relative shrink-0 grayscale'
           alt="Looksrare logo redirect"
           layout="fill"
@@ -89,7 +98,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
     default:
       break;
     }
-  }, []);
+  }, [props]);
 
   const validListings = filterValidListings(props?.listings || props?.nft?.listings?.items);
 
