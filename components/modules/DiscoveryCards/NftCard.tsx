@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTPurchasesContext } from 'components/modules//Checkout/NFTPurchaseContext';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
@@ -249,8 +249,7 @@ export function NftCard(props: NftCardProps) {
             <div className="sm:h-[auto] h-[190px] p-[18px] bg-white font-noi-grotesk">
               <div
                 className="sm:leading-[18px] sm:h-[54px] h-[94px] flex flex-col text-[20px] leading-[28px] font-[600] list-none border-b-[1px] border-[#F2F2F2] pb-[8px] mb-[8px]">
-                <CustomTooltip2
-                  noFullHeight={true}
+                <CustomTooltip
                   orientation='top'
                   tooltipComponent={
                     <div
@@ -270,7 +269,7 @@ export function NftCard(props: NftCardProps) {
                         </div>
                     }
                   </div>
-                </CustomTooltip2>
+                </CustomTooltip>
                 <p
                   className="sm:text-sm text-[16px] [200px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</p>
               </div>

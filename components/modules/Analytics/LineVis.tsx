@@ -75,7 +75,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
     }
   };
 
-  const CustomTooltip = (props: any) => {
+  const ChartCustomTooltip = (props: any) => {
     const { active, payload, dataLength } = props;
     if (active && payload && payload.length) {
       if (dataLength > 1000 && Number(payload[0].value.toFixed(0)) % 2 === 0) {
@@ -143,7 +143,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
           <YAxis axisLine={false} tickLine={false} dataKey={'value'} tickCount={6} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} orientation={'left'} tickFormatter={yAxisFormatter} />
           <Tooltip
             cursor={false}
-            content={<CustomTooltip dataLength={data.length}/>}
+            content={<ChartCustomTooltip dataLength={data.length}/>}
           />
           <Line
             type="linear"

@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { ProfileLayoutType } from 'graphql/generated/types';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
@@ -168,7 +168,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             <SearchIcon className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
           </div>
         }
-        {userIsAdmin &&<CustomTooltip2
+        {userIsAdmin &&<CustomTooltip
           orientation='custom'
           customFullLeftPosition='left-6'
           hidden={false}
@@ -207,7 +207,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
               <ArrowClockwise className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
             }
           </div>
-        </CustomTooltip2>}
+        </CustomTooltip>}
         {userIsAdmin &&
             <>
               {getEnvBool(Doppler.NEXT_PUBLIC_MOSAIC_LAYOUT_ENABLED) &&

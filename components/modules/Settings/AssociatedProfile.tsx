@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import { CustomTooltip } from 'components/elements/CustomTooltip';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
@@ -123,10 +123,10 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         <div className='flex items-start'>
           {pending ?
             <CustomTooltip
-              mode="hover"
+              orientation='right'
               tooltipComponent={
                 <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                  className="p-3 max-w-xs"
                 >
                   <p className='text-[#F2890E] mb-2'>Pending</p>
                   <p>This NFT Profile association is waiting your approval. Click on its name to approve or reject.</p>
@@ -143,10 +143,10 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                   <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
                   :
                   <CustomTooltip
-                    mode="hover"
+                    orientation='right'
                     tooltipComponent={
                       <div
-                        className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                        className="p-3 max-w-xs"
                       >
                         <p className='text-[#D40909] mb-2'>Disassociated</p>
                         <p>This NFT Profile has been disassociated from your address. It is safe to remove it from your account.</p>
@@ -159,10 +159,10 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
               :
               (
                 <CustomTooltip
-                  mode="hover"
+                  orientation='right'
                   tooltipComponent={
                     <div
-                      className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                      className="p-3 max-w-xs"
                     >
                       <p className='text-[#00AC30] mb-2'>Associated</p>
                       <p>You have associated your address with this NFT Profile.</p>
