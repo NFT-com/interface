@@ -1,5 +1,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
+import { NFTCardSkeleton } from 'components/elements/Skeletons/NFTCardSkeleton';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { NFTCard } from 'components/modules/NFTCard/NFTCard';
@@ -154,10 +155,19 @@ export default function CollectionsPage() {
                     </div>
 
                   </div>
-                  {(loading) &&
-                    (<div className="flex items-center justify-center min-h-[16rem] w-full">
-                      <Loader />
-                    </div>)}
+                  {loading &&
+                    (
+                      <div className={tw(
+                        'gap-2 minmd:grid minmd:gap-4 minmd:space-x-0 minlg:gap-4',
+                        sideNavOpen
+                          ? 'minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2 minmd:grid-cols-2 grid-cols-1 w-full' :
+                          'minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1 w-full')}
+                      >
+                        {[...Array(12).keys()].map((_, index) => (
+                          <NFTCardSkeleton key={index} />
+                        ))}
+                      </div>
+                    )}
                   { nftSData && nftSData.length < found && nftSData?.length > 0 &&
                     <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
                       <Button
