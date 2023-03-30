@@ -6,7 +6,6 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
 import { tw } from 'utils/tw';
 
-import { Dialog } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -19,7 +18,7 @@ const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof StaticResults
 export const MobileSidebar = () => {
   const { mobileSidebarOpen, setMobileSidebarOpen, toggleMobileSidebar } = useMobileSidebar();
   const { addFundsDialogOpen } = useAddFundsDialog();
-  const { promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
+  const { promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 10 });
   const [discoverExpanded, setDiscoverExpanded] = useState(false);
   const [learnExpanded, setLearnExpanded] = useState(false);
   const { dropDownSearchResults } = useSearchModal();
@@ -164,34 +163,9 @@ export const MobileSidebar = () => {
   return (
     <AnimatePresence>
       {mobileSidebarOpen && (
-        <Dialog
-          layout
-          key='sidebarDialog'
-          static
-          as={motion.div}
-          open={mobileSidebarOpen}
-          className="fixed inset-0 overflow-hidden"
-          onClose={() => {
-            !addFundsDialogOpen && setMobileSidebarOpen(false);
-          }}
-          style={{ zIndex: 105 }}
+        <div
+          className="fixed inset-0 overflow-hidden z-[105] minlg:hidden"
         >
-          <Dialog.Overlay
-            layout
-            key='sidebarDialogOverlay'
-            as={motion.div}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              ease: 'backInOut',
-              duration: 0.4
-            }}
-            className={tw(
-              'absolute inset-0',
-              'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
-            )}
-          />
           <motion.div
             key='sidebarWrapperPanel'
             initial={{ x: '100%' }}
@@ -213,7 +187,7 @@ export const MobileSidebar = () => {
           >
             {getSidebarPanel()}
           </motion.div>
-        </Dialog>
+        </div>
       )}
     </AnimatePresence>
   );

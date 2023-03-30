@@ -86,16 +86,28 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
               <div className="flex items-center">
                 <Link href='/' passHref>
                   <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-8">
-                    {mobileSidebarOpen ?
-                      <p className='font-medium'>MENU</p>
-                      :
+                    <div className='block minlg:hidden'>
+                      {mobileSidebarOpen ?
+                        <p className='font-medium'>MENU</p>
+                        :
+                        <div className='w-10 h-10'>
+                          {useDarkMode ?
+                            <img src={getStaticAsset('public/LogoLight.svg')} alt='public/LogoLight.svg' className='justify-start' /> :
+                            <img src={getStaticAsset('public/Logo.svg')} alt='public/Logo.svg' className='justify-start' />
+                          }
+                        </div>
+                      }
+                    </div>
+
+                    <div className='hidden minlg:block'>
                       <div className='w-10 h-10'>
                         {useDarkMode ?
                           <img src={getStaticAsset('public/LogoLight.svg')} alt='public/LogoLight.svg' className='justify-start' /> :
                           <img src={getStaticAsset('public/Logo.svg')} alt='public/Logo.svg' className='justify-start' />
                         }
                       </div>
-                    }
+                    </div>
+                    
                     <svg className='ml-3 hidden minlg:block' width="63" height="18" viewBox="0 0 63 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M16.3704 0.875H19.9551V17.1235H16.3704L3.51321 5.26179L3.58454 7.83843V17.1235H-6.10352e-05V0.875H3.58454L16.4418 12.7603L16.3704 10.1601V0.875Z" fill="black" />
                       <path d="M26.3558 10.393V17.125H22.7712V0.875H40.9113V4.12529H26.3574V7.14268H39.4787V10.393H26.3558Z" fill="black" />
@@ -322,16 +334,27 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
             <div className="flex items-center">
               <Link href='/' passHref>
                 <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-8">
-                  {mobileSidebarOpen ?
-                    <p className='font-medium'>MENU</p>
-                    :
+                  <div className='block minlg:hidden'>
+                    {mobileSidebarOpen ?
+                      <p className='font-medium'>MENU</p>
+                      :
+                      <div className='w-10 h-10'>
+                        {useDarkMode ?
+                          <img src={getStaticAsset('public/LogoLight.svg')} alt='public/LogoLight.svg' className='justify-start' /> :
+                          <img src={getStaticAsset('public/Logo.svg')} alt='public/Logo.svg' className='justify-start' />
+                        }
+                      </div>
+                    }
+                  </div>
+
+                  <div className='hidden minlg:block'>
                     <div className='w-10 h-10'>
                       {useDarkMode ?
                         <img src={getStaticAsset('public/LogoLight.svg')} alt='public/LogoLight.svg' className='justify-start' /> :
                         <img src={getStaticAsset('public/Logo.svg')} alt='public/Logo.svg' className='justify-start' />
                       }
                     </div>
-                  }
+                  </div>
                   <svg className='ml-3 hidden minlg:block' width="63" height="18" viewBox="0 0 63 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16.3704 0.875H19.9551V17.1235H16.3704L3.51321 5.26179L3.58454 7.83843V17.1235H-6.10352e-05V0.875H3.58454L16.4418 12.7603L16.3704 10.1601V0.875Z" fill="black" />
                     <path d="M26.3558 10.393V17.125H22.7712V0.875H40.9113V4.12529H26.3574V7.14268H39.4787V10.393H26.3558Z" fill="black" />
