@@ -1,5 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
 import useSWR, { mutate } from 'swr';
 
@@ -9,19 +10,20 @@ export interface CollectionLikeCountData {
   mutate: () => void;
 }
 
-export function useCollectionLikeCountQuery(chainId: string, contract: string): CollectionLikeCountData {
+export function useCollectionLikeCountQuery(contract: string): CollectionLikeCountData {
   const sdk = useGraphQLSDK();
   const { likeId } = useNonProfileModal();
+  const defaultChainId = useDefaultChainId();
 
-  const keyString = 'CollectionLikeQuery' + contract + chainId + likeId;
+  const keyString = 'CollectionLikeQuery' + contract + defaultChainId + likeId;
 
   const { data } = useSWR(keyString, async () => {
-    if (!chainId || !contract) {
+    if (!defaultChainId || !contract) {
       return {};
     }
     const result = await sdk.CollectionLikeCount({
       input: {
-        chainId,
+        chainId: defaultChainId,
         contract,
         network: 'ethereum',
       },
