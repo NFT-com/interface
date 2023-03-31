@@ -4,6 +4,7 @@ import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
 import useSWR, { mutate } from 'swr';
+import { useAccount } from 'wagmi';
 
 export interface CollectionLikeCountData {
   data: { __typename?: 'CollectionInfo'; collection?: { __typename?: 'Collection'; likeCount?: number; isLikedByUser?: boolean; isLikedBy?: boolean; }; }
@@ -16,7 +17,8 @@ export function useCollectionLikeCountQuery(contract: string): CollectionLikeCou
   const { likeId } = useNonProfileModal();
   const defaultChainId = useDefaultChainId();
   const { currentProfileId } = useUser();
-  const keyString = 'CollectionLikeQuery' + contract + defaultChainId + likeId + currentProfileId;
+  const { address: currentAccount } = useAccount();
+  const keyString = 'CollectionLikeQuery' + contract + defaultChainId + likeId + currentProfileId + currentAccount;
 
   const { data } = useSWR(keyString, async () => {
     if (!defaultChainId || !contract) {

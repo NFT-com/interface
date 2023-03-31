@@ -6,6 +6,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import useSWR, { mutate,SWRConfiguration } from 'swr';
+import { useAccount } from 'wagmi';
 
 export interface ProfileLikeData {
   profileData: ProfileLikeCountQuery;
@@ -21,8 +22,9 @@ export function useProfileLikeQuery(
   const { likeId } = useNonProfileModal();
   const defaultChainId = useDefaultChainId();
   const { currentProfileId } = useUser();
+  const { address: currentAccount } = useAccount();
 
-  const keyString = 'ProfileLikeQuery' + url + defaultChainId + likeId + currentProfileId;
+  const keyString = 'ProfileLikeQuery' + url + defaultChainId + likeId + currentProfileId + currentAccount;
 
   const { data, error } = useSWR(keyString, async () => {
     if (isNullOrEmpty(url)) {

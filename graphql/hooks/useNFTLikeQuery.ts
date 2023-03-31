@@ -7,6 +7,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { BigNumber, BigNumberish } from 'ethers';
 import { useCallback } from 'react';
 import useSWR, { mutate } from 'swr';
+import { useAccount } from 'wagmi';
 
 export interface NftLikeData {
   data: { __typename?: 'NFT'; likeCount?: number; isLikedByUser?: boolean; isLikedBy?: boolean }
@@ -19,8 +20,9 @@ export function useNftLikeQuery(contract: string, id: BigNumberish): NftLikeData
   const { likeId } = useNonProfileModal();
   const defaultChainId = useDefaultChainId();
   const { currentProfileId } = useUser();
+  const { address: currentAccount } = useAccount();
   
-  const keyString = 'NftLikeQuery' + contract + id?.toString() + likeId + defaultChainId + currentProfileId;
+  const keyString = 'NftLikeQuery' + contract + id?.toString() + likeId + defaultChainId + currentProfileId + currentAccount;
 
   const mutateThis = useCallback(() => {
     mutate(keyString);
