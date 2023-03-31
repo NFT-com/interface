@@ -43,6 +43,13 @@ export enum ActivityType {
   Transfer = 'Transfer'
 }
 
+export type AddCommentInput = {
+  authorId: Scalars['ID'];
+  content: Scalars['String'];
+  entityId: Scalars['ID'];
+  entityType: SocialEntityType;
+};
+
 export type Approval = {
   __typename?: 'Approval';
   amount: Scalars['Uint256'];
@@ -248,6 +255,17 @@ export type CollectionTraitsSummary = {
   __typename?: 'CollectionTraitsSummary';
   stats?: Maybe<TraitsSummaryStats>;
   traits?: Maybe<Array<Maybe<TraitsSummaryData>>>;
+};
+
+export type Comment = {
+  __typename?: 'Comment';
+  authorId?: Maybe<Scalars['ID']>;
+  content?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  entityId?: Maybe<Scalars['ID']>;
+  entityType?: Maybe<SocialEntityType>;
+  id?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type ContractSalesStatistics = {
@@ -640,6 +658,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** AUTHENTICATED */
   addAddress: Wallet;
+  addComment?: Maybe<Comment>;
   addToWatchlist?: Maybe<Scalars['Boolean']>;
   /** AUTHENTICATED */
   approveAmount: Approval;
@@ -758,6 +777,11 @@ export type Mutation = {
 
 export type MutationAddAddressArgs = {
   input: WalletInput;
+};
+
+
+export type MutationAddCommentArgs = {
+  input: AddCommentInput;
 };
 
 
@@ -2273,6 +2297,12 @@ export type SignatureInput = {
   v: Scalars['Int'];
 };
 
+export enum SocialEntityType {
+  Collection = 'Collection',
+  Nft = 'NFT',
+  Profile = 'Profile'
+}
+
 export enum SupportedExternalExchange {
   Looksrare = 'looksrare',
   Opensea = 'opensea',
@@ -3258,6 +3288,13 @@ export type GetSalesQueryVariables = Exact<{
 
 
 export type GetSalesQuery = { __typename?: 'Query', getSales?: Array<{ __typename?: 'TransactionSales', contractAddress?: string | null, tokenId?: string | null, priceUSD?: number | null, price?: number | null, symbol?: string | null, date?: any | null } | null> | null };
+
+export type GetSeaportSignaturesQueryVariables = Exact<{
+  input?: InputMaybe<GetSeaportSignaturesInput>;
+}>;
+
+
+export type GetSeaportSignaturesQuery = { __typename?: 'Query', getSeaportSignatures?: Array<{ __typename?: 'TxOrder', orderHash: string, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData' } | { __typename?: 'NFTCOMProtocolData' } | { __typename?: 'SeaportProtocolData', signature?: string | null } | { __typename?: 'X2Y2ProtocolData' } | null } | null> | null };
 
 export type GetSentReferralEmailsQueryVariables = Exact<{
   profileUrl: Scalars['String'];
@@ -4616,6 +4653,19 @@ export const GetSalesDocument = gql`
     price
     symbol
     date
+  }
+}
+    `;
+export const GetSeaportSignaturesDocument = gql`
+    query GetSeaportSignatures($input: GetSeaportSignaturesInput) {
+  getSeaportSignatures(input: $input) {
+    orderHash
+    protocol
+    protocolData {
+      ... on SeaportProtocolData {
+        signature
+      }
+    }
   }
 }
     `;
@@ -6267,6 +6317,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetSales(variables?: GetSalesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSalesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetSalesQuery>(GetSalesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetSales', 'query');
+    },
+    GetSeaportSignatures(variables?: GetSeaportSignaturesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSeaportSignaturesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetSeaportSignaturesQuery>(GetSeaportSignaturesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetSeaportSignatures', 'query');
     },
     GetSentReferralEmails(variables: GetSentReferralEmailsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSentReferralEmailsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetSentReferralEmailsQuery>(GetSentReferralEmailsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetSentReferralEmails', 'query');
