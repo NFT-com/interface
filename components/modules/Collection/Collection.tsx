@@ -179,8 +179,8 @@ export function Collection(props: CollectionProps) {
           <div className='ml-3'>
             <LikeCount
               count={collectionData?.collection?.likeCount}
-              isLiked={collectionData?.collection?.isLikedByUser}
-              onClick={collectionData?.collection?.isLikedByUser ? unsetLike :setLike}
+              isLiked={collectionData?.collection?.isLikedBy}
+              onClick={collectionData?.collection?.isLikedBy ? unsetLike :setLike}
               mutate={mutateCollectionData}
             />
           </div>
