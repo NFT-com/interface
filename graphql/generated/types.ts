@@ -3477,10 +3477,11 @@ export type MyPreferencesQuery = { __typename?: 'Query', me: { __typename?: 'Use
 export type ProfileQueryVariables = Exact<{
   url: Scalars['String'];
   chainId: Scalars['String'];
+  likedById: Scalars['ID'];
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, ownerWalletId?: string | null, ownerUserId?: string | null, likeCount?: number | null, isLikedByUser?: boolean | null, profileView?: ProfileViewType | null, hideCustomization?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, ownerWalletId?: string | null, ownerUserId?: string | null, likeCount?: number | null, isLikedByUser?: boolean | null, isLikedBy?: boolean | null, profileView?: ProfileViewType | null, hideCustomization?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -3500,10 +3501,11 @@ export type ProfileFollowersQuery = { __typename?: 'Query', profileFollowers: { 
 export type ProfileLikeCountQueryVariables = Exact<{
   url: Scalars['String'];
   chainId: Scalars['String'];
+  likedById: Scalars['ID'];
 }>;
 
 
-export type ProfileLikeCountQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', likeCount?: number | null, isLikedByUser?: boolean | null } };
+export type ProfileLikeCountQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', likeCount?: number | null, isLikedByUser?: boolean | null, isLikedBy?: boolean | null } };
 
 export type ProfileNfTsMutationVariables = Exact<{
   input?: InputMaybe<UpdateNfTsForProfileInput>;
@@ -5674,7 +5676,7 @@ export const MyPreferencesDocument = gql`
 }
     `;
 export const ProfileDocument = gql`
-    query Profile($url: String!, $chainId: String!) {
+    query Profile($url: String!, $chainId: String!, $likedById: ID!) {
   profile(url: $url, chainId: $chainId) {
     id
     url
@@ -5691,6 +5693,7 @@ export const ProfileDocument = gql`
     ownerUserId
     likeCount
     isLikedByUser
+    isLikedBy(likedById: $likedById)
     owner {
       address
       chainId
@@ -5731,10 +5734,11 @@ export const ProfileFollowersDocument = gql`
 }
     `;
 export const ProfileLikeCountDocument = gql`
-    query ProfileLikeCount($url: String!, $chainId: String!) {
+    query ProfileLikeCount($url: String!, $chainId: String!, $likedById: ID!) {
   profile(url: $url, chainId: $chainId) {
     likeCount
     isLikedByUser
+    isLikedBy(likedById: $likedById)
   }
 }
     `;

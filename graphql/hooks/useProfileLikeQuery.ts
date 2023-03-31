@@ -1,6 +1,7 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileLikeCountQuery } from 'graphql/generated/types';
 import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
+import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { isNullOrEmpty } from 'utils/helpers';
 
@@ -19,6 +20,7 @@ export function useProfileLikeQuery(
   const sdk = useGraphQLSDK();
   const { likeId } = useNonProfileModal();
   const defaultChainId = useDefaultChainId();
+  const { currentProfileId } = useUser();
 
   const keyString = 'ProfileLikeQuery' + url + defaultChainId + likeId;
 
@@ -29,7 +31,8 @@ export function useProfileLikeQuery(
     try {
       const result = await sdk.ProfileLikeCount({
         url,
-        chainId: defaultChainId
+        chainId: defaultChainId,
+        likedById: currentProfileId
       });
       return result;
     } catch (error) {
