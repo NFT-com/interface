@@ -1,12 +1,11 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
-import { Doppler, getEnv } from 'utils/env';
-import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import { BigNumber, BigNumberish } from 'ethers';
 import { useCallback } from 'react';
 import useSWR, { mutate } from 'swr';
-import { useNetwork } from 'wagmi';
 
 export interface NftLikeData {
   data: { __typename?: 'NFT'; likeCount?: number; isLikedByUser?: boolean; }
@@ -17,10 +16,9 @@ export interface NftLikeData {
 export function useNftLikeQuery(contract: string, id: BigNumberish): NftLikeData {
   const sdk = useGraphQLSDK();
   const { likeId } = useNonProfileModal();
-
-  const keyString = 'NftLikeQuery' + contract + id?.toString() + likeId;
-
-  const { chain } = useNetwork();
+  const defaultChainId = useDefaultChainId();
+  
+  const keyString = 'NftLikeQuery' + contract + id?.toString() + likeId + defaultChainId;
 
   const mutateThis = useCallback(() => {
     mutate(keyString);
@@ -33,7 +31,7 @@ export function useNftLikeQuery(contract: string, id: BigNumberish): NftLikeData
 
     const result = await sdk.NftLikeCount(
       {
-        chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+        chainId: defaultChainId,
         contract,
         id: BigNumber.from(id).toHexString()
       }
