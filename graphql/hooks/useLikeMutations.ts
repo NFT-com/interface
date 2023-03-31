@@ -2,7 +2,10 @@ import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { LikeableType, Maybe } from 'graphql/generated/types';
 import { useUser } from 'hooks/state/useUser';
 
+import { useNonProfileModal } from '../../hooks/state/useNonProfileModal';
+
 import { useCallback, useState } from 'react';
+import { useRouter } from 'next/router';
 
 export interface LikeMutationResult {
   likeLoading: boolean;
@@ -14,7 +17,10 @@ export interface LikeMutationResult {
   unsetLike: () => Promise<boolean>
 }
 
-export function useSetLikeMutation(likedId: string, likedType: LikeableType): LikeMutationResult {
+export function useSetLikeMutation(likedId: string, likedType: LikeableType, profileName?: string): LikeMutationResult {
+  const { setLikeData } = useNonProfileModal();
+  const router = useRouter();
+
   const sdk = useGraphQLSDK();
   const [likeError, setLikeError] = useState<Maybe<string>>(null);
   const [likeLoading, setLikeLoading] = useState(false);
@@ -24,6 +30,18 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType): Li
 
   const setLike = useCallback(
     async () => {
+      const location = router.pathname;
+      const likeObject = {
+        likedId: likedId,
+        likedType: likedType,
+        profileName: profileName,
+        location: location
+      };
+      if (!user.currentProfileUrl && !currentProfileId) {
+        setLikeData(true, likeObject);
+        localStorage.setItem('nonAuthLikeObject', JSON.stringify(likeObject));
+        return;
+      }
       setLikeLoading(true);
       try {
         const result = await sdk.SetLike({
@@ -52,11 +70,12 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType): Li
         return null;
       }
     },
-    [currentProfileId, likedId, likedType, sdk, user?.currentProfileUrl]
+    [currentProfileId, likedId, likedType, profileName, router.pathname, sdk, setLikeData, user.currentProfileUrl]
   );
 
   const unsetLike = useCallback(
     async () => {
+      if (!user.currentProfileUrl && !currentProfileId) return;
       setUnsetLikeLoading(true);
       try {
         const result = await sdk.UnsetLike({
@@ -84,7 +103,7 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType): Li
         return null;
       }
     },
-    [currentProfileId, likedId, likedType, sdk]
+    [currentProfileId, likedId, likedType, sdk, user.currentProfileUrl]
   );
 
   return {

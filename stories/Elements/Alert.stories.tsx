@@ -1,4 +1,4 @@
-import Alert, { AlertType } from 'components/elements/Alert';
+import Alert, { AlertPosition, AlertType } from 'components/elements/Alert';
 
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import React from 'react';
@@ -33,4 +33,13 @@ Error.args = {
 export const Info = Template.bind({});
 Info.args = {
   type: AlertType.INFO
+};
+
+export const Fixed = Template.bind({});
+Fixed.args = {
+  position: AlertPosition.FIXED
+};
+export const Relative = Template.bind({});
+Relative.args = {
+  position: AlertPosition.RELATIVE
 };

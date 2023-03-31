@@ -8,6 +8,7 @@ import { useScrollPosition } from 'graphql/hooks/useScrollPosition';
 import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
+import { useCheckIsProfileLoaded } from 'hooks/useCheckIsProfileLoaded';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { filterNulls, getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -51,6 +52,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
   const { user } = useUser();
 
   useMaybeCreateUser();
+  useCheckIsProfileLoaded();
 
   const useDarkMode = user?.isDarkMode;
 
