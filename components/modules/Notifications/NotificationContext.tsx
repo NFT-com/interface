@@ -171,7 +171,6 @@ export function NotificationContextProvider(
   }, [notifications]);
 
   useEffect(() => {
-    console.log('pendingAssociatedProfiles fdo', pendingAssociatedProfiles);
     if(!isNullOrEmpty(pendingAssociatedProfiles?.getMyPendingAssociations) && acceptedAssociatedProfiles !== null){
       const filterAccepted = pendingAssociatedProfiles?.getMyPendingAssociations?.filter(a => !acceptedAssociatedProfiles?.some(b => a.url === b.profileUrl));
       setPendingAssociationCount(filterAccepted?.length || 0);
