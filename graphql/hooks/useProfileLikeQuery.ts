@@ -22,7 +22,7 @@ export function useProfileLikeQuery(
   const defaultChainId = useDefaultChainId();
   const { currentProfileId } = useUser();
 
-  const keyString = 'ProfileLikeQuery' + url + defaultChainId + likeId;
+  const keyString = 'ProfileLikeQuery' + url + defaultChainId + likeId + currentProfileId;
 
   const { data, error } = useSWR(keyString, async () => {
     if (isNullOrEmpty(url)) {

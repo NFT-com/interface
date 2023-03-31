@@ -1,6 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileQuery } from 'graphql/generated/types';
-import { useUser } from 'hooks/state/useUser';
 import { Doppler, getEnv } from 'utils/env';
 import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 
