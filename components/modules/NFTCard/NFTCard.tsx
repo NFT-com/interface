@@ -66,10 +66,10 @@ export function NFTCard(props: NftCardProps) {
       {props?.visible !== true && props?.visible !== false &&
        <div className='absolute top-4 right-4 z-50'>
          <LikeCount
-           onClick={nftLikeData?.isLikedByUser ? unsetLike : setLike}
+           onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
            mutate={mutateNftLike}
            count={nftLikeData?.likeCount}
-           isLiked={nftLikeData?.isLikedByUser}
+           isLiked={nftLikeData?.isLikedBy}
          />
        </div>
       }
