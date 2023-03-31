@@ -32,7 +32,7 @@ export function NonAuthLikeModal(){
     if(type === 'nft' || type === 'profile') {
       return 'w-[216px]';
     }else {
-      return 'w-[276px]';
+      return 'w-[311px]';
     }
   };
 
