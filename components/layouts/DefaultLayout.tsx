@@ -51,11 +51,11 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
   const checkSuccessMessage = () => {
     switch (likeType?.toLowerCase()) {
     case 'nft':
-      return 'You liked NFT!';
+      return 'You liked an NFT!';
     case 'collection':
-      return 'You liked Collection!';
+      return 'You liked a Collection!';
     case 'profile':
-      return 'You liked Profile!';
+      return 'You liked a Profile!';
     default:
       return '';
     }
