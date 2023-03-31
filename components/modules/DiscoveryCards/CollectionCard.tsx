@@ -48,6 +48,7 @@ export interface CollectionCardProps {
 
 export function CollectionCard(props: CollectionCardProps) {
   const defaultChainId = useDefaultChainId();
+
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings || props?.nft) ? null : props.tokenId);
   const { data: collectionData, mutate: mutateCollectionData } = useCollectionLikeCountQuery(defaultChainId, props?.contractAddr || props?.contractAddress);
 

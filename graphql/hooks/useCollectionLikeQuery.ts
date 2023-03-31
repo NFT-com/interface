@@ -1,4 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
+import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
 
 import useSWR, { mutate } from 'swr';
 
@@ -10,7 +11,9 @@ export interface CollectionLikeCountData {
 
 export function useCollectionLikeCountQuery(chainId: string, contract: string): CollectionLikeCountData {
   const sdk = useGraphQLSDK();
-  const keyString = 'CollectionLikeQuery' + contract + chainId;
+  const { likeId } = useNonProfileModal();
+
+  const keyString = 'CollectionLikeQuery' + contract + chainId + likeId;
 
   const { data } = useSWR(keyString, async () => {
     if (!chainId || !contract) {
