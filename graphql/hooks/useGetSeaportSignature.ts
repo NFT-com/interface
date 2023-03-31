@@ -28,7 +28,6 @@ export function useGetSeaportSignature(): SeaportSignaturesData {
         if (!result) {
           console.log('GetSeaportSignatures query failed.');
         }
-        console.log(result);
         return result;
       } catch (err) {
         console.log('GetSeaportSignatures query failed.', err);
