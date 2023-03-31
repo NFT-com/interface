@@ -4,15 +4,16 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useERC20Symbol } from 'hooks/useERC20Symbol';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getStaticAsset, shorten, shortenAddress } from 'utils/helpers';
+import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { tw } from 'utils/tw';
 
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
 import Link from 'next/link';
 import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
 import OpenseaIcon from 'public/opensea-icon.svg?svgr';
 import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
-import { useCallback } from 'react';
+import { MouseEvent, useCallback } from 'react';
 
 export interface DetailPageTableRowProps {
   tx: NftPortTxByContractTransactions;
@@ -73,7 +74,17 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-1.5'>Opensea</div>
       </div>;
     } else if (name == 'looksrare') {
-      return <div className='flex items-center'>
+      return <div
+        className='flex items-center hover:cursor-pointer'
+        onClick={(e: MouseEvent<any>) => {
+          e.preventDefault();
+          window.open(
+            getLooksrareAssetPageUrl(tx?.nft?.contractAddress, BigNumber.from(tx?.nft?.tokenId).toString()),
+            '_blank'
+          );
+          e.stopPropagation();
+        }}
+      >
         <LooksrareIcon
           className='h-6 w-6 relative shrink-0 hover:opacity-70 '
           alt="Looksrare logo"

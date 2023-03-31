@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import Loader from 'components/elements/Loader';
 import { Collection } from 'components/modules/Collection/Collection';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
@@ -8,6 +8,7 @@ import { ProfileViewType } from 'graphql/generated/types';
 import { useAssociatedCollectionForProfile } from 'graphql/hooks/useAssociatedCollectionForProfileQuery';
 import { useIsProfileCustomized } from 'graphql/hooks/useIsProfileCustomized';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -29,7 +30,7 @@ import { BigNumber } from 'ethers';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
 import CameraIconEdit from 'public/camera_icon.svg?svgr';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import useSWR from 'swr';
@@ -57,11 +58,14 @@ export function MintedProfile(props: MintedProfileProps) {
   } = useContext(ProfileContext);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
-  const { profileData } = useProfileQuery(profileURI);
+  const { profileData, mutate: mutateProfile } = useProfileQuery(profileURI);
+  const { updateProfile } = useUpdateProfileMutation();
   const { user } = useUser();
   const { data: profileCustomizationStatus } = useIsProfileCustomized(user?.currentProfileUrl, defaultChainId.toString());
   const { nftResolver } = useAllContracts();
   const isOwnerAndSignedIn = useIsOwnerAndSignedIn(profileURI);
+
+  const [hideModal, setHideModal] = useState(false);
 
   const fetchAssociatedContract = useCallback(async () => {
     if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
@@ -119,6 +123,15 @@ export function MintedProfile(props: MintedProfileProps) {
     </div>;
   }
 
+  const onHideCustomization = () => {
+    updateProfile({
+      id: profileData?.profile?.id,
+      hideCustomization: true
+    });
+    mutateProfile();
+    setHideModal(true);
+  };
+
   return (
     <>
       <ProfileScrollContextProvider>
@@ -155,7 +168,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       <div className='absolute inset-0 bg-black opacity-50'></div>
                       <div className='w-10 h-10 absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
-                        <CustomTooltip2
+                        <CustomTooltip
                           orientation='top'
                           tooltipComponent={
                             <div
@@ -166,7 +179,7 @@ export function MintedProfile(props: MintedProfileProps) {
                           }
                         >
                           <CameraIconEdit />
-                        </CustomTooltip2>
+                        </CustomTooltip>
                       </div>
                     </div>}
                   </section>
@@ -234,7 +247,7 @@ export function MintedProfile(props: MintedProfileProps) {
                       >
                         <div className='bg-black opacity-50 absolute top-0 bottom-0 right-0 left-0 rounded-full'></div>
                         <div className='w-[28px] h-[28px] absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
-                          <CustomTooltip2
+                          <CustomTooltip
                             orientation='top'
                             tooltipComponent={
                               <div
@@ -245,7 +258,7 @@ export function MintedProfile(props: MintedProfileProps) {
                             }
                           >
                             <CameraIconEdit />
-                          </CustomTooltip2>
+                          </CustomTooltip>
                         </div>
                       </div>}
 
@@ -358,8 +371,8 @@ export function MintedProfile(props: MintedProfileProps) {
           </div>
         </div>
       </ProfileScrollContextProvider>
-      {addressOwner === currentAddress && user.currentProfileUrl === profileURI && !editMode &&
-        <OnboardingModal profileURI={profileURI} />
+      {addressOwner === currentAddress && user.currentProfileUrl === profileURI && !editMode && !profileData?.profile?.hideCustomization && !hideModal &&
+        <OnboardingModal profileURI={profileURI} onClose={onHideCustomization} />
       }
     </>
   );

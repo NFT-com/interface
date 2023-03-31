@@ -17,7 +17,7 @@ import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApp
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalExchange, ExternalProtocol } from 'types';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
-import { cancelLooksrareListing } from 'utils/looksrareHelpers';
+import { cancelLooksrareListing, getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { getAuctionTypeDisplayName, getProtocolDisplayName } from 'utils/marketplaceUtils';
 import { cancelNftcomListing } from 'utils/nativeMarketplaceHelpers';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
@@ -29,7 +29,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import NFTLogo from 'public/nft_logo_yellow.svg?svgr';
 import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { MouseEvent , useCallback, useContext, useMemo, useState } from 'react';
 import React from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useSigner } from 'wagmi';
@@ -316,9 +316,23 @@ function ExternalListingTile(props: ExternalListingTileProps) {
           listing?.order?.exchange === ExternalExchange.NFTCOM ?
             <NFTLogo className='mx-1.5 h-9 w-9 relative shrink-0' alt="NFT.com logo" layout="fill"/>
             :
-            <div className='relative h-6 w-6 shrink-0 flex'>
-              <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
-            </div>
+            listing?.order?.exchange === ExternalExchange.LooksRare ?
+              <div
+                onClick={(e: MouseEvent<any>) => {
+                  e.preventDefault();
+                  window.open(
+                    getLooksrareAssetPageUrl(props?.nft?.contract, BigNumber.from(props?.nft?.tokenId).toString()),
+                    '_blank'
+                  );
+                  e.stopPropagation();
+                }}
+                className='relative h-6 w-6 shrink-0 flex hover:cursor-pointer'>
+                <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
+              </div>
+              :
+              <div className='relative h-6 w-6 shrink-0 flex'>
+                <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
+              </div>
         }
 
       </div>

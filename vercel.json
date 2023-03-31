@@ -7,6 +7,10 @@
     {
       "path": "/api/sitemaps/collection?teamKey=eB7q1HKpTLA",
       "schedule": "59 23 * * *"
+    },
+    {
+      "path": "/api/sitemaps/article?teamKey=eB7q1HKpTLA",
+      "schedule": "0 * * * *"
     }
   ],
   "functions": {
