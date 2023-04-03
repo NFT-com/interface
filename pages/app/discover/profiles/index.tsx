@@ -14,6 +14,7 @@ import uniqBy from 'lodash/uniqBy';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg?svgr';
 import React, { useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
+import { GridSystem } from '../../../../utils/gridSystem';
 
 export default function ProfilePage() {
   const [isLoading, toggleLoadState] = useState(false);
@@ -78,9 +79,7 @@ export default function ProfilePage() {
     if(allLoadedProfiles && allLoadedProfiles.length){
       return (
         <div>
-          <div className={tw(
-            'grid grid-cols-1 minlg:space-x-0 gap-1 minmd:gap-4',
-            isLeaderBoard ? 'minxl:grid-cols-1' : 'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
+          <div className={GridSystem(4, 2, 4)}>
             {
               !isLeaderBoard
                 ? filterUniqProfiles()

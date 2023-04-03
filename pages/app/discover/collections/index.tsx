@@ -16,6 +16,7 @@ import { SlidersHorizontal, X } from 'phosphor-react';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg?svgr';
 import NoActivityIcon from 'public/no_activity.svg?svgr';
 import React, { useEffect, useRef, useState } from 'react';
+import { GridSystem } from '../../../../utils/gridSystem';
 function usePrevious(value) {
   const ref = useRef(value);
   useEffect(() => {
@@ -100,9 +101,7 @@ export default function CollectionsPage() {
       );
     }else{
       return (
-        <div className={tw(
-          'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-          'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4 w-full')}>
+        <div className={GridSystem(3, 2, 2)}>
           {collections && collections?.length > 0 && collections?.map((collection, index) => {
             return (
               <CollectionCard

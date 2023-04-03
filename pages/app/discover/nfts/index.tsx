@@ -14,6 +14,7 @@ import { tw } from 'utils/tw';
 import { SlidersHorizontal, X } from 'phosphor-react';
 import NoActivityIcon from 'public/no_activity.svg?svgr';
 import React, { useEffect, useRef, useState } from 'react';
+import { GridSystem } from 'utils/gridSystem';
 function usePrevious(value) {
   const ref = useRef(value);
   useEffect(() => {
@@ -68,12 +69,7 @@ export default function CollectionsPage() {
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
   const showNftView = () => {
     return (
-      <div className={tw(
-        'gap-2 minmd:grid minmd:gap-4 minmd:space-x-0 minlg:gap-4',
-        sideNavOpen
-          ? 'minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2 minmd:grid-cols-2 grid-cols-1 w-full' :
-          'minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1 w-full')}
-      >
+      <div className={GridSystem(5, 2, 4, sideNavOpen)}>
         {nftSData && nftSData?.length > 0 && nftSData?.map((item, index) => {
           return !getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)
             ? (
