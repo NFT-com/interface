@@ -200,6 +200,7 @@ export type Collection = {
   floorPrice?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['ID']>;
   isCurated?: Maybe<Scalars['Boolean']>;
+  isLikedBy?: Maybe<Scalars['Boolean']>;
   isLikedByUser?: Maybe<Scalars['Boolean']>;
   isOfficial?: Maybe<Scalars['Boolean']>;
   isSpam?: Maybe<Scalars['Boolean']>;
@@ -208,6 +209,11 @@ export type Collection = {
   name?: Maybe<Scalars['String']>;
   stats?: Maybe<NftPortStatistics>;
   totalVolume?: Maybe<Scalars['Float']>;
+};
+
+
+export type CollectionIsLikedByArgs = {
+  likedById: Scalars['ID'];
 };
 
 export type CollectionInfo = {
@@ -1127,6 +1133,7 @@ export type Nft = {
   id: Scalars['ID'];
   isGKMinted?: Maybe<Scalars['Boolean']>;
   isHide?: Maybe<Scalars['Boolean']>;
+  isLikedBy?: Maybe<Scalars['Boolean']>;
   isLikedByUser?: Maybe<Scalars['Boolean']>;
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
   likeCount?: Maybe<Scalars['Int']>;
@@ -1143,6 +1150,11 @@ export type Nft = {
   tokenId: Scalars['Uint256'];
   type: NftType;
   wallet?: Maybe<Wallet>;
+};
+
+
+export type NftIsLikedByArgs = {
+  likedById: Scalars['ID'];
 };
 
 
@@ -1615,6 +1627,7 @@ export type Profile = {
   index?: Maybe<Scalars['Int']>;
   isFollowedByMe?: Maybe<Scalars['Boolean']>;
   isGKMinted?: Maybe<Scalars['Boolean']>;
+  isLikedBy?: Maybe<Scalars['Boolean']>;
   isLikedByUser?: Maybe<Scalars['Boolean']>;
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
   layoutType?: Maybe<ProfileLayoutType>;
@@ -1631,6 +1644,11 @@ export type Profile = {
   usersActionsWithPoints?: Maybe<Array<Maybe<UsersActionOutput>>>;
   visibleNFTs?: Maybe<Scalars['Int']>;
   winningBid?: Maybe<Bid>;
+};
+
+
+export type ProfileIsLikedByArgs = {
+  likedById: Scalars['ID'];
 };
 
 export type ProfileActionOutput = {
@@ -3191,10 +3209,11 @@ export type AssociatedCollectionForProfileQuery = { __typename?: 'Query', associ
 
 export type CollectionQueryVariables = Exact<{
   input: CollectionInput;
+  likedById: Scalars['ID'];
 }>;
 
 
-export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null, chainId?: string | null, deployer?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null, isCurated?: boolean | null, isSpam?: boolean | null, likeCount?: number | null, isLikedByUser?: boolean | null } | null, nftPortResults?: { __typename?: 'NFTPortResults', name?: string | null, symbol?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null } | null } | null };
+export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null, chainId?: string | null, deployer?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null, isCurated?: boolean | null, isSpam?: boolean | null, likeCount?: number | null, isLikedByUser?: boolean | null, isLikedBy?: boolean | null } | null, nftPortResults?: { __typename?: 'NFTPortResults', name?: string | null, symbol?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null } | null } | null };
 
 export type CollectionLeaderboardQueryVariables = Exact<{
   input?: InputMaybe<CollectionLeaderboardInput>;
@@ -3205,10 +3224,11 @@ export type CollectionLeaderboardQuery = { __typename?: 'Query', collectionLeade
 
 export type CollectionLikeCountQueryVariables = Exact<{
   input: CollectionInput;
+  likedById: Scalars['ID'];
 }>;
 
 
-export type CollectionLikeCountQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', likeCount?: number | null, isLikedByUser?: boolean | null } | null } | null };
+export type CollectionLikeCountQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', likeCount?: number | null, isLikedByUser?: boolean | null, isLikedBy?: boolean | null } | null } | null };
 
 export type CollectionNfTsQueryVariables = Exact<{
   input: CollectionNfTsInput;
@@ -3407,10 +3427,11 @@ export type NftLikeCountQueryVariables = Exact<{
   contract: Scalars['Address'];
   id: Scalars['String'];
   chainId?: InputMaybe<Scalars['String']>;
+  likedById: Scalars['ID'];
 }>;
 
 
-export type NftLikeCountQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', likeCount?: number | null, isLikedByUser?: boolean | null } };
+export type NftLikeCountQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', isLikedBy?: boolean | null, isLikedByUser?: boolean | null, likeCount?: number | null } };
 
 export type NftsForCollectionsQueryVariables = Exact<{
   input: NftsForCollectionsInput;
@@ -3456,10 +3477,11 @@ export type MyPreferencesQuery = { __typename?: 'Query', me: { __typename?: 'Use
 export type ProfileQueryVariables = Exact<{
   url: Scalars['String'];
   chainId: Scalars['String'];
+  likedById: Scalars['ID'];
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, ownerWalletId?: string | null, ownerUserId?: string | null, likeCount?: number | null, isLikedByUser?: boolean | null, profileView?: ProfileViewType | null, hideCustomization?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, ownerWalletId?: string | null, ownerUserId?: string | null, likeCount?: number | null, isLikedByUser?: boolean | null, isLikedBy?: boolean | null, profileView?: ProfileViewType | null, hideCustomization?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -3479,10 +3501,11 @@ export type ProfileFollowersQuery = { __typename?: 'Query', profileFollowers: { 
 export type ProfileLikeCountQueryVariables = Exact<{
   url: Scalars['String'];
   chainId: Scalars['String'];
+  likedById: Scalars['ID'];
 }>;
 
 
-export type ProfileLikeCountQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', likeCount?: number | null, isLikedByUser?: boolean | null } };
+export type ProfileLikeCountQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', likeCount?: number | null, isLikedByUser?: boolean | null, isLikedBy?: boolean | null } };
 
 export type ProfileNfTsMutationVariables = Exact<{
   input?: InputMaybe<UpdateNfTsForProfileInput>;
@@ -4235,7 +4258,7 @@ export const AssociatedCollectionForProfileDocument = gql`
 }
     `;
 export const CollectionDocument = gql`
-    query Collection($input: CollectionInput!) {
+    query Collection($input: CollectionInput!, $likedById: ID!) {
   collection(input: $input) {
     collection {
       id
@@ -4250,6 +4273,7 @@ export const CollectionDocument = gql`
       isSpam
       likeCount
       isLikedByUser
+      isLikedBy(likedById: $likedById)
     }
     nftPortResults {
       name
@@ -4300,11 +4324,12 @@ export const CollectionLeaderboardDocument = gql`
 }
     `;
 export const CollectionLikeCountDocument = gql`
-    query CollectionLikeCount($input: CollectionInput!) {
+    query CollectionLikeCount($input: CollectionInput!, $likedById: ID!) {
   collection(input: $input) {
     collection {
       likeCount
       isLikedByUser
+      isLikedBy(likedById: $likedById)
     }
   }
 }
@@ -5458,10 +5483,11 @@ export const NftByIdDocument = gql`
 }
     `;
 export const NftLikeCountDocument = gql`
-    query NftLikeCount($contract: Address!, $id: String!, $chainId: String) {
+    query NftLikeCount($contract: Address!, $id: String!, $chainId: String, $likedById: ID!) {
   nft(contract: $contract, id: $id, chainId: $chainId) {
-    likeCount
+    isLikedBy(likedById: $likedById)
     isLikedByUser
+    likeCount
   }
 }
     `;
@@ -5650,7 +5676,7 @@ export const MyPreferencesDocument = gql`
 }
     `;
 export const ProfileDocument = gql`
-    query Profile($url: String!, $chainId: String!) {
+    query Profile($url: String!, $chainId: String!, $likedById: ID!) {
   profile(url: $url, chainId: $chainId) {
     id
     url
@@ -5667,6 +5693,7 @@ export const ProfileDocument = gql`
     ownerUserId
     likeCount
     isLikedByUser
+    isLikedBy(likedById: $likedById)
     owner {
       address
       chainId
@@ -5707,10 +5734,11 @@ export const ProfileFollowersDocument = gql`
 }
     `;
 export const ProfileLikeCountDocument = gql`
-    query ProfileLikeCount($url: String!, $chainId: String!) {
+    query ProfileLikeCount($url: String!, $chainId: String!, $likedById: ID!) {
   profile(url: $url, chainId: $chainId) {
     likeCount
     isLikedByUser
+    isLikedBy(likedById: $likedById)
   }
 }
     `;
