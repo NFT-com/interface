@@ -40,7 +40,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!officialCollection && !officialCollection.contract) {
       throw new Error('Collection Not Found');
     }
-    console.log('%c Line:41 🍋 officialCollection', 'color:#33a5ff', officialCollection);
 
     const officialCollectionNfts = await client.request(
       gqlQueries.collectionNfts,
@@ -51,7 +50,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           offsetPageInput: { page }
         }
       }).then(data => data.officialCollectionNFTs);
-    console.log('%c Line:46 🍒 officialCollectionNfts', 'color:#7f2b82', officialCollectionNfts.items[0]);
 
     if (officialCollectionNfts && officialCollectionNfts?.items) {
       officialCollectionNfts.items.forEach(({ tokenId, updatedAt }) => {
