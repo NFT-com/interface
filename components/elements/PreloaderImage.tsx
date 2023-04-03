@@ -15,8 +15,8 @@ export default function PreloaderImage() {
       return <img src={getStaticAsset('public/preloaderImg-4.svg')} alt='public/preloaderImg-4.svg' />;
     case 4:
       return <img src={getStaticAsset('public/preloaderImg-5.svg')} alt='public/preloaderImg-5.svg' />;
-   default:
-     return 0;
+    default:
+      return 0;
     }
   };
 

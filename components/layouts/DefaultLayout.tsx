@@ -1,5 +1,4 @@
 import Alert, { AlertPosition, AlertType } from 'components/elements/Alert';
-import ClientOnly from 'components/elements/ClientOnly';
 import { Footer } from 'components/elements/Footer/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';

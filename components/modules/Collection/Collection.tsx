@@ -73,9 +73,9 @@ export function Collection(props: CollectionProps) {
   const [selectedTab,
     setSelectedTab,
     tabs] = useTabs(0, {
-      0: 'NFTs',
-      1: 'Activity'
-    });
+    0: 'NFTs',
+    1: 'Activity'
+  });
 
   const [found, setFound] = useState(0);
   const [collectionNfts, setCollectionNfts] = useState([]);

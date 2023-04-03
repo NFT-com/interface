@@ -1,5 +1,5 @@
-import { Doppler, getEnvBool } from 'utils/env';
 import Loader from 'components/elements/Loader/Loader';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -153,14 +153,14 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
                         </div>
                       )
                   }
-          {props.children}
-        </div>
+                  {props.children}
+                </div>
               }
-      </div>
+            </div>
           </div>
         </div >
       </Dialog >
     )
-}
+    }
   </AnimatePresence >;
 }

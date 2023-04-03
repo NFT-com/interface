@@ -5,7 +5,7 @@ import { tw } from 'utils/tw';
 import { useIsomorphicLayoutEffect } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 const errorImagesLight = [
   'https://cdn.nft.com/404_1.svg',
