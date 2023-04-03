@@ -28,11 +28,6 @@ export const FooterSmall = () => {
       title: 'Learn',
       links: filterNulls([
         {
-          name: 'Gallery',
-          link: '/app/gallery',
-          newTab: false,
-        },
-        {
           name: 'Docs',
           link: 'https://docs.nft.com',
           newTab: true,

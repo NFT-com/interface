@@ -143,6 +143,11 @@ const nextConfig = {
         source: '/app/sale',
         destination: '/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414',
         permanent: true,
+      },
+      {
+        source: '/app/gallery',
+        destination: '/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414',
+        permanent: true,
       }
     ];
   },

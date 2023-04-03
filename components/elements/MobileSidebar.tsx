@@ -116,17 +116,6 @@ export const MobileSidebar = () => {
           {checkHeaderContent()}
         </div>
         <div className='border-b border-[#ECECEC]'>
-          <Link href='/app/gallery'>
-            <h2 className={tw(
-              'w-full py-6 text-2xl font-medium font-noi-grotesk'
-            )}
-            onClick={() => toggleMobileSidebar()}
-            >
-              Gallery
-            </h2>
-          </Link>
-        </div>
-        <div className='border-b border-[#ECECEC]'>
           <div className='flex items-center justify-between' onClick={() => setLearnExpanded(!learnExpanded)}>
             <h2 className={tw(
               'w-full py-6 text-2xl font-medium font-noi-grotesk'
