@@ -6,7 +6,6 @@ import useAnalyticsOnRouteChange from 'hooks/useAnalyticsOnRouteChange';
 
 import * as fbq from 'lib/fbq';
 import * as gtag from 'lib/gtag';
-import * as segment from 'lib/segment';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -54,18 +53,6 @@ export default function MyApp({
       <Script
         strategy="worker"
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
-      />
-      <Script
-        id="segment-script"
-        strategy="worker"
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error('Segment snippet included twice.');else{analytics.invoked=!0;analytics.methods=['trackSubmit','trackClick','trackLink','trackForm','pageview','identify','reset','group','track','ready','alias','debug','page','once','off','on','addSourceMiddleware','addIntegrationMiddleware','setAnonymousId','addDestinationMiddleware'];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics;};};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key);}analytics.load=function(key,e){var t=document.createElement('script');t.type='text/javascript';t.async=!0;t.src='https://cdn.segment.com/analytics.js/v1/' + key + '/analytics.min.js';var n=document.getElementsByTagName('script')[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e;};analytics._writeKey='${segment.SEGMENT_API_KEY}';analytics.SNIPPET_VERSION='4.15.3';
-            analytics.load('${segment.SEGMENT_API_KEY}');
-            analytics.page();
-            }}();
-          `
-        }}
       />
       <Script id="fb-pixel-script" strategy="worker" dangerouslySetInnerHTML={{
         __html: `!function(f,b,e,v,n,t,s) {
