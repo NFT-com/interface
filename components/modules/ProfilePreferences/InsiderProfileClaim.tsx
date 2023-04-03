@@ -183,11 +183,11 @@ export function InsiderProfileClaim() {
               'flex items-center rounded-xl p-4 w-2/5 cursor-pointer',
               'bg-modal-overlay-dk border border-accent-border-dk mr-5'
             )}
-              onClick={() => {
-                if (!reservedProfileMinted) {
-                  setSelectedReservedProfile(profile);
-                }
-              }}
+            onClick={() => {
+              if (!reservedProfileMinted) {
+                setSelectedReservedProfile(profile);
+              }
+            }}
             >
               <input
                 className='mr-4'

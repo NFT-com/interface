@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }).then(data => data.officialCollections);
 
-    officialCollections && officialCollections.items.forEach((officialCollection, index) => {
+    officialCollections && officialCollections.items.forEach((officialCollection) => {
       const { chainId, contract, slug } = officialCollection;
       const collectionNftInput = {
         input: {

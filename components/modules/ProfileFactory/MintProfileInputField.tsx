@@ -54,10 +54,10 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
 
   const getProfileStatusText = useCallback((profileStatus, isOwner) => {
     switch (profileStatus) {
-      case ProfileStatus.Available:
-        return (
-          <p className='text-[#2AAE47] mb-3'>Great! Profile name is available :)</p>
-        );
+    case ProfileStatus.Available:
+      return (
+        <p className='text-[#2AAE47] mb-3'>Great! Profile name is available :)</p>
+      );
     case 'Listed':
       return isOwner
         ? (
