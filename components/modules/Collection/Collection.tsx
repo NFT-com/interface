@@ -24,7 +24,7 @@ import { CollectionContextType, CollectionHeaderProps, CollectionProps } from 't
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
-import { tw } from 'utils/tw';
+import { cl, tw } from 'utils/tw';
 
 import { CollectionInfo } from './CollectionInfo';
 
@@ -73,9 +73,9 @@ export function Collection(props: CollectionProps) {
   const [selectedTab,
     setSelectedTab,
     tabs] = useTabs(0, {
-    0: 'NFTs',
-    1: 'Activity'
-  });
+      0: 'NFTs',
+      1: 'Activity'
+    });
 
   const [found, setFound] = useState(0);
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -177,7 +177,7 @@ export function Collection(props: CollectionProps) {
       setCollectionNfts([]);
       setCurrentPage(1);
       setFound(0);
-      setCollectionPageAppliedFilters('','', false);
+      setCollectionPageAppliedFilters('', '', false);
     }
 
     if (prevId_nftName !== id_nftName) {
@@ -569,9 +569,10 @@ export const CollectionBody: React.FC = () => {
   const { collectionContract, selectedTab, tabs } = useCollectionContext();
   return (
     <>
-      <div className={tw(
+      <div className={cl(
         'px-4 pb-16 w-full',
-        'max-w-nftcom mx-auto'
+        'max-w-nftcom mx-auto',
+        'min-h-screen'
       )}
       >
         <CollectionMenu />
