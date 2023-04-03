@@ -271,14 +271,14 @@ export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) 
               : (collectionData?.collection?.name || collectionName)}
           </h2>
           {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-            <div className='ml-3'>
-              <LikeCount
-                count={collectionData?.collection?.likeCount}
-                isLiked={collectionData?.collection?.isLikedByUser}
-                onClick={collectionData?.collection?.isLikedByUser ? unsetLike : setLike}
-                mutate={mutateCollectionData}
-              />
-            </div>
+          <div className='ml-3'>
+            <LikeCount
+              count={collectionData?.collection?.likeCount}
+              isLiked={collectionData?.collection?.isLikedBy}
+              onClick={collectionData?.collection?.isLikedBy ? unsetLike :setLike}
+              mutate={mutateCollectionData}
+            />
+          </div>
           }
         </div>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">

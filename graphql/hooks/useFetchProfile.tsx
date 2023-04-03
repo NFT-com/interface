@@ -26,6 +26,7 @@ export function useFetchProfile(): FetchProfile {
       const result = await sdk.Profile({
         url,
         chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+        likedById: ''
       });
       setLoading(false);
       return result;

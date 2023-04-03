@@ -1,11 +1,10 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { LikeableType, Maybe } from 'graphql/generated/types';
+import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
 import { useUser } from 'hooks/state/useUser';
 
-import { useNonProfileModal } from '../../hooks/state/useNonProfileModal';
-
-import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useCallback, useState } from 'react';
 
 export interface LikeMutationResult {
   likeLoading: boolean;
@@ -19,6 +18,7 @@ export interface LikeMutationResult {
 
 export function useSetLikeMutation(likedId: string, likedType: LikeableType, profileName?: string): LikeMutationResult {
   const { setLikeData } = useNonProfileModal();
+  const { forceReload } = useNonProfileModal();
   const router = useRouter();
 
   const sdk = useGraphQLSDK();
@@ -55,7 +55,17 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         if (!result) {
           throw Error('SetLike mutation failed.');
         }
-
+        const isClient = typeof window !== 'undefined';
+        const data = isClient ? localStorage.getItem('nonAuthLikeObject') : null;
+        const storedLike = data ? JSON.parse(data) : null;
+        if(storedLike){
+          setTimeout(() => {
+            forceReload(storedLike?.likedId, storedLike?.likedType);
+            if (isClient) {
+              localStorage.removeItem('nonAuthLikeObject');
+            }
+          }, 500);
+        }
         setLikeLoading(false);
         analytics.track(`Liked a ${likedType}`, {
           likedById: currentProfileId,
@@ -70,7 +80,7 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         return null;
       }
     },
-    [currentProfileId, likedId, likedType, profileName, router.pathname, sdk, setLikeData, user.currentProfileUrl]
+    [currentProfileId, forceReload, likedId, likedType, profileName, router.pathname, sdk, setLikeData, user.currentProfileUrl]
   );
 
   const unsetLike = useCallback(

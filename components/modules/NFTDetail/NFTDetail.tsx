@@ -131,10 +131,10 @@ export const NFTDetail = (props: NFTDetailProps) => {
                   {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
                     <div className='ml-3'>
                       <LikeCount
-                        onClick={nftLikeData?.isLikedByUser ? unsetLike : setLike}
+                        onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
                         mutate={mutateNftLike}
                         count={nftLikeData?.likeCount}
-                        isLiked={nftLikeData?.isLikedByUser}
+                        isLiked={nftLikeData?.isLikedBy}
                       />
                     </div>
                   }
