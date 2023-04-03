@@ -48,8 +48,9 @@ export interface CollectionCardProps {
 
 export function CollectionCard(props: CollectionCardProps) {
   const defaultChainId = useDefaultChainId();
+
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings || props?.nft) ? null : props.tokenId);
-  const { data: collectionData, mutate: mutateCollectionData } = useCollectionLikeCountQuery(defaultChainId, props?.contractAddr || props?.contractAddress);
+  const { data: collectionData, mutate: mutateCollectionData } = useCollectionLikeCountQuery(props?.contractAddr || props?.contractAddress);
 
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]

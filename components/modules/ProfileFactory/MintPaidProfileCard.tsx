@@ -1,6 +1,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import ClientOnly from 'components/elements/ClientOnly';
-import CustomTooltip2 from 'components/elements/CustomTooltip2';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import maxProfilesABI from 'constants/abis/MaxProfiles.json';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
@@ -174,7 +174,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
               <span >
               Choose Your Profile Name
                 <div className='w-max inline-block absolute pl-1 bottom-.5'>
-                  <CustomTooltip2
+                  <CustomTooltip
                     orientation='top'
                     tooltipComponent={
                       <div
@@ -185,7 +185,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
                     }
                   >
                     <Info size={25} color="#969696" weight="fill" />
-                  </CustomTooltip2>
+                  </CustomTooltip>
                 </div>
               </span>
             </div>

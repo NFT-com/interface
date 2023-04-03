@@ -1,4 +1,4 @@
-import { CustomTooltip } from 'components/elements/CustomTooltip';
+import CustomTooltip from 'components/elements/CustomTooltip';
 import { ContractSalesStatistics } from 'graphql/generated/types';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { tw } from 'utils/tw';
@@ -11,7 +11,7 @@ export type CollectionInfoProps = {
   type?: string
 }
 
-export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoProps) => {
+export const CollectionInfo = ({ data, type }: CollectionInfoProps) => {
   const ethPriceUSD = useEthPriceUSD();
   const [isExpanded, setIsExpanded] = useState(false);
   const formatCurrency = (input: number) => {
@@ -25,11 +25,10 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
         <div className="flex justify-between h-10">
           <p className='self-start font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
-              rightPostion={!hasDescription && -100}
-              mode="hover"
+              orientation='right'
               tooltipComponent={
                 <span
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
+                  className="p-1 text-white w-[200px]"
                 >
                   <p className='mb-3'>Floor Price</p>
                   <p>Lowest active listing price for a NFT from the collection</p>
@@ -49,11 +48,10 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
         <div className="flex justify-between mt-1">
           <p className='font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
-              rightPostion={!hasDescription && -100}
-              mode="hover"
+              orientation='right'
               tooltipComponent={
                 <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
+                  className="p-1 text-white w-[200px]"
                 >
                   <p className='mb-3'>Total Volume</p>
                   <p>Total value of transactions for NFTs from the collection</p>
@@ -68,11 +66,10 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
         <div className="flex justify-between mt-5">
           <p className='font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
-              rightPostion={!hasDescription && -100}
-              mode="hover"
+              orientation='right'
               tooltipComponent={
                 <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
+                  className="p-1 text-white w-[200px]"
                 >
                   <p className='mb-3'>Supply</p>
                   <p>Amount of NFTs in the collection</p>
@@ -87,11 +84,10 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
         <div className="flex justify-between mt-4">
           <p className='font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
-              rightPostion={!hasDescription && -100}
-              mode="hover"
+              orientation='right'
               tooltipComponent={
                 <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
+                  className="p-1 text-white w-[200px]"
                 >
                   <p className='mb-3'>Owners</p>
                   <p>Amount of unique addresses holding NFTs from the collection</p>
@@ -110,11 +106,10 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
         <div className="flex justify-between mt-4 minmd:mt-0">
           <p className='font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
-              rightPostion={!hasDescription && -100}
-              mode="hover"
+              orientation='right'
               tooltipComponent={
                 <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
+                  className="p-1 text-white w-[200px]"
                 >
                   <p className='mb-3'>Supply/Owners Ratio</p>
                   <p>Ratio of supply compared to owners. Gives insight on NFTs owned per owner</p>
@@ -129,11 +124,10 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
         <div className="flex justify-between h-10 mt-4 minmd:mt-5">
           <p className='self-start font-medium text-[#6F6F6F] flex items-center minlg:hidden relative'>
             <CustomTooltip
-              rightPostion={!hasDescription && -100}
-              mode="hover"
+              orientation='right'
               tooltipComponent={
                 <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
+                  className="p-1 text-white w-[200px]"
                 >
                   <p className='mb-3'>Market Capitalization</p>
                   <p>Estimation of total value of all NFTs from the collection</p>
@@ -145,11 +139,10 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
           </p>
           <p className='self-start font-medium text-[#6F6F6F] hidden items-center minlg:flex relative'>
             <CustomTooltip
-              rightPostion={!hasDescription && -100}
-              mode="hover"
+              orientation='right'
               tooltipComponent={
                 <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
+                  className="p-1 text-white w-[200px]"
                 >
                   <p className='mb-3'>Market Cap</p>
                   <p>Estimation of total value of all NFTs from the collection</p>
