@@ -1,5 +1,5 @@
+import * as fbq from 'lib/fbq';
 import * as gtag from 'lib/gtag';
-import * as segment from 'lib/segment';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -12,7 +12,7 @@ export default function useAnalyticsOnRouteChange() {
   useEffect(() => {
     const handleRouteChange = (url) => {
       gtag.pageview(url);
-      segment.pageview(url);
+      fbq.pageview();
     };
     router.events.on('routeChangeComplete', handleRouteChange);
     return () => {

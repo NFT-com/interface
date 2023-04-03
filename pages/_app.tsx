@@ -4,6 +4,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import RootProvider from 'context';
 import useAnalyticsOnRouteChange from 'hooks/useAnalyticsOnRouteChange';
 
+import * as fbq from 'lib/fbq';
 import * as gtag from 'lib/gtag';
 import * as segment from 'lib/segment';
 import type { NextPage } from 'next';
@@ -66,7 +67,7 @@ export default function MyApp({
           `
         }}
       />
-      <Script id="fb-pixel-script" strategy="worker" src="/js/fbq.js" dangerouslySetInnerHTML={{
+      <Script id="fb-pixel-script" strategy="worker" dangerouslySetInnerHTML={{
         __html: `!function(f,b,e,v,n,t,s) {
           if(f.fbq)return;n=f.fbq=function(){n.callMethod?
           n.callMethod.apply(n,arguments)
@@ -76,8 +77,7 @@ export default function MyApp({
           t.src=v;s=b.getElementsByTagName(e)[0];
           s.parentNode.insertBefore(t,s);
           }(window, document,'script', 'https://connect.facebook.net/en_US/fbevents.js');
-          fbq('init', '1332665313901251');
-          fbq('track', 'PageView');
+          fbq('init', ${fbq.FB_PIXEL_ID});
           ` }} />
       <DefaultSeo
         title="NFT.com | The Social NFT Marketplace"

@@ -3,6 +3,7 @@ import { LikeableType, Maybe } from 'graphql/generated/types';
 import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
 import { useUser } from 'hooks/state/useUser';
 
+import * as gtag from 'lib/gtag';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 
@@ -58,7 +59,7 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         const isClient = typeof window !== 'undefined';
         const data = isClient ? localStorage.getItem('nonAuthLikeObject') : null;
         const storedLike = data ? JSON.parse(data) : null;
-        if(storedLike){
+        if (storedLike) {
           setTimeout(() => {
             forceReload(storedLike?.likedId, storedLike?.likedType);
             if (isClient) {
@@ -67,11 +68,10 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
           }, 500);
         }
         setLikeLoading(false);
-        analytics.track(`Liked a ${likedType}`, {
-          likedById: currentProfileId,
-          likedByProfile: user?.currentProfileUrl,
-          likedId,
-          likedType
+        gtag.event({
+          category: 'social',
+          action: `Liked-${likedType.toLowerCase()}`,
+          label: likedId
         });
         return result?.setLike;
       } catch (err) {
@@ -101,10 +101,10 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         }
 
         setUnsetLikeLoading(false);
-        analytics.track('Unliked', {
-          unlikedById: currentProfileId,
-          unlikedId: likedId,
-          likedType
+        gtag.event({
+          category: 'social',
+          action: `Unliked-${likedType}`,
+          label: likedId
         });
         return result?.unsetLike;
       } catch (err) {
