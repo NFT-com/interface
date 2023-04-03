@@ -41,7 +41,6 @@ export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCount
         setClicked(false);
         mutate();
       } else {
-        setClicked(true);
         setLiked(false);
         await timeout(700);
         setClicked(false);
@@ -66,7 +65,7 @@ export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCount
     >
       <div className='h-full flex flex-row items-center justify-center space-x-2'>
 
-        {clicked ?
+        {clicked && !liked ?
           <>
             <div className='w-[18px] h-5 flex'></div>
             <div className='absolute -top-[0.17rem] -left-[11px]'>
