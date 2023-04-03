@@ -1,4 +1,5 @@
 import Alert, { AlertPosition, AlertType } from 'components/elements/Alert';
+import ClientOnly from 'components/elements/ClientOnly';
 import { Footer } from 'components/elements/Footer/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';
@@ -72,11 +73,11 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
         className='flex-1 w-full h-full'
       >
         {!hideHeader &&
-          <>
+          <ClientOnly>
             <Header />
             <MobileSidebar />
             {searchModalOpen && <SearchModal />}
-          </>
+          </ClientOnly>
         }
         {!hideSearch &&
           <div className='mt-24 mb-8 block minlg:hidden'>
@@ -85,9 +86,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
         }
         {showDNavigation && <DiscoveryNavigation />}
 
-        {/* <main className="flex-1 overflow-y-scroll"> */}
         {children}
-        {/* </main> */}
 
         {profileSelectModal && signed && <DynamicProfileSelectModal />}
 
@@ -107,14 +106,14 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
 
         {!hideFooter && <Footer />}
       </div>
-      {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && <NonAuthLikeModal/>}
+      {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && <NonAuthLikeModal />}
       {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && alertIsVisible && <Alert
         heading={checkSuccessMessage()}
         description={''}
         onClose={() => setVisibleAlert(false)}
         autoClose={true}
         position={AlertPosition.FIXED}
-        type={AlertType.SUCCESS}/>}
+        type={AlertType.SUCCESS} />}
     </div>
   );
 }
