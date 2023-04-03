@@ -1,10 +1,12 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileLikeCountQuery } from 'graphql/generated/types';
 import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
+import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import useSWR, { mutate,SWRConfiguration } from 'swr';
+import { useAccount } from 'wagmi';
 
 export interface ProfileLikeData {
   profileData: ProfileLikeCountQuery;
@@ -19,8 +21,10 @@ export function useProfileLikeQuery(
   const sdk = useGraphQLSDK();
   const { likeId } = useNonProfileModal();
   const defaultChainId = useDefaultChainId();
+  const { currentProfileId } = useUser();
+  const { address: currentAccount } = useAccount();
 
-  const keyString = 'ProfileLikeQuery' + url + defaultChainId + likeId;
+  const keyString = 'ProfileLikeQuery' + url + defaultChainId + likeId + currentProfileId + currentAccount;
 
   const { data, error } = useSWR(keyString, async () => {
     if (isNullOrEmpty(url)) {
@@ -29,7 +33,8 @@ export function useProfileLikeQuery(
     try {
       const result = await sdk.ProfileLikeCount({
         url,
-        chainId: defaultChainId
+        chainId: defaultChainId,
+        likedById: currentProfileId
       });
       return result;
     } catch (error) {

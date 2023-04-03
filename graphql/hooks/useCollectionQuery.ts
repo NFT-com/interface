@@ -1,5 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { CollectionInfo } from 'graphql/generated/types';
+import { useUser } from 'hooks/state/useUser';
 
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -12,7 +13,8 @@ export interface CollectionData {
 
 export function useCollectionQuery(chainId: string, contract: string): CollectionData {
   const sdk = useGraphQLSDK();
-  const keyString = 'CollectionQuery ' + contract + chainId;
+  const { currentProfileId } = useUser();
+  const keyString = 'CollectionQuery ' + contract + chainId + currentProfileId;
 
   const { data } = useSWR(keyString, async () => {
     if (!chainId || !contract) {
@@ -24,6 +26,7 @@ export function useCollectionQuery(chainId: string, contract: string): Collectio
         contract,
         network: 'ethereum',
       },
+      likedById: currentProfileId
     });
     return result?.collection ?? {};
   });

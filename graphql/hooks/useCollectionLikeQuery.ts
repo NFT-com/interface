@@ -1,11 +1,13 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
+import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
 import useSWR, { mutate } from 'swr';
+import { useAccount } from 'wagmi';
 
 export interface CollectionLikeCountData {
-  data: { __typename?: 'CollectionInfo'; collection?: { __typename?: 'Collection'; likeCount?: number; isLikedByUser?: boolean; }; }
+  data: { __typename?: 'CollectionInfo'; collection?: { __typename?: 'Collection'; likeCount?: number; isLikedByUser?: boolean; isLikedBy?: boolean; }; }
   loading: boolean;
   mutate: () => void;
 }
@@ -14,8 +16,9 @@ export function useCollectionLikeCountQuery(contract: string): CollectionLikeCou
   const sdk = useGraphQLSDK();
   const { likeId } = useNonProfileModal();
   const defaultChainId = useDefaultChainId();
-
-  const keyString = 'CollectionLikeQuery' + contract + defaultChainId + likeId;
+  const { currentProfileId } = useUser();
+  const { address: currentAccount } = useAccount();
+  const keyString = 'CollectionLikeQuery' + contract + defaultChainId + likeId + currentProfileId + currentAccount;
 
   const { data } = useSWR(keyString, async () => {
     if (!defaultChainId || !contract) {
@@ -27,6 +30,7 @@ export function useCollectionLikeCountQuery(contract: string): CollectionLikeCou
         contract,
         network: 'ethereum',
       },
+      likedById: currentProfileId
     });
     return result?.collection ?? {};
   });

@@ -1,11 +1,10 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { LikeableType, Maybe } from 'graphql/generated/types';
+import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
 import { useUser } from 'hooks/state/useUser';
 
-import { useNonProfileModal } from '../../hooks/state/useNonProfileModal';
-
-import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useCallback, useState } from 'react';
 
 export interface LikeMutationResult {
   likeLoading: boolean;

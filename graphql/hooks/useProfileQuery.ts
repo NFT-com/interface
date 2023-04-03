@@ -28,7 +28,8 @@ export function useProfileQuery(
     try {
       const result = await sdk.Profile({
         url,
-        chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
+        chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+        likedById: ''
       });
       return result;
     } catch (error) {
