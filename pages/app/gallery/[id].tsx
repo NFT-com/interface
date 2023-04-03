@@ -1,4 +1,4 @@
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { GenesisKeyDetailContent } from 'components/modules/Gallery/GenesisKeyDetailContent';
 import { tw } from 'utils/tw';
@@ -21,7 +21,7 @@ export default function GalleryDetailPage() {
       <Loader />
     </div>;
   }
-  
+
   return (
     <div className='w-full mt-24 flex flex-col items-center'>
       <GenesisKeyDetailContent id={id} />
@@ -32,7 +32,7 @@ export default function GalleryDetailPage() {
 GalleryDetailPage.getLayout = function getLayout(page) {
   return (
     <DefaultLayout>
-      { page }
+      {page}
     </DefaultLayout>
   );
 };

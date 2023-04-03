@@ -1,4 +1,4 @@
-import { LoadedContainer } from 'components/elements/LoadedContainer';
+import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { SignedOutView } from 'components/modules/GenesisKeyAuction/SignedOutView';
 import { InsiderProfileClaim } from 'components/modules/ProfilePreferences/InsiderProfileClaim';
@@ -85,7 +85,7 @@ export default function ProfilePreferencesPage() {
 ProfilePreferencesPage.getLayout = function getLayout(page) {
   return (
     <DefaultLayout>
-      { page }
+      {page}
     </DefaultLayout>
   );
 };

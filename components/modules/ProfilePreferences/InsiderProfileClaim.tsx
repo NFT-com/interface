@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import { LoadedContainer } from 'components/elements/LoadedContainer';
+import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
 import { HeroTitle } from 'components/modules/Hero/HeroTitle';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useProfileAuctionSigner } from 'hooks/contracts/useProfileAuctionSigner';
@@ -24,7 +24,7 @@ export function InsiderProfileClaim() {
   const { mutate: mutateMyProfileTokens } = useMyNftProfileTokens();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { reservedProfiles } = useInsiderReservedProfiles();
-  
+
   const [minting, setMinting] = useState(false);
   const [mintSuccess, setMintSuccess] = useState(null);
   const [selectedReservedProfile, setSelectedReservedProfile] = useState(null);
@@ -55,7 +55,7 @@ export function InsiderProfileClaim() {
           await tx.wait(1);
           setMintSuccess(profileURIToMint);
         }
-        
+
         setMutateMintedStatusFlag(mutateMintedStatusFlag + 1);
         mutateMyProfileTokens();
         mutateProfileHash();
@@ -132,7 +132,7 @@ export function InsiderProfileClaim() {
         </div>
       );
     }
-  
+
     if (firstReservedProfileMinted && secondReservedProfileMinted) {
       return (
         <div className='flex flex-col items-center'>
@@ -154,7 +154,7 @@ export function InsiderProfileClaim() {
         </div>
       );
     }
-  
+
     return (
       <div className="flex flex-col items-center mt-16 deprecated_sm:w-full" >
         <div className='my-16'>
@@ -183,18 +183,18 @@ export function InsiderProfileClaim() {
               'flex items-center rounded-xl p-4 w-2/5 cursor-pointer',
               'bg-modal-overlay-dk border border-accent-border-dk mr-5'
             )}
-            onClick={() => {
-              if (!reservedProfileMinted) {
-                setSelectedReservedProfile(profile);
-              }
-            }}
+              onClick={() => {
+                if (!reservedProfileMinted) {
+                  setSelectedReservedProfile(profile);
+                }
+              }}
             >
               <input
                 className='mr-4'
                 type="radio"
                 disabled={reservedProfileMinted}
                 checked={selectedReservedProfile === profile ||
-                    reservedProfileMinted}
+                  reservedProfileMinted}
                 onChange={() => null}
               />
               <div className='flex flex-col w-[90%]'>

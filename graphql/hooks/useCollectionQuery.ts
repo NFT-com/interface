@@ -6,44 +6,43 @@ import { PartialDeep } from 'type-fest';
 
 export interface CollectionData {
   data: PartialDeep<CollectionInfo>;
+  error: any;
   loading: boolean;
   mutate: () => void;
 }
 
-export function useCollectionQuery(args: { chainId: string, contract: string } | { chainId: string, name: string }): CollectionData {
+export function useCollectionQuery(args: { chainId: string, contract: string } | { chainId: string, slug: string }): CollectionData {
   let query = { type: undefined, value: undefined };
-  const { chainId } = args;
-  const sdk = useGraphQLSDK();
-
   // Set query type
   if ('contract' in args) query = { type: 'contract', value: args.contract };
-  if ('name' in args) query = { type: 'name', value: args.name };
+  if ('slug' in args) query = { type: 'slug', value: args.slug };
 
+  const { chainId } = args;
+  const sdk = useGraphQLSDK();
   const keyString = `CollectionQuery ${query.value}-${chainId}`;
+  const input = {
+    input: query.type === 'contract'
+      ? {
+        chainId,
+        contract: query.value,
+        network: 'ethereum',
+      }
+      : {
+        chainId,
+        slug: query.value,
+        network: 'ethereum'
+      },
+  };
 
-  const { data } = useSWR(keyString, async () => {
-    if (!chainId || !query.value) {
-      return {};
-    }
-    const result = await sdk.Collection({
-      input: query.type === 'contract'
-        ? {
-          chainId,
-          contract: query.value,
-          network: 'ethereum',
-        }
-        : {
-          chainId,
-          name: query.value,
-          network: 'ethereum'
-        },
-    });
-    return result?.collection ?? {};
+  const { data, error, isLoading } = useSWR(keyString, async () => {
+    if (!chainId || !query.value) return {};
+    return await sdk.Collection(input).then(data => data?.collection ?? {});
   });
 
   return {
     data: data,
-    loading: !query.value || data == null,
+    error,
+    loading: [isLoading, !query.value, data == null].includes(true),
     mutate: () => {
       mutate(keyString);
     },

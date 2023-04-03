@@ -67,42 +67,43 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
   }, [likeType]);
   return (
     <div className={tw('flex flex-col',
-      'h-screen w-full min-w-screen min-h-screen',
+      'h-screen',
     )}>
       <div
-        className='flex-1 w-full'
-        style={{ minHeight: '100vh' }}
+        className='flex-1 w-full h-full'
       >
         {!hideHeader &&
-        <ClientOnly>
-          <Header />
-          <MobileSidebar/>
-          {searchModalOpen && <SearchModal />}
-        </ClientOnly>
+          <>
+            <Header />
+            <MobileSidebar />
+            {searchModalOpen && <SearchModal />}
+          </>
         }
         {!hideSearch &&
-          <div className='mt-24  mb-8 block minlg:hidden'>
+          <div className='mt-24 mb-8 block minlg:hidden'>
             <SearchContent isHeader mobileSearch mobileSidebar={false} />
           </div>
         }
-        {showDNavigation && <DiscoveryNavigation/>}
+        {showDNavigation && <DiscoveryNavigation />}
 
+        {/* <main className="flex-1 overflow-y-scroll"> */}
         {children}
+        {/* </main> */}
 
         {profileSelectModal && signed && <DynamicProfileSelectModal />}
 
         {emailCaptureModal && <DynamicEmailCaptureModal />}
         {signOutDialogOpen &&
-         <SignOutModal
-           visible={signOutDialogOpen}
-           onClose={() => {
-             setSignOutDialogOpen(false);
-             changeWallet && openConnectModal();
-             setChangeWallet(false);
-             setProfileSelectModalOpen(false);
-             setCurrentProfileUrl('');
-           }}
-         />
+          <SignOutModal
+            visible={signOutDialogOpen}
+            onClose={() => {
+              setSignOutDialogOpen(false);
+              changeWallet && openConnectModal();
+              setChangeWallet(false);
+              setProfileSelectModalOpen(false);
+              setCurrentProfileUrl('');
+            }}
+          />
         }
 
         {!hideFooter && <Footer />}

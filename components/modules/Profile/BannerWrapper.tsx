@@ -1,4 +1,4 @@
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';

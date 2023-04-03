@@ -1,5 +1,5 @@
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import { Collection, CollectionBanner, CollectionBody, CollectionDescription, CollectionDetails, CollectionHeader, CollectionMenu } from 'components/modules/Collection/Collection';
+import { Collection, CollectionBanner, CollectionBody, CollectionDescription, CollectionDetails, CollectionHeader } from 'components/modules/Collection/Collection';
 import NotFoundPage from 'pages/404';
 import { Doppler, getEnvBool } from 'utils/env';
 
@@ -13,8 +13,6 @@ export type CollectionPageRouteParams = {
 export default function CollectionPage() {
   const router = useRouter();
   const { contractAddr } = router.query;
-  console.log('%c Line:16 🥟 contractAddr', 'color:#33a5ff', contractAddr);
-
   const caseInsensitiveAddr = contractAddr?.toString().toLowerCase();
   if (!ethers.utils.isAddress(caseInsensitiveAddr) || !getEnvBool(Doppler.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED)) {
     return <NotFoundPage />;

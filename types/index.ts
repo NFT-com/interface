@@ -125,7 +125,7 @@ export type SitemapField = {
 export type SitemapQueryVariables = {
   chainId: string
   contract: string,
-  name: string,
+  slug: string,
   document: string,
   variables: Record<string, any>,
 }

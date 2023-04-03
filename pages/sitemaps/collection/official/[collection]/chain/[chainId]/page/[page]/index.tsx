@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { getSitemapUrl, teamAuthToken  } from 'lib/sitemap';
+import { getSitemapUrl, teamAuthToken } from 'lib/sitemap';
 import { GetServerSideProps } from 'next';
 import { getServerSideSitemapLegacy } from 'next-sitemap';
 

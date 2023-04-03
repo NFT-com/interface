@@ -10,7 +10,7 @@ export type DefaultPage = {
 }
 
 export type OfficialPage = DefaultPage & {
-  name: string;
+  slug: string;
 }
 
 export type CollectionProps = DefaultPage | OfficialPage;
@@ -27,7 +27,7 @@ export type CollectionContextType = {
   contractAddr: string | string[];
   currentPage: number;
   setCurrentPage: Dispatch<SetStateAction<number>>;
-  officialName: string | string[];
+  slug: string | string[];
   found: number;
   selectedTab: number;
   setSelectedTab: Dispatch<SetStateAction<number>>;

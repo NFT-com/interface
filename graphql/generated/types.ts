@@ -206,6 +206,7 @@ export type Collection = {
   likeCount?: Maybe<Scalars['Int']>;
   logoUrl?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
   stats?: Maybe<NftPortStatistics>;
   totalVolume?: Maybe<Scalars['Float']>;
 };
@@ -219,8 +220,8 @@ export type CollectionInfo = {
 export type CollectionInput = {
   chainId?: InputMaybe<Scalars['String']>;
   contract?: InputMaybe<Scalars['Address']>;
-  name?: InputMaybe<Scalars['String']>;
   network: Scalars['String'];
+  slug?: InputMaybe<Scalars['String']>;
 };
 
 export type CollectionLeaderboard = {
@@ -1462,7 +1463,7 @@ export type OfficialCollection = {
   chainId: Scalars['String'];
   contract: Scalars['Address'];
   id: Scalars['ID'];
-  name: Scalars['String'];
+  slug: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
 
@@ -3447,7 +3448,7 @@ export type OfficialCollectionsQueryVariables = Exact<{
 }>;
 
 
-export type OfficialCollectionsQuery = { __typename?: 'Query', officialCollections?: { __typename?: 'OfficialCollectionsOutput', pageCount?: number | null, totalItems?: number | null, items: Array<{ __typename?: 'OfficialCollection', id: string, contract: any, name: string, chainId: string, updatedAt: any }> } | null };
+export type OfficialCollectionsQuery = { __typename?: 'Query', officialCollections?: { __typename?: 'OfficialCollectionsOutput', pageCount?: number | null, totalItems?: number | null, items: Array<{ __typename?: 'OfficialCollection', id: string, contract: any, slug: string, chainId: string, updatedAt: any }> } | null };
 
 export type MyPreferencesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5629,7 +5630,7 @@ export const OfficialCollectionsDocument = gql`
     items {
       id
       contract
-      name
+      slug
       chainId
       updatedAt
     }

@@ -1,5 +1,5 @@
 import EmailStatusIcon from 'components/elements/EmailStatusIcon';
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { ModalButton } from 'components/elements/ModalButton';
 import { useConfirmEmailMutation } from 'graphql/hooks/useConfirmEmailMutation';
 import { useCreateUserMutation } from 'graphql/hooks/useCreateUserMutation';

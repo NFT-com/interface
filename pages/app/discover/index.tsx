@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { SearchBar } from 'components/elements/SearchBar';
 import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
@@ -49,7 +49,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
       collectionAddresses: contractAddresses,
       count: 5
     }).then((collectionsData => {
-      const sortedNftsForCollections = collectionsData.nftsForCollections.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
+      const sortedNftsForCollections = collectionsData.nftsForCollections.sort((a, b) => (a.collectionAddress > b.collectionAddress) ? 1 : -1);
       nftsForCollections = sortedNftsForCollections.filter(i => i.nfts.length > 0);
     }));
     return nftsForCollections;
@@ -60,35 +60,35 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   }, [selectedCuratedCollection?.contractAddresses.addresses]);
 
   useEffect(() => {
-    if(isNullOrEmpty(curatedCollections)) {
+    if (isNullOrEmpty(curatedCollections)) {
       setCuratedCollections(getEnvBool(Doppler.NEXT_PUBLIC_DEV_CONTENT_MODEL_ENABLED) ? dataDev : data);
     }
-  },[curatedCollections, data, dataDev, setCuratedCollections]);
+  }, [curatedCollections, data, dataDev, setCuratedCollections]);
 
   useEffect(() => {
     const query = Object.keys(router.query);
-    if(query && query[0]){
+    if (query && query[0]) {
       toggleTabView(query[0]);
-    }else {
+    } else {
       toggleTabView('collections');
     }
   }, [router]);
 
   useEffect(() => {
     setPage(1);
-  },[selectedCuratedCollection?.tabTitle]);
+  }, [selectedCuratedCollection?.tabTitle]);
 
   useEffect(() => {
-    if(isNullOrEmpty(selectedCuratedCollection)) {
+    if (isNullOrEmpty(selectedCuratedCollection)) {
       curatedCollections && curatedCollections.length > 0 && setSelectedCuratedCollection(curatedCollections[0]);
     }
-  },[curatedCollections, selectedCuratedCollection, setSelectedCuratedCollection]);
+  }, [curatedCollections, selectedCuratedCollection, setSelectedCuratedCollection]);
 
   useEffect(() => {
-    const paginatedContracts = nftsForCollections?.slice(0, getPerPage('discover', screenWidth, sideNavOpen)*page);
-    const sortedPaginatedAddresses = paginatedContracts?.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
+    const paginatedContracts = nftsForCollections?.slice(0, getPerPage('discover', screenWidth, sideNavOpen) * page);
+    const sortedPaginatedAddresses = paginatedContracts?.sort((a, b) => (a.collectionAddress > b.collectionAddress) ? 1 : -1);
     nftsForCollections && nftsForCollections.length > 0 && setPaginatedAddresses([...sortedPaginatedAddresses]);
-  },[nftsForCollections, page, screenWidth, sideNavOpen]);
+  }, [nftsForCollections, page, screenWidth, sideNavOpen]);
 
   const PROFILE_LOAD_COUNT = getPerPage('discoverProfiles', screenWidth);
 
@@ -125,7 +125,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
     }
   }, [allLoadedProfiles, lastAddedPage, loadedProfilesNextPage, setTotalCount]);
   const leaderBoardOrCollectionView = () => {
-    if(isLeaderBoard){
+    if (isLeaderBoard) {
       return (
         <div className={tw(
           'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
@@ -143,7 +143,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                     logoUrl={collectionLeader.logoUrl}
                     contract={collectionLeader.contract}
                     stats={collectionLeader.stats}
-                    key={index}/>
+                    key={index} />
                 );
               })
               : (<div className="flex items-center justify-center min-h-[16rem] w-full">
@@ -152,7 +152,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
           }
         </div>
       );
-    }else{
+    } else {
       return (
         <div className={tw(
           'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
@@ -169,7 +169,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                 description={collection.nfts[0].metadata.description}
                 countOfElements={collection.actualNumberOfNFTs}
                 maxSymbolsInString={180}
-                images={collectionCardImages(collection)}/>
+                images={collectionCardImages(collection)} />
             );
           })}
         </div>
@@ -184,7 +184,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
     return self.indexOf(value) === index;
   };
   const returnProfileBlock = () => {
-    if(allLoadedProfiles && allLoadedProfiles.length){
+    if (allLoadedProfiles && allLoadedProfiles.length) {
       return (
         <div>
           <div className={tw(
@@ -239,7 +239,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
           </div>
         </div>
       );
-    }else {
+    } else {
       return (
         <div className="flex items-center justify-center min-h-[16rem] w-full">
           <Loader />
@@ -271,7 +271,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
               (<div className="flex items-center justify-center min-h-[16rem] w-full">
                 <Loader />
               </div>)}
-            { !isLeaderBoard && paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.length < nftsForCollections?.length &&
+            {!isLeaderBoard && paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.length < nftsForCollections?.length &&
               <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
                 <Button
                   size={ButtonSize.LARGE}
@@ -289,22 +289,22 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   };
   const checkActiveTab = () => {
     switch (tabView) {
-    case 'collections':
-      return returnCollectionBlock();
-    case 'profiles':
-      return returnProfileBlock();
-    default:
-      return returnCollectionBlock();
+      case 'collections':
+        return returnCollectionBlock();
+      case 'profiles':
+        return returnProfileBlock();
+      default:
+        return returnCollectionBlock();
     }
   };
   useEffect(() => {
-    if(tabView === 'collections'){
+    if (tabView === 'collections') {
       toggleLeaderBoardState(true);
-    }else {
+    } else {
       toggleLeaderBoardState(false);
     }
   }, [tabView]);
-  return(
+  return (
     <>
       <div className="p-2 minmd:p-4 minlg:p-8 minhd:p-16 minmd:m-0 mb-10 minlg:mb-10 minlg:mt-20 minmd:max-w-full self-center minmd:self-stretch minxl:mx-auto min-h-screen ">
         <div className="flex">
@@ -313,10 +313,10 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
               isLeaderBoard && tabView === 'collections' && (
                 <div className='mb-10 mt-8'>
                   <div className="text-xl minmd:text-3xl minmd:mb-5 mb-3	minlg:text-[54px] font-semibold text-[#000000] text-center minlg:leading-[63px] minlg:mb-10">
-                    Find your next collectible<br/> <span className="text-[#000000] textColorGradient">wherever it lives</span>
+                    Find your next collectible<br /> <span className="text-[#000000] textColorGradient">wherever it lives</span>
                   </div>
                   <div>
-                    <SearchBar leaderBoardSearch/>
+                    <SearchBar leaderBoardSearch />
                   </div>
                 </div>
               )
@@ -328,8 +328,8 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                   <div className="flex flex-col minmd:flex-row minmd:items-center">
                     {isLeaderBoard && <span className="text-[1.75rem] font-[500] mr-10">Leaderboard</span>}
                     <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
-                      {!isLeaderBoard ? <LeaderBoardIcon className="mr-2"/> : null}
-                      {!isLeaderBoard ? 'Show leaderboard' : tabView === 'profiles' ? 'View Profiles' : 'View Collections' }
+                      {!isLeaderBoard ? <LeaderBoardIcon className="mr-2" /> : null}
+                      {!isLeaderBoard ? 'Show leaderboard' : tabView === 'profiles' ? 'View Profiles' : 'View Collections'}
                     </button>
                   </div>
                 </div>
@@ -338,7 +338,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                     <div className="flex items-center ">
                       <TimePeriodToggle
                         onChange={(val) => changeTimePeriod(val)}
-                        activePeriod={activePeriod}/>
+                        activePeriod={activePeriod} />
                     </div>
                   )
                 }
@@ -355,7 +355,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
 DiscoverPage.getLayout = function getLayout(page) {
   return (
     <DefaultLayout>
-      { page }
+      {page}
     </DefaultLayout>
   );
 };

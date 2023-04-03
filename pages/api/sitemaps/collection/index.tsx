@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { SitemapField } from 'types';
 
-import { client, encodeCollectionNameURI, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
+import { client, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 /**
@@ -38,9 +38,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }).then(data => data.officialCollections);
 
     if (officialCollections && officialCollections?.items) {
-      officialCollections.items.forEach(({ name, updatedAt }) => {
+      officialCollections.items.forEach(({ slug, updatedAt }) => {
         sitemapFields.push({
-          loc: `${siteUrlHost}/${encodeCollectionNameURI(name)}`,
+          loc: `${siteUrlHost}/${slug}`,
           lastmod: updatedAt,
           priority: 0.7,
           changefreq: 'daily'

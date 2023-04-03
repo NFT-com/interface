@@ -66,7 +66,7 @@ const useCollectionContext = () => {
 
 export function Collection(props: CollectionProps) {
   const router = useRouter();
-  const { contractAddr, officialName } = router.query;
+  const { contractAddr, slug } = router.query;
 
   const defaultChainId = useDefaultChainId();
   const { setSearchModalOpen, id_nftName, sideNavOpen, setSideNavOpen, setModalType, setCollectionPageAppliedFilters, setClearedFilters } = useSearchModal();
@@ -81,7 +81,7 @@ export function Collection(props: CollectionProps) {
   const [collectionNfts, setCollectionNfts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { usePrevious } = usePreviousValue();
-  const prevContractAddr = usePrevious(contractAddr || officialName);
+  const prevContractAddr = usePrevious(contractAddr || slug);
   const prevPage = usePrevious(currentPage);
   const prevId_nftName = usePrevious(id_nftName);
 
@@ -100,7 +100,7 @@ export function Collection(props: CollectionProps) {
       } :
       {
         chainId: defaultChainId,
-        name: propsGuard.value
+        slug: propsGuard.value
       });
   const { data: collectionMetadata } = useSWR(`ContractMetadata ${propsGuard.value}`,
     async () => await getContractMetadata(
@@ -134,7 +134,7 @@ export function Collection(props: CollectionProps) {
     contractAddr,
     currentPage,
     setCurrentPage,
-    officialName,
+    slug,
     found,
     selectedTab,
     setSelectedTab,
@@ -158,7 +158,7 @@ export function Collection(props: CollectionProps) {
     contractAddr,
     currentPage,
     setCurrentPage,
-    officialName,
+    slug,
     found,
     setFound,
     setLike,
@@ -173,7 +173,7 @@ export function Collection(props: CollectionProps) {
   ]);
 
   useEffect(() => {
-    if (![contractAddr, officialName].includes(prevContractAddr)) {
+    if (![contractAddr, slug].includes(prevContractAddr)) {
       setCollectionNfts([]);
       setCurrentPage(1);
       setFound(0);
@@ -185,7 +185,7 @@ export function Collection(props: CollectionProps) {
       setCurrentPage(1);
       setFound(0);
     }
-  }, [contractAddr, officialName, id_nftName, prevContractAddr, prevId_nftName, setClearedFilters, setCollectionPageAppliedFilters]);
+  }, [contractAddr, slug, id_nftName, prevContractAddr, prevId_nftName, setClearedFilters, setCollectionPageAppliedFilters]);
 
   useEffect(() => {
     currentPage === 1 && collectionContract && fetchTypesenseMultiSearch({
@@ -255,7 +255,7 @@ export const CollectionBanner: React.FC = () => {
 };
 
 export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) => {
-  const { collectionContract, collectionData, mutateCollectionData, collectionName, collectionNfts, collectionPreferredOwnerData, collectionSalesHistory, setLike, unsetLike } = useCollectionContext();
+  const { collectionContract, collectionData, mutateCollectionData, collectionName, collectionPreferredOwnerData, setLike, unsetLike } = useCollectionContext();
   return (
     <>
       <div className='font-noi-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
@@ -312,11 +312,9 @@ export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) 
               }
             </div>
           </div>
-
           <div className='flex flex-col'>
             <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Contract Address</p>
             <div className='mt-1 text-[#B59007] font-medium font-mono'>
-
               <a
                 target="_blank"
                 rel="noreferrer"
@@ -568,7 +566,7 @@ export const CollectionNfts: React.FC = () => {
 };
 
 export const CollectionBody: React.FC = () => {
-  const { collectionContract, selectedTab, tabs, sideNavOpen } = useCollectionContext();
+  const { collectionContract, selectedTab, tabs } = useCollectionContext();
   return (
     <>
       <div className={tw(

@@ -2,7 +2,7 @@
 import { SitemapField } from 'types';
 
 import { BigNumber } from 'ethers';
-import { client, decodeCollectionNameURI, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
+import { client, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 /**
@@ -17,7 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const page = parseInt(pageCtx as string);
     const sitemapFields: SitemapField[] = [];
-    const collectionName = decodeCollectionNameURI(collection as string);
     const siteUrlHost = getSitemapUrl({
       host: req.headers.host,
       path: '/app/nft'
@@ -31,14 +30,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     client.setHeader('teamKey', teamKey);
 
     // Add collection name lookup
-    const officialCollection = await client.request(gqlQueries.collectionByName, {
+    const officialCollection = await client.request(gqlQueries.collectionBySlug, {
       input: {
-        name: collectionName
+        network: 'ethereum', // Update once we expand networks
+        slug: collection
       }
-    });
+    }).then(data => data?.collection?.collection);
+
     if (!officialCollection && !officialCollection.contract) {
       throw new Error('Collection Not Found');
     }
+    console.log('%c Line:41 🍋 officialCollection', 'color:#33a5ff', officialCollection);
 
     const officialCollectionNfts = await client.request(
       gqlQueries.collectionNfts,
@@ -49,6 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           offsetPageInput: { page }
         }
       }).then(data => data.officialCollectionNFTs);
+    console.log('%c Line:46 🍒 officialCollectionNfts', 'color:#7f2b82', officialCollectionNfts.items[0]);
 
     if (officialCollectionNfts && officialCollectionNfts?.items) {
       officialCollectionNfts.items.forEach(({ tokenId, updatedAt }) => {

@@ -1,5 +1,5 @@
 import { BidStatusIcon } from 'components/elements/BidStatusIcon';
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { getAddressForChain, nftProfile } from 'constants/contracts';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { ProfileStatus } from 'graphql/generated/types';
@@ -54,21 +54,9 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
 
   const getProfileStatusText = useCallback((profileStatus, isOwner) => {
     switch (profileStatus) {
-    case ProfileStatus.Available:
-      return (
-        <p className='text-[#2AAE47] mb-3'>Great! Profile name is available :)</p>
-      );
-    case ProfileStatus.Pending:
-      return (
-        <p>Pending Claim</p>
-      );
-    case ProfileStatus.Owned:
-      return isOwner
-        ? (
-          <p className='text-[#2AAE47] mb-3'>You are the owner!</p>
-        )
-        : (
-          <p className='text-[#F02D21] mb-3'>Sorry, profile name unavailable</p>
+      case ProfileStatus.Available:
+        return (
+          <p className='text-[#2AAE47] mb-3'>Great! Profile name is available :)</p>
         );
     case 'Listed':
       return isOwner
@@ -132,7 +120,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      if(type === 'Free'){
+      if (type === 'Free') {
         setFreeProfile(inputValue);
       } else {
         setGKProfile([inputValue, name]);
@@ -150,7 +138,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
           'rounded-l-lg py-3 text-lg',
           'bg-[#F8F8F8]'
         )}>
-      NFT.com/
+          NFT.com/
         </div>
         <input
           name={name}
@@ -171,7 +159,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
               const validReg = /^[a-z0-9_]*$/;
               if (
                 validReg.test(e.target.value.toLowerCase()) &&
-                    e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
+                e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
               ) {
                 setInputValue(e.target.value.toLowerCase());
                 setError(null);

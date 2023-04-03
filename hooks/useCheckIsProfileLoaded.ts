@@ -1,3 +1,4 @@
+'use client';
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 
 import { useNonProfileModal } from './state/useNonProfileModal';
@@ -8,11 +9,13 @@ import { useEffect } from 'react';
 export function useCheckIsProfileLoaded() {
   const { forceReload } = useNonProfileModal();
   const { currentProfileId, user } = useUser();
-
+  const isClient = typeof window !== 'undefined';
   const checkStoreUserLikes = () => {
-    const data = localStorage.getItem('nonAuthLikeObject');
-    const likeObject = JSON.parse(data);
-    return likeObject;
+    if (isClient) {
+      const data = localStorage.getItem('nonAuthLikeObject');
+      const likeObject = JSON.parse(data);
+      return likeObject;
+    }
   };
   const likeObject = checkStoreUserLikes();
   const { setLike } = useSetLikeMutation(
@@ -21,12 +24,14 @@ export function useCheckIsProfileLoaded() {
   );
 
   useEffect(() => {
-    if(currentProfileId && user.currentProfileUrl && likeObject) {
+    if (currentProfileId && user.currentProfileUrl && likeObject) {
       setLike();
       setTimeout(() => {
         forceReload(likeObject?.likedId, likeObject?.likedType);
-        localStorage.removeItem('nonAuthLikeObject');
+        if (isClient) {
+          localStorage.removeItem('nonAuthLikeObject');
+        }
       }, 500);
     }
-  }, [user, currentProfileId, setLike, likeObject, forceReload]);
+  }, [user, currentProfileId, setLike, likeObject, forceReload, isClient]);
 }

@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';

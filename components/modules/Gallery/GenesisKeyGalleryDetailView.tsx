@@ -1,4 +1,4 @@
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { PropertyCard } from 'components/modules/NFTDetail/PropertyCard';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useGenesisKeyMetadata } from 'hooks/useGenesisKeyMetadata';
@@ -128,44 +128,44 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
               isDownloading ? 'opacity-80' : 'opacity-100',
               'hover:opacity-75',
             )}
-            onClick={() => {
-              if (isDownloading) {
-                return;
-              }
-              try {
-                setIsDownloading(true);
-                const zip = new JSZip();
-                let count = 0;
-                const zipFilename = `NFT_COM_GK${formatID(BigNumber.from(props.id))}.zip`;
-                const urls = [
-                  processIPFSURL(genesisKeyMetadata?.metadata?.image),
-                  processIPFSURL(genesisKeyMetadata?.metadata?.animation_url),
-                ];
-                urls.forEach(url => {
-                  JSZipUtils.getBinaryContent(url, function (err, data) {
-                    if (err) {
-                      throw err;
-                    }
-                    zip.file(
-                      count === 1
-                        ? `NFT_COM_GK${formatID(BigNumber.from(props.id))}.mp4`
-                        : `NFT_COM_GK${formatID(BigNumber.from(props.id))}.png`,
-                      data,
-                      { binary: true }
-                    );
-                    ++count;
-                    if (count === urls.length) {
-                      zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, zipFilename);
-                        setIsDownloading(false);
-                      });
-                    }
+              onClick={() => {
+                if (isDownloading) {
+                  return;
+                }
+                try {
+                  setIsDownloading(true);
+                  const zip = new JSZip();
+                  let count = 0;
+                  const zipFilename = `NFT_COM_GK${formatID(BigNumber.from(props.id))}.zip`;
+                  const urls = [
+                    processIPFSURL(genesisKeyMetadata?.metadata?.image),
+                    processIPFSURL(genesisKeyMetadata?.metadata?.animation_url),
+                  ];
+                  urls.forEach(url => {
+                    JSZipUtils.getBinaryContent(url, function (err, data) {
+                      if (err) {
+                        throw err;
+                      }
+                      zip.file(
+                        count === 1
+                          ? `NFT_COM_GK${formatID(BigNumber.from(props.id))}.mp4`
+                          : `NFT_COM_GK${formatID(BigNumber.from(props.id))}.png`,
+                        data,
+                        { binary: true }
+                      );
+                      ++count;
+                      if (count === urls.length) {
+                        zip.generateAsync({ type: 'blob' }).then(function (content) {
+                          saveAs(content, zipFilename);
+                          setIsDownloading(false);
+                        });
+                      }
+                    });
                   });
-                });
-              } catch (e) {
-                setIsDownloading(false);
-              }
-            }}
+                } catch (e) {
+                  setIsDownloading(false);
+                }
+              }}
             >
               {isDownloading ? <Loader /> : <Download size={16} color={secondaryIcon} fill={secondaryIcon} />}
               <span className='text-xs text-left ml-2'>

@@ -1,4 +1,4 @@
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { ProfilePage } from 'components/modules/Profile/ProfilePage';
 import { tw } from 'utils/tw';
@@ -18,7 +18,7 @@ export default function ProfileURI() {
     if (profileURI !== URI?.toLowerCase()) {
       router.push(URI?.toLowerCase());
     }
-  },[router, profileURI]);
+  }, [router, profileURI]);
 
   if (profileURI?.toString()?.toLowerCase() == 'you') router.push('/app/mint-profiles');
 
@@ -40,7 +40,7 @@ export default function ProfileURI() {
 ProfileURI.getLayout = function getLayout(page) {
   return (
     <DefaultLayout>
-      { page }
+      {page}
     </DefaultLayout>
   );
 };

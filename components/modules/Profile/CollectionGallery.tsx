@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { NFTCollectionCard } from 'components/elements/NFTCollectionCard';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { Nft } from 'graphql/generated/types';
