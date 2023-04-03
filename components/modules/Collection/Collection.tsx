@@ -66,7 +66,9 @@ const useCollectionContext = () => {
 
 export function Collection(props: CollectionProps) {
   const router = useRouter();
-  const { contractAddr, slug } = router.query;
+  const { contractAddr, slug: slugQuery } = router.query;
+  const contract = contractAddr as string;
+  const slug = slugQuery as string;
 
   const defaultChainId = useDefaultChainId();
   const { setSearchModalOpen, id_nftName, sideNavOpen, setSideNavOpen, setModalType, setCollectionPageAppliedFilters, setClearedFilters } = useSearchModal();
@@ -81,7 +83,7 @@ export function Collection(props: CollectionProps) {
   const [collectionNfts, setCollectionNfts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { usePrevious } = usePreviousValue();
-  const prevContractAddr = usePrevious(contractAddr || slug);
+  const prevContractAddr = usePrevious(contract || slug);
   const prevPage = usePrevious(currentPage);
   const prevId_nftName = usePrevious(id_nftName);
 
@@ -93,14 +95,14 @@ export function Collection(props: CollectionProps) {
   const collectionSalesHistory = useGetContractSalesStatisticsQuery(collectionContract);
   const collectionNFTInfo = useGetNFTDetailsQuery(collectionContract, collectionNfts[0]?.document?.tokenId);
   const { data: collectionData, mutate: mutateCollectionData } = useCollectionQuery(
-    propsGuard.type === 'contract' ?
+    propsGuard.type === 'contract' && !slug ?
       {
         chainId: defaultChainId,
-        contract: propsGuard.value
+        contract,
       } :
       {
         chainId: defaultChainId,
-        slug: propsGuard.value
+        slug
       });
   const { data: collectionMetadata } = useSWR(`ContractMetadata ${propsGuard.value}`,
     async () => await getContractMetadata(
@@ -271,14 +273,14 @@ export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) 
               : (collectionData?.collection?.name || collectionName)}
           </h2>
           {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-          <div className='ml-3'>
-            <LikeCount
-              count={collectionData?.collection?.likeCount}
-              isLiked={collectionData?.collection?.isLikedBy}
-              onClick={collectionData?.collection?.isLikedBy ? unsetLike :setLike}
-              mutate={mutateCollectionData}
-            />
-          </div>
+            <div className='ml-3'>
+              <LikeCount
+                count={collectionData?.collection?.likeCount}
+                isLiked={collectionData?.collection?.isLikedBy}
+                onClick={collectionData?.collection?.isLikedBy ? unsetLike : setLike}
+                mutate={mutateCollectionData}
+              />
+            </div>
           }
         </div>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
@@ -520,29 +522,35 @@ export const CollectionNfts: React.FC = () => {
             <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{found > 1 ? `${found} NFTS` : `${found} NFT`}</p>
           }
           <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
-            {collectionNfts.map((nft, index) => {
+            {collectionNfts.map((nft, i) => {
               return !getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)
                 ? (
-                  <div className="NftCollectionItem" key={index}>
+                  <div
+                    className="NftCollectionItem"
+                    key={`${nft.contractAddr}-${nft.tokenId}-${i}`}
+                  >
                     <NFTCard
                       contractAddress={nft.document.contractAddr}
                       tokenId={nft.document.tokenId}
                       title={nft.document.nftName}
                       collectionName={nft.document.contractName}
                       images={[]}
-                      redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
+                      redirectTo={nft.document.nftName && `/ app / nft / ${nft.document.contractAddr} /${nft.document.tokenId} `}
                       description={nft.document.nftDescription ? nft.document.nftDescription.slice(0, 50) + '...' : ''}
                     />
                   </div>) :
                 (
-                  <div className="NftCollectionItem" key={index}>
+                  <div
+                    className="NftCollectionItem"
+                    key={`${nft.contractAddr}-${nft.tokenId}-${i}`}
+                  >
                     <NFTCardNew
                       contractAddr={nft.document.contractAddr}
                       tokenId={nft.document.tokenId}
                       name={nft.document.nftName}
                       collectionName={nft.document.contractName}
                       images={[]}
-                      redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
+                      redirectTo={nft.document.nftName && `/ app / nft / ${nft.document.contractAddr} /${nft.document.tokenId}`}
                     />
                   </div>
                 );
@@ -561,7 +569,7 @@ export const CollectionNfts: React.FC = () => {
           </div>}
         </div>
         : <div className="font-noi-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>}
-    </div>
+    </div >
   );
 };
 

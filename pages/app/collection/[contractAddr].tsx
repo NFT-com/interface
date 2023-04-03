@@ -1,14 +1,18 @@
+import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import { Collection, CollectionBanner, CollectionBody, CollectionDescription, CollectionDetails, CollectionHeader } from 'components/modules/Collection/Collection';
 import NotFoundPage from 'pages/404';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import { ethers } from 'ethers';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
-export type CollectionPageRouteParams = {
-  address: string;
-}
+const Collection = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.Collection), { loading: () => <LoaderPageFallback /> }); // Adds fallback while loading Collection
+const CollectionBanner = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionBanner));
+const CollectionBody = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionBody));
+const CollectionDescription = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionDescription));
+const CollectionDetails = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionDetails));
+const CollectionHeader = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionHeader));
 
 export default function CollectionPage() {
   const router = useRouter();

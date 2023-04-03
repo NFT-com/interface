@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function LoaderPageFallback() {
   return (
-    <div className='flex justify-center items-center py-10 h-full w-full' >
+    <div className='flex justify-center items-center py-10 min-h-screen w-full' >
       <span className="flex flex-col gap-4">
         <h2 className="text-3xl font-black">
           Loading...
