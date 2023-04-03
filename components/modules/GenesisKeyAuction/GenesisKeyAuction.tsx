@@ -135,10 +135,10 @@ export function GenesisKeyAuction() {
       'w-screen h-screen bg-no-repeat bg-center bg-cover',
       'backdrop-blur-sm backdrop-opacity-80'
     )}
-      style={{
-        // eslint-disable-next-line max-len
-        background: 'radial-gradient(59.6% 80.37% at 50.68% 83.52%, #272F46 0%, #202F56 46.87%, #030406 100%)'
-      }}>
+    style={{
+      // eslint-disable-next-line max-len
+      background: 'radial-gradient(59.6% 80.37% at 50.68% 83.52%, #272F46 0%, #202F56 46.87%, #030406 100%)'
+    }}>
       <div className={tw(
         'absolute bottom-0 w-full h-full',
         'justify-center items-center',
@@ -147,11 +147,11 @@ export function GenesisKeyAuction() {
         'bg-clip-content',
         'backdrop-saturate-150',
       )}
-        style={
-          (isMobile && isNullOrEmpty(keyBackground.img)) ?
-            { backgroundImage: `url(${keyBackground.img})` }
-            : { backgroundImage: '' }
-        }
+      style={
+        (isMobile && isNullOrEmpty(keyBackground.img)) ?
+          { backgroundImage: `url(${keyBackground.img})` }
+          : { backgroundImage: '' }
+      }
       >
         {!isMobile &&
           <div

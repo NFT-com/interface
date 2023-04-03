@@ -289,12 +289,12 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   };
   const checkActiveTab = () => {
     switch (tabView) {
-      case 'collections':
-        return returnCollectionBlock();
-      case 'profiles':
-        return returnProfileBlock();
-      default:
-        return returnCollectionBlock();
+    case 'collections':
+      return returnCollectionBlock();
+    case 'profiles':
+      return returnProfileBlock();
+    default:
+      return returnCollectionBlock();
     }
   };
   useEffect(() => {
