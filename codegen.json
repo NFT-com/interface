@@ -1,6 +1,6 @@
 {
   "overwrite": true,
-  "schema": "http://localhost:8080/graphql",
+  "schema": "http://localhost:10010/graphql",
   "documents": [
     "graphql/queries/*.graphql",
     "graphql/mutations/*.graphql"
