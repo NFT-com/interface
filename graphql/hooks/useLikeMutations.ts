@@ -55,12 +55,15 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         if (!result) {
           throw Error('SetLike mutation failed.');
         }
-        const data = localStorage.getItem('nonAuthLikeObject');
-        const storedLIke = JSON.parse(data);
-        if(storedLIke){
+        const isClient = typeof window !== 'undefined';
+        const data = isClient ? localStorage.getItem('nonAuthLikeObject') : null;
+        const storedLike = data ? JSON.parse(data) : null;
+        if(storedLike){
           setTimeout(() => {
-            forceReload(storedLIke?.likedId, storedLIke?.likedType);
-            localStorage.removeItem('nonAuthLikeObject');
+            forceReload(storedLike?.likedId, storedLike?.likedType);
+            if (isClient) {
+              localStorage.removeItem('nonAuthLikeObject');
+            }
           }, 500);
         }
         setLikeLoading(false);
