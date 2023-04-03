@@ -48,8 +48,9 @@ export interface CollectionCardProps {
 
 export function CollectionCard(props: CollectionCardProps) {
   const defaultChainId = useDefaultChainId();
+
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings || props?.nft) ? null : props.tokenId);
-  const { data: collectionData, mutate: mutateCollectionData } = useCollectionLikeCountQuery(defaultChainId, props?.contractAddr || props?.contractAddress);
+  const { data: collectionData, mutate: mutateCollectionData } = useCollectionLikeCountQuery(props?.contractAddr || props?.contractAddress);
 
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
@@ -82,8 +83,8 @@ export function CollectionCard(props: CollectionCardProps) {
           <div className='absolute top-4 right-4 z-50'>
             <LikeCount
               count={collectionData?.collection?.likeCount}
-              isLiked={collectionData?.collection?.isLikedByUser}
-              onClick={collectionData?.collection?.isLikedByUser ? unsetLike :setLike}
+              isLiked={collectionData?.collection?.isLikedBy}
+              onClick={collectionData?.collection?.isLikedBy ? unsetLike :setLike}
               mutate={mutateCollectionData}
             />
           </div>

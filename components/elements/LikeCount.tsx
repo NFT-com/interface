@@ -1,3 +1,4 @@
+import { useUser } from 'hooks/state/useUser';
 import { tw } from 'utils/tw';
 
 import { Player } from '@lottiefiles/react-lottie-player';
@@ -12,37 +13,49 @@ type LikeCountProps = {
 }
 
 export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCountProps) {
+  const { currentProfileId, user } = useUser();
+
   const [clicked, setClicked] = useState(false);
   const [liked, setLiked] = useState(null);
-  const [likeCount, setLikeCount] = useState(null);
-
+  const [isDisabled, setDisabled] = useState(false);
   useEffect(() => {
     setLiked(isLiked);
-    setLikeCount(count);
-  }, [count, isLiked]);
+  }, [isLiked]);
 
   function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+  const handleClick = async () => {
+    setDisabled(true);
+    setTimeout(() => {
+      setDisabled(false);
+    }, 1000);
+    if (!user.currentProfileUrl && !currentProfileId) {
+      return;
+    }else {
+      if(!liked) {
+        setClicked(true);
+        //await timeout is used here to allow the animation to fully animate before hiding it again
+        await timeout(700);
+        setLiked(true);
+        setClicked(false);
+        mutate();
+      } else {
+        setLiked(false);
+        await timeout(700);
+        setClicked(false);
+        mutate();
+      }
+    }
+  };
 
   return (
-    <div
+    <button
+      disabled={isDisabled}
       onClick={async(e) => {
         e.preventDefault();
         onClick && onClick();
-        if(!liked) {
-          setClicked(true);
-          setLikeCount(likeCount + 1);
-          //await timeout is used here to allow the animation to fully animate before hiding it again
-          await timeout(700);
-          setLiked(true);
-          setClicked(false);
-          mutate();
-        } else {
-          mutate();
-          setLiked(false);
-          setLikeCount(likeCount - 1);
-        }
+        await handleClick();
       }
       }
       className={tw(
@@ -51,7 +64,7 @@ export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCount
       )}
     >
       <div className='h-full flex flex-row items-center justify-center space-x-2'>
-        
+
         {clicked && !liked ?
           <>
             <div className='w-[18px] h-5 flex'></div>
@@ -71,22 +84,21 @@ export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCount
             />
           </div>
         }
-        
-        {likeCount > 0 &&
-            <p className={tw(
-              'font-noi-grotesk font-medium tracking-normal',
-              liked ? 'text-alert-red-light' : 'text-key-bg',
-            )}>
-              {
-                new Intl.NumberFormat('en-US', {
-                  notation: 'compact',
-                  compactDisplay: 'short'
-                }).format(likeCount)
-              }
-            </p>
+
+        {count > 0 &&
+          <p className={tw(
+            'font-noi-grotesk font-medium tracking-normal',
+            liked ? 'text-alert-red-light' : 'text-key-bg',
+          )}>
+            {
+              new Intl.NumberFormat('en-US', {
+                notation: 'compact',
+                compactDisplay: 'short'
+              }).format(count)
+            }
+          </p>
         }
       </div>
-    </div>
+    </button>
   );
 }
-

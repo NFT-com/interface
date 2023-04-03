@@ -87,7 +87,7 @@ export function useUser() {
 
   return {
     user: data,
-    currentProfileId: profileData?.profile?.id,
+    currentProfileId: profileData?.profile?.id ?? '',
     loading,
     setDarkMode,
     setCurrentProfileUrl,

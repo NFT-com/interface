@@ -28,7 +28,7 @@ export interface NftCardProps {
   contractAddr: string;
   tokenId: string;
   redirectTo: string;
-  
+
   listings?: PartialDeep<TxActivity>[];
   nft?: PartialDeep<DetailedNft>;
   isOwnedByMe?: boolean;
@@ -44,6 +44,7 @@ export function NFTCard(props: NftCardProps) {
   const defaultChainId = useDefaultChainId();
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
+
   const { getByContractAddress } = useSupportedCurrencies();
 
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nft is passed by setting tokenId to null
@@ -59,20 +60,20 @@ export function NFTCard(props: NftCardProps) {
     nft?.id ?? props?.nft?.id,
     LikeableType.Nft
   );
- 
+
   return (
     <div className='relative w-full h-full'>
       {props?.visible !== true && props?.visible !== false &&
        <div className='absolute top-4 right-4 z-50'>
          <LikeCount
-           onClick={nftLikeData?.isLikedByUser ? unsetLike : setLike}
+           onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
            mutate={mutateNftLike}
            count={nftLikeData?.likeCount}
-           isLiked={nftLikeData?.isLikedByUser}
+           isLiked={nftLikeData?.isLikedBy}
          />
        </div>
       }
-      
+
       <div className={tw(
         'group/ntfCard transition-all cursor-pointer rounded-2xl shadow-xl relative w-full h-full minmd:mb-0 overflow-visible',
         props.descriptionVisible != false ? '' : 'h-max'

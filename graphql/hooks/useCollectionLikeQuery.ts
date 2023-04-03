@@ -1,27 +1,36 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
+import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
+import { useUser } from 'hooks/state/useUser';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
 import useSWR, { mutate } from 'swr';
+import { useAccount } from 'wagmi';
 
 export interface CollectionLikeCountData {
-  data: { __typename?: 'CollectionInfo'; collection?: { __typename?: 'Collection'; likeCount?: number; isLikedByUser?: boolean; }; }
+  data: { __typename?: 'CollectionInfo'; collection?: { __typename?: 'Collection'; likeCount?: number; isLikedByUser?: boolean; isLikedBy?: boolean; }; }
   loading: boolean;
   mutate: () => void;
 }
 
-export function useCollectionLikeCountQuery(chainId: string, contract: string): CollectionLikeCountData {
+export function useCollectionLikeCountQuery(contract: string): CollectionLikeCountData {
   const sdk = useGraphQLSDK();
-  const keyString = 'CollectionLikeQuery' + contract + chainId;
+  const { likeId } = useNonProfileModal();
+  const defaultChainId = useDefaultChainId();
+  const { currentProfileId } = useUser();
+  const { address: currentAccount } = useAccount();
+  const keyString = 'CollectionLikeQuery' + contract + defaultChainId + likeId + currentProfileId + currentAccount;
 
   const { data } = useSWR(keyString, async () => {
-    if (!chainId || !contract) {
+    if (!defaultChainId || !contract) {
       return {};
     }
     const result = await sdk.CollectionLikeCount({
       input: {
-        chainId,
+        chainId: defaultChainId,
         contract,
         network: 'ethereum',
       },
+      likedById: currentProfileId
     });
     return result?.collection ?? {};
   });

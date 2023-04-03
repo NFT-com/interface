@@ -36,7 +36,8 @@ export function ProfileCard(props: ProfileCardProps) {
 
   const { setLike, unsetLike } = useSetLikeMutation(
     props?.id ?? props?.profile?.id,
-    LikeableType.Profile
+    LikeableType.Profile,
+    props?.profile?.url
   );
 
   if(isLeaderBoard){
@@ -80,8 +81,8 @@ export function ProfileCard(props: ProfileCardProps) {
             <div className='absolute top-4 right-4 z-50'>
               <LikeCount
                 count={profileLikeData?.profile?.likeCount || 0}
-                isLiked={profileLikeData?.profile?.isLikedByUser || false}
-                onClick={profileLikeData?.profile?.isLikedByUser ? unsetLike :setLike}
+                isLiked={profileLikeData?.profile?.isLikedBy || false}
+                onClick={profileLikeData?.profile?.isLikedBy ? unsetLike :setLike}
                 mutate={mutate}
               />
             </div>
