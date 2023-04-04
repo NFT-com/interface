@@ -1,4 +1,4 @@
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { joinClasses } from 'utils/helpers';
 
 export interface ModalButtonProps {

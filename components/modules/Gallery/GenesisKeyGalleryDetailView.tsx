@@ -1,4 +1,4 @@
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { PropertyCard } from 'components/modules/NFTDetail/PropertyCard';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useGenesisKeyMetadata } from 'hooks/useGenesisKeyMetadata';

@@ -1,4 +1,4 @@
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { NullState } from 'components/elements/NullState';
 import { MintedProfile } from 'components/modules/Profile/MintedProfile';
 import { ProfileContextProvider } from 'components/modules/Profile/ProfileContext';
@@ -45,7 +45,7 @@ export function ProfilePage(props: ProfilePageProps) {
 
   const getPageContent = useCallback(() => {
     const validReg = /^[a-z0-9_]*$/;
-    if(
+    if (
       processedProfileURI === null ||
       processedProfileURI === undefined ||
       !validReg.test(processedProfileURI as string ?? '-') ||
@@ -55,7 +55,7 @@ export function ProfilePage(props: ProfilePageProps) {
         <NullState
           showImage={true}
           primaryMessage='Looking for a NFT.com profile?'
-          secondaryMessage={ 'Return to NFT.com'}
+          secondaryMessage={'Return to NFT.com'}
           buttonLabel={'Go to NFT.com'}
           href='/'
         />
@@ -96,6 +96,6 @@ export function ProfilePage(props: ProfilePageProps) {
     profileOwner,
     profileTokenId
   ]);
-  
+
   return getPageContent();
 }

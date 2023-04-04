@@ -1,4 +1,4 @@
-import { LoadedContainer } from 'components/elements/LoadedContainer';
+import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { AuctionType } from 'components/modules/GenesisKeyAuction/GenesisKeyAuction';
 import { GenesisKeyLoserView } from 'components/modules/GenesisKeyAuction/GenesisKeyLoserView';
@@ -67,25 +67,25 @@ export default function ClaimGenesisKeyPage() {
   return (
     <>
       {!isMobile &&
-            <div
-              className={tw(
-                'absolute items-center w-full h-full justify-center drop-shadow-md',
-                'overflow-auto z-20 flex justify-center',
-                isNullOrEmpty(keyImg)
-                  ? '' // fall through to splash key behind this component.
-                  // otherwise, fill in the background behind the minted key.
-                  : 'bg-[#C0C0C0]'
-              )}
-            >
-              <video
-                className="h-full"
-                id='keyVideo'
-                src={keyImg}
-                autoPlay
-                muted
-                loop
-              />
-            </div>
+        <div
+          className={tw(
+            'absolute items-center w-full h-full justify-center drop-shadow-md',
+            'overflow-auto z-20 flex justify-center',
+            isNullOrEmpty(keyImg)
+              ? '' // fall through to splash key behind this component.
+              // otherwise, fill in the background behind the minted key.
+              : 'bg-[#C0C0C0]'
+          )}
+        >
+          <video
+            className="h-full"
+            id='keyVideo'
+            src={keyImg}
+            autoPlay
+            muted
+            loop
+          />
+        </div>
       }
       <div className={tw(
         'relative flex flex-col overflow-y-auto items-center mt-32',
@@ -102,7 +102,7 @@ export default function ClaimGenesisKeyPage() {
 ClaimGenesisKeyPage.getLayout = function getLayout(page) {
   return (
     <DefaultLayout>
-      { page }
+      {page}
     </DefaultLayout>
   );
 };

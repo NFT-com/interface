@@ -1,6 +1,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import ClientOnly from 'components/elements/ClientOnly';
-import { LoadedContainer } from 'components/elements/LoadedContainer';
+import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
 import { Modal } from 'components/elements/Modal';
 import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
 import DefaultLayout from 'components/layouts/DefaultLayout';
@@ -95,18 +95,18 @@ export default function GalleryPage() {
       )}>
         {/* Desktop Filters - sidebar */}
         {!isMobile &&
-            <div className={tw(
-              'minlg:flex flex-col w-1/4 shrink-0 h-full min-h-4/5',
-              'px-10 pt-6 hidden text-black dark:text-white'
-            )}>
-              <GenesisKeyGalleryFilters
-                showFilters={true}
-                currentFilter={currentFilter}
-                setCurrentFilter={(filter: string) => {
-                  setCurrentFilter(filter);
-                }}
-              />
-            </div>
+          <div className={tw(
+            'minlg:flex flex-col w-1/4 shrink-0 h-full min-h-4/5',
+            'px-10 pt-6 hidden text-black dark:text-white'
+          )}>
+            <GenesisKeyGalleryFilters
+              showFilters={true}
+              currentFilter={currentFilter}
+              setCurrentFilter={(filter: string) => {
+                setCurrentFilter(filter);
+              }}
+            />
+          </div>
         }
         <div className={tw(
           'flex flex-col flex-grow h-screen overflow-auto',
@@ -167,7 +167,7 @@ export default function GalleryPage() {
 GalleryPage.getLayout = function getLayout(page) {
   return (
     <DefaultLayout>
-      { page }
+      {page}
     </DefaultLayout>
   );
 };

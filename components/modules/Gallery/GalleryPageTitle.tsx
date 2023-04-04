@@ -1,4 +1,4 @@
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { Maybe } from 'graphql/generated/types';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { AlchemyOwnedNFT } from 'types/alchemy';
@@ -37,18 +37,18 @@ export function GalleryPageTitle(props: GalleryPageTitleProps) {
         {props.itemType === 'profile' ? 'Profiles' : 'Genesis Keys'}
         {
           props.itemType === 'gk' &&
-            <>
-              {' '}/{' '}
-              {
-                props.totalGKSupply == null ?
-                  <Loader /> :
-                  <span className='text-secondary-txt ml-2 font-bold'>
-                    {(props.showMyStuff ?
-                      (ownedGKTokens?.filter(gkIDFilter)?.length ?? 0) :
-                      props.totalGKSupply
-                    )?.toString()}
-                  </span>}
-            </>
+          <>
+            {' '}/{' '}
+            {
+              props.totalGKSupply == null ?
+                <Loader /> :
+                <span className='text-secondary-txt ml-2 font-bold'>
+                  {(props.showMyStuff ?
+                    (ownedGKTokens?.filter(gkIDFilter)?.length ?? 0) :
+                    props.totalGKSupply
+                  )?.toString()}
+                </span>}
+          </>
         }
       </span>
     </div>

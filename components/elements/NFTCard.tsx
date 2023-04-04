@@ -56,7 +56,6 @@ export interface NFTCardProps {
   onSelectToggle?: (selected: boolean) => void;
   visible?: boolean;
   onVisibleToggle?: (visible: boolean) => void;
-
   // By default this component takes the full width of its container.
   // If you need this component to constrain its own width, use this prop.
   // The result of this is not guaranteed, and the recommended approach is to
@@ -70,6 +69,7 @@ export interface NFTCardProps {
   layoutType?: string;
   redirectTo?: string;
   preventDefault?: boolean
+  classOverride?: string;
 }
 
 const DynamicNFTCardDescription = dynamic<React.ComponentProps<typeof StaticNFTCardDescription>>(() => import('components/elements/NFTCardDescription').then(mod => mod.NFTCardDescription));
