@@ -139,6 +139,8 @@ export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
     return prefix + image.slice(28);
   } else if (base32cid(image) || multihash(image) || cid(image)) {
     return prefix + image;
+  } else if (image.indexOf('https://ikzttp.mypinata.cloud/ipfs/') === 0) {
+    return prefix + image.slice(35);
   }
   return image;
 };
