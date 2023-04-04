@@ -1,6 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { NFTCardSkeleton } from 'components/elements/Skeletons/NFTCardSkeleton';
-import Loader from 'components/elements/Loader/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { NFTCard } from 'components/modules/NFTCard/NFTCard';
@@ -15,6 +14,7 @@ import { tw } from 'utils/tw';
 import { SlidersHorizontal, X } from 'phosphor-react';
 import NoActivityIcon from 'public/no_activity.svg?svgr';
 import React, { useEffect, useRef, useState } from 'react';
+
 function usePrevious(value) {
   const ref = useRef(value);
   useEffect(() => {
@@ -168,7 +168,7 @@ export default function CollectionsPage() {
                         ))}
                       </div>
                     )}
-                  { nftSData && nftSData.length < found && nftSData?.length > 0 &&
+                  {nftSData && nftSData.length < found && nftSData?.length > 0 &&
                     <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
                       <Button
                         size={ButtonSize.LARGE}
