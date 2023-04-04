@@ -27,7 +27,7 @@ export async function createLooksrareParametersForNFTListing(
   const addresses: Addresses = addressesByNetwork[chainId];
   // Get protocolFees and creatorFees from the contracts
   const protocolFees = await looksrareStrategy.viewProtocolFee();
-  // Get rebate 
+  // Get rebate
   const [
     , // receiver
     royaltyAmount
@@ -44,7 +44,7 @@ export async function createLooksrareParametersForNFTListing(
     signer: offerer,
     isOrderAsk: true,
     amount: '1',
-    price:  BigNumber.from(price).toString(),
+    price: BigNumber.from(price).toString(),
     startTime: BigNumber.from(Date.now()).div(1000).toString(),
     endTime: BigNumber.from(Date.now()).div(1000).add(duration).toString(),
     minPercentageToAsk: Math.max(netPriceRatio, minNetPriceRatio),
@@ -92,7 +92,7 @@ export const getLooksrareHex = (
       // status,
       // signature,
     } = protocolData;
-    
+
     const hexParam = looksrareExchange.interface.encodeFunctionData('matchAskWithTakerBidUsingETHAndWETH', [
       {
         isOrderAsk: false,
@@ -121,7 +121,7 @@ export const getLooksrareHex = (
         s,
       },
     ]);
-    
+
     const wholeHex = looksrareLib.encodeFunctionData('_tradeHelper', [
       ethValue,
       hexParam,
@@ -129,9 +129,9 @@ export const getLooksrareHex = (
       tokenId,
       true, // failIfRevert
     ]);
-    
+
     const genHex = libraryCall('_tradeHelper(uint256,bytes,address,uint256,bool)', wholeHex.slice(10));
-    
+
     return {
       tradeData: genHex,
       value: ethers.BigNumber.from(ethValue),
@@ -201,7 +201,7 @@ export const looksrareBuyNow = async (
       }
     );
 
-    analytics.track('BuyNow', {
+    gtag('event', 'BuyNow', {
       ethereumAddress: executorAddress,
       protocol: order.protocol,
       contractAddress: order?.nft?.contract,

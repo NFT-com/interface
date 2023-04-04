@@ -58,7 +58,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
         loading={false}
         onClose={function (): void {
           setLayoutEditorOpen(false);
-        } }
+        }}
       >
         <ProfileLayoutEditorModalContent
           savedLayoutType={profileData?.profile?.layoutType}
@@ -74,7 +74,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
             publicNFTCount={publiclyVisibleNftCount}
             onShowAll={() => {
               showNftIds(allOwnerNfts?.map(nft => nft.id), true);
-              analytics.track('Show All NFTs', {
+              gtag('event', 'Show All NFTs', {
                 ethereumAddress: currentAddress,
                 profile: props.profileURI,
                 nftsByOwner: createNftOwnerMap(allOwnerNfts)
@@ -82,7 +82,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
             }}
             onHideAll={() => {
               hideNftIds(allOwnerNfts?.map(nft => nft.id), true);
-              analytics.track('Hide All NFTs', {
+              gtag('event', 'Hide All NFTs', {
                 ethereumAddress: currentAddress,
                 profile: props.profileURI,
                 nftsByOwner: createNftOwnerMap(allOwnerNfts)

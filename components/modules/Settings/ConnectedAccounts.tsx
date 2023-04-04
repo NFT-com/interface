@@ -25,7 +25,7 @@ export type RejectedEvent = {
 
 type ConnectedAccountsProps = {
   selectedProfile: string;
-  associatedAddresses : Maybe<{
+  associatedAddresses: Maybe<{
     pending: Address[];
     accepted: Address[];
     denied: PartialDeep<RejectedEvent>[]
@@ -59,14 +59,14 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
     } else {
       const tx = await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile);
       setTransactionPending(true);
-      if(tx) {
+      if (tx) {
         await tx.wait(1).then(() => {
           setSuccess(true);
           setTransaction(tx.hash);
           setModalVisible(true);
           setTransactionPending(false);
           mutate('SettingsAssociatedAddresses' + selectedProfile + currentAddress);
-          analytics.track('Association Sent', {
+          gtag('event', 'Association Sent', {
             ethereumAddress: currentAddress,
             profile: selectedProfile,
             destinationAddress: address
@@ -81,18 +81,18 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   };
 
   useEffect(() => {
-    if(associatedAddresses?.pending.find(element => element.chainAddr === inputVal) || associatedAddresses?.accepted.find(element => element.chainAddr === inputVal)){
+    if (associatedAddresses?.pending.find(element => element.chainAddr === inputVal) || associatedAddresses?.accepted.find(element => element.chainAddr === inputVal)) {
       setIsAssociatedOrPending(true);
     } else {
       setIsAssociatedOrPending(false);
     }
   }, [inputVal, associatedAddresses, currentAddress]);
-  
+
   return (
     <div id="addresses" className='font-noi-grotesk'>
       <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>Associate Addresses</h2>
       <p className='text-blog-text-reskin mb-4'>The NFTs contained or collections deployed by associated Ethereum addresses will display on this NFT Profile.</p>
-      
+
       <SettingsForm buttonText='Request Association' submitHandler={openModal} {...{ inputVal, isAssociatedOrPending }} changeHandler={setInputVal} />
 
       {associatedAddresses?.accepted?.length || associatedAddresses?.pending?.length || associatedAddresses?.denied?.length
@@ -104,13 +104,13 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
               <p className='w-1/2 text-blog-text-reskin text-sm'>Network</p>
             </div>
 
-            {associatedAddresses?.accepted.map((address, index)=> (
+            {associatedAddresses?.accepted.map((address, index) => (
               <AssociatedAddress {...{ selectedProfile }} key={index} address={address.chainAddr} />
             ))}
-            {associatedAddresses?.pending.map((address, index)=> (
+            {associatedAddresses?.pending.map((address, index) => (
               <AssociatedAddress {...{ selectedProfile }} pending key={index} address={address.chainAddr} />
             ))}
-            {associatedAddresses?.denied?.map((address)=> (
+            {associatedAddresses?.denied?.map((address) => (
               !address.hideIgnored &&
               <AssociatedAddress {...{ selectedProfile }} rejected key={address.id} eventId={address.id} address={address.destinationAddress} submit={submitHandler} />
             ))}
