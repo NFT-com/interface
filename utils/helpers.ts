@@ -139,6 +139,8 @@ export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
     return null;
   } else if (image.includes('ipfs')) {
     return prefix + extractIPFSHashAndPathFromUrl(image);
+  } else if (base32cid(image) || multihash(image) || cid(image)) {
+    return prefix + image;
   }
   return image;
 };
