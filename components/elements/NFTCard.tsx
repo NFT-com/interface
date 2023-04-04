@@ -138,7 +138,7 @@ export function NFTCard(props: NFTCardProps) {
           // props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max',
           props.imageLayout === 'row' ? 'p-3 rounded-xl' : 'p-2 rounded',
           props.constrain ?
-          // constrain self to 2 or 4 per row
+            // constrain self to 2 or 4 per row
             'w-2/5 minlg:w-[23%]' :
             'w-full min-h-[inherit]',
           props.customBorder ?? '',
@@ -150,10 +150,10 @@ export function NFTCard(props: NFTCardProps) {
           backgroundColor: props.customBackground ?? tileBackground
         }}
         onClick={(e) => {
-        // TODO: move to helper / logger class at some point
+          // TODO: move to helper / logger class at some point
           e.stopPropagation();
           props.preventDefault && e.preventDefault();
-          analytics.track(`${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
+          gtag('event', `${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
             ethereumAddress: currentAddress,
             title: props?.title,
             processedImageURLs: processedImageURLs?.[0],
@@ -163,94 +163,94 @@ export function NFTCard(props: NFTCardProps) {
           props.onClick && props.onClick();
         }}>
         {(props.header || props.onSelectToggle != null) &&
-            <div className='flex w-full px-4 minlg:px-5 pt-4 minlg:pt-5 pb-2 minlg:pb-3  justify-between'>
-              <div className='flex flex-col'>
-                <span className='text-xs text-secondary-txt font-semibold'>
-                  {props.header?.key ?? ''}
-                </span>
-                <span
-                  className='text-xs minmd:text-sm  font-bold text-primary-txt dark:text-primary-txt-dk'
-                >
-                  {props.header?.value ?? ''}
-                </span>
-              </div>
-              {
-                props.onSelectToggle != null &&
-                <div
-                  className='p-1'
-                  onClick={(e: MouseEvent<HTMLDivElement>) => {
-                    setSelected(!selected);
-                    props.onSelectToggle(selected);
-                    e.stopPropagation();
-                  }}>
-                  {selected ? <CheckSquare color={secondaryIcon} /> : <Square color={secondaryIcon} />}
-                </div>
-              }
+          <div className='flex w-full px-4 minlg:px-5 pt-4 minlg:pt-5 pb-2 minlg:pb-3  justify-between'>
+            <div className='flex flex-col'>
+              <span className='text-xs text-secondary-txt font-semibold'>
+                {props.header?.key ?? ''}
+              </span>
+              <span
+                className='text-xs minmd:text-sm  font-bold text-primary-txt dark:text-primary-txt-dk'
+              >
+                {props.header?.value ?? ''}
+              </span>
             </div>
+            {
+              props.onSelectToggle != null &&
+              <div
+                className='p-1'
+                onClick={(e: MouseEvent<HTMLDivElement>) => {
+                  setSelected(!selected);
+                  props.onSelectToggle(selected);
+                  e.stopPropagation();
+                }}>
+                {selected ? <CheckSquare color={secondaryIcon} /> : <Square color={secondaryIcon} />}
+              </div>
+            }
+          </div>
         }
         {
           props.visible != null &&
-              <div
-                className='absolute right-3 top-4 z-50'
-                onClick={(e: MouseEvent<HTMLDivElement>) => {
-                  props.onVisibleToggle(!props.visible);
-                  e.stopPropagation();
-                  props.preventDefault && e.preventDefault();
-                }}
-              >
-                {props.visible ? <Eye id="eye" color={pink} /> : <EyeOff id="eyeOff" color={pink} /> }
-              </div>
+          <div
+            className='absolute right-3 top-4 z-50'
+            onClick={(e: MouseEvent<HTMLDivElement>) => {
+              props.onVisibleToggle(!props.visible);
+              e.stopPropagation();
+              props.preventDefault && e.preventDefault();
+            }}
+          >
+            {props.visible ? <Eye id="eye" color={pink} /> : <EyeOff id="eyeOff" color={pink} />}
+          </div>
         }
         {showListingIcons && (
           <div className='absolute left-3 top-4 z-50'>
             {showNftcomListingIcon &&
-                  <NFTLogo
-                    className='h-7 w-7 relative shrink-0 hover:opacity-70 ml-1 mb-0.5'
-                    alt="Opensea logo redirect"
-                    layout="fill"
-                  />
+              <NFTLogo
+                className='h-7 w-7 relative shrink-0 hover:opacity-70 ml-1 mb-0.5'
+                alt="Opensea logo redirect"
+                layout="fill"
+              />
             }
             {showOpenseaListingIcon &&
-                  <OpenseaIcon
-                    onClick={(e: MouseEvent<any>) => {
-                      window.open(
-                        getOpenseaAssetPageUrl(props.contractAddress, BigNumber.from(props.tokenId).toString()),
-                        '_blank'
-                      );
-                      e.stopPropagation();
-                    }}
-                    className='h-9 w-9 relative shrink-0 hover:opacity-70 '
-                    alt="Opensea logo redirect"
-                    layout="fill"
-                  />
+              <OpenseaIcon
+                onClick={(e: MouseEvent<any>) => {
+                  window.open(
+                    getOpenseaAssetPageUrl(props.contractAddress, BigNumber.from(props.tokenId).toString()),
+                    '_blank'
+                  );
+                  e.stopPropagation();
+                }}
+                className='h-9 w-9 relative shrink-0 hover:opacity-70 '
+                alt="Opensea logo redirect"
+                layout="fill"
+              />
             }
             {showLooksrareListingIcon &&
-                  <LooksrareIcon
-                    onClick={(e: MouseEvent<any>) => {
-                      window.open(
-                        getLooksrareAssetPageUrl(props.contractAddress, BigNumber.from(props.tokenId).toString()),
-                        '_blank'
-                      );
-                      e.stopPropagation();
-                    }}
-                    className='h-9 w-9 relative shrink-0 hover:opacity-70'
-                    alt="Looksrare logo redirect"
-                    layout="fill"
-                  />
+              <LooksrareIcon
+                onClick={(e: MouseEvent<any>) => {
+                  window.open(
+                    getLooksrareAssetPageUrl(props.contractAddress, BigNumber.from(props.tokenId).toString()),
+                    '_blank'
+                  );
+                  e.stopPropagation();
+                }}
+                className='h-9 w-9 relative shrink-0 hover:opacity-70'
+                alt="Looksrare logo redirect"
+                layout="fill"
+              />
             }
             {showX2Y2ListingIcon &&
-                  <X2Y2Icon
-                    onClick={(e: MouseEvent<any>) => {
-                      window.open(
-                        getX2Y2AssetPageUrl(props.contractAddress, BigNumber.from(props.tokenId).toString()),
-                        '_blank'
-                      );
-                      e.stopPropagation();
-                    }}
-                    className='h-7 w-7 mt-1 ml-1 relative shrink-0 hover:opacity-70 '
-                    alt="Opensea logo redirect"
-                    layout="fill"
-                  />
+              <X2Y2Icon
+                onClick={(e: MouseEvent<any>) => {
+                  window.open(
+                    getX2Y2AssetPageUrl(props.contractAddress, BigNumber.from(props.tokenId).toString()),
+                    '_blank'
+                  );
+                  e.stopPropagation();
+                }}
+                className='h-7 w-7 mt-1 ml-1 relative shrink-0 hover:opacity-70 '
+                alt="Opensea logo redirect"
+                layout="fill"
+              />
             }
           </div>
         )}
@@ -270,7 +270,7 @@ export function NFTCard(props: NFTCardProps) {
                 props.images[0] == null ? 'aspect-square' : '',
               )}
             >
-              { (props.images.length === 0 || props.images[0] == null) && processedImageURLs.length === 0 ?
+              {(props.images.length === 0 || props.images[0] == null) && processedImageURLs.length === 0 ?
                 null :
                 <RoundedCornerMedia
                   width={600}
@@ -284,7 +284,7 @@ export function NFTCard(props: NFTCardProps) {
             </div> :
             props.imageLayout === 'row' ?
               <div className='flex justify-center w-full min-h-XL min-h-2XL'>
-                {processedImageURLs.slice(0,3).map((image: string, index: number) => {
+                {processedImageURLs.slice(0, 3).map((image: string, index: number) => {
                   return <RoundedCornerMedia
                     width={150}
                     height={150}

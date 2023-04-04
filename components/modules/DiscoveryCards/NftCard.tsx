@@ -41,7 +41,7 @@ export interface NftCardProps {
   contractAddr: string;
   tokenId: string;
   redirectTo: string;
-  
+
   listings?: PartialDeep<TxActivity>[];
   nft?: PartialDeep<DetailedNft>;
   isOwnedByMe?: boolean;
@@ -72,11 +72,11 @@ export function NftCard(props: NftCardProps) {
   const currentDate = useGetCurrentDate();
 
   const checkEndDate = () => {
-    if(bestListing){
+    if (bestListing) {
       const endDate = moment.unix(getListingEndDate(bestListing, bestListing.order.protocol as ExternalProtocol));
       const date = moment(endDate).fromNow();
 
-      if(date.includes('minute') || date.includes('second')){
+      if (date.includes('minute') || date.includes('second')) {
         return 'less than 1 hour';
       } else return date.replace('in ', '');
     }
@@ -86,21 +86,21 @@ export function NftCard(props: NftCardProps) {
 
   const getIcon = useCallback((contract: string, currency: string) => {
     switch (currency) {
-    case 'ETH':
-      return <ETH className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="ETH logo redirect" layout="fill"/>;
-    case 'USDC':
-      return <USDC className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="USDC logo redirect" layout="fill"/>;
-    default:
-      if (!contract) {
-        return <div>{currency}</div>;
-      }
-      // eslint-disable-next-line @next/next/no-img-element
-      return <div className='-ml-1 mr-1 flex items-center'><img
-        className='h-5 w-5 relative shrink-0'
-        src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract)}/logo.png`}
-        alt={currency}
-      />
-      </div>;
+      case 'ETH':
+        return <ETH className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="ETH logo redirect" layout="fill" />;
+      case 'USDC':
+        return <USDC className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="USDC logo redirect" layout="fill" />;
+      default:
+        if (!contract) {
+          return <div>{currency}</div>;
+        }
+        // eslint-disable-next-line @next/next/no-img-element
+        return <div className='-ml-1 mr-1 flex items-center'><img
+          className='h-5 w-5 relative shrink-0'
+          src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract)}/logo.png`}
+          alt={currency}
+        />
+        </div>;
     }
   }, []);
 
@@ -111,44 +111,44 @@ export function NftCard(props: NftCardProps) {
     )}>
       {
         props.visible != null &&
-          <div
-            className='absolute left-3 top-4 z-30'
-            onClick={(e: MouseEvent<HTMLDivElement>) => {
-              props.onVisibleToggle(!props.visible);
-              e.stopPropagation();
-              props.preventDefault && e.preventDefault();
-            }}
-          >
-            {props.visible
-              ? <Visible className={tw(
-                'w-7 h-6 fill-white'
-              )} />
-              : <Hidden className={tw(
-                'w-7 h-6 fill-white'
-              )} />
-            }
-          </div>
+        <div
+          className='absolute left-3 top-4 z-30'
+          onClick={(e: MouseEvent<HTMLDivElement>) => {
+            props.onVisibleToggle(!props.visible);
+            e.stopPropagation();
+            props.preventDefault && e.preventDefault();
+          }}
+        >
+          {props.visible
+            ? <Visible className={tw(
+              'w-7 h-6 fill-white'
+            )} />
+            : <Hidden className={tw(
+              'w-7 h-6 fill-white'
+            )} />
+          }
+        </div>
       }
 
       {
         props.visible === true &&
-          <div
-            className='absolute right-3 top-4 z-30'
-          >
-            <Reorder
-              className={tw(
-                'w-6 h-6'
-              )}
-            />
-          </div>
+        <div
+          className='absolute right-3 top-4 z-30'
+        >
+          <Reorder
+            className={tw(
+              'w-6 h-6'
+            )}
+          />
+        </div>
       }
       <a
         href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'}
         onClick={(e) => {
-        // TODO: move to helper / logger class at some point
+          // TODO: move to helper / logger class at some point
           e.stopPropagation();
           props.preventDefault && e.preventDefault();
-          analytics.track(`${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
+          gtag('event', `${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
             ethereumAddress: currentAddress,
             title: props?.name,
             processedImageURLs: processedImageURLs?.[0]
@@ -199,7 +199,7 @@ export function NftCard(props: NftCardProps) {
                             protocolData: bestListing?.order?.protocol === ExternalProtocol.Seaport ?
                               bestListing?.order?.protocolData as SeaportProtocolData :
                               bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
-                                bestListing?.order?.protocolData as X2Y2ProtocolData:
+                                bestListing?.order?.protocolData as X2Y2ProtocolData :
                                 bestListing?.order?.protocolData as LooksrareProtocolData
                           });
                           togglePurchaseSummaryModal();
@@ -228,14 +228,14 @@ export function NftCard(props: NftCardProps) {
                             protocolData: bestListing?.order?.protocol === ExternalProtocol.Seaport ?
                               bestListing?.order?.protocolData as SeaportProtocolData :
                               bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
-                                bestListing?.order?.protocolData as X2Y2ProtocolData:
+                                bestListing?.order?.protocolData as X2Y2ProtocolData :
                                 bestListing?.order?.protocolData as LooksrareProtocolData
                           });
                           toggleCartSidebar('Buy');
                         }}
                         className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#ffffff] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-[#F9D54C]">
                         <div className='w-6 h-6'>
-                          <ShopIcon/>
+                          <ShopIcon />
                         </div>
                       </button>
                     </>
@@ -264,9 +264,9 @@ export function NftCard(props: NftCardProps) {
                       {props.name}
                     </p>
                     {(props.nft?.isGKMinted ?? nftProfileData?.profile?.isGKMinted) &&
-                        <div className='h-4 w-4 minlg:h-6 minlg:w-6 ml-2 min-w-[24px] flex items-center'>
-                          <GK />
-                        </div>
+                      <div className='h-4 w-4 minlg:h-6 minlg:w-6 ml-2 min-w-[24px] flex items-center'>
+                        <GK />
+                      </div>
                     }
                   </div>
                 </CustomTooltip>

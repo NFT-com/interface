@@ -7,7 +7,7 @@ import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { Doppler, getEnv,getEnvBool } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { filterNulls, getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -31,7 +31,7 @@ export interface ProfileMenuProps {
   profileURI: string;
 }
 
-export function ProfileMenu({ profileURI } : ProfileMenuProps) {
+export function ProfileMenu({ profileURI }: ProfileMenuProps) {
   const { address: currentAddress } = useAccount();
   const router = useRouter();
   const [, staticCopy] = useCopyClipboard();
@@ -50,7 +50,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
 
   const {
     mutate: mutatePublicProfileNfts,
-  } = useProfileNFTsQuery(profileData?.profile?.id,String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),8);
+  } = useProfileNFTsQuery(profileData?.profile?.id, String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), 8);
 
   const {
     mutate: mutateAllOwnerNfts,
@@ -99,7 +99,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
       )} />
     },
     {
-      name:'Featured',
+      name: 'Featured',
       label: '',
       onSelect: () => setLayout(ProfileLayoutType.Featured),
       icon: <FeaturedIcon className={tw(
@@ -107,10 +107,10 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
       )} />
     },
     {
-      name:'Mosaic',
+      name: 'Mosaic',
       label: '',
       onSelect: () => setLayout(ProfileLayoutType.Mosaic),
-      icon:  <MosaicIcon className={tw(
+      icon: <MosaicIcon className={tw(
         'w-[18px] h-[18px] minlg:w-5 minlg:h-5'
       )} />
     },
@@ -118,7 +118,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
       name: 'Spotlight',
       label: '',
       onSelect: () => setLayout(ProfileLayoutType.Spotlight),
-      icon:  <SpotlightIcon className={tw(
+      icon: <SpotlightIcon className={tw(
         'w-[18px] h-[18px] minlg:w-5 minlg:h-5'
       )} />
     }
@@ -168,7 +168,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             <SearchIcon className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
           </div>
         }
-        {userIsAdmin &&<CustomTooltip
+        {userIsAdmin && <CustomTooltip
           orientation='custom'
           customFullLeftPosition='left-6'
           hidden={false}
@@ -209,60 +209,60 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
           </div>
         </CustomTooltip>}
         {userIsAdmin &&
-            <>
-              {getEnvBool(Doppler.NEXT_PUBLIC_MOSAIC_LAYOUT_ENABLED) &&
-                <DropdownPickerModal
-                  pointer
-                  align='center'
-                  constrain
-                  stopMobileModal
-                  disableMinWidth
-                  disablePadding
-                  selectedIndex={selectedLayout ? layoutOptions.findIndex(item => item.name === selectedLayout) : 0}
-                  options={layoutOptions}
-                >
-                  <div className='w-10 h-10 minlg:w-12 minlg:h-12 rounded-full flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer'>
-                    {selectedLayout ? layoutOptions.filter(item => item?.name === selectedLayout)[0]?.icon : layoutOptions[0]?.icon}
-                  </div>
-                </DropdownPickerModal>
-              }
-
+          <>
+            {getEnvBool(Doppler.NEXT_PUBLIC_MOSAIC_LAYOUT_ENABLED) &&
               <DropdownPickerModal
                 pointer
+                align='center'
                 constrain
                 stopMobileModal
                 disableMinWidth
                 disablePadding
-                align='center'
-                selectedIndex={0}
-                options={filterNulls([
-                  {
-                    label: 'Settings',
-                    onSelect: () => router.push('/app/settings'),
-                    icon: null
-                  },
-                  !editMode &&
-                  {
-                    label: 'Edit Profile',
-                    onSelect: () => setEditMode(true),
-                    icon: null,
-                    closeModalOnClick: true
-                  },
-                  {
-                    label: `${showDescriptions ? 'Hide' : 'Show'} Descriptions`,
-                    onSelect: editMode ? () => setDraftNftsDescriptionsVisible(!draftNftsDescriptionsVisible) : () => setDescriptions(!showDescriptions),
-                    icon: null,
-                  }
-                ])
-                }>
+                selectedIndex={selectedLayout ? layoutOptions.findIndex(item => item.name === selectedLayout) : 0}
+                options={layoutOptions}
+              >
                 <div className='w-10 h-10 minlg:w-12 minlg:h-12 rounded-full flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer'>
-                  <GearIcon className={tw(
-                    'w-[18px] h-[18px] minlg:h-5 minlg:w-5'
-                  )} />
+                  {selectedLayout ? layoutOptions.filter(item => item?.name === selectedLayout)[0]?.icon : layoutOptions[0]?.icon}
                 </div>
               </DropdownPickerModal>
+            }
 
-              {editMode && userIsAdmin &&
+            <DropdownPickerModal
+              pointer
+              constrain
+              stopMobileModal
+              disableMinWidth
+              disablePadding
+              align='center'
+              selectedIndex={0}
+              options={filterNulls([
+                {
+                  label: 'Settings',
+                  onSelect: () => router.push('/app/settings'),
+                  icon: null
+                },
+                !editMode &&
+                {
+                  label: 'Edit Profile',
+                  onSelect: () => setEditMode(true),
+                  icon: null,
+                  closeModalOnClick: true
+                },
+                {
+                  label: `${showDescriptions ? 'Hide' : 'Show'} Descriptions`,
+                  onSelect: editMode ? () => setDraftNftsDescriptionsVisible(!draftNftsDescriptionsVisible) : () => setDescriptions(!showDescriptions),
+                  icon: null,
+                }
+              ])
+              }>
+              <div className='w-10 h-10 minlg:w-12 minlg:h-12 rounded-full flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer'>
+                <GearIcon className={tw(
+                  'w-[18px] h-[18px] minlg:h-5 minlg:w-5'
+                )} />
+              </div>
+            </DropdownPickerModal>
+
+            {editMode && userIsAdmin &&
               <div className='fixed minlg:relative bottom-0 left-0 bg-white minlg:bg-transparent flex w-full py-5 px-3 space-x-4 shadow-[0_-16px_32px_rgba(0,0,0,0.08)] minlg:shadow-none z-50'
               >
                 <Button
@@ -271,7 +271,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                   size={ButtonSize.LARGE}
                   extraClasses="whitespace-nowrap"
                   onClick={() => {
-                    analytics.track('Update Profile', {
+                    gtag('event', 'Update Profile', {
                       ethereumAddress: currentAddress,
                       profile: profileURI,
                       newProfile: draftProfileImg?.preview ? true : false,
@@ -292,37 +292,37 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                   onClick={clearDrafts}
                 />
               </div>
-              }
-            </>
+            }
+          </>
         }
         {(!editMode || editMode && !userIsAdmin) &&
-        <DropdownPickerModal
-          pointer
-          constrain
-          stopMobileModal
-          disableMinWidth
-          disablePadding
-          align='right'
-          selectedIndex={0}
-          options={[
-            {
-              label: 'Copy link to clipboard',
-              onSelect: () => staticCopy(`${getBaseUrl()}${router.query?.profileURI}`),
-              icon: <LinkIcon className={tw(
-                'w-[18px] h-[18px] mr-3'
-              )} />
-            },
-            {
-              label: 'Share via Twitter',
-              onSelect: () => window.open('https://twitter.com/share?url='+ `https://www.nft.com/${profileURI}`+`&text=NFT.com Profile for ${profileURI}`, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'),
-              icon: <TwitterLogo size={18} className='mr-3' color='#1DA1F2' weight="fill" />
-            },
-          ]
-          }>
-          <div className='w-[102px] h-10 minlg:h-12 rounded-full flex items-center px-4 text-sm font-medium border border-[#ECECEC] hover:cursor-pointer'>
-            <ShareNetwork size={15} className='mr-1' weight='bold' /> SHARE
-          </div>
-        </DropdownPickerModal>
+          <DropdownPickerModal
+            pointer
+            constrain
+            stopMobileModal
+            disableMinWidth
+            disablePadding
+            align='right'
+            selectedIndex={0}
+            options={[
+              {
+                label: 'Copy link to clipboard',
+                onSelect: () => staticCopy(`${getBaseUrl()}${router.query?.profileURI}`),
+                icon: <LinkIcon className={tw(
+                  'w-[18px] h-[18px] mr-3'
+                )} />
+              },
+              {
+                label: 'Share via Twitter',
+                onSelect: () => window.open('https://twitter.com/share?url=' + `https://www.nft.com/${profileURI}` + `&text=NFT.com Profile for ${profileURI}`, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'),
+                icon: <TwitterLogo size={18} className='mr-3' color='#1DA1F2' weight="fill" />
+              },
+            ]
+            }>
+            <div className='w-[102px] h-10 minlg:h-12 rounded-full flex items-center px-4 text-sm font-medium border border-[#ECECEC] hover:cursor-pointer'>
+              <ShareNetwork size={15} className='mr-1' weight='bold' /> SHARE
+            </div>
+          </DropdownPickerModal>
         }
       </div>
     </div>

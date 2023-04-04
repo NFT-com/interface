@@ -180,7 +180,7 @@ export const getNftcomHex = async (
       orderSignature: signature,
       buyNowTaker,
     } = protocolData;
-    
+
     const order = {
       auctionType,
       buyNowTaker,
@@ -195,10 +195,10 @@ export const getNftcomHex = async (
         r: signature.r,
         s: signature.s,
         v: signature.v
-      } ,
+      },
       start,
       structHash: orderHash,
-      takeAsset ,
+      takeAsset,
       takerAddress
     };
     const sellOrder = marketAskToOrderStruct(order);
@@ -206,7 +206,7 @@ export const getNftcomHex = async (
     const inputData = [[sellOrder, recipient, signature.v, signature.r, signature.s], BigNumber.from(ethValue), failIfRevert];
     const wholeHex = await NFTCOMLib.encodeFunctionData('_buySwap', inputData);
     const genHex = libraryCall('_buySwap(BuyNowParams,uint256,bool)', wholeHex.slice(10));
-    
+
     return {
       tradeData: genHex,
       value: BigNumber.from(ethValue),
@@ -235,15 +235,15 @@ export const onchainAuctionTypeToGqlAuctionType = (
     AuctionType.English,
     AuctionType.Decreasing
   ];
-  
+
   return auctions[auctionType];
 };
 
 export type SaleDuration = '1 Day' | '3 Days' | '1 Week' | 'Forever';
 
 export const getDurationToMs = (d: SaleDuration) => {
-  const durationDays: {[s in SaleDuration]: number} = {
-    '1 Day' : 1,
+  const durationDays: { [s in SaleDuration]: number } = {
+    '1 Day': 1,
     '3 Days': 3,
     '1 Week': 7,
     'Forever': 0
@@ -466,7 +466,7 @@ export function unhashedMakeAsset(nft: PartialDeep<Nft>): UnhashedAsset {
 }
 
 export function unhashedTakeAsset(
-  saleCurrency : string,
+  saleCurrency: string,
   startingPrice: BigNumber,
   auctionType: AuctionType,
   takeAssetContractAddress: string,
@@ -516,7 +516,7 @@ export async function createNativeParametersForNFTListing(
   // 1 minutes before for padding
   const start = noExpirationNFTCOM ? 0 : Math.floor((now / 1000) - (60 * 1));
   const end = noExpirationNFTCOM ? 0 : Math.floor((now + duration * 1000) / 1000);
-  
+
   const unsignedOrder: UnsignedOrder = await getUnsignedOrder(
     ethers.utils.getAddress(address), // maker
     taker, //taker
@@ -578,7 +578,7 @@ export const nftcomBuyNow = async (
     } = order.protocolData as NftcomProtocolData & {
       orderSignature: Signature;
     };
-    
+
     const nftcomOrder = {
       auctionType,
       buyNowTaker,
@@ -612,7 +612,7 @@ export const nftcomBuyNow = async (
       }
     );
 
-    analytics.track('BuyNow', {
+    gtag('event', 'BuyNow', {
       ethereumAddress: executorAddress,
       protocol: order.protocol,
       contractAddress: order?.nft?.contract,

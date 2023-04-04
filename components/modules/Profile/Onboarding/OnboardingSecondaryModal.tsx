@@ -24,7 +24,7 @@ type OnboardingItemProps = {
 };
 
 interface OnboardingActionModalProps {
-  selectedItem : OnboardingItemProps;
+  selectedItem: OnboardingItemProps;
   modalOpen: boolean;
   setModalOpen: (isOpen: boolean) => void;
 }
@@ -46,7 +46,7 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
         setErrorMessage([index, 'This user was previously referred. Please try a different email.'])
       ).then(() => {
         mutateSentReferrals();
-        analytics.track('Sent Email Referral', {
+        gtag('event', 'Sent Email Referral', {
           sentReferralAddress: value,
           profile: user.currentProfileUrl
         });
@@ -124,7 +124,7 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
 
                     <div className='mb-10 px-7'>
                       <Button
-                        onClick={() => !isNullOrEmpty(selectedItem?.href) ? router.push(selectedItem?.href) : setModalOpen(false) }
+                        onClick={() => !isNullOrEmpty(selectedItem?.href) ? router.push(selectedItem?.href) : setModalOpen(false)}
                         label={selectedItem?.buttonText ? selectedItem.buttonText : selectedItem?.name}
                         type={ButtonType.PRIMARY}
                         size={ButtonSize.LARGE}

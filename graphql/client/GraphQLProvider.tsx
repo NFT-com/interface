@@ -40,7 +40,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
         address: currentAddress,
         timestamp: unixTimestamp
       }));
-      analytics.track('SignIn', {
+      gtag('event', 'SignIn', {
         ethereumAddress: currentAddress
       });
       setSigned(true);
