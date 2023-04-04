@@ -40,7 +40,7 @@ export function LinksToSection(props: LinksToSectionParams) {
       section: 'GALLERY',
       title: 'NFT.COM Gallery',
       description: 'Explore all our Genesis Keys.',
-      linkTo: '/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414'
+      linkTo: '/app/collection/official/nftcom-genesis-key'
     },
     {
       image: '/link-to-nftcom-2.png',
