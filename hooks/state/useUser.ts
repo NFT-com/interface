@@ -2,7 +2,7 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
-import { useCallback,useEffect } from 'react';
+import { useCallback,useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 export interface UserState {
@@ -12,6 +12,7 @@ export interface UserState {
 }
 
 export function useUser() {
+  const [currentProfileId, setCurrentProfileId] = useState('');
   const { data, mutate } = useSWR('user', {
     fallbackData: {
       isDarkMode: false,
@@ -85,9 +86,13 @@ export function useUser() {
     setCurrentProfileUrl(result);
   }, [setCurrentProfileUrl, result]);
 
+  useEffect(() => {
+    setCurrentProfileId(profileData?.profile?.id ?? '');
+  }, [profileData]);
+
   return {
     user: data,
-    currentProfileId: profileData?.profile?.id ?? '',
+    currentProfileId: currentProfileId,
     loading,
     setDarkMode,
     setCurrentProfileUrl,
