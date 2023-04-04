@@ -61,11 +61,6 @@ export const FooterLarge = () => {
     {
       title: 'Learn',
       links: filterNulls([
-        {
-          name: 'Gallery',
-          link: '/app/gallery',
-          newTab: false,
-        },
         !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(profileTokens)
           ? {
             name: 'Vault',
