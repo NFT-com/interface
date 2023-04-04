@@ -41,11 +41,11 @@ import useSWR from 'swr';
 export const collectionPropTypeGuard = (props: CollectionProps): {
   value: string;
   type: string;
-  restProps: Omit<CollectionProps, 'name'>;
+  restProps: Omit<CollectionProps, 'slug'>;
 } => {
-  if ('name' in props) {
-    const { name, ...restProps } = props;
-    return { value: name?.toString(), type: 'name', restProps };
+  if ('slug' in props) {
+    const { slug, ...restProps } = props;
+    return { value: slug?.toString(), type: 'slug', restProps };
   }
 
   const { contract } = props;
@@ -75,9 +75,9 @@ export function Collection(props: CollectionProps) {
   const [selectedTab,
     setSelectedTab,
     tabs] = useTabs(0, {
-      0: 'NFTs',
-      1: 'Activity'
-    });
+    0: 'NFTs',
+    1: 'Activity'
+  });
 
   const [found, setFound] = useState(0);
   const [collectionNfts, setCollectionNfts] = useState([]);
