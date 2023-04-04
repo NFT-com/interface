@@ -8,7 +8,6 @@ import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
 import { base32cid, cid, multihash } from 'is-ipfs';
 import { atom } from 'jotai';
-import omit from 'lodash/omit';
 import moment, { Moment } from 'moment';
 import slugify from 'slugify';
 import { PartialDeep } from 'type-fest';
@@ -184,16 +183,16 @@ export function getEtherscanLink(
   const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`;
 
   switch (type) {
-    case 'transaction': {
-      return `${prefix}/tx/${data}`;
-    }
-    case 'token': {
-      return `${prefix}/token/${data}`;
-    }
-    case 'address':
-    default: {
-      return `${prefix}/address/${data}`;
-    }
+  case 'transaction': {
+    return `${prefix}/tx/${data}`;
+  }
+  case 'token': {
+    return `${prefix}/token/${data}`;
+  }
+  case 'address':
+  default: {
+    return `${prefix}/address/${data}`;
+  }
   }
 }
 
@@ -335,4 +334,4 @@ export const isOfficialCollection = (collection: PartialDeep<Collection>) => col
     remove: /[*+~.()'"!:@]/g,
     trim: true
   })}`
-  : collection.contract;
+  : collection?.contract;
