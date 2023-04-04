@@ -1,12 +1,13 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { LikeableType, Maybe } from 'graphql/generated/types';
 import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
+import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useUser } from 'hooks/state/useUser';
+import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 
 import * as gtag from 'lib/gtag';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
-import { useAccount } from 'wagmi';
 
 export interface LikeMutationResult {
   likeLoading: boolean;
@@ -20,7 +21,8 @@ export interface LikeMutationResult {
 
 export function useSetLikeMutation(likedId: string, likedType: LikeableType, profileName?: string): LikeMutationResult {
   const { setLikeData } = useNonProfileModal();
-  const { connector } = useAccount();
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
+  const { setProfileSelectModalOpen } = useProfileSelectModal();
   const { forceReload } = useNonProfileModal();
   const router = useRouter();
 
@@ -40,8 +42,12 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         profileName: profileName,
         location: location
       };
-      if (!user.currentProfileUrl && !currentProfileId && !connector) {
-        setLikeData(true, likeObject);
+      if (!user.currentProfileUrl && !currentProfileId) {
+        if(myOwnedProfileTokens && myOwnedProfileTokens.length){
+          setProfileSelectModalOpen(true);
+        }else{
+          setLikeData(true, likeObject);
+        }
         localStorage.setItem('nonAuthLikeObject', JSON.stringify(likeObject));
         return;
       }

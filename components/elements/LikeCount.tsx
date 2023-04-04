@@ -4,7 +4,6 @@ import { tw } from 'utils/tw';
 import { Player } from '@lottiefiles/react-lottie-player';
 import Heart from 'public/heart.svg?svgr';
 import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
 
 type LikeCountProps = {
   count: number;
@@ -15,7 +14,6 @@ type LikeCountProps = {
 
 export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCountProps) {
   const { currentProfileId, user } = useUser();
-  const { connector } = useAccount();
   const [clicked, setClicked] = useState(false);
   const [liked, setLiked] = useState(null);
   const [likeCount, setLikeCount] = useState(null);
@@ -33,7 +31,7 @@ export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCount
     setTimeout(() => {
       setDisabled(false);
     }, 1000);
-    if (!user.currentProfileUrl && !currentProfileId && !connector) {
+    if (!user.currentProfileUrl && !currentProfileId) {
       return;
     }else {
       if(!liked) {
