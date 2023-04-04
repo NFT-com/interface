@@ -535,7 +535,7 @@ export const CollectionNfts: React.FC = () => {
                       title={nft.document.nftName}
                       collectionName={nft.document.contractName}
                       images={[]}
-                      redirectTo={nft.document.nftName && `/ app / nft / ${nft.document.contractAddr} /${nft.document.tokenId} `}
+                      redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
                       description={nft.document.nftDescription ? nft.document.nftDescription.slice(0, 50) + '...' : ''}
                     />
                   </div>) :
@@ -550,7 +550,7 @@ export const CollectionNfts: React.FC = () => {
                       name={nft.document.nftName}
                       collectionName={nft.document.contractName}
                       images={[]}
-                      redirectTo={nft.document.nftName && `/ app / nft / ${nft.document.contractAddr} /${nft.document.tokenId}`}
+                      redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
                     />
                   </div>
                 );
