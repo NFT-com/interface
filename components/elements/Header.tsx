@@ -167,10 +167,6 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   </a>
                 </DropdownPickerModal>
 
-                <Link href='/app/gallery' legacyBehavior>
-                  <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>Gallery</a>
-                </Link>
-
                 <DropdownPickerModal
                   closeModalOnClick
                   pointer
@@ -415,10 +411,6 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   <CaretDown size={20} color="black" weight="bold" className='ml-2' />
                 </a>
               </DropdownPickerModal>
-
-              <Link href='/app/gallery' legacyBehavior>
-                <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>Gallery</a>
-              </Link>
 
               <DropdownPickerModal
                 closeModalOnClick

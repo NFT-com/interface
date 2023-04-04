@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { NFTCollectionCard } from 'components/elements/NFTCollectionCard';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { Nft } from 'graphql/generated/types';
@@ -26,7 +26,7 @@ export interface CollectionGalleryProps {
 
 export function CollectionGallery(props: CollectionGalleryProps) {
   const { profileURI } = props;
-  
+
   const { chain } = useNetwork();
   const { profileData } = useProfileQuery(profileURI);
 
@@ -40,7 +40,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     publiclyVisibleNfts,
   } = useContext(ProfileContext);
 
-  const { data: collectionData } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), selectedCollection);
+  const { data: collectionData } = useCollectionQuery({ chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contract: selectedCollection });
 
   const { data: collections } = useSWR(
     '' + editMode + JSON.stringify(publiclyVisibleNfts) + JSON.stringify(editModeNfts),
@@ -86,7 +86,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
 
   if (selectedCollection) {
     const detailedCollectionNFTs = collections?.get(selectedCollection) ?? [];
-    
+
     return <div className={'w-full flex flex-col items-center'}>
       <div className='w-full flex items-center px-8 mb-8 cursor-pointer justify-between'>
         <div className='flex items-center' onClick={() => {

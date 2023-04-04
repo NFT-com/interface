@@ -1,4 +1,4 @@
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -34,11 +34,10 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
     >
       {imageUrl && <Image
         src={props?.draft ? imageUrl : imageUrl.indexOf('.svg') >= 0 ? imageUrl : `${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(imageUrl)}&width=3000`}
-        layout='fill'
+        className="object-cover"
+        fill
         priority
         quality='100'
-        objectFit='cover'
-        objectPosition='center'
         alt='banner'
       />}
       {props.loading && <div
@@ -48,7 +47,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
           'items-center justify-center w-full h-full'
         )}
       >
-        <Loader/>
+        <Loader />
       </div>}
       <div
         className="flex justify-start items-end h-full"

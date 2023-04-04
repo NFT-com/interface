@@ -7,32 +7,45 @@ import { PartialDeep } from 'type-fest';
 
 export interface CollectionData {
   data: PartialDeep<CollectionInfo>;
+  error: any;
   loading: boolean;
   mutate: () => void;
 }
 
-export function useCollectionQuery(chainId: string, contract: string): CollectionData {
+export function useCollectionQuery(args: { chainId: string, contract: string } | { chainId: string, slug: string }): CollectionData {
+  let query = { type: undefined, value: undefined };
+  // Set query type
+  if ('contract' in args) query = { type: 'contract', value: args.contract };
+  if ('slug' in args) query = { type: 'slug', value: args.slug };
+
+  const { chainId } = args;
   const sdk = useGraphQLSDK();
   const { currentProfileId } = useUser();
-  const keyString = 'CollectionQuery ' + contract + chainId + currentProfileId;
-
-  const { data } = useSWR(keyString, async () => {
-    if (!chainId || !contract) {
-      return {};
-    }
-    const result = await sdk.Collection({
-      input: {
+  const keyString = ['CollectionQuery', query.value, chainId, currentProfileId];
+  const input = {
+    input: query.type === 'contract'
+      ? {
         chainId,
-        contract,
+        contract: query.value,
         network: 'ethereum',
+      }
+      : {
+        chainId,
+        slug: query.value,
+        network: 'ethereum'
       },
-      likedById: currentProfileId
-    });
-    return result?.collection ?? {};
+    likedById: currentProfileId
+  };
+
+  const { data, error, isLoading } = useSWR(keyString, async () => {
+    if (!chainId || !query.value) return {};
+    return await sdk.Collection(input).then(data => data?.collection ?? {});
   });
+
   return {
     data: data,
-    loading: data == null,
+    error,
+    loading: [isLoading, !query.value, data == null].includes(true),
     mutate: () => {
       mutate(keyString);
     },

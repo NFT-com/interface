@@ -126,7 +126,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
   };
   const isDiscoverPage = router.asPath.split('/').some((w) => w === 'discover');
 
-  if(mobileSearch){
+  if (mobileSearch) {
     return (
       <>
         <div id='mobile-search' className={tw(
@@ -233,7 +233,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
             <div ref={resultsRef}>
               <DynamicResultsDropDown
                 isHeader={isHeader}
-                extraClasses={`${leaderBoardSearch ? 'inset-x-0 w-full z-10 max-w-[100%] top-[50px] px-3' : 'mt-4' }`}
+                extraClasses={`${leaderBoardSearch ? 'inset-x-0 w-full z-10 max-w-[100%] top-[50px] px-3' : 'mt-4'}`}
                 searchResults={searchResults}
                 resultTitleOnClick={() => {
                   setSearchModalOpen(false);

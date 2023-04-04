@@ -207,6 +207,7 @@ export type Collection = {
   likeCount?: Maybe<Scalars['Int']>;
   logoUrl?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
   stats?: Maybe<NftPortStatistics>;
   totalVolume?: Maybe<Scalars['Float']>;
 };
@@ -224,8 +225,9 @@ export type CollectionInfo = {
 
 export type CollectionInput = {
   chainId?: InputMaybe<Scalars['String']>;
-  contract: Scalars['Address'];
+  contract?: InputMaybe<Scalars['Address']>;
   network: Scalars['String'];
+  slug?: InputMaybe<Scalars['String']>;
 };
 
 export type CollectionLeaderboard = {
@@ -1473,7 +1475,7 @@ export type OfficialCollection = {
   chainId: Scalars['String'];
   contract: Scalars['Address'];
   id: Scalars['ID'];
-  name: Scalars['String'];
+  slug: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
 
@@ -3220,7 +3222,7 @@ export type CollectionLeaderboardQueryVariables = Exact<{
 }>;
 
 
-export type CollectionLeaderboardQuery = { __typename?: 'Query', collectionLeaderboard?: { __typename?: 'CollectionLeaderboard', items: Array<{ __typename?: 'Collection', contract?: any | null, logoUrl?: string | null, likeCount?: number | null, name?: string | null, stats?: { __typename?: 'NFTPortStatistics', one_day_volume?: number | null, one_day_change?: number | null, one_day_sales?: number | null, one_day_average_price?: number | null, seven_day_volume?: number | null, seven_day_change?: number | null, seven_day_sales?: number | null, seven_day_average_price?: number | null, thirty_day_volume?: number | null, thirty_day_change?: number | null, thirty_day_sales?: number | null, thirty_day_average_price?: number | null, total_volume?: number | null, total_sales?: number | null, total_supply?: number | null, total_minted?: number | null, num_owners?: number | null, average_price?: number | null, market_cap?: number | null, floor_price?: number | null, floor_price_historic_one_day?: number | null, floor_price_historic_seven_day?: number | null, floor_price_historic_thirty_day?: number | null, updated_date?: string | null } | null } | null> } | null };
+export type CollectionLeaderboardQuery = { __typename?: 'Query', collectionLeaderboard?: { __typename?: 'CollectionLeaderboard', items: Array<{ __typename?: 'Collection', contract?: any | null, logoUrl?: string | null, likeCount?: number | null, name?: string | null, isOfficial?: boolean | null, stats?: { __typename?: 'NFTPortStatistics', one_day_volume?: number | null, one_day_change?: number | null, one_day_sales?: number | null, one_day_average_price?: number | null, seven_day_volume?: number | null, seven_day_change?: number | null, seven_day_sales?: number | null, seven_day_average_price?: number | null, thirty_day_volume?: number | null, thirty_day_change?: number | null, thirty_day_sales?: number | null, thirty_day_average_price?: number | null, total_volume?: number | null, total_sales?: number | null, total_supply?: number | null, total_minted?: number | null, num_owners?: number | null, average_price?: number | null, market_cap?: number | null, floor_price?: number | null, floor_price_historic_one_day?: number | null, floor_price_historic_seven_day?: number | null, floor_price_historic_thirty_day?: number | null, updated_date?: string | null } | null } | null> } | null };
 
 export type CollectionLikeCountQueryVariables = Exact<{
   input: CollectionInput;
@@ -3467,7 +3469,7 @@ export type OfficialCollectionsQueryVariables = Exact<{
 }>;
 
 
-export type OfficialCollectionsQuery = { __typename?: 'Query', officialCollections?: { __typename?: 'OfficialCollectionsOutput', pageCount?: number | null, totalItems?: number | null, items: Array<{ __typename?: 'OfficialCollection', id: string, contract: any, name: string, chainId: string, updatedAt: any }> } | null };
+export type OfficialCollectionsQuery = { __typename?: 'Query', officialCollections?: { __typename?: 'OfficialCollectionsOutput', pageCount?: number | null, totalItems?: number | null, items: Array<{ __typename?: 'OfficialCollection', id: string, contract: any, slug: string, chainId: string, updatedAt: any }> } | null };
 
 export type MyPreferencesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4293,6 +4295,7 @@ export const CollectionLeaderboardDocument = gql`
       logoUrl
       likeCount
       name
+      isOfficial
       stats {
         one_day_volume
         one_day_change
@@ -5653,7 +5656,7 @@ export const OfficialCollectionsDocument = gql`
     items {
       id
       contract
-      name
+      slug
       chainId
       updatedAt
     }

@@ -18,7 +18,7 @@ import { NFTDetailMoreFromCollection } from './NFTDetailMoreFromCollection';
 import { Properties } from './Properties';
 
 import { Tab } from '@headlessui/react';
-import { useEffect, useMemo,useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useAccount } from 'wagmi';
 
@@ -69,15 +69,15 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
             'flex flex-col w-full minxl:hidden',
           )}>
             {(defaultChainId === '1') &&
-            <div className="w-full md:px-4 pt-4 pb-6">
-              <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
-              <NFTAnalyticsContainer data={nft} />
-            </div>
+              <div className="w-full md:px-4 pt-4 pb-6">
+                <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
+                <NFTAnalyticsContainer data={nft} />
+              </div>
             }
           </div>
           <div className='flex w-full items-center p-4 pb-0 justify-start'>
             <div className='justify-start'>
-              <Tab.Group selectedIndex={selectedDetailTab} onChange={(index) => {setSelectedDetailTab(index);}}>
+              <Tab.Group selectedIndex={selectedDetailTab} onChange={(index) => { setSelectedDetailTab(index); }}>
                 <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
                   {Object.keys(detailTabTypes).map((detailTab) => (
                     <Tab key={detailTab}>
@@ -124,7 +124,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   };
 
   return (
-    <div className="flex flex-col md:pt-0 pt-20 items-center w-full">
+    <div className="flex flex-col md:pt-0 pt-20 items-center w-full min-h-screen">
       {nft?.metadata?.imageURL &&
         <div className='flex w-full bg-[#F2F2F2] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
           <div className="flex w-full max-h-[600px] h-full max-w-nftcom object-contain drop-shadow-lg rounded aspect-square">

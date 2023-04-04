@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import { LoadedContainer } from 'components/elements/LoadedContainer';
+import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
 import { KeyClaimVideo } from 'components/modules/GenesisKeyAuction/KeyClaimVideo';
 import { HeroTitle } from 'components/modules/Hero/HeroTitle';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
@@ -45,11 +45,11 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
   const { setKeyBackground } = useKeyBackground();
   const genesisKeyMetadata = useGenesisKeyMetadata(
     props.ownedTokenID != null ? BigNumber.from(props.ownedTokenID) : null);
-  
+
   const genesisKeyImage = processIPFSURL(isMobile
     ? genesisKeyMetadata?.metadata?.image
     : genesisKeyMetadata?.metadata?.animation_url);
-  
+
   const { mutate: mutateOwnedGKs } = useOwnedGenesisKeyTokens(currentAddress);
 
   const [showPostClaimView, setShowPostClaimView] = useState(false);
@@ -62,7 +62,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
   }, [props.ownedTokenID]);
 
   useEffect(() => {
-    if(genesisKeyImage && genesisKeyMetadata) {
+    if (genesisKeyImage && genesisKeyMetadata) {
       const bgColorAttribute = genesisKeyMetadata?.metadata?.attributes
         ?.find(attr => attr?.trait_type === 'Background');
       setKeyBackground(
@@ -97,48 +97,48 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
             }
           </span>
           {(mintSucceeded || props.ownedTokenID != null) &&
-          <div className='flex items-center justify-center w-full my-3'>
-            <div className={tw('shadow-md hover:shadow-lg focus:shadow-lg',
-              'w-full font-bold tracking-wider space-y-5')}>
-              <Button
-                size={ButtonSize.LARGE}
-                stretch
-                onClick={() => {
-                  // todo: include a link to the metadata api for rendering card previews.
-                  window.open(
-                    'https://twitter.com/intent/tweet?' +
-                    // 'url=' + encodeURIComponent(window.location.href) + props.id +
-                    // 'url=' + encodeURIComponent('https://staging-api.nft.com/gk/') + props.id +
-                    // '&'+
-                    'text=' +
-                    encodeURIComponent(
-                      'I just claimed a genesis key from NFT.com! Check it out: ' +
-                      'https://' + window.location.host + '/app/gallery/' + props.ownedTokenID
-                    ),
-                    '_blank'
-                  );
-                }}
-                label="TWEET YOUR KEY"
-                type={ButtonType.PRIMARY}
-              />
-              <div
-                className={tw(
-                  'text-base deprecated_sm:text-xs font-semibold',
-                  'flex flex-row items-center mt-5 hover:underline cursor-pointer',
-                  'text-action-primary cursor-pointer w-full justify-center flex'
-                )}
-                onClick={() => {
-                  setKeyBackground(
-                    '',
-                    'black'
-                  );
-                  setShowPostClaimView(true);
-                }}
-              >
-                Continue
+            <div className='flex items-center justify-center w-full my-3'>
+              <div className={tw('shadow-md hover:shadow-lg focus:shadow-lg',
+                'w-full font-bold tracking-wider space-y-5')}>
+                <Button
+                  size={ButtonSize.LARGE}
+                  stretch
+                  onClick={() => {
+                    // todo: include a link to the metadata api for rendering card previews.
+                    window.open(
+                      'https://twitter.com/intent/tweet?' +
+                      // 'url=' + encodeURIComponent(window.location.href) + props.id +
+                      // 'url=' + encodeURIComponent('https://staging-api.nft.com/gk/') + props.id +
+                      // '&'+
+                      'text=' +
+                      encodeURIComponent(
+                        'I just claimed a genesis key from NFT.com! Check it out: ' +
+                        'https://' + window.location.host + '/app/gallery/' + props.ownedTokenID
+                      ),
+                      '_blank'
+                    );
+                  }}
+                  label="TWEET YOUR KEY"
+                  type={ButtonType.PRIMARY}
+                />
+                <div
+                  className={tw(
+                    'text-base deprecated_sm:text-xs font-semibold',
+                    'flex flex-row items-center mt-5 hover:underline cursor-pointer',
+                    'text-action-primary cursor-pointer w-full justify-center flex'
+                  )}
+                  onClick={() => {
+                    setKeyBackground(
+                      '',
+                      'black'
+                    );
+                    setShowPostClaimView(true);
+                  }}
+                >
+                  Continue
+                </div>
               </div>
             </div>
-          </div>
           }
         </div>
       </div>);
@@ -183,7 +183,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                               'text-3xl mt-5 deprecated_sm:text-xl w-full flex flex-col items-center',
                               'text-primary-txt text-center max-w-2xl'
                             )}>
-                            Congratulations! It is time for you to mint your Genesis Key, and become a leader of this community led ecosystem!
+                              Congratulations! It is time for you to mint your Genesis Key, and become a leader of this community led ecosystem!
                             </span>
                           </>
                         }

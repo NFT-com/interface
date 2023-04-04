@@ -61,6 +61,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
           className='h-[25px] w-[25px] relative shrink-0'
           alt="NFT.com logo redirect"
           layout="fill"
+          key='nft-com-logo'
         />
       );
     case ExternalProtocol.LooksRare:
@@ -77,6 +78,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
           className='h-[25px] w-[25px] relative shrink-0 grayscale'
           alt="Looksrare logo redirect"
           layout="fill"
+          key='looksrare-icon'
         />
       );
     case ExternalProtocol.Seaport:
@@ -85,6 +87,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
           className='h-[25px] w-[25px] relative shrink-0 grayscale'
           alt="Opensea logo redirect"
           layout="fill"
+          key='opensea-icon'
         />
       );
     case ExternalProtocol.X2Y2:
@@ -93,6 +96,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
           className='h-[25px] w-[25px] relative shrink-0 grayscale'
           alt="Opensea logo redirect"
           layout="fill"
+          key='x2y2-gray-icon'
         />
       );
     default:
@@ -142,13 +146,13 @@ export function NFTCardImage(props: NFTCardImageProps) {
                       protocolData: props?.bestListing?.order?.protocol === ExternalProtocol.Seaport ?
                         props?.bestListing?.order?.protocolData as SeaportProtocolData :
                         props?.bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
-                          props?.bestListing?.order?.protocolData as X2Y2ProtocolData:
+                          props?.bestListing?.order?.protocolData as X2Y2ProtocolData :
                           props?.bestListing?.order?.protocolData as LooksrareProtocolData
                     });
                     toggleCartSidebar('Buy');
                   }}
                   className="p-[11px] bg-footer-bg hover:bg-[#ECECEC] text-button-tertiary-hover rounded-[10px] h-10 w-10">
-                  <ShopIcon/>
+                  <ShopIcon />
                 </button>
               </div>
               <div className='absolute bottom-7 left-7 flex flex-row w-full justify-between items-center pr-14 flex-wrap'>
@@ -165,7 +169,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
                 )}
               </div>
             </div>
-            : null }
+            : null}
         </div>
       </div>
     </div>

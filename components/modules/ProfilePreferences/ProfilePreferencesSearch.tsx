@@ -1,7 +1,7 @@
 import { BidStatusIcon } from 'components/elements/BidStatusIcon';
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import { LoadedContainer } from 'components/elements/LoadedContainer';
-import Loader from 'components/elements/Loader';
+import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
+import Loader from 'components/elements/Loader/Loader';
 import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
 import { HeroTitle } from 'components/modules/Hero/HeroTitle';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
@@ -103,10 +103,10 @@ export function ProfilePreferencesSearch() {
       <>
         <div className='flex flex-col text-center text-primary-txt-dk text-xl my-4 max-w-xl'>
           <span>
-          Looking to get a NFT Profile?
+            Looking to get a NFT Profile?
           </span>
           <span>
-          Purchase a Genesis Key and mint four (4) NFT Profiles
+            Purchase a Genesis Key and mint four (4) NFT Profiles
           </span>
 
           {totalRemaining?.gt(0) &&
@@ -124,8 +124,8 @@ export function ProfilePreferencesSearch() {
           }
 
           <span>
-          If you have a Genesis Key, head to the <span className='font-bold'>#collab-land</span> channel on{' '}
-          our <span
+            If you have a Genesis Key, head to the <span className='font-bold'>#collab-land</span> channel on{' '}
+            our <span
               style={{ color: link }}
               className='cursor-pointer hover:underline'
               onClick={() => {
@@ -134,11 +134,11 @@ export function ProfilePreferencesSearch() {
                   '_blank'
                 );
               }}>
-            Discord
+              Discord
             </span>{' '}
-          and verify your wallet with{' '}
-           the <span className='font-bold'>Collab.land</span> bot to receive access to{' '}
-          exclusive channels.
+            and verify your wallet with{' '}
+            the <span className='font-bold'>Collab.land</span> bot to receive access to{' '}
+            exclusive channels.
           </span>
         </div>
         <div className={tw('deprecated_sm:w-screen flex justify-center pb-8',
@@ -160,7 +160,7 @@ export function ProfilePreferencesSearch() {
   }, [link, router, totalRemaining, defaultChainId]);
 
   const getNonSearchView = useCallback(() => {
-    if (currentAddress && !isSupported ) {
+    if (currentAddress && !isSupported) {
       return <div className='mb-12'>
         <NetworkErrorTile />
       </div>;
@@ -182,8 +182,8 @@ export function ProfilePreferencesSearch() {
         {totalClaimable > 0 ?
           <>
             <span className='text-white mb-4 text-lg text-center max-w-2xl'>
-            It looks like you{'\''}ve got another profile to mint. Feel free to mint now or
-            anytime you connect your wallet to NFT.com
+              It looks like you{'\''}ve got another profile to mint. Feel free to mint now or
+              anytime you connect your wallet to NFT.com
             </span>
             <div className={tw('deprecated_sm:w-screen flex justify-center pb-16',
               'uppercase font-hero-heading1 font-extrabold tracking-wide')}>
@@ -216,7 +216,7 @@ export function ProfilePreferencesSearch() {
           'text-2xl deprecated_md:text-lg deprecated_sm:text-base my-8 text-center text-primary-txt-dk deprecated_sm:mt-32'
         )}>
           {totalClaimable}&nbsp;
-         Profile{totalClaimable !== 1 ? 's': ''} Available to mint
+          Profile{totalClaimable !== 1 ? 's' : ''} Available to mint
         </span>
         {mintSuccess || totalClaimable === 0 ?
           getNonSearchView()
@@ -266,7 +266,7 @@ export function ProfilePreferencesSearch() {
                   const validReg = /^[a-z0-9_]*$/;
                   if (
                     validReg.test(e.target.value.toLowerCase()) &&
-                          e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
+                    e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
                   ) {
                     setCurrentURI(e.target.value.toLowerCase());
                   } else {

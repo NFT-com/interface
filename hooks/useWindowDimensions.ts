@@ -1,12 +1,14 @@
 /**
- * credit to 
+ * credit to
  * https://stackoverflow.com/questions/36862334/get-viewport-window-height-in-reactjs
  */
 
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
+
+type WindowDimensions = { width?: number, height?: number }
 
 export default function useWindowDimensions() {
-  const [windowDimensions, setWindowDimensions] = useState({
+  const [windowDimensions, setWindowDimensions] = useState<WindowDimensions>({
     width: undefined,
     height: undefined,
   });

@@ -15,7 +15,7 @@ export interface NftChainInfoProps {
 export const NftChainInfo = (props: NftChainInfoProps) => {
   const { nft } = props;
   const router = useRouter();
-  
+
   return (
     <div className='flex flex-row w-full' id="NftChainInfoContainer">
       <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[24px] font-[18px] text-[#6A6A6A] w-full py-5 md:py-4 md:px-6 px-10 space-y-2">
@@ -52,7 +52,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
                     <Info className='mr-3' />
                   </CustomTooltip>
                   <Copy toCopy={BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
-                    {BigNumber.from(nft?.tokenId).toString().slice(0,10) + '...'}
+                    {BigNumber.from(nft?.tokenId).toString().slice(0, 10) + '...'}
                   </Copy>
                 </p>
               )

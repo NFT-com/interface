@@ -1,4 +1,4 @@
-import { LoadedContainer } from 'components/elements/LoadedContainer';
+import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
 import { NullState } from 'components/elements/NullState';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -206,7 +206,7 @@ export default function RoadmapPage() {
 RoadmapPage.getLayout = function getLayout(page) {
   return (
     <DefaultLayout>
-      { page }
+      {page}
     </DefaultLayout>
   );
 };

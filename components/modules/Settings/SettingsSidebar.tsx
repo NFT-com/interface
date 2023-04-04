@@ -76,7 +76,7 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
       <ScrollLink activeClass='font-bold' to='profiles' spy smooth duration={500} offset={-100}>
         <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-noi-grotesk'>Manage Address</p>
       </ScrollLink>
-      
+
     </div>
   );
 }

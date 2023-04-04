@@ -1,13 +1,13 @@
 import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
-import { RoundedCornerAmount,RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
+import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft } from 'graphql/generated/types';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
-import { filterNulls, getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
+import { filterNulls, getGenesisKeyThumbnail, isNullOrEmpty, isOfficialCollection, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
@@ -57,10 +57,10 @@ export default function AssetTableRow({
     : [item?.metadata?.imageURL].map(processIPFSURL);
 
   const getDisplayedProfiles = useCallback(() => {
-    if(!profiles?.length){
+    if (!profiles?.length) {
       return <p className='text-[#B6B6B6]'>hidden</p>;
     }
-    if (profiles?.length === 1){
+    if (profiles?.length === 1) {
       return <div className='flex items-center'>
         <RoundedCornerMedia
           priority={true}
@@ -136,7 +136,7 @@ export default function AssetTableRow({
         </div>
       </td>
       <td className="text-body leading-body pr-8 minmd:pr-4" >
-        <Link href={`/app/collection/${item?.contract}`}>
+        <Link href={`/app/collection/${isOfficialCollection(item.collection)}`}>
           <div className='hover:cursor-pointer'>
             <p className='-mt-1 text-black'>{collectionName}</p>
           </div>
@@ -190,14 +190,14 @@ export default function AssetTableRow({
               : null,
             {
               label: 'Share on Twitter',
-              onSelect: () => window.open('https://twitter.com/share?url='+ encodeURIComponent(`https://www.nft.com/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`)+'&text='+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'),
+              onSelect: () => window.open('https://twitter.com/share?url=' + encodeURIComponent(`https://www.nft.com/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`) + '&text=' + document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'),
               icon: null,
             },
           ])
           }
         >
           <div className='flex items-center justify-between w-full'>
-            <span/>
+            <span />
             <DotsThreeVertical data-cy="RowDropdown" size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
           </div>
         </DropdownPickerModal>

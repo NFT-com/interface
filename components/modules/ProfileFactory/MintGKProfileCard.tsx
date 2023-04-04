@@ -1,6 +1,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
-import { LoadedContainer } from 'components/elements/LoadedContainer';
+import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
@@ -60,7 +60,7 @@ export default function MintGKProfileCard() {
   const [inputs, setInputs] = useState(resetInputs());
   const index = currentValue && inputs.findIndex(x => x.name === currentValue[1]);
   const filteredInputs = inputs.filter(input => !Object.values(input).includes(null));
-  const inputCount = inputs.filter(input => {return input.isVisible;})?.length || 0;
+  const inputCount = inputs.filter(input => { return input.isVisible; })?.length || 0;
 
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
@@ -76,10 +76,10 @@ export default function MintGKProfileCard() {
   }, [isLoaded, loadingClaimable, loadingMintedProfiles, claimable, loadingGKTokens]);
 
   useEffect(() => {
-    if(isNullOrEmpty(currentValue)){
+    if (isNullOrEmpty(currentValue)) {
       return;
     }
-    if(currentValue[0] === '') {
+    if (currentValue[0] === '') {
       setInputs(prevState => prevState.map(item => {
         if (item.name === currentValue[1]) {
           return {
@@ -151,7 +151,7 @@ export default function MintGKProfileCard() {
   }, [claimable, setSelectedGK]);
 
   const setMintingModal = useCallback((isOpen) => {
-    if(isOpen){
+    if (isOpen) {
       setMinting(true);
       setModalOpen(true);
     } else {
@@ -166,36 +166,36 @@ export default function MintGKProfileCard() {
         <p className='mt-9 text-xl font-normal'>Genesis Key holders receive <span className='font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>four free mints!</span></p>
         <LoadedContainer newLoader fitToParent loaded={isLoaded}>
           {currentAddress && claimable?.length === 0 &&
-          <div className='flex flex-col justify-center items-center'>
-            <p className='text-red-500 mt-10 mb-2'>No Genesis Key detected for mint.</p>
-            <div className='flex flex-col items-center'>
-              <Link href={`/app/collection/${getAddress('genesisKey', defaultChainId)}`}>
-                <Button
-                  size={ButtonSize.LARGE}
-                  type={ButtonType.PRIMARY}
-                  onClick={() => null}
-                  label='Buy Genesis Key'
-                  stretch
-                />
-              </Link>
-              <Link href='/'>
-                <p className='mt-2 hover:cursor-pointer'>Return to home</p>
-              </Link>
+            <div className='flex flex-col justify-center items-center'>
+              <p className='text-red-500 mt-10 mb-2'>No Genesis Key detected for mint.</p>
+              <div className='flex flex-col items-center'>
+                <Link href={`/app/collection/${getAddress('genesisKey', defaultChainId)}`}>
+                  <Button
+                    size={ButtonSize.LARGE}
+                    type={ButtonType.PRIMARY}
+                    onClick={() => null}
+                    label='Buy Genesis Key'
+                    stretch
+                  />
+                </Link>
+                <Link href='/'>
+                  <p className='mt-2 hover:cursor-pointer'>Return to home</p>
+                </Link>
+              </div>
             </div>
-          </div>
           }
 
           <div className='mt-9'>
 
             {!currentAddress &&
-          <div className='flex justify-center'>
-            <Button
-              onClick={openConnectModal}
-              type={ButtonType.PRIMARY}
-              size={ButtonSize.LARGE}
-              label='Connect Wallet'
-            />
-          </div>
+              <div className='flex justify-center'>
+                <Button
+                  onClick={openConnectModal}
+                  type={ButtonType.PRIMARY}
+                  size={ButtonSize.LARGE}
+                  label='Connect Wallet'
+                />
+              </div>
             }
 
             {currentAddress && mintedProfiles && !loadingMintedProfiles && mintedProfiles?.profilesMintedByGK.map((profile) =>
@@ -219,16 +219,16 @@ export default function MintGKProfileCard() {
             )}
 
             {loadingMintedProfiles && currentAddress &&
-            <>
-              <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
-              <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
-              <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
-              <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
-            </>
+              <>
+                <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
+                <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
+                <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
+                <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
+              </>
             }
             {
               currentAddress && inputs.map((input, i) => {
-                if (input.isVisible && selectedGK && selectedGK?.claimable > 0){
+                if (input.isVisible && selectedGK && selectedGK?.claimable > 0) {
                   return <MintProfileInputField
                     key={i}
                     minting={minting}
@@ -242,28 +242,28 @@ export default function MintGKProfileCard() {
           </div>
 
           {!isNullOrEmpty(claimable) &&
-          <div className='flex justify-between items-center'>
-            <div>
-              <DropdownPicker
-                onChange={setActiveGK}
-                selectedIndex={0}
-                options={filterNulls(
-                  getGKOptions()
-                )}
-                showKeyIcon
-              />
+            <div className='flex justify-between items-center'>
+              <div>
+                <DropdownPicker
+                  onChange={setActiveGK}
+                  selectedIndex={0}
+                  options={filterNulls(
+                    getGKOptions()
+                  )}
+                  showKeyIcon
+                />
+              </div>
+              {inputCount <= 4 && selectedGK?.claimable > 0 && selectedGK?.claimable - inputCount !== 0 ? <p className='hover:cursor-pointer' onClick={() => setInputVisible()}>Add NFT Profile</p> : null}
             </div>
-            {inputCount <= 4 && selectedGK?.claimable > 0 && selectedGK?.claimable - inputCount !== 0 ? <p className='hover:cursor-pointer' onClick={() => setInputVisible()}>Add NFT Profile</p> : null}
-          </div>
           }
 
           <div className='mt-12 minlg:mt-[59px]'>
             {
               !isNullOrEmpty(claimable) &&
-            <p className="text-[#5B5B5B] text-center mb-3 font-normal">
-              {selectedGK?.claimable <= 3 ? `Minted ${4 - selectedGK?.claimable} ` : `Minting ${inputCount} `}
-              out of 4 free NFT Profiles
-            </p>
+              <p className="text-[#5B5B5B] text-center mb-3 font-normal">
+                {selectedGK?.claimable <= 3 ? `Minted ${4 - selectedGK?.claimable} ` : `Minting ${inputCount} `}
+                out of 4 free NFT Profiles
+              </p>
             }
 
             {claimable && claimable.length && hasMintsAvailable ?
