@@ -114,7 +114,10 @@ export default function CollectionsPage() {
                   <div className='flex items-center'>
                     <div
                       className={`hidden minlg:block max-w-[112px] overflow-hidden cursor-pointer ${sideNavOpen ? 'mr-[206px]' : 'mr-4'}`}
-                      onClick={() => setSideNavOpen(!sideNavOpen)}>
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setSideNavOpen(!sideNavOpen);
+                      }}>
                       {sideNavOpen ?
                         <div className="flex items-center justify-center bg-[#F2F2F2] text-[#6A6A6A] py-3 px-5 text-lg rounded-[48px]">
                           Filters
@@ -152,13 +155,10 @@ export default function CollectionsPage() {
                           : null
                       }
                       {nftSData?.length > 0 && showNftView()}
-                    </div>
-
-                  </div>
-                  {loading &&
+                      {loading &&
                     (
                       <div className={tw(
-                        'gap-2 minmd:grid minmd:gap-4 minmd:space-x-0 minlg:gap-4',
+                        'gap-2 minmd:grid minmd:gap-4 minmd:space-x-0 minlg:gap-4 mt-3',
                         sideNavOpen
                           ? 'minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2 minmd:grid-cols-2 grid-cols-1 w-full' :
                           'minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1 w-full')}
@@ -168,6 +168,9 @@ export default function CollectionsPage() {
                         ))}
                       </div>
                     )}
+                    </div>
+                  </div>
+                  
                   {nftSData && nftSData.length < found && nftSData?.length > 0 &&
                     <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
                       <Button
@@ -175,12 +178,14 @@ export default function CollectionsPage() {
                         scaleOnHover
                         stretch={true}
                         label={'Load More'}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
                           setPage(page + 1);
                         }}
                         type={ButtonType.PRIMARY}
                       />
-                    </div>}
+                    </div>
+                  }
                 </div>
               </div>
             </div>

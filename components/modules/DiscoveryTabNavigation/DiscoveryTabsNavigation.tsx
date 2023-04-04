@@ -37,7 +37,8 @@ export function DiscoveryTabNav() {
           DiscoveryTabs.map(tab => {
             return (
               <li key={tab.id}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   setClearedFilters();
                   setTimeout(() => {
                     toggleLeaderBoardState(true);

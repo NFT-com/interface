@@ -162,7 +162,12 @@ export default function CollectionsPage() {
                   }
                   <div className="flex flex-col minmd:flex-row minmd:items-center">
                     {isLeaderBoard && <span className="text-[1.75rem] font-[500] mr-10">Leaderboard</span>}
-                    <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
+                    <button onClick={(e) => {
+                      e.preventDefault();
+                      toggleLeaderBoardState(!isLeaderBoard);
+                    }}
+                    className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}
+                    >
                       {!isLeaderBoard ? <LeaderBoardIcon className="mr-2" /> : null}
                       {!isLeaderBoard ? 'Show leaderboard' : 'View Collections'}
                     </button>
@@ -226,7 +231,8 @@ export default function CollectionsPage() {
                         scaleOnHover
                         stretch={true}
                         label={'Load More'}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
                           setPage(page + 1);
                         }}
                         type={ButtonType.PRIMARY}
