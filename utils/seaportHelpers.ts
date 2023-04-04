@@ -10,13 +10,14 @@ import {
   Fee,
   ItemType,
   ONE_HUNDRED_PERCENT_BP,
-  OPENSEA_CONDUIT_KEY, OrderType,SEAPORT_CONTRACT_NAME,
+  OPENSEA_CONDUIT_KEY, OrderType, SEAPORT_CONTRACT_NAME,
   SEAPORT_CONTRACT_VERSION,
   SEAPORT_FEE_COLLLECTION_ADDRESS,
   SEAPORT_ZONE_HASH,
   SeaportConsiderationItem,
   SeaportOrderComponents,
-  SeaportOrderParameters } from 'types/seaport';
+  SeaportOrderParameters
+} from 'types/seaport';
 
 import { filterNulls, getBaseUrl } from './helpers';
 import { libraryCall, seaportLib } from './marketplaceHelpers';
@@ -122,7 +123,7 @@ export function createSeaportParametersForNFTListing(
     recipient: SEAPORT_FEE_COLLLECTION_ADDRESS,
     basisPoints: 250,
   };
-  
+
   const considerationItemsWithFees = filterNulls([
     ...deductFees(considerationItems, filterNulls([openseaFee, collectionFee])),
     feeToConsiderationItem({
@@ -320,7 +321,7 @@ export const seaportBuyNow = async (
       }
     );
 
-    analytics.track('BuyNow', {
+    gtag('event', 'BuyNow', {
       ethereumAddress: executorAddress,
       protocol: order.protocol,
       contractAddress: order?.nft?.contract,

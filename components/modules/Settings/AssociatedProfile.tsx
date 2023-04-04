@@ -58,7 +58,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       await tx.wait(1).then(() => {
         setAccepted(true);
         setTransactionPending(false);
-        analytics.track('Accepted Profile Association', {
+        gtag('event', 'Accepted Profile Association', {
           ethereumAddress: currentAddress,
           profile: url,
         });
@@ -74,14 +74,14 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
           setVisible(true);
           setAssociationRejected(true);
           toast.success('Rejected');
-          analytics.track('Reject Profile Association', {
+          gtag('event', 'Reject Profile Association', {
             ethereumAddress: currentAddress,
             profile: profile,
           });
         })
         .catch(() => toast.warning('Error. Please try again'));
     } else if (isRemoved) {
-      updateHidden({ eventIdArray: [profile.id], hidden: true }).then(() =>{
+      updateHidden({ eventIdArray: [profile.id], hidden: true }).then(() => {
         toast.success('Removed');
         setVisible(true);
         setAssociationRejected(true);
@@ -91,7 +91,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       setTransactionPending(true);
       if (tx) {
         await tx.wait(1).then(() => {
-          analytics.track('Remove Profile Association', {
+          gtag('event', 'Remove Profile Association', {
             ethereumAddress: currentAddress,
             profile: profile,
           });
@@ -106,17 +106,17 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   }, [ignoreAssociations, isRemoved, nftResolver, pending, profile, setUserNotificationActive, updateHidden, currentAddress]);
 
   const closeModal = useCallback(() => {
-    if(associationRejected){
+    if (associationRejected) {
       setAssociationRejected(false);
     }
-    if(accepted){
+    if (accepted) {
       setAccepted(false);
     }
     mutate('SettingsAssociatedProfiles' + currentAddress);
     mutatePending();
     setVisible(false);
   }, [accepted, associationRejected, mutatePending, currentAddress]);
-  
+
   return (
     <>
       <div className='p-1 flex justify-between items-start mb-3'>
@@ -192,7 +192,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                           className='flex justify-between font-mono text-blog-text-reskin text-sm font-medium'
                         >
                           {shortenAddress(profile?.addr || profile?.owner)}
-                          <LinkIcon size={18} className='ml-2'/>
+                          <LinkIcon size={18} className='ml-2' />
                         </div>
                       </ExternalLink>
                     )}
@@ -201,7 +201,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
             </div>
           </div>
         </div>
-  
+
         <div className='flex items-center'>
           <DropdownPickerModal
             constrain
@@ -258,7 +258,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                     <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2 animate-spin-slow' />
                     <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
                   </div>
-                  
+
                   <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
                 </>
                 :
@@ -282,7 +282,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                               className='flex font-mono text-black text-sm font-bold tracking-wide mb-4'
                             >
                               {shortenAddress(profile?.addr || profile?.owner)}
-                              <LinkIcon size={18} className='ml-2'/>
+                              <LinkIcon size={18} className='ml-2' />
                             </div>
                           </ExternalLink>
 
@@ -291,7 +291,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                             <span className='text-black font-bold tracking-wide'>
                               {' '}{profile.profileUrl || profile.url}{' '}
                             </span>
-                              will <span className='text-black font-bold tracking-wide'>NOT</span> be able to make any changes to your address or its contents. You can change this connection at any time in your account’s settings.
+                            will <span className='text-black font-bold tracking-wide'>NOT</span> be able to make any changes to your address or its contents. You can change this connection at any time in your account’s settings.
                           </p>
                           <Button
                             type={ButtonType.PRIMARY}
@@ -304,7 +304,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                             <GasPump size={20} weight="fill" />
                             <p className='ml-1'>This action will require a<span className='border-dashed	border-b border-[#6F6F6F]'> gas fee.</span></p>
                           </div>
-                          <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {setRemoveModalVisible(true); setVisible(false);}}>Reject Request</p>
+                          <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => { setRemoveModalVisible(true); setVisible(false); }}>Reject Request</p>
                         </div>
                       )
                       :
@@ -348,7 +348,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                         <span className='text-black font-bold tracking-wide'>{' '}{profile.profileUrl || profile.url}</span>
                       </p>
                       <p className='text-[#6F6F6F] mb-6'>Your NFTs will not display on their NFT Profile`&apos;`s gallery.</p>
-                  
+
                       <Button
                         onClick={closeModal}
                         size={ButtonSize.LARGE}
@@ -366,4 +366,3 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
     </>
   );
 }
-    

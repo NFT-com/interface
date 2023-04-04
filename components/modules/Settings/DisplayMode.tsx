@@ -16,7 +16,7 @@ export default function DisplayMode({ selectedProfile }: DisplayModeProps) {
   const { updateProfileView } = useUpdateProfileViewMutation();
 
   useEffect(() => {
-    if(profileData?.profile?.profileView === 'Collection'){
+    if (profileData?.profile?.profileView === 'Collection') {
       setSelected('Collection');
     } else {
       setSelected('Gallery');
@@ -27,7 +27,7 @@ export default function DisplayMode({ selectedProfile }: DisplayModeProps) {
     toast.success('Saved!');
     setSelected(event.target.value);
     updateProfileView({ profileViewType: event.target.value, url: selectedProfile }).catch(() => toast.error('Error'));
-    analytics.track('Profile View Updated', {
+    gtag('event', 'Profile View Updated', {
       profile: selectedProfile,
       profileViewType: event.target.value
     });
@@ -37,7 +37,7 @@ export default function DisplayMode({ selectedProfile }: DisplayModeProps) {
     <div id="display" className='mt-10 font-noi-grotesk'>
       <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>Select Display Mode</h2>
       <p className='text-[#6F6F6F]'>Choose how you plan to use your NFT Profile.</p>
-  
+
       <div className='mt-4'>
         <input checked={selected === 'Gallery'} onChange={handleChange} className="form-radio text-[#F9D963] border-2 border-[#D5D5D5] w-4 h-4 focus:ring-[#F9D963]" type="radio" name="gallery-display" value='Gallery' id='Gallery' />
         <label className="ml-2 text-sm" htmlFor="Gallery">

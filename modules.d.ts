@@ -1,4 +1,3 @@
-/// <reference types="@types/segment-analytics" />
 /// <reference types="@types/gtag.js" />
 /// <reference types="@types/facebook-pixel" />
 // Declare modules with no @types/ here

@@ -14,7 +14,8 @@ import {
   NetworkMeta,
   OP_COMPLETE_SELL_OFFER,
   Order,
-  orderParamType, orderParamTypes, RunInput, runInputParamType } from 'types';
+  orderParamType, orderParamTypes, RunInput, runInputParamType
+} from 'types';
 
 import { getBaseUrl, isNullOrEmpty } from './helpers';
 import { libraryCall, X2Y2Lib } from './marketplaceHelpers';
@@ -172,7 +173,7 @@ async function fetchOrderSign(
     !isNullOrEmpty(royalty?.toString()) && url.searchParams.set('royalty', royalty.toString());
     !isNullOrEmpty(payback?.toString()) && url.searchParams.set('payback', payback.toString());
     url.searchParams.set('tokenId', tokenId);
-  
+
     const data = await fetch(url.toString()).then(res => res.json());
     const inputData = (data.data ?? []) as { order_id: number; input: string }[];
     const input = inputData.find(d => d.order_id === orderId);
@@ -305,7 +306,7 @@ export const getX2Y2Hex = async (
       tokenId,
       type,
     } = protocolData;
-    
+
     const order = {
       item_hash: hash,
       maker,
@@ -332,7 +333,7 @@ export const getX2Y2Hex = async (
     const wholeHex = await X2Y2Lib.encodeFunctionData('_run', inputData);
 
     const genHex = libraryCall('_run(RunInput,uint256,address,uint256,bool)', wholeHex.slice(10));
-    
+
     return {
       tradeData: genHex,
       value: BigNumber.from(ethValue),
@@ -439,7 +440,7 @@ export const X2Y2BuyNow = async (
       }
     );
 
-    analytics.track('BuyNow', {
+    gtag('event', 'BuyNow', {
       ethereumAddress: executorAddress,
       protocol: order.protocol,
       contractAddress: order?.nft?.contract,

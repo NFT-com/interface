@@ -64,14 +64,14 @@ export function NFTCard(props: NftCardProps) {
   return (
     <div className='relative w-full h-full'>
       {props?.visible !== true && props?.visible !== false &&
-       <div className='absolute top-4 right-4 z-50'>
-         <LikeCount
-           onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
-           mutate={mutateNftLike}
-           count={nftLikeData?.likeCount}
-           isLiked={nftLikeData?.isLikedBy}
-         />
-       </div>
+        <div className='absolute top-4 right-4 z-50'>
+          <LikeCount
+            onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
+            mutate={mutateNftLike}
+            count={nftLikeData?.likeCount}
+            isLiked={nftLikeData?.isLikedBy}
+          />
+        </div>
       }
 
       <div className={tw(
@@ -85,7 +85,7 @@ export function NFTCard(props: NftCardProps) {
             // TODO: move to helper / logger class at some point
             e.stopPropagation();
             props.preventDefault && e.preventDefault();
-            analytics.track(`${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
+            gtag('event', `${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
               ethereumAddress: currentAddress,
               title: props?.name,
               processedImageURLs: processedImageURLs?.[0]
