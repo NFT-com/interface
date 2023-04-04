@@ -88,7 +88,7 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         return null;
       }
     },
-    [currentProfileId, forceReload, likedId, likedType, profileName, router.pathname, sdk, setLikeData, user.currentProfileUrl]
+    [currentProfileId, forceReload, likedId, likedType, myOwnedProfileTokens, profileName, router.pathname, sdk, setLikeData, setProfileSelectModalOpen, user.currentProfileUrl]
   );
 
   const unsetLike = useCallback(
