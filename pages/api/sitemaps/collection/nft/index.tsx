@@ -29,20 +29,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     client.setHeader('teamKey', teamKey);
 
+    // Add collection name lookup
+    const officialCollection = await client.request(gqlQueries.collectionBySlug, {
+      input: {
+        network: 'ethereum', // Update once we expand networks
+        slug: collection
+      }
+    }).then(data => data?.collection?.collection);
+
+    if (!officialCollection && !officialCollection.contract) {
+      throw new Error('Collection Not Found');
+    }
+
     const officialCollectionNfts = await client.request(
       gqlQueries.collectionNfts,
       {
         input: {
           chainId,
-          collectionAddress: collection,
+          collectionAddress: officialCollection?.contract,
           offsetPageInput: { page }
         }
-      }).then(data => data.officialCollectionNFTs).catch((err) => console.error(err));
+      }).then(data => data.officialCollectionNFTs);
 
     if (officialCollectionNfts && officialCollectionNfts?.items) {
       officialCollectionNfts.items.forEach(({ tokenId, updatedAt }) => {
         sitemapFields.push({
-          loc: `${siteUrlHost}/${collection}/${BigNumber.from(tokenId).toString()}`,
+          loc: `${siteUrlHost}/${officialCollection.contract}/${BigNumber.from(tokenId).toString()}`,
           lastmod: updatedAt,
           priority: 0.7,
           changefreq: 'daily'
@@ -51,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Cache API response for 23hrs 59min
-    res.setHeader('Cache-Control', 's-maxage=86340, stale-while-revalidate');
+    res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
 
     return res.status(200).json({ sitemapFields });
   } catch (err) {

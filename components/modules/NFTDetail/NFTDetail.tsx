@@ -41,7 +41,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
   const defaultChainId = useDefaultChainId();
 
-  const { data: collection } = useCollectionQuery(String(defaultChainId), props?.nft?.contract);
+  const { data: collection } = useCollectionQuery({ chainId: String(defaultChainId), contract: props?.nft?.contract });
   const { data: collectionMetadata } = useSWR('ContractMetadata' + props.nft?.contract, async () => {
     return await getContractMetadata(props.nft?.contract, defaultChainId);
   });
@@ -154,7 +154,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 loading && !success ? 'animate-spin' : null,
               )}
             >
-              <ArrowClockwise className='text-[#6F6F6F] h-5 w-5'/>
+              <ArrowClockwise className='text-[#6F6F6F] h-5 w-5' />
             </div>
           }
         </div>
@@ -285,12 +285,12 @@ export const NFTDetail = (props: NFTDetailProps) => {
         (
           (currentAddress === props.nft?.wallet?.address && !isNullOrEmpty(currentAddress)) ||
           (currentAddress !== props.nft?.wallet?.address && !isNullOrEmpty(props.nft?.wallet?.address) && !isNullOrEmpty(props.nft?.memo)))
-          &&
-          <div className="flex minxl:basis-1/2">
-            <NFTDetailContextProvider nft={props.nft} >
-              <NftMemo nft={props.nft} />
-            </NFTDetailContextProvider>
-          </div>
+        &&
+        <div className="flex minxl:basis-1/2">
+          <NFTDetailContextProvider nft={props.nft} >
+            <NftMemo nft={props.nft} />
+          </NFTDetailContextProvider>
+        </div>
       }
     </div>
   );

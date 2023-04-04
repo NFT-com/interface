@@ -5,6 +5,7 @@ query CollectionLeaderboard($input: CollectionLeaderboardInput){
     logoUrl
     likeCount
     name
+    isOfficial
       stats {
         one_day_volume
         one_day_change

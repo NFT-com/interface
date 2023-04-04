@@ -25,13 +25,13 @@ export const GraphQLProviderProps = {};
 export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderProps>) {
   const { isSupported } = useSupportedNetwork();
   const { address: currentAddress } = useAccount();
-  
+
   const { chain } = useNetwork();
   const [loading, setLoading] = useState(true);
   const [client, setClient] = useState(defaultClient);
   const [signed, setSigned] = useState(false);
   const [sigRejected, setSigRejected] = useState(!currentAddress);
-  const unixTimestamp = moment().add(6, 'days').add(23,'hours').unix();
+  const unixTimestamp = moment().add(6, 'days').add(23, 'hours').unix();
   const { signMessageAsync } = useSignMessage({
     message: `${getEnv(Doppler.NEXT_PUBLIC_APOLLO_AUTH_MESSAGE)} ${unixTimestamp}`,
     onSuccess(data) {
@@ -107,7 +107,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
   }, [currentAddress]);
 
   useEffect(() => {
-    if((currentAddress && !isSupported) || sigRejected) {
+    if ((currentAddress && !isSupported) || sigRejected) {
       return;
     }
     if (isNullOrEmpty(currentAddress)) {
@@ -120,7 +120,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       setSigRejected(!sigResult && !isNullOrEmpty(currentAddress));
     })();
   }, [currentAddress, isSupported, trySignature, sigRejected]);
-  
+
   return (
     <GraphQLContext.Provider
       value={{

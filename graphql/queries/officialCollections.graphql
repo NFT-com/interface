@@ -3,7 +3,7 @@ query OfficialCollections($input: OfficialCollectionsInput!) {
     items {
       id
       contract
-      name
+      slug
       chainId
       updatedAt
     }

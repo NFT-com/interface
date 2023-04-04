@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useScrollToBottom } from 'graphql/hooks/useScrollToBottom';
@@ -38,7 +38,7 @@ export function NftGallery(props: NftGalleryProps) {
     if (!editMode && closeToBottom && publiclyVisibleNftsNoEdit?.length > 0 && !loading) {
       loadMoreNfts();
     }
-    
+
     if (editMode && closeToBottom && editModeNfts?.length > 0 && !loadingAllOwnerNfts) {
       loadMoreNftsEditMode();
     }
@@ -114,10 +114,10 @@ export function NftGallery(props: NftGalleryProps) {
         </div>
       }
       {(loading || loadingAllOwnerNfts) &&
-      <div className= 'min-h-[25rem] minmd:min-h-[20rem] text-primary-txt flex flex-col items-center justify-center'>
-        <div className="mb-2">Loading...</div>
-        <Loader />
-      </div>}
+        <div className='min-h-[25rem] minmd:min-h-[20rem] text-primary-txt flex flex-col items-center justify-center'>
+          <div className="mb-2">Loading...</div>
+          <Loader />
+        </div>}
     </>
   );
 }
