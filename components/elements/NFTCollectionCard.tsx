@@ -29,7 +29,10 @@ export function NFTCollectionCard(props: NFTCollectionCardProps) {
     draftNftsDescriptionsVisible
   } = useContext(ProfileContext);
 
-  const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.contract);
+  const { data: collection } = useCollectionQuery({
+    chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    contract: props?.contract
+  });
   const processedImages = props.images?.filter(i => i != null);
 
   return (

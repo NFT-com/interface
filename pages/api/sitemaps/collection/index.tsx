@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const sitemapFields: SitemapField[] = [];
     const siteUrlHost = getSitemapUrl({
       host: req.headers.host,
-      path: '/app/collection'
+      path: '/app/collection/official'
     });
 
     // Verify api has proper auth token
@@ -38,9 +38,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }).then(data => data.officialCollections);
 
     if (officialCollections && officialCollections?.items) {
-      officialCollections.items.forEach(({ contract, updatedAt }) => {
+      officialCollections.items.forEach(({ slug, updatedAt }) => {
         sitemapFields.push({
-          loc: `${siteUrlHost}/${contract}`,
+          loc: `${siteUrlHost}/${slug}`,
           lastmod: updatedAt,
           priority: 0.7,
           changefreq: 'daily'

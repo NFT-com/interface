@@ -2,7 +2,7 @@ import { Nft, ProfileQuery } from 'graphql/generated/types';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Loader from './Loader';
+import Loader from './Loader/Loader';
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
 import { BigNumber } from 'ethers';
@@ -67,7 +67,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
           <div className='h-full w-full row-span-1 col-span-1'>
             <Link href={`/app/nft/${props.featuredNfts[1]?.contract}/${props.featuredNfts[1]?.tokenId}`} passHref legacyBehavior>
               <a className='flex flex-col w-full row-auto minmd:aspect-auto aspect-square h-full justify-start'>
-                <RoundedCornerMedia priority={true} src={processIPFSURL(props.featuredNfts[1]?.previewLink ||props.featuredNfts[1]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full max-h-[77%] sm:max-h-full sm:w-full' />
+                <RoundedCornerMedia priority={true} src={processIPFSURL(props.featuredNfts[1]?.previewLink || props.featuredNfts[1]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full max-h-[77%] sm:max-h-full sm:w-full' />
                 {props.featuredNfts[1] && (
                   <div className='bg-white rounded-b-md minmd:px-3 minmd:py-1 px-3 py-2 max-h-[50%] h-max overflow-hidden truncate ...'>
                     <p className='minmd:text-xxs4 text-xxs2 text-[#727272] truncate'>{props.featuredNfts[1]?.metadata?.name || '#' + BigNumber.from(props.featuredNfts[1]?.tokenId).toString()}</p>

@@ -20,4 +20,3 @@ NotFoundPage.getLayout = function getLayout(page) {
     </DefaultLayout>
   );
 };
-

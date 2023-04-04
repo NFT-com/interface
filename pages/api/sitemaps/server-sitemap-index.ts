@@ -42,8 +42,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }).then(data => data.officialCollections);
 
-    officialCollections && officialCollections.items.forEach(officialCollection => {
-      const { chainId, contract } = officialCollection;
+    officialCollections && officialCollections.items.forEach((officialCollection) => {
+      const { chainId, contract, slug } = officialCollection;
       const collectionNftInput = {
         input: {
           chainId,
@@ -52,11 +52,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       };
 
-      sitemapUrls.push(`${sitemapHostUrl}/${contract}/chain/${chainId}/page/${1}.xml`);
+      sitemapUrls.push(`${sitemapHostUrl}/collection/official/${slug}/chain/${chainId}/page/${1}.xml`);
 
       collectionNftFirstPagePromises.push({
         chainId,
         contract,
+        slug,
         document: gqlQueries.collectionNfts,
         variables: collectionNftInput
       });
@@ -69,23 +70,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ...pageResult?.data.officialCollectionNFTs,
           chainId: batchedRequest[index].chainId,
           contract: batchedRequest[index].contract,
+          slug: batchedRequest[index].slug,
         }))
       )
     ));
 
     results && results.flat(2).forEach((result) => {
       if (result) {
-        const { contract, chainId, pageCount } = result;
+        const { chainId, slug, pageCount } = result;
         if (pageCount > 1) {
           for (let pgIndex = 0; pgIndex < pageCount - 1; pgIndex += 1) {
-            sitemapUrls.push(`${sitemapHostUrl}/${contract}/chain/${chainId}/page/${pgIndex + 2}.xml`);
+            sitemapUrls.push(`${sitemapHostUrl}/collection/official/${slug}/chain/${chainId}/page/${pgIndex + 2}.xml`);
           }
         }
       }
     });
 
-    // Cache API response for 23hrs 59min
-    res.setHeader('Cache-Control', 's-maxage=86340, stale-while-revalidate');
+    // Cache API response for 24hrs
+    res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
 
     return res.status(200).json({ sitemapUrls });
   } catch (err) {
