@@ -27,7 +27,7 @@ function usePrevious(value) {
 
 export default function CollectionsPage() {
   const [page, setPage] = useState(1);
-  const { sideNavOpen, activePeriod, setSideNavOpen, collectionsResultsFilterBy, isLeaderBoard, toggleLeaderBoardState, changeTimePeriod, setSearchModalOpen, setClearedFilters, setIsDiscoverCollections, isDiscoverCollections } = useSearchModal();
+  const { sideNavOpen, activePeriod, setSideNavOpen, collectionsResultsFilterBy, isLeaderBoard, toggleLeaderBoardState, changeTimePeriod, setSearchModalOpen, setIsDiscoverCollections, isDiscoverCollections } = useSearchModal();
   const { data: collectionData } = useCollectionQueryLeaderBoard(activePeriod);
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
@@ -65,9 +65,6 @@ export default function CollectionsPage() {
         page > 1 ? setCollectionData([...collections, ...results.hits]) : setCollectionData(results.hits);
       });
     }
-    return () => {
-      setClearedFilters();
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, filters]);
 
