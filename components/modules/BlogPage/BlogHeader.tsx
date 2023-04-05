@@ -24,7 +24,7 @@ export default function BlogHeader({ post }: HeaderProps) {
           <Image
             src={post.author.image.url}
             alt={post.author.image.description || 'Author Image'}
-            className="object-cover"
+            className="object-contain"
             loader={contentfulLoader}
             fill
           />
