@@ -1,5 +1,6 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
+import 'styles/css/react-medium-image-zoom-styles.css';
 
 import RootProvider from 'context';
 import useAnalyticsOnRouteChange from 'hooks/useAnalyticsOnRouteChange';

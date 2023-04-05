@@ -8,7 +8,7 @@ type HeroProps = {
 
 export default function BlogHeroImage({ src, alt }: HeroProps) {
   return (
-    <div className="minxl:h-blogHero-xl minlg:h-blogHero-lg h-96 w-full relative overflow-hidden">
+    <div className="aspect-video minxl:h-blogHero-xl minlg:h-blogHero-lg w-full relative overflow-hidden pb-4 rounded-md border border-gray-100/50 drop-shadow-md">
       <Image
         src={src}
         alt={alt}
