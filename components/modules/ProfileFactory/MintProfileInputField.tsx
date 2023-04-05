@@ -58,6 +58,14 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
       return (
         <p className='text-[#2AAE47] mb-3'>Great! Profile name is available :)</p>
       );
+    case ProfileStatus.Owned:
+      return isOwner
+        ? (
+          <p className='text-[#2AAE47] mb-3'>You are the owner!</p>
+        )
+        : (
+          <p className='text-[#F02D21] mb-3'>Sorry, profile name unavailable</p>
+        );
     case 'Listed':
       return isOwner
         ? (
