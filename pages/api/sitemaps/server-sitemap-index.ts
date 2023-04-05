@@ -104,7 +104,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({ sitemapUrls });
   } catch (err) {
-    console.error(err?.message);
+    console.error(err?.message.substring(0, 3000));
     return res.status(500).json({
       error: {
         message: `An error occurred fetching the server sitemap index, ${err?.message}`
