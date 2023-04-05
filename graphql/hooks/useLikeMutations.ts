@@ -8,6 +8,7 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import * as gtag from 'lib/gtag';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
+import { toast } from 'react-toastify';
 
 export interface LikeMutationResult {
   likeLoading: boolean;
@@ -32,7 +33,18 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
   const [unsetLikeError, setUnsetLikeError] = useState<Maybe<string>>(null);
   const [unsetLikeLoading, setUnsetLikeLoading] = useState(false);
   const { currentProfileId, user } = useUser();
-
+  const checkSuccessMessage = (likeType) => {
+    switch (likeType?.toLowerCase()) {
+    case 'nft':
+      return 'You liked an NFT!';
+    case 'collection':
+      return 'You liked a Collection!';
+    case 'profile':
+      return 'You liked a Profile!';
+    default:
+      return '';
+    }
+  };
   const setLike = useCallback(
     async () => {
       const location = router.pathname;
@@ -67,10 +79,11 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         const isClient = typeof window !== 'undefined';
         const data = isClient ? localStorage.getItem('nonAuthLikeObject') : null;
         const storedLike = data ? JSON.parse(data) : null;
-        if (storedLike) {
+        if (storedLike && result) {
+          forceReload(storedLike?.likedId, storedLike?.likedType);
           setTimeout(() => {
-            forceReload(storedLike?.likedId, storedLike?.likedType);
             if (isClient) {
+              toast.success(checkSuccessMessage(storedLike?.likedType));
               localStorage.removeItem('nonAuthLikeObject');
             }
           }, 500);
