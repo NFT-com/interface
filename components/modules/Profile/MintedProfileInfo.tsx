@@ -3,8 +3,9 @@ import LikeCount from 'components/elements/LikeCount';
 import Toast from 'components/elements/Toast';
 import { LikeableType } from 'graphql/generated/types';
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
-import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
+import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
@@ -24,7 +25,8 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { user } = useUser();
   const { profileData } = useProfileQuery(profileURI);
-  const { profileData: profileLikeData, mutate: mutateProfileLikeData } = useProfileLikeQuery(profileURI);
+  const { nftProfile } = useAllContracts();
+  const { data: profileLikeData, mutate: mutateProfileLikeData } = useNftLikeQuery(nftProfile.address, profileData?.profile?.tokenId);
   const {
     editMode,
     draftBio,
@@ -75,9 +77,9 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             }
             {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
               <LikeCount
-                count={profileLikeData?.profile?.likeCount}
-                isLiked={profileLikeData?.profile?.isLikedBy}
-                onClick={profileLikeData?.profile?.isLikedBy ? unsetLike : setLike}
+                count={profileLikeData?.likeCount}
+                isLiked={profileLikeData?.isLikedBy}
+                onClick={profileLikeData?.isLikedBy ? unsetLike : setLike}
                 mutate={mutateProfileLikeData}
               />
             }

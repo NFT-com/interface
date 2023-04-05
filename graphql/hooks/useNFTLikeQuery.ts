@@ -21,7 +21,7 @@ export function useNftLikeQuery(contract: string, id: BigNumberish): NftLikeData
   const { currentProfileId } = useUser();
   const { address: currentAccount } = useAccount();
 
-  const keyString = 'NftLikeQuery' + contract + id?.toString() + likeId + defaultChainId + currentProfileId + currentAccount;
+  const keyString = 'NftLikeQuery' + contract + Number(id) + likeId + defaultChainId + currentProfileId + currentAccount;
 
   const mutateThis = useCallback(() => {
     mutate(keyString);

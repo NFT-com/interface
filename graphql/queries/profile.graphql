@@ -16,6 +16,7 @@ query Profile($url: String!, $chainId: String!, $likedById: ID!) {
     likeCount
     isLikedByUser
     isLikedBy(likedById: $likedById)
+    tokenId
     owner {
       address
       chainId

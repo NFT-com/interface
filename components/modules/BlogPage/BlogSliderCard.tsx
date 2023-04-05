@@ -1,6 +1,7 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { PostData } from 'types/blogs';
 
+import { contentfulLoader } from 'lib/image/loader';
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -26,6 +27,7 @@ export default function BlogSliderCard({ post }: BlogSliderPostProps) {
             placeholder="blur"
             style={{ objectFit: 'cover' }}
             blurDataURL={post?.heroImage.url}
+            loader={contentfulLoader}
           />
         </Link>
       </div>
@@ -55,6 +57,7 @@ export default function BlogSliderCard({ post }: BlogSliderPostProps) {
                 src={post?.author?.image?.url}
                 alt={post?.author?.image?.description || 'Author Image'}
                 className="object-cover"
+                loader={contentfulLoader}
                 fill
               />
             </span>

@@ -1,6 +1,7 @@
 import BlurImage from 'components/elements/BlurImage';
 import { PostData } from 'types/blogs';
 
+import { contentfulLoader } from 'lib/image/loader';
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,14 +17,15 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
     <Link href={`/articles/${post?.slug}`} passHref legacyBehavior>
       <div data-cy="blogPostCard" className="text-left	hover:cursor-pointer">
         {post?.heroImage?.url &&
-      <div style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)' }} className="aspect-4/3 w-full relative rounded-md">
-        <BlurImage
-          className='rounded-md object-cover'
-          fill
-          src={post?.heroImage?.url}
-          alt={post?.heroImage?.description}
-        />
-      </div>
+          <div style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)' }} className="aspect-4/3 w-full relative rounded-md">
+            <BlurImage
+              className='rounded-md object-cover'
+              fill
+              src={post?.heroImage?.url}
+              alt={post?.heroImage?.description}
+              loader={contentfulLoader}
+            />
+          </div>
         }
         <h3 className="font-noi-grotesk font-bold minxl:text-xl minlg:text-lg minmd:text-base text-sm mt-2">
           {post?.title}
@@ -41,6 +43,7 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
               <Image
                 src={post.author.image.url}
                 alt={post.author.image.description || 'Author Image'}
+                loader={contentfulLoader}
                 className="object-cover"
                 fill
               />
@@ -55,7 +58,7 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
                 {moment(post?.publishDate).format('MMM Do, YYYY')}
               </p>
               <span className="mx-1 minlg:block hidden minlg:text-sm text-xxs3 ">
-              .
+                .
               </span>
               {post?.body && (
                 <p className="minlg:block hidden minlg:text-sm text-xxs3">
