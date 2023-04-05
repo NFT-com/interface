@@ -5,7 +5,7 @@ import Zoom from 'react-medium-image-zoom';
 type ImageWithZoomProps = {
   src: string;
   alt: string;
-  loader: (props: ImageLoaderProps) => string;
+  loader?: (props: ImageLoaderProps) => string;
 };
 
 /**
