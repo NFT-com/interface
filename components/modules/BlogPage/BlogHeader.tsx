@@ -3,6 +3,7 @@ import { PostData } from 'types/blogs';
 
 import SharingIcons from './SharingIcons';
 
+import { contentfulLoader } from 'lib/image/loader';
 import moment from 'moment';
 import Image from 'next/image';
 import { readingTime } from 'reading-time-estimator';
@@ -24,6 +25,7 @@ export default function BlogHeader({ post }: HeaderProps) {
             src={post.author.image.url}
             alt={post.author.image.description || 'Author Image'}
             className="object-cover"
+            loader={contentfulLoader}
             fill
           />
         </div>

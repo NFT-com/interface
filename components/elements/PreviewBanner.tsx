@@ -14,7 +14,7 @@ function PreviewBanner() {
         legacyBehavior
       >
         <a
-          className="bg-white dark:bg-black text-black dark:text-white rounded decoraction p-2"
+          className="bg-white dark:bg-black text-black dark:text-white rounded decoration p-2"
         >
           EXIT PREVIEW MODE
         </a>
