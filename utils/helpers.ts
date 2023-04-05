@@ -121,22 +121,24 @@ export const getStaticAsset = (imagePath: string, cdn = true): string => {
   return imagePath;
 };
 
+function extractIPFSHashAndPathFromUrl(url: string): string | null {
+  // Define a regular expression pattern to match the IPFS hash format
+  // and capture any subsequent path after the hash.
+  const ipfsHashPattern = /(Qm[a-zA-Z0-9]{44}(\/.*)?)/;
+
+  // Find the match in the URL
+  const match = url.match(ipfsHashPattern);
+
+  // Return the matched IPFS hash and path or null if not found
+  return match ? match[0] : null;
+}
+
 export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
   const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
   if (image == null) {
     return null;
-  } else if (image.indexOf('ipfs://ipfs/') === 0) {
-    return prefix + image.slice(12);
-  } else if (image.indexOf('ipfs://') === 0) {
-    return prefix + image.slice(7);
-  } else if (image.indexOf('https://ipfs.io/ipfs/') === 0) {
-    return prefix + image.slice(21);
-  } else if (image.indexOf('https://ipfs.infura.io/ipfs/') === 0) {
-    return prefix + image.slice(28);
-  } else if (image.indexOf('https://gateway.pinata.cloud/ipfs/') === 0) {
-    return prefix + image.slice(34);
-  } else if (image.indexOf('https://infura-ipfs.io/ipfs/') === 0) {
-    return prefix + image.slice(28);
+  } else if (image.includes('ipfs')) {
+    return prefix + extractIPFSHashAndPathFromUrl(image);
   } else if (base32cid(image) || multihash(image) || cid(image)) {
     return prefix + image;
   }
