@@ -194,6 +194,7 @@ export type Collection = {
   averagePrice?: Maybe<Scalars['Float']>;
   bannerUrl?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['String']>;
+  comments?: Maybe<CommentsOutput>;
   contract?: Maybe<Scalars['Address']>;
   deployer?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
@@ -210,6 +211,11 @@ export type Collection = {
   slug?: Maybe<Scalars['String']>;
   stats?: Maybe<NftPortStatistics>;
   totalVolume?: Maybe<Scalars['Float']>;
+};
+
+
+export type CollectionCommentsArgs = {
+  pageInput?: InputMaybe<PageInput>;
 };
 
 
@@ -274,6 +280,18 @@ export type Comment = {
   entityType?: Maybe<SocialEntityType>;
   id?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type CommentsInput = {
+  entityId: Scalars['ID'];
+  pageInput?: InputMaybe<PageInput>;
+};
+
+export type CommentsOutput = {
+  __typename?: 'CommentsOutput';
+  items: Array<Maybe<Comment>>;
+  pageInfo?: Maybe<PageInfo>;
+  totalItems?: Maybe<Scalars['Int']>;
 };
 
 export type ContractSalesStatistics = {
@@ -371,6 +389,10 @@ export type CurationsOutput = {
   items: Array<Curation>;
   pageInfo?: Maybe<PageInfo>;
   totalItems?: Maybe<Scalars['Int']>;
+};
+
+export type DeleteCommentInput = {
+  commentId: Scalars['ID'];
 };
 
 export type Event = {
@@ -686,6 +708,7 @@ export type Mutation = {
   createMarketBid: TxBidOrder;
   /** AUTHENTICATED */
   createMarketListing: TxListingOrder;
+  deleteComment?: Maybe<Scalars['Boolean']>;
   deleteFromWatchlist?: Maybe<Scalars['Boolean']>;
   fillChainIds: FillChainIdsOutput;
   /** AUTHENTICATED */
@@ -840,6 +863,11 @@ export type MutationCreateMarketBidArgs = {
 
 export type MutationCreateMarketListingArgs = {
   input: CreateListingInput;
+};
+
+
+export type MutationDeleteCommentArgs = {
+  input: DeleteCommentInput;
 };
 
 
@@ -1130,6 +1158,7 @@ export type Nft = {
   __typename?: 'NFT';
   chainId?: Maybe<Scalars['String']>;
   collection?: Maybe<Collection>;
+  comments?: Maybe<CommentsOutput>;
   contract?: Maybe<Scalars['Address']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
@@ -1152,6 +1181,11 @@ export type Nft = {
   tokenId: Scalars['Uint256'];
   type: NftType;
   wallet?: Maybe<Wallet>;
+};
+
+
+export type NftCommentsArgs = {
+  pageInput?: InputMaybe<PageInput>;
 };
 
 
@@ -1617,6 +1651,7 @@ export type Profile = {
   __typename?: 'Profile';
   bannerURL?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['String']>;
+  comments?: Maybe<CommentsOutput>;
   createdAt: Scalars['DateTime'];
   deployedContractsVisible?: Maybe<Scalars['Boolean']>;
   description?: Maybe<Scalars['String']>;
@@ -1646,6 +1681,11 @@ export type Profile = {
   usersActionsWithPoints?: Maybe<Array<Maybe<UsersActionOutput>>>;
   visibleNFTs?: Maybe<Scalars['Int']>;
   winningBid?: Maybe<Bid>;
+};
+
+
+export type ProfileCommentsArgs = {
+  pageInput?: InputMaybe<PageInput>;
 };
 
 
@@ -1759,6 +1799,7 @@ export type Query = {
   collectionNFTs: NfTsOutput;
   collectionTraits?: Maybe<CollectionTraitsSummary>;
   collectionsByDeployer?: Maybe<Array<Maybe<Collection>>>;
+  comments?: Maybe<CommentsOutput>;
   curationNFTs: CurationNfTsOutput;
   fetchEthUsd: Scalars['Float'];
   filterListings: GetOrders;
@@ -1875,6 +1916,11 @@ export type QueryCollectionTraitsArgs = {
 
 export type QueryCollectionsByDeployerArgs = {
   deployer: Scalars['String'];
+};
+
+
+export type QueryCommentsArgs = {
+  input: CommentsInput;
 };
 
 
@@ -3483,7 +3529,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, ownerWalletId?: string | null, ownerUserId?: string | null, likeCount?: number | null, isLikedByUser?: boolean | null, isLikedBy?: boolean | null, profileView?: ProfileViewType | null, hideCustomization?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, ownerWalletId?: string | null, ownerUserId?: string | null, likeCount?: number | null, isLikedByUser?: boolean | null, isLikedBy?: boolean | null, tokenId?: string | null, profileView?: ProfileViewType | null, hideCustomization?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -5697,6 +5743,7 @@ export const ProfileDocument = gql`
     likeCount
     isLikedByUser
     isLikedBy(likedById: $likedById)
+    tokenId
     owner {
       address
       chainId
