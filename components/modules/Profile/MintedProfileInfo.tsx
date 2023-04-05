@@ -36,7 +36,8 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
 
   const { setLike, unsetLike } = useSetLikeMutation(
     profileData?.profile?.id,
-    LikeableType.Profile
+    LikeableType.Profile,
+    profileData?.profile?.url
   );
 
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
@@ -84,7 +85,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             }
           </div>
         </div>
-        
+
         <div className='hidden minlg:block'>
           <ProfileMenu profileURI={profileURI} />
         </div>

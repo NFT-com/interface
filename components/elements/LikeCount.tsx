@@ -67,7 +67,6 @@ export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCount
       )}
     >
       <div className='h-full flex flex-row items-center justify-center space-x-2'>
-
         {clicked && !liked ?
           <>
             <div className='w-[18px] h-5 flex'></div>
