@@ -1,5 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Nft } from 'graphql/generated/types';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { Doppler, getEnv } from 'utils/env';
 import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 
@@ -7,7 +8,6 @@ import { BigNumber, BigNumberish } from 'ethers';
 import { useCallback } from 'react';
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
-import { useNetwork } from 'wagmi';
 
 export interface NftData {
   data: PartialDeep<Nft>;
@@ -20,21 +20,21 @@ export function useNftQuery(contract: string, id: BigNumberish, listingsOwner?: 
   const sdk = useGraphQLSDK();
   const keyString = 'NftQuery ' + contract + id + listingsOwner;
 
-  const { chain } = useNetwork();
+  const defaultChainId = useDefaultChainId();
 
   const mutateThis = useCallback(() => {
     mutate(keyString);
   }, [keyString]);
 
   const { data } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(contract) || id == null) {
+    if (isNullOrEmpty(contract) || id == null || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== defaultChainId) {
       return null;
     }
     
     // All NFT IDs are stored in hex string format.
     const input = listingsOwner ?
-      { chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID), contract, id: BigNumber.from(id).toHexString(), listingsOwner } :
-      { chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID), contract, id: BigNumber.from(id).toHexString() };
+      { chainId: getChainIdString(defaultChainId) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID), contract, id: BigNumber.from(id).toHexString(), listingsOwner } :
+      { chainId: getChainIdString(defaultChainId) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID), contract, id: BigNumber.from(id).toHexString() };
 
     const result = await sdk.Nft(input);
     return result?.nft;

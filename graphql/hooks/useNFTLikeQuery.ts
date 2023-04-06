@@ -2,6 +2,7 @@ import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
 import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { BigNumber, BigNumberish } from 'ethers';
@@ -28,7 +29,7 @@ export function useNftLikeQuery(contract: string, id: BigNumberish): NftLikeData
   }, [keyString]);
 
   const { data } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(contract) || id == null) {
+    if (isNullOrEmpty(contract) || id == null || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== defaultChainId) {
       return null;
     }
 
