@@ -1,11 +1,9 @@
 
 // TODO: Need to get inventory of domains to allow (frame-ancestors newer ver of x-frame-options)
 const ContentSecurityPolicy = `
-  child-src 'self;
-  default-src 'self' *.nft.com;
   frame-ancestors 'none';
   script-src 'self' https://www.googletagmanager.com https://connect.facebook.net;
-  style-src 'self';
+  style-src 'self' https://fonts.googleapis.com;
   font-src 'self' https://fonts.googleapis.com;
 `;
 
