@@ -46,7 +46,7 @@ export const Properties = (props: PropertiesProps) => {
             {nftTraits?.map((item, index) => {
               return <NftDetailCard
                 key={index}
-                type={item?.type ? item?.type.toUpperCase() : ''}
+                type={item?.type}
                 value={item.value}
                 copy
               />;
