@@ -143,6 +143,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
             key={props.src}
             src={imageUrl}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className={tw(
               props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
               'absolute w-full h-full justify-center',

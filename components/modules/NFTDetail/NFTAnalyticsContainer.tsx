@@ -59,29 +59,40 @@ const DynamicNFTActivity = dynamic<React.ComponentProps<typeof StaticNFTActivity
 export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const [selectedTab, setSelectedTab] = useState(nftActivityTabs[0]);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[6]);
+  const { contract, tokenId } = data;
   const { getSales } = useGetSales();
 
-  const { data: nftData } = useSWR('getSales' + data?.contract + data?.tokenId + selectedTimeFrame, async () => {
-    const dayTimeFrames = {
-      '1D': '24h',
-      '7D': '7d',
-      '1M': '30d',
-      '3M': '90d',
-      '6M': '6m',
-      '1Y': '1y',
-      'ALL': 'all'
-    };
+  const { data: nftData } = useSWR(
+    () => contract && tokenId ?
+      ['getSales', data?.contract, data?.tokenId, selectedTimeFrame]
+      : null,
+    async ([
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      url,
+      contract,
+      tokenId,
+      timeFrame
+    ]) => {
+      const dayTimeFrames = {
+        '1D': '24h',
+        '7D': '7d',
+        '1M': '30d',
+        '3M': '90d',
+        '6M': '6m',
+        '1Y': '1y',
+        'ALL': 'all'
+      };
 
-    const resp = await getSales({
-      contractAddress: data?.contract,
-      tokenId: BigNumber.from(data?.tokenId).toString(),
-      dateRange: dayTimeFrames[selectedTimeFrame] });
+      const resp = await getSales({
+        contractAddress: contract,
+        tokenId: BigNumber.from(tokenId).toString(),
+        dateRange: dayTimeFrames[timeFrame] });
 
-    const sales = resp.getSales.map(i => {
-      return { date: i.date, value: i.priceUSD };
+      const sales = resp.getSales.map(i => {
+        return { date: i.date, value: i.priceUSD };
+      });
+      return sales.sort((a,b) =>(a.date > b.date) ? 1 : -1);
     });
-    return sales.sort((a,b) =>(a.date > b.date) ? 1 : -1);
-  });
 
   return (
     <div className="overflow-x-auto shadow-2xl rounded-[24px] pb-4 md:pb-0 minxl:py-5 minxl:pb-0 w-full">

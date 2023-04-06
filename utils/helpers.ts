@@ -337,3 +337,10 @@ export const isOfficialCollection = (collection: PartialDeep<Collection>) => col
     trim: true
   })}`
   : collection?.contract;
+
+/**
+ * Simple check if the given string is a valid Ethereum contract address.
+ * @param {string} contract - The contract address to validate.
+ * @returns {boolean} - True if the contract address is valid, false otherwise.
+ */
+export const isValidContractSimple = (contract: string) => /^0x[a-fA-F0-9]{40}$/.test(contract);

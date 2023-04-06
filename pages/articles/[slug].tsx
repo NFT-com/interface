@@ -28,32 +28,31 @@ export default function Post({ post, preview }: PostProps) {
     return <NotFoundPage />;
   }
 
+  const seoConfig = {
+    title:post.title,
+    description:post.description,
+    openGraph: {
+      url: `https://www.nft.com/articles/${post.slug}`,
+      title: post.title,
+      description: post.description,
+      type: 'article',
+      article: {
+        publishedTime: post.publishDate,
+        tags: post.tags,
+      },
+      images: [
+        {
+          url: post.heroImage.url,
+          alt: post.heroImage.description,
+        },
+      ],
+      site_name: 'NFT.com',
+    },
+  };
+
   return (
     <>
-      <NextSeo
-        title={post.title}
-        description={post.description}
-        openGraph={{
-          url: `https://www.nft.com/articles/${post.slug}`,
-          title: post.title,
-          description: post.description,
-          type: 'article',
-          article: {
-            publishedTime: post.publishDate,
-            tags: post.tags,
-          },
-          images: [
-            {
-              url: post.heroImage.url,
-              alt: post.heroImage.description,
-            },
-          ],
-          site_name: 'NFT.com',
-        }}
-        twitter={{
-          cardType: 'summary_large_image',
-        }}
-      />
+      <NextSeo {...seoConfig}/>
       <div className='bg-white'>
         <div className="relative text-center px-4 w-full minlg:pt-28 max-w-nftcom mx-auto">
           <Link href="/articles">

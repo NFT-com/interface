@@ -12,6 +12,7 @@ export const RoundedCornerMediaImage = (props: {
       key={props.src}
       quality='50'
       fill
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       priority={props?.priority}
       src={props.src}
       onError={props.onError}
