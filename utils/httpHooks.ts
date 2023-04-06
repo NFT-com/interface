@@ -28,11 +28,8 @@ import {
 import { DeployedContract } from 'constants/contracts';
 import {
   DAI,
-  DAI_GOERLI,
   USDC,
-  USDC_GOERLI,
   WETH,
-  WETH_GOERLI
 } from 'constants/tokens';
 
 import { Doppler, getEnv } from './env';
@@ -54,9 +51,7 @@ export const isProduction = (chainId: number | string) => {
 
 const deployedContractAddressResolver = (chainId: number | string | undefined, tokenContract: DeployedContract) => {
   return ethers.utils.getAddress(
-    isSandbox(chainId) ?
-      tokenContract.goerli :
-      tokenContract.mainnet
+    tokenContract.mainnet
   );
 };
 
@@ -102,11 +97,11 @@ export const getAddress = (token: SupportedTokenContract, chainId: number | stri
   case 'nftResolver' :
     return deployedContractAddressResolver(chainId, nftResolver);
   case 'usdc':
-    return ethers.utils.getAddress(isSandbox(chainId) ? USDC_GOERLI.address : USDC.address);
+    return ethers.utils.getAddress(USDC.address);
   case 'dai':
-    return ethers.utils.getAddress(isSandbox(chainId) ? DAI_GOERLI.address : DAI.address);
+    return ethers.utils.getAddress(DAI.address);
   case 'weth':
-    return ethers.utils.getAddress(isSandbox(chainId) ? WETH_GOERLI.address : WETH.address);
+    return ethers.utils.getAddress(WETH.address);
   case 'aggregator':
     return deployedContractAddressResolver(chainId, nftAggregator);
   case 'marketplace':

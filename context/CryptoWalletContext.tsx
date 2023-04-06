@@ -2,7 +2,6 @@
 import CustomAvatar from 'components/elements/CustomAvatar';
 import Disclaimer from 'components/elements/Disclaimer';
 import { Doppler, getEnv } from 'utils/env';
-import { DeploymentEnv, isNotEnv, isProd } from 'utils/isEnv';
 
 import {
   connectorsForWallets,
@@ -20,15 +19,13 @@ import {
 import { ReactNode, useMemo } from 'react';
 import { rainbowLight } from 'styles/RainbowKitThemes';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { goerli, mainnet } from 'wagmi/chains';
+import { mainnet } from 'wagmi/chains';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 export const CryptoWalletProvider = ({ children }: { children: ReactNode }) => {
   const { chains, provider } = useMemo(() => {
     return configureChains(
-      !isProd
-        ? [mainnet, goerli]
-        : [mainnet],
+      [mainnet],
       [
         jsonRpcProvider({
           rpc: (chain) => {
@@ -87,11 +84,7 @@ export const CryptoWalletProvider = ({ children }: { children: ReactNode }) => {
           }}
           theme={rainbowLight}
           chains={chains}
-          initialChain={
-            isNotEnv([DeploymentEnv.STAGING, DeploymentEnv.PRODUCTION])
-              ? goerli
-              : mainnet
-          }
+          initialChain={mainnet}
           avatar={CustomAvatar}
         >
           {children}

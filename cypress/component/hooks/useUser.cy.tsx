@@ -8,13 +8,11 @@ import { getSigners, setupWagmiClient } from '../../util/utils';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { MockConnector } from '@wagmi/core/connectors/mock';
 import { configureChains, useDisconnect, WagmiConfig } from 'wagmi';
-import { goerli, mainnet } from 'wagmi/chains';
+import { mainnet } from 'wagmi/chains';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 const { chains } = configureChains(
-  getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
-    [mainnet, goerli] :
-    [mainnet],
+  [mainnet],
   [
     jsonRpcProvider({
       rpc: (chain) => {

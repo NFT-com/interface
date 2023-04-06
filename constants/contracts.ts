@@ -15,7 +15,7 @@ export const genesisKey: DeployedContract = {
 
 export const genesisKeyDistributor: DeployedContract = {
   mainnet : '0x0eBa8d862AF4E01A0573B663FB3eb3A06D7937dE',
-  goerli: '0x36c9cadedC7fff4Ad2e316B6cCcE2CF0343BFdd4' // todo: use goerli address
+  goerli: '0x36c9cadedC7fff4Ad2e316B6cCcE2CF0343BFdd4'
 };
 
 export const genesisKeyTeamClaim: DeployedContract = {
