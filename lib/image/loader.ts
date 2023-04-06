@@ -1,3 +1,5 @@
+import { getBaseUrl } from 'utils/helpers';
+
 import { ImageLoaderProps } from 'next/image';
 
 /**
@@ -14,4 +16,18 @@ export function contentfulLoader({ src, quality, width }: ImageLoaderProps) {
   url.searchParams.set('w', width.toString());
   url.searchParams.set('q', quality ? quality.toString() : '75');
   return url.href;
+}
+
+/**
+ * A function that returns the URL of an image to be loaded. If the image is an SVG and is hosted on nft.com,
+ * the original URL is returned. Otherwise, the URL is passed through an imageFetcher API to resize the image.
+ * @param {ImageLoaderProps} - An object containing the source URL and the desired width of the image.
+ * @returns {string} - The URL of the image to be loaded.
+ */
+export function nftComCdnLoader({ src, width }: ImageLoaderProps) {
+  return src?.indexOf('.svg') >= 0 && src?.indexOf('nft.com') >= 0
+    ? src
+    : `${getBaseUrl(
+      'https://www.nft.com/'
+    )}api/imageFetcher?url=${encodeURIComponent(src)}&width=${width || 300}`;
 }
