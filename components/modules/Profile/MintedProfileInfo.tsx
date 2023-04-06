@@ -1,6 +1,5 @@
 import CustomTooltip from 'components/elements/CustomTooltip';
 import LikeCount from 'components/elements/LikeCount';
-import Toast from 'components/elements/Toast';
 import { LikeableType } from 'graphql/generated/types';
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
