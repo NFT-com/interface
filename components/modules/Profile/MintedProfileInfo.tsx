@@ -1,6 +1,5 @@
 import CustomTooltip from 'components/elements/CustomTooltip';
 import LikeCount from 'components/elements/LikeCount';
-import Toast from 'components/elements/Toast';
 import { LikeableType } from 'graphql/generated/types';
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
@@ -55,7 +54,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       'mt-[-25px] minlg:mt-[-50px] px-4 minlg:px-20 font-noi-grotesk minlg:mb-12'
     )}
     >
-      <Toast />
       <div className={tw('flex w-full items-center',
         `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : ''}`,
         'justify-start minlg:justify-between minlg:mt-3'

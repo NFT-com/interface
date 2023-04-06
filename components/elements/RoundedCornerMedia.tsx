@@ -3,6 +3,7 @@ import { tw } from 'utils/tw';
 
 import { RoundedCornerMediaImage as StaticRoundedCornerMediaImage } from './RoundedCornerMediaImage';
 
+import { nftComCdnLoader } from 'lib/image/loader';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
@@ -93,8 +94,8 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
 
   const imageUrl = imageSrc || props?.src;
   const rawImageBool = (imageUrl?.indexOf('cdn.nft.com') >= 0 && imageUrl?.indexOf('.svg') >= 0) ||
-    imageUrl?.indexOf('ens.domains') >= 0 ||
-    (imageUrl?.indexOf('storage.googleapis.com') >= 0 && imageUrl?.indexOf('.svg') >= 0);
+  imageUrl?.indexOf('ens.domains') >= 0 ||
+  (imageUrl?.indexOf('storage.googleapis.com') >= 0 && imageUrl?.indexOf('.svg') >= 0);
 
   return (
     <div className={tw(
@@ -144,6 +145,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
             src={imageUrl}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            loader={nftComCdnLoader}
             className={tw(
               props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
               'absolute w-full h-full justify-center',
@@ -154,6 +156,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           (imageUrl != 'null?width=600') && <DynamicRoundedCornerMediaImage
             priority={props?.priority}
             src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
+            loader={nftComCdnLoader}
             onError={() => {
               setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
             }}

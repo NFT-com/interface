@@ -1,11 +1,14 @@
-import Image from 'next/image';
+import Image, { ImageProps } from 'next/image';
 
-export const RoundedCornerMediaImage = (props: {
+export interface RoundedCornerMediaImageProps extends Omit<ImageProps, 'alt'> {
+  alt?: string;
   src: any;
   priority?: boolean;
   onError: () => void;
   className: string;
-}) => {
+}
+
+export const RoundedCornerMediaImage = (props: RoundedCornerMediaImageProps) => {
   return (
     <Image
       alt='NFT Image'
@@ -17,6 +20,7 @@ export const RoundedCornerMediaImage = (props: {
       src={props.src}
       onError={props.onError}
       className={props.className}
+      {...props}
     />
   );
 };
