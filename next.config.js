@@ -1,4 +1,3 @@
-
 const { withSentryConfig } = require('@sentry/nextjs');
 const path = require('path');
 const v8 = require('v8');
