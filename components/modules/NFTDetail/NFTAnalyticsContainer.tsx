@@ -59,11 +59,10 @@ const DynamicNFTActivity = dynamic<React.ComponentProps<typeof StaticNFTActivity
 export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const [selectedTab, setSelectedTab] = useState(nftActivityTabs[0]);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[6]);
-  const { contract, tokenId } = data;
   const { getSales } = useGetSales();
 
   const { data: nftData } = useSWR(
-    () => contract && tokenId ?
+    () => data?.contract && data?.tokenId ?
       ['getSales', data?.contract, data?.tokenId, selectedTimeFrame]
       : null,
     async ([
