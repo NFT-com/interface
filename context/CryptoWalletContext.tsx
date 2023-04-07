@@ -2,7 +2,7 @@
 import CustomAvatar from 'components/elements/CustomAvatar';
 import Disclaimer from 'components/elements/Disclaimer';
 import { Doppler, getEnv } from 'utils/env';
-import { DeploymentEnv, isNotEnv, isProd } from 'utils/isEnv';
+import { isProd } from 'utils/isEnv';
 
 import {
   connectorsForWallets,
@@ -88,7 +88,7 @@ export const CryptoWalletProvider = ({ children }: { children: ReactNode }) => {
           theme={rainbowLight}
           chains={chains}
           initialChain={
-            isNotEnv([DeploymentEnv.STAGING, DeploymentEnv.PRODUCTION])
+            getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) === goerli.id.toString()
               ? goerli
               : mainnet
           }
