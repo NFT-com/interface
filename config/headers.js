@@ -1,9 +1,6 @@
 // TODO: Need to get inventory of domains to allow (frame-ancestors newer ver of x-frame-options)
 const ContentSecurityPolicy = `
   frame-ancestors 'none';
-  script-src 'self' https://www.googletagmanager.com https://connect.facebook.net nonce-pb+/pfhRedphzqIYzlBxMA== nonce-gGkqzVy6zqm4Aoyp9I4H5g== nonce-375Pd+0smY3JyJkGZJLKnA==;
-  style-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
-  font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
 `;
 
 const securityHeaders = [
