@@ -42,9 +42,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const defaultChainId = useDefaultChainId();
 
   const { data: collection } = useCollectionQuery({ chainId: String(defaultChainId), contract: props?.nft?.contract });
-  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.nft?.contract, async () => {
-    return await getContractMetadata(props.nft?.contract, defaultChainId);
-  });
+  const { data: collectionMetadata } = useSWR(
+    () => props?.nft?.contract ?
+      ['ContractMetadata', props?.nft?.contract]
+      : null,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async ([url, contract]) => {
+      return await getContractMetadata(contract, defaultChainId);
+    });
 
   const collectionName = collectionMetadata?.contractMetadata?.name || collectionMetadata?.contractMetadata?.openSea?.collectionName;
 

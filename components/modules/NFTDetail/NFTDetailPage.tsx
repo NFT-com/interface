@@ -37,10 +37,12 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const defaultChainId = useDefaultChainId();
 
   const { data: nft, mutate: mutateNft } = useNftQuery(props.collection, props.tokenId);
-
-  const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
-    return await getContractMetadata(nft?.contract, defaultChainId);
-  });
+  const { data: collection } = useSWR(
+    () => props.collection ? ['ContractMetadata', props.collection] : null,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async ([url, contract]) => {
+      return await getContractMetadata(contract, defaultChainId);
+    });
   const { refreshNft } = useRefreshNftMutation();
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
 

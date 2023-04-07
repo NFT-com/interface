@@ -144,6 +144,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
             key={props.src}
             src={imageUrl}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             loader={nftComCdnLoader}
             className={tw(
               props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
