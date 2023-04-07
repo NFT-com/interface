@@ -103,6 +103,10 @@ export function useUser() {
     if (activeConnector) {
       activeConnector.on('change', handleConnectorUpdate);
     }
+
+    return () => {
+      activeConnector && activeConnector.off('change', handleConnectorUpdate);
+    };
   }, [activeConnector]);
 
   return {
