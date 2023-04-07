@@ -22,7 +22,6 @@ export const Properties = (props: PropertiesProps) => {
   const { data: claimableProfileCount } = useSWR('ContractMetadata' + props?.nft?.tokenId + isGkCollection, async () => {
     return await profileAuction.genesisKeyClaimNumber(Number(props?.nft?.tokenId));
   });
-  console.log('🚀 ~ file: Properties.tsx:25 ~ const{data:claimableProfileCount}=useSWR ~ claimableProfileCount:', claimableProfileCount);
 
   return (
     <div className="flex flex-col w-full h-fit justify-between" id="NftPropertiesContainer">
@@ -47,7 +46,7 @@ export const Properties = (props: PropertiesProps) => {
             {nftTraits?.map((item, index) => {
               return <NftDetailCard
                 key={index}
-                type={item.type.toUpperCase()}
+                type={item?.type}
                 value={item.value}
                 copy
               />;
