@@ -1,4 +1,4 @@
-import { getBaseUrl } from 'utils/helpers';
+import { getBaseUrl, processIPFSURL } from 'utils/helpers';
 
 import { ImageLoaderProps } from 'next/image';
 
@@ -25,9 +25,22 @@ export function contentfulLoader({ src, quality, width }: ImageLoaderProps) {
  * @returns {string} - The URL of the image to be loaded.
  */
 export function nftComCdnLoader({ src, width }: ImageLoaderProps) {
-  return src?.indexOf('.svg') >= 0 && src?.indexOf('nft.com') >= 0
-    ? src
-    : `${getBaseUrl(
-      'https://www.nft.com/'
-    )}api/imageFetcher?url=${encodeURIComponent(src)}&width=${width || 300}`;
+  return `${getBaseUrl(
+    'https://www.nft.com/'
+  )}api/imageFetcher?url=${encodeURIComponent(processIPFSURL(src))}&width=${width || 300}`;
+}
+
+/**
+ * Generates a srcset for the given image URL using a set of predefined widths.
+ * @param {string} url - The URL of the image to generate the srcset for.
+ * @returns An object containing the src, srcs, and srcset for the image.
+ */
+export function generateSrcSet(url: string) {
+  const widths = [256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840];
+  const encodedUrl = encodeURIComponent(processIPFSURL(url));
+  const srcs = widths.map((width) => {
+    return `https://www.nft.com/api/imageFetcher?url=${encodedUrl}&width=${width} ${width}w`;
+  });
+  const srcset = srcs.join(', ');
+  return { src: srcs.at(-1), srcs, srcset };
 }

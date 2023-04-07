@@ -1,11 +1,14 @@
+import BlurImage from 'components/elements/BlurImage';
 import { getBaseUrl, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
-import { tw } from 'utils/tw';
+import { defaultBlurPlaceholderUrl } from 'utils/image';
+import { cl } from 'utils/tw';
 
 import { RoundedCornerMediaImage as StaticRoundedCornerMediaImage } from './RoundedCornerMediaImage';
 
+import { generateSrcSet } from 'lib/image/loader';
 import { nftComCdnLoader } from 'lib/image/loader';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
+import { ImageLoader } from 'next/image';
 import React, { useEffect, useState } from 'react';
 export enum RoundedCornerVariant {
   TopOnly = 'topOnly',
@@ -31,6 +34,7 @@ export interface RoundedCornerMediaProps {
   src: string;
   priority?: boolean;
   fallbackImage?: string;
+  loader?: ImageLoader;
   variant: RoundedCornerVariant;
   amount?: RoundedCornerAmount;
   width?: number;
@@ -42,7 +46,6 @@ export interface RoundedCornerMediaProps {
   objectFit?: 'contain' | 'cover';
 }
 
-// TODO:  Add twMerge util class & prettier config to resolve duplicate tw classes
 export const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmount): string => {
   switch (variant) {
   case RoundedCornerVariant.TopOnly:
@@ -78,6 +81,7 @@ const DynamicRoundedCornerMediaImage = dynamic<React.ComponentProps<typeof Stati
 export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
   const [imageSrc, setImageSrc] = useState(null);
   const [loading, setLoading] = useState(true);
+  const loader = props?.loader || nftComCdnLoader;
   const url = props?.src?.split('?')[0];
   const ext = url?.split('.').pop();
   useEffect(() => {
@@ -96,9 +100,24 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
   const rawImageBool = (imageUrl?.indexOf('cdn.nft.com') >= 0 && imageUrl?.indexOf('.svg') >= 0) ||
   imageUrl?.indexOf('ens.domains') >= 0 ||
   (imageUrl?.indexOf('storage.googleapis.com') >= 0 && imageUrl?.indexOf('.svg') >= 0);
+  const videoSrcs = props.videoOverride ? generateSrcSet(props.src) : null;
+
+  const renderRawImage = (imageSrc?: string) => (<BlurImage
+    alt='NFT Image'
+    key={props.src}
+    src={imageSrc || imageUrl}
+    fill
+    loader={loader}
+    className={cl(
+      props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
+      'absolute w-full h-full justify-center',
+      getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
+      props.extraClasses
+    )}
+  />);
 
   return (
-    <div className={tw(
+    <div className={cl(
       'relative object-cover aspect-square overflow-hidden',
       getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
       props.containerClasses
@@ -109,14 +128,14 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
         <div>
           {loading &&
             <div
-              className={tw(
+              className={cl(
                 props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
                 'absolute w-full h-full flex justify-center items-center',
                 getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
                 props.extraClasses
               )}
             >
-              <div className={tw(
+              <div className={cl(
                 'animate-pulse bg-gray-300 h-11/12 aspect-square',
                 'rounded-md'
               )} />
@@ -127,39 +146,30 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
             muted={!props.videoOverride}
             loop
             key={props?.src}
-            src={props?.src}
-            poster={props?.src}
+            poster={videoSrcs?.srcset}
             onLoadedData={() => setLoading(false)}
-            className={tw(
+            className={cl(
               props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
-              'absolute w-full h-full justify-center',
+              'absolute w-full h-full justify-center aspect-square',
               getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
               props.extraClasses
             )}
-          />
+          >
+            {videoSrcs?.srcs.map(src => (<source src={src} key={src} />))}
+          </video>
         </div>
-        : rawImageBool ?
-          <Image
-            alt='NFT Image'
-            key={props.src}
-            src={imageUrl}
-            fill
-            loader={nftComCdnLoader}
-            className={tw(
-              props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
-              'absolute w-full h-full justify-center',
-              getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-              props.extraClasses
-            )}
-          /> :
+        : rawImageBool
+          ? renderRawImage()
+          :
           (imageUrl != 'null?width=600') && <DynamicRoundedCornerMediaImage
             priority={props?.priority}
-            src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
-            loader={nftComCdnLoader}
+            src={imageUrl}
+            width={300}
+            loader={loader}
             onError={() => {
               setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
             }}
-            className={tw(
+            className={cl(
               props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
               'absolute w-full h-full justify-center',
               getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),

@@ -49,7 +49,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
 
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
-    : props.images.length > 0 ? props.images?.map(processIPFSURL) : [props?.nft?.metadata?.imageURL].map(processIPFSURL);
+    : props.images.length > 0 ? props.images : [props?.nft?.metadata?.imageURL];
 
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
 

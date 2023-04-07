@@ -5,7 +5,7 @@ import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/helpers';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
@@ -130,7 +130,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           <div className="flex w-full max-h-[600px] h-full max-w-nftcom object-contain drop-shadow-lg rounded aspect-square">
             <RoundedCornerMedia
               key={nft?.id}
-              src={processIPFSURL(nft?.metadata?.imageURL)}
+              src={nft?.metadata?.imageURL}
               videoOverride={true}
               variant={RoundedCornerVariant.None}
               objectFit='contain'

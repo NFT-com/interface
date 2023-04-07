@@ -1,5 +1,6 @@
-import Image, { ImageProps } from 'next/image';
+import BlurImage from './BlurImage';
 
+import { ImageProps } from 'next/image';
 export interface RoundedCornerMediaImageProps extends Omit<ImageProps, 'alt'> {
   alt?: string;
   src: any;
@@ -10,15 +11,11 @@ export interface RoundedCornerMediaImageProps extends Omit<ImageProps, 'alt'> {
 
 export const RoundedCornerMediaImage = (props: RoundedCornerMediaImageProps) => {
   return (
-    <Image
+    <BlurImage
       alt='NFT Image'
       key={props.src}
       quality='50'
       fill
-      priority={props?.priority}
-      src={props.src}
-      onError={props.onError}
-      className={props.className}
       {...props}
     />
   );

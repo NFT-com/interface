@@ -1,9 +1,10 @@
+import BlurImage from 'components/elements/BlurImage';
 import Loader from 'components/elements/Loader/Loader';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
+import { nftComCdnLoader } from 'lib/image/loader';
 import { PropsWithChildren } from 'react';
 
 export interface BannerWrapperProps {
@@ -32,8 +33,12 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
         'h-[120px] minlg:h-[320px]',
       )}
     >
-      {imageUrl && <Image
-        src={props?.draft ? imageUrl : imageUrl.indexOf('.svg') >= 0 ? imageUrl : `${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(imageUrl)}&width=3000`}
+      {imageUrl &&
+      <BlurImage
+        src={imageUrl}
+        width={3000}
+        loader={nftComCdnLoader}
+        sizes="100vw"
         className="object-cover"
         fill
         priority

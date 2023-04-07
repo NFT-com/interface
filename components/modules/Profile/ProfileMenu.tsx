@@ -11,7 +11,7 @@ import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { filterNulls, getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { ProfileContext } from './ProfileContext';
+import { useProfileContext } from './ProfileContext';
 
 import { SearchIcon } from '@heroicons/react/outline';
 import delay from 'delay';
@@ -24,7 +24,7 @@ import GridIcon from 'public/layout_icon_grid.svg?svgr';
 import MosaicIcon from 'public/layout_icon_mosaic.svg?svgr';
 import SpotlightIcon from 'public/layout_icon_spotlight.svg?svgr';
 import GearIcon from 'public/settings_icon.svg?svgr';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 export interface ProfileMenuProps {
@@ -71,7 +71,7 @@ export function ProfileMenu({ profileURI }: ProfileMenuProps) {
     draftNftsDescriptionsVisible,
     setDraftNftsDescriptionsVisible,
     userIsAdmin
-  } = useContext(ProfileContext);
+  } = useProfileContext();
 
   const setLayout = useCallback((type: ProfileLayoutType) => {
     setSelectedLayout(type);

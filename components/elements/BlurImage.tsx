@@ -1,32 +1,39 @@
+import { defaultBlurPlaceholderUrl } from 'utils/image';
+import { cl } from 'utils/tw';
+
 import fallbackPlaceholder from '/public/assets/fallback-image.svg';
-import cn from 'clsx';
+import { nftComCdnLoader } from 'lib/image/loader';
 import Image, { ImageProps } from 'next/image';
 import { useState } from 'react';
 
 type BlurImageProps = {
   className?: string;
   fallbackImage?: any;
-} & ImageProps
+} & Omit<ImageProps, 'src'> & Partial<Pick<ImageProps, 'src'>>
 
-export default function BlurImage(props : BlurImageProps) {
-  const [isLoading, setLoading] = useState(true);
+export default function BlurImage({ alt, className, loader, width, height, fill, src, ...props } : BlurImageProps) {
+  const [isLoading, setIsLoading] = useState(true);
+  const blurLoader = src ? (loader || nftComCdnLoader) : undefined;
 
+  const layoutProps = fill ? { fill } : { width, height };
   return (
     <Image
-      alt={props.alt}
-      // TODO: Add base64 encoded fallback image
-      // placeholder="blur"
-      // blurDataURL={fallbackPlaceholder}
-      placeholder={fallbackPlaceholder}
-      className={cn(
-        props.className,
-        'duration-700 ease-in-out',
+      alt={alt}
+      loader={blurLoader}
+      placeholder="blur"
+      src={src ?? fallbackPlaceholder}
+      blurDataURL={defaultBlurPlaceholderUrl}
+      className={cl(
+        className,
+        'duration-500 ease-in-out',
         isLoading
-          ? 'grayscale blur-2xl scale-110'
-          : 'grayscale-0 blur-0 scale-100'
+          ? 'scale-110'
+          : 'scale-100'
       )}
-      onLoadingComplete={() => setLoading(false)}
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      onLoadingComplete={() => setIsLoading(false)}
       {...props}
+      {...layoutProps}
     />
   );
 }
