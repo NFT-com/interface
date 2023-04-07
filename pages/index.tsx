@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import 'aos/dist/aos.css';
 
+import DefaultSEO from 'config/next-seo.config';
 import BlurImage from 'components/elements/BlurImage';
 import StaticPreviewBanner from 'components/elements/PreviewBanner';
 import HomeLayout from 'components/layouts/HomeLayout';
@@ -329,6 +330,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
   return (
     <>
       <NextSeo
+        {...DefaultSEO}
         title='NFT.com | The Social NFT Marketplace'
         description='Join NFT.com to display, trade, and engage with your NFTs.'
         openGraph={{
@@ -336,9 +338,6 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           title: 'NFT.com | The Social NFT Marketplace',
           description: 'Join NFT.com to display, trade, and engage with your NFTs.',
           site_name: 'NFT.com',
-        }}
-        twitter={{
-          cardType: 'summary_large_image',
         }}
       />
       <main id='anim-main-trigger' className='font-noi-grotesk not-italic HomePageContainer'>
