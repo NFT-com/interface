@@ -82,7 +82,6 @@ export function NFTCard(props: NftCardProps) {
         <a
           href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'}
           onClick={(e) => {
-            // TODO: move to helper / logger class at some point
             e.stopPropagation();
             props.preventDefault && e.preventDefault();
             gtag('event', `${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
