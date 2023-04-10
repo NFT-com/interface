@@ -95,7 +95,7 @@ export function NFTCard(props: NftCardProps) {
         >
           <div className={tw(
             'relative object-cover w-full h-max flex flex-col',
-            !bestListing && 'mb-10'
+            !bestListing && props.descriptionVisible && 'mb-10'
           )}>
             <NFTCardImage {...props} bestListing={bestListing} nft={nft} isOwnedByMe={isOwnedByMe} currencyData={currencyData} />
             {props.descriptionVisible != false &&

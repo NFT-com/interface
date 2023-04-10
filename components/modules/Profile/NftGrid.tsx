@@ -57,7 +57,7 @@ export function NftGrid(props: NftGridProps) {
     className={tw(
       'grid w-full',
       'gap-4 mt-4 minlg:mt-0',
-      (draftLayoutType ?? savedLayoutType) === 'Default' ? 'grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-3 minxl:grid-cols-4 minxxl:grid-cols-5' : '',
+      (draftLayoutType ?? savedLayoutType) === 'Default' ? 'grid-cols-2 minmd:grid-cols-2 minlg:grid-cols-3 minxl:grid-cols-4 minxxl:grid-cols-5' : '',
       (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-2 minmd:grid-cols-4 minlg:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'grid-cols-4 minlg:grid-cols-8' : '',
