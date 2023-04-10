@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof ResultsDropDownDisplay>>(() => import('components/modules/Search/ResultsDropDownDisplay').then(mod => mod.ResultsDropDownDisplay));
 
 export default function AssociatedProfileSelect() {
-  const error = false;
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
 
   // formState and searchState are separate to allow click to set formState without triggering another search
@@ -91,8 +90,9 @@ export default function AssociatedProfileSelect() {
           <input
             id='associatedCollectionSearch'
             name ='associatedCollectionSearch'
+            type='text'
             className={tw('box-border shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline  placeholder:font-mono placeholder:text-sm pr-10',
-              formState.associatedCollectionSearch === '' ? 'border-[#D5D5D5]' : error ? 'border-[#DD0F70] focus:ring-[#DD0F70] focus:ring-1 focus:border-[#DD0F70]' : 'border-[#0E8344] focus:ring-[#0E8344] focus:ring-1 focus:border-[#0E8344]',
+              formState.associatedCollectionSearch === '' ? 'border-[#D5D5D5]' : 'border-[#0E8344] focus:ring-[#0E8344] focus:ring-1 focus:border-[#0E8344]',
             )}
             onChange={onChangeHandler}
             value={formState.associatedCollectionSearch} />
