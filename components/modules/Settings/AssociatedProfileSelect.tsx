@@ -1,8 +1,11 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { ResultsDropDownDisplay } from 'components/modules/Search/ResultsDropDownDisplay';
+import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import useDebounce from 'hooks/useDebounce';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -15,10 +18,16 @@ const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof ResultsDropDo
 
 type AssociatedProfileSelectProps = {
   profileId: string;
+  associatedContract?: string;
 };
-export default function AssociatedProfileSelect({ profileId }: AssociatedProfileSelectProps) {
+export default function AssociatedProfileSelect({ profileId, associatedContract }: AssociatedProfileSelectProps) {
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const { updateProfile } = useUpdateProfileMutation();
+  const defaultChainId = useDefaultChainId();
+  const { data: collectionQueryData } = useCollectionQuery({
+    chainId: defaultChainId,
+    contract: associatedContract,
+  });
 
   // formState and searchState are separate to allow click to set formState without triggering another search
   const [formState, setFormState] = useState({
@@ -30,8 +39,22 @@ export default function AssociatedProfileSelect({ profileId }: AssociatedProfile
   const debouncedSearch = useDebounce(searchState.associatedCollectionSearch, 250);
 
   const [searchResults, setSearchResults] = useState({} as any);
-  const [selectedResult, setSelectedResult] = useState<{id: string, contractAddr: string}>();
+  const [selectedResult, setSelectedResult] = useState<{id: string, contractAddr: string, logoUrl: string}>();
   const [error, setError] = useState<boolean | undefined>();
+
+  useEffect(() => {
+    if (collectionQueryData) {
+      const { collection } = collectionQueryData;
+      setSelectedResult({
+        id: collection.id,
+        contractAddr: collection.contract,
+        logoUrl: collection.logoUrl
+      });
+      setFormState({
+        associatedCollectionSearch: collection.name
+      });
+    }
+  }, [collectionQueryData, setSelectedResult]);
 
   useEffect(() => {
     if (debouncedSearch?.length) {
@@ -51,8 +74,8 @@ export default function AssociatedProfileSelect({ profileId }: AssociatedProfile
     }
   }, [fetchTypesenseSearch, debouncedSearch]);
 
-  const inputInfo = useCallback(() => {
-    if(isNullOrEmpty(formState.associatedCollectionSearch)){
+  const validationHelpContent = useCallback(() => {
+    if(isNullOrEmpty(searchState.associatedCollectionSearch)){
       return null;
     }
     
@@ -71,7 +94,11 @@ export default function AssociatedProfileSelect({ profileId }: AssociatedProfile
         <CheckCircle size={25} className='mr-3 rounded-full absolute box-border top-[4.7rem] right-0' color='green' weight="fill" />
       </>
     );
-  }, [error, formState]);
+  }, [error, searchState]);
+
+  const hasFormBeenChanged = () => {
+    return selectedResult && searchState.associatedCollectionSearch !== '';
+  };
 
   const onChangeHandler = e => {
     if (selectedResult) {
@@ -100,16 +127,13 @@ export default function AssociatedProfileSelect({ profileId }: AssociatedProfile
   };
 
   const resetState = () => {
-    setFormState({
-      associatedCollectionSearch: ''
-    });
     setSearchState({
       associatedCollectionSearch: ''
     });
     setSearchResults({});
-    setSelectedResult(undefined);
     setError(undefined);
   };
+
   const onButtonClickHandler = () => {
     if (selectedResult) {
       toast.success('Saved!');
@@ -134,11 +158,24 @@ export default function AssociatedProfileSelect({ profileId }: AssociatedProfile
             name ='associatedCollectionSearch'
             type='text'
             className={tw('box-border shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline  placeholder:font-mono placeholder:text-sm pr-10',
-              formState.associatedCollectionSearch === '' ? 'border-[#D5D5D5]' : selectedResult ? 'border-[#0E8344] focus:ring-[#0E8344] focus:ring-1 focus:border-[#0E8344]' : 'border-[#DD0F70] focus:ring-[#DD0F70] focus:ring-1 focus:border-[#DD0F70]',
+              !hasFormBeenChanged()
+                ? selectedResult ? 'border-[#D5D5D5] indent-7' : 'border-[#D5D5D5]'
+                : selectedResult && error
+                  ? 'border-[#DD0F70] focus:ring-[#DD0F70] focus:ring-1 focus:border-[#DD0F70]'
+                  : 'border-[#0E8344] focus:ring-[#0E8344] focus:ring-1 focus:border-[#0E8344] indent-7',
             )}
             onChange={onChangeHandler}
             value={formState.associatedCollectionSearch} />
-          {inputInfo()}
+          {selectedResult && <div className="absolute min-w-[34px] w-[34px] h-[34x] rounded-[16px] top-[4.36rem] left-[.2rem] overflow-hidden">
+            <RoundedCornerMedia
+              variant={RoundedCornerVariant.None}
+              width={600}
+              height={600}
+              containerClasses='w-[100%] h-[100%]'
+              src={selectedResult.logoUrl}
+            />
+          </div>}
+          {validationHelpContent()}
         </form>
         {!!searchResults?.found && <DynamicResultsDropDown
           isHeader={false}
@@ -151,7 +188,7 @@ export default function AssociatedProfileSelect({ profileId }: AssociatedProfile
         size={ButtonSize.LARGE}
         label='Display Collection'
         stretch
-        disabled={!selectedResult }
+        disabled={!hasFormBeenChanged()}
         onClick={onButtonClickHandler}
       />
     </div>
