@@ -7,7 +7,7 @@ import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation
 import useDebounce from 'hooks/useDebounce';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { isNullOrEmpty } from 'utils/helpers';
-import { tw } from 'utils/tw';
+import { cl, tw } from 'utils/tw';
 
 import dynamic from 'next/dynamic';
 import { CheckCircle, Warning } from 'phosphor-react';
@@ -157,12 +157,12 @@ export default function AssociatedProfileSelect({ profileId, associatedContract 
             id='associatedCollectionSearch'
             name ='associatedCollectionSearch'
             type='text'
-            className={tw('box-border shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline  placeholder:font-mono placeholder:text-sm pr-10',
-              !hasFormBeenChanged()
-                ? selectedResult ? 'border-[#D5D5D5] indent-7' : 'border-[#D5D5D5]'
-                : selectedResult && error
-                  ? 'border-[#DD0F70] focus:ring-[#DD0F70] focus:ring-1 focus:border-[#DD0F70]'
-                  : 'border-[#0E8344] focus:ring-[#0E8344] focus:ring-1 focus:border-[#0E8344] indent-7',
+            className={cl('box-border shadow appearance-none border border-[#D5D5D5] rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline  placeholder:font-mono placeholder:text-sm pr-10',
+              {
+                'indent-7': selectedResult,
+                'border-[#DD0F70] focus:ring-[#DD0F70] focus:ring-1 focus:border-[#DD0F70]': hasFormBeenChanged && error,
+                'border-[#0E8344] focus:ring-[#0E8344] focus:ring-1 focus:border-[#0E8344]': hasFormBeenChanged() && !error
+              }
             )}
             onChange={onChangeHandler}
             value={formState.associatedCollectionSearch} />
