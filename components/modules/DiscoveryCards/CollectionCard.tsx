@@ -2,7 +2,6 @@ import LikeCount from 'components/elements/LikeCount';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { LikeableType, Nft, TxActivity } from 'graphql/generated/types';
 import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
-import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import {

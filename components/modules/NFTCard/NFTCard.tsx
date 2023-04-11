@@ -2,7 +2,6 @@ import LikeCount from 'components/elements/LikeCount';
 import { DetailedNft } from 'components/modules/DiscoveryCards/CollectionCard';
 import { WETH } from 'constants/tokens';
 import { LikeableType, TxActivity } from 'graphql/generated/types';
-import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
