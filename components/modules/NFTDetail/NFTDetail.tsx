@@ -6,7 +6,6 @@ import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { getAddressForChain, nftProfile } from 'constants/contracts';
 import { LikeableType, Nft, NftType, Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
-import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';

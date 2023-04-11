@@ -256,7 +256,7 @@ export const CollectionBanner: React.FC = () => {
 };
 
 export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) => {
-  const { collectionContract, collectionData, mutateCollectionData, collectionName, collectionPreferredOwnerData, setLike, unsetLike } = useCollectionContext();
+  const { collectionContract, collectionData, mutateCollectionData, collectionName, collectionPreferredOwnerData } = useCollectionContext();
   return (
     <>
       <div className='font-noi-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
