@@ -99,10 +99,11 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
       } catch (err) {
         setLikeLoading(false);
         setLikeError('SetLike failed. Please try again.');
+        localStorage.removeItem('nonAuthLikeObject');
         return null;
       }
     },
-    [currentProfileId, forceReload, likedId, likedType, myOwnedProfileTokens, profileName, router.pathname, sdk, setLikeData, setProfileSelectModalOpen, user.currentProfileUrl]
+    [currentAddress, currentProfileId, forceReload, isConnected, likedId, likedType, myOwnedProfileTokens, profileName, router.pathname, sdk, setLikeData, setProfileSelectModalOpen, user.currentProfileUrl]
   );
 
   const unsetLike = useCallback(
