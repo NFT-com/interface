@@ -1509,7 +1509,7 @@ export type OfficialCollection = {
   chainId: Scalars['String'];
   contract: Scalars['Address'];
   id: Scalars['ID'];
-  slug: Scalars['String'];
+  slug?: Maybe<Scalars['String']>;
   updatedAt: Scalars['DateTime'];
 };
 
@@ -1649,6 +1649,7 @@ export type PendingAssociationOutput = {
 
 export type Profile = {
   __typename?: 'Profile';
+  associatedContract?: Maybe<Scalars['Address']>;
   bannerURL?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['String']>;
   comments?: Maybe<CommentsOutput>;
@@ -3516,7 +3517,7 @@ export type OfficialCollectionsQueryVariables = Exact<{
 }>;
 
 
-export type OfficialCollectionsQuery = { __typename?: 'Query', officialCollections?: { __typename?: 'OfficialCollectionsOutput', pageCount?: number | null, totalItems?: number | null, items: Array<{ __typename?: 'OfficialCollection', id: string, contract: any, slug: string, chainId: string, updatedAt: any }> } | null };
+export type OfficialCollectionsQuery = { __typename?: 'Query', officialCollections?: { __typename?: 'OfficialCollectionsOutput', pageCount?: number | null, totalItems?: number | null, items: Array<{ __typename?: 'OfficialCollection', id: string, contract: any, slug?: string | null, chainId: string, updatedAt: any }> } | null };
 
 export type MyPreferencesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3530,7 +3531,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, ownerWalletId?: string | null, ownerUserId?: string | null, likeCount?: number | null, isLikedByUser?: boolean | null, isLikedBy?: boolean | null, tokenId?: string | null, profileView?: ProfileViewType | null, hideCustomization?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, associatedContract?: any | null, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, ownerWalletId?: string | null, ownerUserId?: string | null, likeCount?: number | null, isLikedByUser?: boolean | null, isLikedBy?: boolean | null, tokenId?: string | null, profileView?: ProfileViewType | null, hideCustomization?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -5730,6 +5731,7 @@ export const ProfileDocument = gql`
   profile(url: $url, chainId: $chainId) {
     id
     url
+    associatedContract
     status
     bannerURL
     photoURL
