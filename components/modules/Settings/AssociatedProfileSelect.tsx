@@ -7,7 +7,7 @@ import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation
 import useDebounce from 'hooks/useDebounce';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { isNullOrEmpty } from 'utils/helpers';
-import { cl, tw } from 'utils/tw';
+import { cl } from 'utils/tw';
 
 import dynamic from 'next/dynamic';
 import { CheckCircle, Warning } from 'phosphor-react';
