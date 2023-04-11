@@ -1,7 +1,6 @@
 import CustomTooltip from 'components/elements/CustomTooltip';
 import LikeCount from 'components/elements/LikeCount';
 import { LikeableType } from 'graphql/generated/types';
-import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
@@ -31,12 +30,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     setDraftBio,
     draftGkIconVisible,
   } = useContext(ProfileContext);
-
-  const { setLike, unsetLike } = useSetLikeMutation(
-    profileData?.profile?.id,
-    LikeableType.Profile,
-    profileData?.profile?.url
-  );
 
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
 
@@ -75,8 +68,12 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             <LikeCount
               count={profileLikeData?.likeCount}
               isLiked={profileLikeData?.isLikedBy}
-              onClick={profileLikeData?.isLikedBy ? unsetLike : setLike}
               mutate={mutateProfileLikeData}
+              likeData={{
+                id: profileData?.profile?.id,
+                type: LikeableType.Profile,
+                profileName: profileData?.profile?.url
+              }}
             />
           </div>
         </div>

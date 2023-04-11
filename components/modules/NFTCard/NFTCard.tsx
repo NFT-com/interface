@@ -56,20 +56,18 @@ export function NFTCard(props: NftCardProps) {
   const isOwnedByMe = props?.isOwnedByMe || (props?.nft?.wallet?.address ?? props?.nft?.owner) === currentAddress;
   const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
 
-  const { setLike, unsetLike } = useSetLikeMutation(
-    nft?.id ?? props?.nft?.id,
-    LikeableType.Nft
-  );
-
   return (
     <div className='relative w-full h-full'>
       {props?.visible !== true && props?.visible !== false &&
         <div className='absolute top-4 right-4 z-50'>
           <LikeCount
-            onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
             mutate={mutateNftLike}
             count={nftLikeData?.likeCount}
             isLiked={nftLikeData?.isLikedBy}
+            likeData={{
+              id: nft?.id ?? props?.nft?.id,
+              type: LikeableType.Nft
+            }}
           />
         </div>
       }

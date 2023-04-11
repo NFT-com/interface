@@ -275,8 +275,11 @@ export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) 
             <LikeCount
               count={collectionData?.collection?.likeCount}
               isLiked={collectionData?.collection?.isLikedBy}
-              onClick={collectionData?.collection?.isLikedBy ? unsetLike : setLike}
               mutate={mutateCollectionData}
+              likeData={{
+                id: collectionData?.collection?.id,
+                type: LikeableType.Collection
+              }}
             />
           </div>
         </div>

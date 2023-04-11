@@ -80,11 +80,6 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const { refreshNft, loading, success } = useRefreshNftMutation();
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
 
-  const { setLike, unsetLike } = useSetLikeMutation(
-    props?.nft?.id,
-    LikeableType.Nft
-  );
-
   const refreshNftCallback = useCallback(() => {
     (async () => {
       const result = await refreshNft(props.nft?.id);
@@ -135,10 +130,13 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
                   <div className='ml-3'>
                     <LikeCount
-                      onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
                       mutate={mutateNftLike}
                       count={nftLikeData?.likeCount}
                       isLiked={nftLikeData?.isLikedBy}
+                      likeData={{
+                        id: props?.nft?.id,
+                        type: LikeableType.Nft
+                      }}
                     />
                   </div>
                 </>

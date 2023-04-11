@@ -55,11 +55,6 @@ export function CollectionCard(props: CollectionCardProps) {
     [getGenesisKeyThumbnail(props.tokenId)]
     : props?.images?.length > 0 ? props?.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
 
-  const { setLike, unsetLike } = useSetLikeMutation(
-    props?.collectionId,
-    LikeableType.Collection
-  );
-
   const checkMinPrice = (price) => {
     if(!price){
       return '';
@@ -82,8 +77,11 @@ export function CollectionCard(props: CollectionCardProps) {
           <LikeCount
             count={collectionData?.collection?.likeCount}
             isLiked={collectionData?.collection?.isLikedBy}
-            onClick={collectionData?.collection?.isLikedBy ? unsetLike :setLike}
             mutate={mutateCollectionData}
+            likeData={{
+              id: props?.collectionId,
+              type: LikeableType.Collection
+            }}
           />
         </div>
 

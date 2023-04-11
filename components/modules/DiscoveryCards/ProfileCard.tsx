@@ -33,12 +33,6 @@ export function ProfileCard(props: ProfileCardProps) {
 
   const { profileData: profileLikeData, mutate } = useProfileLikeQuery(props?.profile?.url);
 
-  const { setLike, unsetLike } = useSetLikeMutation(
-    props?.id ?? props?.profile?.id,
-    LikeableType.Profile,
-    props?.profile?.url
-  );
-
   if(isLeaderBoard){
     return (
       <div className='flex justify-center'>
@@ -80,8 +74,12 @@ export function ProfileCard(props: ProfileCardProps) {
             <LikeCount
               count={profileLikeData?.profile?.likeCount || 0}
               isLiked={profileLikeData?.profile?.isLikedBy || false}
-              onClick={profileLikeData?.profile?.isLikedBy ? unsetLike :setLike}
               mutate={mutate}
+              likeData={{
+                id: props?.id ?? props?.profile?.id,
+                type: LikeableType.Profile,
+                profileName: props?.profile?.url
+              }}
             />
           </div>
 

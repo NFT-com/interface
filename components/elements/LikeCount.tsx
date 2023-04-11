@@ -1,3 +1,5 @@
+import { LikeableType } from 'graphql/generated/types';
+import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useUser } from 'hooks/state/useUser';
 import { tw } from 'utils/tw';
 
@@ -5,14 +7,20 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import Heart from 'public/heart.svg?svgr';
 import { useEffect, useState } from 'react';
 
+type LikeData = {
+  type: LikeableType
+  id: string
+  profileName?: string
+}
+
 type LikeCountProps = {
   count: number;
   isLiked: boolean;
-  onClick: any;
   mutate: () => void;
+  likeData?: LikeData
 }
 
-export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCountProps) {
+export default function LikeCount({ count, isLiked, mutate, likeData }: LikeCountProps) {
   const { currentProfileId, user } = useUser();
   const [clicked, setClicked] = useState(false);
   const [liked, setLiked] = useState(null);
@@ -26,6 +34,13 @@ export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCount
   function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+
+  const { setLike, unsetLike } = useSetLikeMutation(
+    likeData?.id,
+    likeData?.type,
+    likeData?.profileName
+  );
+
   const handleClick = async () => {
     setDisabled(true);
     setTimeout(() => {
@@ -57,7 +72,7 @@ export default function LikeCount({ count, isLiked, onClick, mutate }: LikeCount
       disabled={isDisabled}
       onClick={async(e) => {
         e.preventDefault();
-        onClick && onClick();
+        isLiked ? unsetLike() : setLike();
         await handleClick();
       }
       }
