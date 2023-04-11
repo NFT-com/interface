@@ -1,17 +1,15 @@
 import { Modal } from 'components/elements/Modal';
-import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { createNftOwnerMap } from 'utils/createNftOwnerMap';
 import { tw } from 'utils/tw';
 
-import { CollectionGallery } from './CollectionGallery';
 import { GalleryToggleAllButtons as StaticGalleryToggleAllButtons } from './GalleryToggleAllButtons';
 import { NftGallery } from './NftGallery';
 import { ProfileContext } from './ProfileContext';
 import { ProfileLayoutEditorModalContent } from './ProfileLayoutEditorModalContent';
 
 import dynamic from 'next/dynamic';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 export interface MintedProfileGalleryProps {
@@ -24,7 +22,6 @@ const DynamicGalleryToggleAllButtons = dynamic<React.ComponentProps<typeof Stati
 export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const {
     editMode,
-    draftDisplayType,
     publiclyVisibleNftCount,
     showNftIds,
     hideNftIds,
@@ -35,14 +32,6 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const { address: currentAddress } = useAccount();
 
   const { profileData } = useProfileQuery(props.profileURI);
-
-  const isGroupedByCollection = draftDisplayType === ProfileDisplayType.Collection;
-
-  const [groupByCollectionNotOwner, setGroupByCollectionNotOwner] = useState(isGroupedByCollection);
-
-  useEffect(() => {
-    setGroupByCollectionNotOwner(false);
-  }, [editMode]);
 
   return (
     <div className={tw(
@@ -91,11 +80,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           />
         </div>
       }
-      {
-        (editMode ? isGroupedByCollection : groupByCollectionNotOwner) ?
-          <CollectionGallery profileURI={props.profileURI} /> :
-          <NftGallery profileURI={props.profileURI} />
-      }
+      <NftGallery profileURI={props.profileURI} />
     </div>
   );
 }

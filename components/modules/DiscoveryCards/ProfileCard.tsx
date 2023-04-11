@@ -5,7 +5,6 @@ import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
 import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { Doppler, getEnvBool } from 'utils/env';
 
 import Image from 'next/image';
 import GK from 'public/Badge_Key.svg?svgr';
@@ -77,16 +76,15 @@ export function ProfileCard(props: ProfileCardProps) {
     return (
       <a href={'/' + props.profile?.url} className="mb-3 minmd:mb-0 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p h-[212px]">
         <div className="bg-black h-[99px] relative">
-          {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-            <div className='absolute top-4 right-4 z-50'>
-              <LikeCount
-                count={profileLikeData?.profile?.likeCount || 0}
-                isLiked={profileLikeData?.profile?.isLikedBy || false}
-                onClick={profileLikeData?.profile?.isLikedBy ? unsetLike :setLike}
-                mutate={mutate}
-              />
-            </div>
-          }
+          <div className='absolute top-4 right-4 z-50'>
+            <LikeCount
+              count={profileLikeData?.profile?.likeCount || 0}
+              isLiked={profileLikeData?.profile?.isLikedBy || false}
+              onClick={profileLikeData?.profile?.isLikedBy ? unsetLike :setLike}
+              mutate={mutate}
+            />
+          </div>
+
           {
             props.profile.bannerURL
               ? (

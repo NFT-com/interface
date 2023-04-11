@@ -1,5 +1,4 @@
 import Loader from 'components/elements/Loader/Loader';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -108,51 +107,26 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
                     </Dialog.Title>
 
                   }
-                  {
-                    getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)
-                      ? (
-                        <div className={tw(props.closeBtnNoPaddings ? '' : 'mt-2', props.pure && !props.closeBtnNoPaddings ? 'hidden' : '',)}>
-                          {!props.noCancelBtn && <div className={`pt-4 pr-4 absolute right-0 top-0 ${props.closeBtnNoPaddings ? '' : 'hidden'}`}>
-                            <button
-                              type="button"
-                              className="rounded-md focus:outline-none
+                  <div className={tw(props.closeBtnNoPaddings ? '' : 'mt-2', props.pure && !props.closeBtnNoPaddings ? 'hidden' : '',)}>
+                    {!props.noCancelBtn && <div className={`pt-4 pr-4 absolute right-0 top-0 ${props.closeBtnNoPaddings ? '' : 'hidden'}`}>
+                      <button
+                        type="button"
+                        className="rounded-md focus:outline-none
                         text-primary-txt dark:text-primary-txt-dk"
-                              onClick={props.onClose}
-                            >
-                              <span className="sr-only">Close</span>
-                              {!props.hideX && <XIcon className="h-6 w-6" aria-hidden="true" />}
-                            </button>
-                          </div>}
-                          {
-                            !isNullOrEmpty(props.subtitle) &&
+                        onClick={props.onClose}
+                      >
+                        <span className="sr-only">Close</span>
+                        {!props.hideX && <XIcon className="h-6 w-6" aria-hidden="true" />}
+                      </button>
+                    </div>}
+                    {
+                      !isNullOrEmpty(props.subtitle) &&
                             <p className="text-sm text-gray-500">
                               {props.subtitle}
                             </p>
-                          }
-                        </div>
-                      )
-                      : (
-                        <div className={tw('mt-2', props.pure ? 'hidden' : '',)}>
-                          {!props.noCancelBtn && <div className='hidden pt-4 pr-4 absolute right-0 top-0'>
-                            <button
-                              type="button"
-                              className="rounded-md focus:outline-none
-                        text-primary-txt dark:text-primary-txt-dk"
-                              onClick={props.onClose}
-                            >
-                              <span className="sr-only">Close</span>
-                              {!props.hideX && <XIcon className="h-6 w-6" aria-hidden="true" />}
-                            </button>
-                          </div>}
-                          {
-                            !isNullOrEmpty(props.subtitle) &&
-                            <p className="text-sm text-gray-500">
-                              {props.subtitle}
-                            </p>
-                          }
-                        </div>
-                      )
-                  }
+                    }
+                  </div>
+                     
                   {props.children}
                 </div>
               }
