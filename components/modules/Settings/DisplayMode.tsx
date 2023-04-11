@@ -61,7 +61,7 @@ export default function DisplayMode({ selectedProfile }: DisplayModeProps) {
       {
         selected === 'Collection' && (
           getEnvBool(Doppler.NEXT_PUBLIC_OFFCHAIN_ASSOCIATION_ENABLED)
-            ? <AssociatedProfileSelect {...{ profileId: profileData.profile.id }} />
+            ? <AssociatedProfileSelect {...{ profileId: profileData.profile.id, associatedContract: profileData.profile.associatedContract }} />
             : <ConnectedCollections {...{ selectedProfile }} />
         )
       }
