@@ -1,4 +1,3 @@
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
@@ -97,7 +96,7 @@ export default function Alert({ type, heading, description, onClick, onClose, hi
       className={tw(
         'flex p-4 border-2 rounded font-noi-grotesk hover:cursor-pointer',
         getAlertStyles(type),
-        getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ? getAlertPosition(position) : ''
+        getAlertPosition(position)
       )}
     >
       <div className='flex w-full items-start'>

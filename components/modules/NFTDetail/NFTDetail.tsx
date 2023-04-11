@@ -14,7 +14,6 @@ import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMu
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnvBool } from 'utils/env';
 import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -133,16 +132,15 @@ export const NFTDetail = (props: NFTDetailProps) => {
                       <GK />
                     </div>
                   }
-                  {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-                    <div className='ml-3'>
-                      <LikeCount
-                        onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
-                        mutate={mutateNftLike}
-                        count={nftLikeData?.likeCount}
-                        isLiked={nftLikeData?.isLikedBy}
-                      />
-                    </div>
-                  }
+
+                  <div className='ml-3'>
+                    <LikeCount
+                      onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
+                      mutate={mutateNftLike}
+                      count={nftLikeData?.likeCount}
+                      isLiked={nftLikeData?.isLikedBy}
+                    />
+                  </div>
                 </>
               )
             }
