@@ -82,7 +82,6 @@ export function NFTCard(props: NftCardProps) {
         <a
           href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'}
           onClick={(e) => {
-            // TODO: move to helper / logger class at some point
             e.stopPropagation();
             props.preventDefault && e.preventDefault();
             gtag('event', `${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
@@ -95,7 +94,7 @@ export function NFTCard(props: NftCardProps) {
         >
           <div className={tw(
             'relative object-cover w-full h-max flex flex-col',
-            !bestListing && 'mb-10'
+            !bestListing && props.descriptionVisible && 'mb-10'
           )}>
             <NFTCardImage {...props} bestListing={bestListing} nft={nft} isOwnedByMe={isOwnedByMe} currencyData={currencyData} />
             {props.descriptionVisible != false &&
