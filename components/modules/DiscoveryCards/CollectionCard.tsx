@@ -5,7 +5,6 @@ import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuer
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { Doppler, getEnvBool } from 'utils/env';
 import {
   getGenesisKeyThumbnail,
   isNullOrEmpty,
@@ -79,16 +78,15 @@ export function CollectionCard(props: CollectionCardProps) {
   return (
     <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden">
       <div className="h-44 relative ">
-        {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-          <div className='absolute top-4 right-4 z-50'>
-            <LikeCount
-              count={collectionData?.collection?.likeCount}
-              isLiked={collectionData?.collection?.isLikedBy}
-              onClick={collectionData?.collection?.isLikedBy ? unsetLike :setLike}
-              mutate={mutateCollectionData}
-            />
-          </div>
-        }
+        <div className='absolute top-4 right-4 z-50'>
+          <LikeCount
+            count={collectionData?.collection?.likeCount}
+            isLiked={collectionData?.collection?.isLikedBy}
+            onClick={collectionData?.collection?.isLikedBy ? unsetLike :setLike}
+            mutate={mutateCollectionData}
+          />
+        </div>
+
         <RoundedCornerMedia
           variant={RoundedCornerVariant.None}
           width={600}

@@ -6,7 +6,6 @@ import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
@@ -73,14 +72,12 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
               <GK />
             </div>
             }
-            {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-              <LikeCount
-                count={profileLikeData?.likeCount}
-                isLiked={profileLikeData?.isLikedBy}
-                onClick={profileLikeData?.isLikedBy ? unsetLike : setLike}
-                mutate={mutateProfileLikeData}
-              />
-            }
+            <LikeCount
+              count={profileLikeData?.likeCount}
+              isLiked={profileLikeData?.isLikedBy}
+              onClick={profileLikeData?.isLikedBy ? unsetLike : setLike}
+              mutate={mutateProfileLikeData}
+            />
           </div>
         </div>
 
@@ -114,7 +111,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       {editMode && userIsAdmin &&
         <div className={tw(
           'w-full minlg:w-1/2 flex flex-col text-[#6A6A6A] group',
-          getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ? 'items-start' : 'items-end'
+          'items-start'
         )}
         >
           <CustomTooltip
