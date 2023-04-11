@@ -1,16 +1,24 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { ResultsDropDownDisplay } from 'components/modules/Search/ResultsDropDownDisplay';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
+import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import useDebounce from 'hooks/useDebounce';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { CheckCircle, Warning } from 'phosphor-react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof ResultsDropDownDisplay>>(() => import('components/modules/Search/ResultsDropDownDisplay').then(mod => mod.ResultsDropDownDisplay));
 
-export default function AssociatedProfileSelect() {
+type AssociatedProfileSelectProps = {
+  profileId: string;
+};
+export default function AssociatedProfileSelect({ profileId }: AssociatedProfileSelectProps) {
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
+  const { updateProfile } = useUpdateProfileMutation();
 
   // formState and searchState are separate to allow click to set formState without triggering another search
   const [formState, setFormState] = useState({
@@ -22,7 +30,8 @@ export default function AssociatedProfileSelect() {
   const debouncedSearch = useDebounce(searchState.associatedCollectionSearch, 250);
 
   const [searchResults, setSearchResults] = useState({} as any);
-  const [selectedResult, setSelectedResult] = useState();
+  const [selectedResult, setSelectedResult] = useState<{id: string, contractAddr: string}>();
+  const [error, setError] = useState<boolean | undefined>();
 
   useEffect(() => {
     if (debouncedSearch?.length) {
@@ -42,7 +51,33 @@ export default function AssociatedProfileSelect() {
     }
   }, [fetchTypesenseSearch, debouncedSearch]);
 
+  const inputInfo = useCallback(() => {
+    if(isNullOrEmpty(formState.associatedCollectionSearch)){
+      return null;
+    }
+    
+    if(error){
+      return (
+        <>
+          <p className='text-[#DD0F70] mt-1 text-xs font-noi-grotesk'>Please select a collection from the dropdown</p>
+          <Warning size={25} className='mr-3 rounded-full absolute box-border top-[4.7rem] right-0' weight="fill" color='#DD0F70' />
+        </>
+      );
+    }
+
+    return (
+      <>
+        <p className='text-[#0E8344] mt-1 text-xs font-noi-grotesk'>Valid collection</p>
+        <CheckCircle size={25} className='mr-3 rounded-full absolute box-border top-[4.7rem] right-0' color='green' weight="fill" />
+      </>
+    );
+  }, [error, formState]);
+
   const onChangeHandler = e => {
+    if (selectedResult) {
+      setSelectedResult(undefined);
+    }
+    setError(true);
     setFormState({
       associatedCollectionSearch: e.target.value
     });
@@ -59,6 +94,7 @@ export default function AssociatedProfileSelect() {
     setFormState({
       associatedCollectionSearch: searchDoc.contractName
     });
+    setError(false);
     setSelectedResult(searchDoc);
     setSearchResults({});
   };
@@ -67,15 +103,21 @@ export default function AssociatedProfileSelect() {
     setFormState({
       associatedCollectionSearch: ''
     });
-
     setSearchState({
       associatedCollectionSearch: ''
     });
     setSearchResults({});
     setSelectedResult(undefined);
+    setError(undefined);
   };
   const onButtonClickHandler = () => {
-    console.log(selectedResult);
+    if (selectedResult) {
+      toast.success('Saved!');
+      updateProfile({
+        id: profileId,
+        associatedContract: selectedResult.contractAddr,
+      });
+    }
     resetState();
   };
 
@@ -92,10 +134,11 @@ export default function AssociatedProfileSelect() {
             name ='associatedCollectionSearch'
             type='text'
             className={tw('box-border shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline  placeholder:font-mono placeholder:text-sm pr-10',
-              formState.associatedCollectionSearch === '' ? 'border-[#D5D5D5]' : 'border-[#0E8344] focus:ring-[#0E8344] focus:ring-1 focus:border-[#0E8344]',
+              formState.associatedCollectionSearch === '' ? 'border-[#D5D5D5]' : selectedResult ? 'border-[#0E8344] focus:ring-[#0E8344] focus:ring-1 focus:border-[#0E8344]' : 'border-[#DD0F70] focus:ring-[#DD0F70] focus:ring-1 focus:border-[#DD0F70]',
             )}
             onChange={onChangeHandler}
             value={formState.associatedCollectionSearch} />
+          {inputInfo()}
         </form>
         {!!searchResults?.found && <DynamicResultsDropDown
           isHeader={false}

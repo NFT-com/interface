@@ -16,7 +16,6 @@ import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -85,7 +84,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
 
         {!hideFooter && <Footer />}
       </div>
-      {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && <NonAuthLikeModal />}
+      <NonAuthLikeModal />
     </div>
   );
 }
