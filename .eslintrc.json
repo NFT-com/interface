@@ -122,6 +122,7 @@
           [ "^\\u0000" ], // side effect (imports that do not export anything)
           [
             "^assets*",
+            "^config",
             "^components",
             "^connectors",
             "^constants",

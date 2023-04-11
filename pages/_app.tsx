@@ -1,5 +1,6 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
+import 'styles/css/react-medium-image-zoom-styles.css';
 
 import RootProvider from 'context';
 import useAnalyticsOnRouteChange from 'hooks/useAnalyticsOnRouteChange';
@@ -37,11 +38,11 @@ export default function MyApp({
         <title>NFT.com</title>
         <script
           type="text/partytown"
+          nonce='pb+/pfhRedphzqIYzlBxMA=='
           dangerouslySetInnerHTML={{
             __html: `
             window.dataLayer = window.dataLayer || [];
             window.gtag = function gtag(){window.dataLayer.push(arguments);}
-
             gtag('js', new Date());
             gtag('config', '${gtag.GA_TRACKING_ID}', {
                 page_path: window.location.pathname,
@@ -52,10 +53,15 @@ export default function MyApp({
       </Head>
       <Script
         strategy="worker"
+        nonce="gGkqzVy6zqm4Aoyp9I4H5g=="
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
       />
-      <Script id="fb-pixel-script" strategy="worker" dangerouslySetInnerHTML={{
-        __html: `!function(f,b,e,v,n,t,s) {
+      <Script
+        id="fb-pixel-script"
+        nonce='375Pd+0smY3JyJkGZJLKnA=='
+        strategy="worker"
+        dangerouslySetInnerHTML={{
+          __html: `!function(f,b,e,v,n,t,s) {
           if(f.fbq)return;n=f.fbq=function(){n.callMethod?
           n.callMethod.apply(n,arguments)
           :n.queue.push(arguments);};

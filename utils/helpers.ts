@@ -121,6 +121,18 @@ export const getStaticAsset = (imagePath: string, cdn = true): string => {
   return imagePath;
 };
 
+function extractIPFSHashAndPathFromUrl(url: string): string | null {
+  // Define a regular expression pattern to match the IPFS hash format
+  // and capture any subsequent path after the hash.
+  const ipfsHashPattern = /(Qm[a-zA-Z0-9]{44}(\/.*)?)/;
+
+  // Find the match in the URL
+  const match = url.match(ipfsHashPattern);
+
+  // Return the matched IPFS hash and path or null if not found
+  return match ? match[0] : null;
+}
+
 export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
   const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
   if (image == null) {
@@ -137,6 +149,8 @@ export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
     return prefix + image.slice(34);
   } else if (image.indexOf('https://infura-ipfs.io/ipfs/') === 0) {
     return prefix + image.slice(28);
+  } else if (image.includes('ipfs')) {
+    return prefix + extractIPFSHashAndPathFromUrl(image);
   } else if (base32cid(image) || multihash(image) || cid(image)) {
     return prefix + image;
   }
@@ -335,3 +349,10 @@ export const isOfficialCollection = (collection: PartialDeep<Collection>) => col
     trim: true
   })}`
   : collection?.contract;
+
+/**
+ * Simple check if the given string is a valid Ethereum contract address.
+ * @param {string} contract - The contract address to validate.
+ * @returns {boolean} - True if the contract address is valid, false otherwise.
+ */
+export const isValidContractSimple = (contract: string) => /^0x[a-fA-F0-9]{40}$/.test(contract);

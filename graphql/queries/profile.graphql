@@ -2,6 +2,7 @@ query Profile($url: String!, $chainId: String!, $likedById: ID!) {
   profile(url: $url, chainId: $chainId) {
     id
     url
+    associatedContract
     status
     bannerURL
     photoURL
@@ -16,6 +17,7 @@ query Profile($url: String!, $chainId: String!, $likedById: ID!) {
     likeCount
     isLikedByUser
     isLikedBy(likedById: $likedById)
+    tokenId
     owner {
       address
       chainId

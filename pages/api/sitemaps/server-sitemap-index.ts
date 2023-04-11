@@ -1,6 +1,7 @@
 import { OfficialCollectionNfTsOutput } from 'graphql/generated/types';
 import { SitemapQueryVariables } from 'types';
 import chunkArray from 'utils/chunkArray';
+import timeout from 'utils/timeout';
 
 import { client, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -63,16 +64,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     });
 
-    const batchedRequests = chunkArray(collectionNftFirstPagePromises, 100);
-    const results = await Promise.all(batchedRequests.map((batchedRequest) =>
-      client.batchRequests<{ data: { officialCollectionNFTs: OfficialCollectionNfTsOutput } }[]>(batchedRequest).then(
-        data => data.map((pageResult, index) => ({
-          ...pageResult?.data.officialCollectionNFTs,
-          chainId: batchedRequest[index].chainId,
-          contract: batchedRequest[index].contract,
-          slug: batchedRequest[index].slug,
-        }))
-      )
+    const batchedRequests = chunkArray(collectionNftFirstPagePromises, 200);
+    const results = await Promise.all(batchedRequests.map(async (batchedRequest, i) => {
+      // Add delay to get around unknown rate limit from either gql, aws waf, or cloudflare
+      const round = `batch-${i + 1}`;
+      console.log(`⏰ Start ${round}`);
+      console.time(`${round}`);
+      if (i > 0) await timeout((i + 1) * 10000);
+      console.log(`⏳ Delay ${round}`);
+      console.timeLog(`${round}`);
+      return client.batchRequests<{ data: { officialCollectionNFTs: OfficialCollectionNfTsOutput } }[]>(batchedRequest).then(
+        data => {
+          console.timeEnd(`${round}`);
+          console.log(`✅ End ${round}`);
+          return data.map((pageResult, index) => ({
+            ...pageResult?.data.officialCollectionNFTs,
+            chainId: batchedRequest[index].chainId,
+            contract: batchedRequest[index].contract,
+            slug: batchedRequest[index].slug,
+          }));
+        }
+      );
+    }
     ));
 
     results && results.flat(2).forEach((result) => {
@@ -91,7 +104,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({ sitemapUrls });
   } catch (err) {
-    console.error(err?.message);
+    console.error(err?.message.substring(0, 3000));
     return res.status(500).json({
       error: {
         message: `An error occurred fetching the server sitemap index, ${err?.message}`

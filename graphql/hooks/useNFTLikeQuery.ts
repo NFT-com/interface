@@ -2,6 +2,7 @@ import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
 import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { BigNumber, BigNumberish } from 'ethers';
@@ -21,17 +22,14 @@ export function useNftLikeQuery(contract: string, id: BigNumberish): NftLikeData
   const { currentProfileId } = useUser();
   const { address: currentAccount } = useAccount();
 
-  const keyString = 'NftLikeQuery' + contract + id?.toString() + likeId + defaultChainId + currentProfileId + currentAccount;
+  const keyString = 'NftLikeQuery' + contract + Number(id) + likeId + defaultChainId + currentProfileId + currentAccount;
 
   const mutateThis = useCallback(() => {
     mutate(keyString);
   }, [keyString]);
 
-  const { data } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(contract) || id == null) {
-      return null;
-    }
-
+  const stopFetch = [getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== defaultChainId, isNullOrEmpty(contract), id === null].includes(true);
+  const { data } = useSWR(!stopFetch ? keyString : null, async () => {
     const result = await sdk.NftLikeCount(
       {
         chainId: defaultChainId,

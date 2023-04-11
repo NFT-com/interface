@@ -25,7 +25,6 @@ export const WalletRainbowKitButton = (props: WalletRainbowKitButtonProps) => {
       }
     },
     onDisconnect() {
-      console.log('disconnected');
       setCurrentProfileUrl('');
     },
   });
