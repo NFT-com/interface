@@ -217,24 +217,14 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 {searchedData && searchedData.map((item, index) => {
                   return (
                     <div key={index} className='DiscoverCollectionItem'>
-                      {!getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ?
-                        <NftCard
-                          name={item.document.nftName}
-                          images={[item.document.imageURL]}
-                          contractAddr={item.document.contractAddr}
-                          tokenId={item.document.tokenId}
-                          collectionName={item.document.contractName}
-                          redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-                        /> :
-                        <NFTCard
-                          name={item.document.nftName}
-                          images={[item.document.imageURL]}
-                          contractAddr={item.document.contractAddr}
-                          tokenId={item.document.tokenId}
-                          collectionName={item.document.contractName}
-                          redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-                        />
-                      }
+                      <NFTCard
+                        name={item.document.nftName}
+                        images={[item.document.imageURL]}
+                        contractAddr={item.document.contractAddr}
+                        tokenId={item.document.tokenId}
+                        collectionName={item.document.contractName}
+                        redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+                      />
                     </div>);
                 })}
               </div>
