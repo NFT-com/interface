@@ -1,8 +1,7 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import LikeCount from 'components/elements/LikeCount';
-import { NFTCard } from 'components/elements/NFTCard';
 import { CollectionActivity } from 'components/modules/Analytics/CollectionActivity';
-import { NFTCard as NFTCardNew } from 'components/modules/NFTCard/NFTCard';
+import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { LikeableType } from 'graphql/generated/types';
@@ -272,16 +271,14 @@ export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) 
               </div>)
               : (collectionData?.collection?.name || collectionName)}
           </h2>
-          {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-            <div className='ml-3'>
-              <LikeCount
-                count={collectionData?.collection?.likeCount}
-                isLiked={collectionData?.collection?.isLikedBy}
-                onClick={collectionData?.collection?.isLikedBy ? unsetLike : setLike}
-                mutate={mutateCollectionData}
-              />
-            </div>
-          }
+          <div className='ml-3'>
+            <LikeCount
+              count={collectionData?.collection?.likeCount}
+              isLiked={collectionData?.collection?.isLikedBy}
+              onClick={collectionData?.collection?.isLikedBy ? unsetLike : setLike}
+              mutate={mutateCollectionData}
+            />
+          </div>
         </div>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
           <div className='flex'>
@@ -523,37 +520,21 @@ export const CollectionNfts: React.FC = () => {
           }
           <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
             {collectionNfts.map((nft, i) => {
-              return !getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED)
-                ? (
-                  <div
-                    className="NftCollectionItem"
-                    key={`${nft.contractAddr}-${nft.tokenId}-${i}`}
-                  >
-                    <NFTCard
-                      contractAddress={nft.document.contractAddr}
-                      tokenId={nft.document.tokenId}
-                      title={nft.document.nftName}
-                      collectionName={nft.document.contractName}
-                      images={[]}
-                      redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
-                      description={nft.document.nftDescription ? nft.document.nftDescription.slice(0, 50) + '...' : ''}
-                    />
-                  </div>) :
-                (
-                  <div
-                    className="NftCollectionItem"
-                    key={`${nft.contractAddr}-${nft.tokenId}-${i}`}
-                  >
-                    <NFTCardNew
-                      contractAddr={nft.document.contractAddr}
-                      tokenId={nft.document.tokenId}
-                      name={nft.document.nftName}
-                      collectionName={nft.document.contractName}
-                      images={[]}
-                      redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
-                    />
-                  </div>
-                );
+              return (
+                <div
+                  className="NftCollectionItem"
+                  key={`${nft.contractAddr}-${nft.tokenId}-${i}`}
+                >
+                  <NFTCard
+                    contractAddr={nft.document.contractAddr}
+                    tokenId={nft.document.tokenId}
+                    name={nft.document.nftName}
+                    collectionName={nft.document.contractName}
+                    images={[]}
+                    redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
+                  />
+                </div>
+              );
             }
             )}
           </div>

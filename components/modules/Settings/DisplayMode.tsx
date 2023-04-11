@@ -1,6 +1,8 @@
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUpdateProfileViewMutation } from 'graphql/hooks/useUpdateProfileViewMutation';
+import { Doppler, getEnvBool } from 'utils/env';
 
+import AssociatedProfileSelect from './AssociatedProfileSelect';
 import ConnectedCollections from './ConnectedCollections';
 
 import { useEffect, useState } from 'react';
@@ -56,8 +58,12 @@ export default function DisplayMode({ selectedProfile }: DisplayModeProps) {
         </p>
       </div>
 
-      {selected === 'Collection' &&
-        <ConnectedCollections {...{ selectedProfile }} />
+      {
+        selected === 'Collection' && (
+          getEnvBool(Doppler.NEXT_PUBLIC_OFFCHAIN_ASSOCIATION_ENABLED)
+            ? <AssociatedProfileSelect {...{ profileId: profileData.profile.id }} />
+            : <ConnectedCollections {...{ selectedProfile }} />
+        )
       }
     </div>
   );
