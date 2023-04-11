@@ -25,8 +25,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { NextSeo } from 'next-seo';
 import ArrowNav from 'public/arrow-right.svg?svgr';
-import testImage from 'public/browser.jpg';
 import screenImage from 'public/browser-01.webp';
+import benefitImage01 from 'public/img-benefit01.webp';
+import benefitImage02 from 'public/img-benefit02.webp';
+import benefitImage03 from 'public/img-benefit03.webp';
 import profileImage from 'public/profile-images.webp';
 import { useEffect } from 'react';
 import Marquee from 'react-fast-marquee';
@@ -275,7 +277,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
 
           {/* Block: What you can do */}
           <section
-            className='pt-20 pb-20 minlg:pb-36 minxl:pb-52'
+            className='pt-20 pb-20 minlg:pb-36 minxl:pb-44'
             style={{
               background: 'url("/bg-profile.webp") no-repeat 50% 100%/100% auto'
             }}
@@ -303,7 +305,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           </section>
   
           {/* Block: Marquee */}
-          <div id='anim-ticker-trigger' className='overflow-x-hidden py-[4.625rem]'>
+          <div id='anim-ticker-trigger' className='overflow-x-hidden pt-[4.625rem] pb-[6.825rem]'>
             <div id='anim-ticker-first' className={tw(
               'text-4xl minlg:text-7xl minxxl:text-9xl -ml-7'
             )}>
@@ -331,16 +333,18 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
   
           {/* Block: Discover Collections */}
           <div id='anim-discover-trigger' className={tw(
-            'bg-black',
-            'before:w-40 before:absolute before:left-3 before:top-0 before:h-6 before:bg-white'
+            'bg-black relative',
+            'minlg:before:w-40 minlg:before:absolute minlg:before:left-[2.5rem] minlg:before:top-0 minlg:before:h-[1.875rem] before:bg-white before:skew-x-[-20deg]',
+            'minlg:after:w-[8.9rem] minlg:after:absolute minlg:after:left-[11.5rem] minlg:after:top-0 minlg:after:h-[5.5rem] after:bg-white after:skew-x-[-20deg]'
           )}>
             <div className={tw(
+              'pl-5 minmd:pl-0',
               'relative z-0 py-[2.5rem] minlg:pt-[6.25rem] minlg:pb-12',
             )}>
-              <div className='relative text-center'>
+              <div className='relative minlg:text-center'>
                 <h2 data-aos="fade-up" className={tw(
                   'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal text-white',
-                  'mb-[6.125rem]'
+                  'mb-10 minmd:mb-[6.625rem]'
                 )}>Discover Collections</h2>
               </div>
   
@@ -351,7 +355,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     spaceBetween={16}
                     breakpoints={{
                       0: {
-                        slidesPerView: 1.2,
+                        slidesPerView: 1.15,
                       },
                       600: {
                         slidesPerView: 2,
@@ -368,7 +372,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                       'disableOnInteraction': false
                     }}
                     scrollbar={{ draggable: true }}
-                    className='flex !pb-12 minxl:!pb-[4.375rem]'>
+                    className='flex !pb-12 minxl:!pb-[4.875rem]'>
                     {data_v2?.newsSlidesCollection?.items.map((preview) =>
                       <SwiperSlide key={preview.slug} className='!h-auto'>
                         <Link key={preview.slug} href={`articles/${preview.slug}`} className={tw(
@@ -417,41 +421,36 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           </div>
   
           {/* Block: Text/Image */}
-          <div className="pt-8 minxxl:pt-16 pb-9">
+          <div className="pt-8 minxxl:pt-16 pb-2">
             <div className='grid minmd:grid-cols-2 items-center'>
-              <div className='minmd:ml-[13.2vw] minmd:max-w-[25rem] minxxl:max-w-[29vw]'>
+              <div className='px-5 minmd:px-0 minmd:ml-[14.7vw] minmd:max-w-[25rem] minxxl:max-w-[29vw] minlg:pb-[9.6rem]'>
                 <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
                   'text-[3rem] minmd:text-[3.75rem] minxxl:text-[5rem] leading-[1.2] font-normal',
                   'tracking-tight mb-6 minxxl:mb-9'
                 )}>
-                  <span>Free </span>
-                  <span data-aos="fade-up" data-aos-delay="200"
-                    className={tw(
-                      'inline-block bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]'
-                    )}>
-                    trading
-                  </span>
+                  <span className={tw(
+                    'bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]'
+                  )}>Free</span>
+                  <span data-aos="fade-up" data-aos-delay="200"> trading</span>
                 </h2>
                 <p data-aos="fade-up" data-aos-delay="300" className={tw(
                   'mb-9',
-                  'text-[1rem] minlg:text-[1.375rem] minxxl:text-[2rem] leading-[1.455]'
+                  'text-[1rem] minlg:text-lg minxxl:text-[2rem] leading-[1.556] minlg:!leading-[1.3]'
                 )}>Lorem ipsum dolor sit amet consectetur. Nibh dictum dis pellentesque laoreet elementum faucibus scelerisque.</p>
                 <a href={''} className={tw(
                   'bg-[#F9D54C] hover:bg-[#dcaf07] drop-shadow-lg rounded-full transition-colors',
                   'inline-flex items-center justify-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
-                  'text-xl minxxl:text-3xl text-black font-medium uppercase'
+                  'text-xl minxxl:text-3xl text-black font-medium uppercase w-full minmd:w-auto'
                 )}>Create profile</a>
               </div>
   
-              <div data-aos="fade-up" data-aos-delay="400" className={tw(
-                ''
-              )}>
-                <Image src={testImage} alt="Test" />
+              <div data-aos="fade-up" data-aos-delay="400">
+                <Image src={benefitImage01} alt="Test" />
               </div>
             </div>
   
-            <div className='grid minmd:grid-cols-2 items-center -mt-8 -mb-28'>
-              <div className='minmd:ml-[13.2vw] minmd:max-w-[25rem] minxxl:max-w-[29vw]'>
+            <div className='grid minmd:grid-cols-2 items-center minmd:-my-[7.5rem]'>
+              <div className='px-5 minmd:px-0 minmd:ml-[10vw] minmd:max-w-[25rem] minxxl:max-w-[29vw] minmd:pb-28'>
                 <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
                   'text-[3rem] minmd:text-[3.75rem] minxxl:text-[5rem] leading-[1.2] font-normal',
                   'tracking-tight mb-6 minxxl:mb-9'
@@ -464,24 +463,24 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 </h2>
                 <p data-aos="fade-up" data-aos-delay="300" className={tw(
                   'mb-9',
-                  'text-[1rem] minlg:text-[1.375rem] minxxl:text-[2rem] leading-[1.455]'
+                  'text-[1rem] minlg:text-lg minxxl:text-[2rem] leading-[1.556] minlg:!leading-[1.3]'
                 )}>Lorem ipsum dolor sit amet consectetur. Nibh dictum dis pellentesque laoreet elementum faucibus scelerisque.</p>
                 <a href={''} className={tw(
                   'bg-[#F9D54C] hover:bg-[#dcaf07] drop-shadow-lg rounded-full transition-colors',
                   'inline-flex items-center justify-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
-                  'text-xl minxxl:text-3xl text-black font-medium uppercase'
+                  'text-xl minxxl:text-3xl text-black font-medium uppercase w-full minmd:w-auto'
                 )}>Create profile</a>
               </div>
   
               <div data-aos="fade-up" data-aos-delay="400" className={tw(
-                'minmd:-order-1'
+                'minmd:-order-1 minlg:-mr-20'
               )}>
-                <Image src={testImage} alt="Test" />
+                <Image src={benefitImage02} alt="Test" />
               </div>
             </div>
   
             <div className='grid minmd:grid-cols-2 items-center'>
-              <div className='minmd:ml-[13.2vw] minmd:max-w-[25rem] minxxl:max-w-[29vw]'>
+              <div className='px-5 minmd:px-0 minmd:ml-[14.7vw] minmd:max-w-[25rem] minxxl:max-w-[29vw] minmd:pt-8'>
                 <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
                   'text-[3rem] minmd:text-[3.75rem] minxxl:text-[5rem] leading-[1.2] font-normal',
                   'tracking-tight mb-6 minxxl:mb-9'
@@ -496,19 +495,17 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 </h2>
                 <p data-aos="fade-up" data-aos-delay="300" className={tw(
                   'mb-9',
-                  'text-[1rem] minlg:text-[1.375rem] minxxl:text-[2rem] leading-[1.455]'
+                  'text-[1rem] minlg:text-lg minxxl:text-[2rem] leading-[1.556] minlg:!leading-[1.3]'
                 )}>Lorem ipsum dolor sit amet consectetur. Nibh dictum dis pellentesque laoreet elementum faucibus scelerisque.</p>
                 <a href={''} className={tw(
                   'bg-[#F9D54C] hover:bg-[#dcaf07] drop-shadow-lg rounded-full transition-colors',
                   'inline-flex items-center justify-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
-                  'text-xl minxxl:text-3xl text-black font-medium uppercase'
+                  'text-xl minxxl:text-3xl text-black font-medium uppercase w-full minmd:w-auto'
                 )}>Create profile</a>
               </div>
   
-              <div data-aos="fade-up" data-aos-delay="400" className={tw(
-                ''
-              )}>
-                <Image src={testImage} alt="Test" />
+              <div data-aos="fade-up" data-aos-delay="400">
+                <Image src={benefitImage03} alt="Test" />
               </div>
             </div>
           </div>
@@ -537,8 +534,8 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     1200: {
                       slidesPerView: 3.3,
                     },
-                    1600: {
-                      slidesPerView: 4.5,
+                    1921: {
+                      slidesPerView: 4.3,
                     }
                   }}
                   navigation={{
@@ -557,7 +554,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                         'bg-white flex flex-col flex-shrink-0 h-full rounded-lg md:mb-5 text-black',
                         'cursor-pointer',
                       )}>
-                        <div className='before:pb-[54.129%] before:block relative overflow-hidden aspect-4/3'>
+                        <div className='before:pb-[66.5%] before:block relative overflow-hidden'>
                           <BlurImage
                             fill
                             className='rounded-t-lg object-cover'
@@ -587,19 +584,21 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 </Swiper>
               </div>
   
-              <div data-aos="zoom-in" data-aos-delay="100" className='text-center relative'>
+              <div data-aos="zoom-in" data-aos-delay="100" className='text-center relative flex flex-col minmd:block'>
                 <a href={data_v2?.newsCta?.link} className={tw(
                   'bg-[#F9D54C] hover:bg-[#dcaf07] drop-shadow-lg rounded-full transition-colors',
                   'inline-flex items-center justify-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
                   'text-xl minxxl:text-3xl text-black font-medium uppercase'
                 )}>{data_v2?.newsCta?.title.toUpperCase()}</a>
 
-                <button type='button' className='insights-swiper__btn-prev'>
-                  <ArrowNav />
-                </button>
-                <button type='button' className='insights-swiper__btn-next'>
-                  <ArrowNav />
-                </button>
+                <div className="insights-swiper__buttons -order-1 pb-5 minmd:pb-0">
+                  <button type='button' className='insights-swiper__btn-prev'>
+                    <ArrowNav />
+                  </button>
+                  <button type='button' className='insights-swiper__btn-next'>
+                    <ArrowNav />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -617,11 +616,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'minmd:flex'
               )}>
                 <div className={tw(
-                  'minmd:w-[45%] pl-8 minxl:pl-36',
-                  'py-12 minlg:py-20 minxxl:py-32'
+                  'minmd:w-[42%] pl-8 minxl:pl-36',
+                  'py-12 minlg:py-[9.5rem] minxxl:py-32'
                 )}>
                   <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                    'text-[calc(48px+54*(100vw-375px)/1545)] text-center minmd:text-left',
+                    'text-[calc(48px+54*(100vw-375px)/1545)] minmd:text-center minmd:text-left',
                     'text-black font-normal leading-[1.1] relative',
                     'mb-4 minlg:mb-2 tracking-[-3px]'
                   )}>
@@ -649,8 +648,8 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   )}>{data_v2?.bynpCta?.title}</a>
                 </div>
   
-                <div className='minmd:w-[55%] text-right'>
-                  <Image className='ml-auto' src={profileImage} alt='' />
+                <div className='minmd:w-[58%] text-right'>
+                  <Image className='ml-auto h-full object-cover' src={profileImage} alt='' />
                 </div>
               </div>
             </div>
