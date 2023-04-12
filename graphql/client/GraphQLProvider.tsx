@@ -2,7 +2,8 @@ import { SignatureModal } from 'components/elements/SignatureModal';
 import { GraphQLClient } from 'graphql-request';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
 import { Doppler, getEnv } from 'utils/env';
-import { getAPIURL, isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getAPIURL } from 'utils/helpers';
 
 import moment from 'moment';
 import { createContext, PropsWithChildren, useCallback, useEffect, useState } from 'react';

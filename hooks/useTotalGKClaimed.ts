@@ -1,5 +1,5 @@
 
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useAllContracts } from './contracts/useAllContracts';
 

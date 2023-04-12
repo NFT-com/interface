@@ -1,6 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ActivityExpiration, ActivityStatus, ActivityType, TxActivity } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useCallback } from 'react';
 import { mutate } from 'swr';
@@ -18,7 +18,7 @@ export function useExpiredNotificationsQuery(address: string, chainId: string): 
   const keyString = 'ExpiredActivitiesQuery ' +
     chainId +
     address;
-    
+
   const { data } = useSWRImmutable(keyString, async () => {
     if (isNullOrEmpty(address) || isNullOrEmpty(chainId)) {
       return [];

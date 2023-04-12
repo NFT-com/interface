@@ -5,7 +5,7 @@ import { useGenesisKeyPublicSaleData } from 'hooks/useGenesisKeyPublicSaleData';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
 import { useTotalGKPublicRemaining } from 'hooks/useTotalGKPublicRemaining';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { GenesisKeyPublicSale } from './GenesisKeyPublicSale';

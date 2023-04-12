@@ -1,6 +1,6 @@
 import { Maybe } from 'graphql/generated/types';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { DropdownPicker } from './DropdownPicker';
@@ -82,7 +82,7 @@ export function PriceInput(props: PriceInputProps) {
             ) {
               const paddedValue = e.target.value === '.' ? '0.' : e.target.value;
               setFormattedPrice(paddedValue);
-            
+
               props.onPriceChange(ethers.utils.parseEther(paddedValue));
             } else {
               e.preventDefault();
@@ -182,7 +182,7 @@ export function PriceInput(props: PriceInputProps) {
               ) {
                 const paddedValue = e.target.value === '.' ? '0.' : e.target.value;
                 setFormattedPrice(paddedValue);
-            
+
                 props.onPriceChange(ethers.utils.parseEther(paddedValue), props.auctionTypeForPrice);
               } else {
                 e.preventDefault();

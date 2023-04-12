@@ -11,7 +11,8 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { ResultsPageProps } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
-import { getPerPage, isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 

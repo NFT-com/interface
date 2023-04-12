@@ -4,7 +4,7 @@ import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NftResponse } from 'graphql/hooks/useNFTQuery';
 import NotFoundPage from 'pages/404';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { isValidContractSimple } from 'utils/helpers';
 
 import { BigNumber } from 'ethers';

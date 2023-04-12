@@ -3,7 +3,7 @@ import { useGetSentReferralEmailsQuery } from 'graphql/hooks/useGetSentReferralE
 import { useSendReferEmailMutation } from 'graphql/hooks/useSendReferEmailMutation';
 import { useUser } from 'hooks/state/useUser';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import OnboardingInput from './OnboardingInput';
 

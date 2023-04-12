@@ -1,7 +1,7 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { NftDetail } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import useSWR, { mutate } from 'swr';
 import { useNetwork } from 'wagmi';
@@ -16,7 +16,7 @@ export function useGetNFTDetailsQuery(contractAddress: string, tokenId: string):
   const sdk = useGraphQLSDK();
   const { chain } = useNetwork();
 
-  const keyString = 'GetNFTDetailsQuery ' + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + contractAddress + tokenId;
+  const keyString = () => contractAddress && tokenId ? ['GetNFTDetailsQuery ', String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddress, tokenId] : null;
 
   const { data } = useSWR(keyString, async () => {
     if(chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') {

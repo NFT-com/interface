@@ -1,6 +1,6 @@
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -17,12 +17,12 @@ export default function ConfirmEmailPage() {
     if (isNullOrEmpty(email) || isNullOrEmpty(token)) {
       return false;
     }
-    
+
     try {
       const result = await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/verify/${email}/${token}`);
       if (Number(result.status) == 200) {
         toast.success('Success! Your email is successfully verified!');
-        
+
         setTimeout(function() {
           // 2 second delay
           router.push('/app/discover');
@@ -58,4 +58,3 @@ ConfirmEmailPage.getLayout = function getLayout(page) {
     </DefaultLayout>
   );
 };
-

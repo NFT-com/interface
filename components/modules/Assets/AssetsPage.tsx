@@ -9,7 +9,7 @@ import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { usePaginator } from 'hooks/usePaginator';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
-import { filterNulls } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import AssetTableRow from './AssetTableRow';

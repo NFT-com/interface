@@ -1,12 +1,16 @@
-import { getBaseUrl, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
-import { tw } from 'utils/tw';
+import { useIsomorphicLayoutEffect } from 'hooks/utils';
+import { isBase64, isNullOrEmpty } from 'utils/format';
+import { cl } from 'utils/tw';
 
-import { RoundedCornerMediaImage as StaticRoundedCornerMediaImage } from './RoundedCornerMediaImage';
-
+import { generateSrcSet } from 'lib/image/loader';
 import { nftComCdnLoader } from 'lib/image/loader';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import { ImageLoader } from 'next/image';
+import React, { useState } from 'react';
+
+const BlurImage = dynamic(import('components/elements/BlurImage'));
+const DynamicRoundedCornerMediaImage = dynamic(import('components/elements/RoundedCornerMediaImage'));
+
 export enum RoundedCornerVariant {
   TopOnly = 'topOnly',
   TopLeft = 'topleft',
@@ -31,6 +35,7 @@ export interface RoundedCornerMediaProps {
   src: string;
   priority?: boolean;
   fallbackImage?: string;
+  loader?: ImageLoader;
   variant: RoundedCornerVariant;
   amount?: RoundedCornerAmount;
   width?: number;
@@ -42,130 +47,158 @@ export interface RoundedCornerMediaProps {
   objectFit?: 'contain' | 'cover';
 }
 
-// TODO:  Add twMerge util class & prettier config to resolve duplicate tw classes
+/**
+ * Returns a string of CSS classes for a given rounded corner variant and amount.
+ * @param {RoundedCornerVariant} variant - The variant of the rounded corner.
+ * @param {RoundedCornerAmount} amount - The amount of rounding to apply.
+ * @returns {string} A string of CSS classes to apply to the element.
+ */
 export const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmount): string => {
-  switch (variant) {
-  case RoundedCornerVariant.TopOnly:
-    return `${amount === RoundedCornerAmount.Medium ? 'rounded-t-md' : 'rounded-t-3xl'} object-cover`;
-  case RoundedCornerVariant.TopLeft:
-    return amount === RoundedCornerAmount.Medium ? 'rounded-tl-md' : 'rounded-tl-3xl';
-  case RoundedCornerVariant.TopRight:
-    return amount === RoundedCornerAmount.Medium ? 'rounded-tr-md' : 'rounded-tr-3xl';
-  case RoundedCornerVariant.BottomLeft:
-    return amount === RoundedCornerAmount.Medium ? 'rounded-bl-md' : 'rounded-bl-3xl';
-  case RoundedCornerVariant.BottomRight:
-    return amount === RoundedCornerAmount.Medium ? 'rounded-br-md' : 'rounded-br-3xl';
-  case RoundedCornerVariant.Right:
-    return amount === RoundedCornerAmount.Medium ? 'rounded-r-md' : 'rounded-r-3xl';
-  case RoundedCornerVariant.Left:
-    return amount === RoundedCornerAmount.Medium ? 'rounded-l-md' : 'rounded-l-3xl';
-  case RoundedCornerVariant.All:
-    return `${amount === RoundedCornerAmount.Medium ? 'rounded-md' : 'rounded-3xl'} object-cover`;
-  case RoundedCornerVariant.Asset:
-    return 'rounded-[6px]';
-  case RoundedCornerVariant.Success:
-    return 'rounded-[18px]';
-  case RoundedCornerVariant.Full:
-    return 'rounded-full object-cover';
-  case RoundedCornerVariant.None:
-  default:
-    return '';
-  }
+  const isMedium = amount === RoundedCornerAmount.Medium;
+  const classOptions = {
+    [RoundedCornerVariant.TopOnly]: cl('object-cover', { 'rounded-t-md': isMedium, 'rounded-t-3xl': !isMedium }),
+    [RoundedCornerVariant.TopLeft]: isMedium ? 'rounded-tl-md' : 'rounded-tl-3xl',
+    [RoundedCornerVariant.TopRight]: isMedium ? 'rounded-tr-md' : 'rounded-tr-3xl',
+    [RoundedCornerVariant.BottomLeft]: isMedium ? 'rounded-bl-md' : 'rounded-bl-3xl',
+    [RoundedCornerVariant.BottomRight]: isMedium ? 'rounded-br-md' : 'rounded-br-3xl',
+    [RoundedCornerVariant.Right]: isMedium ? 'rounded-r-md' : 'rounded-r-3xl',
+    [RoundedCornerVariant.Left]: isMedium ? 'rounded-l-md' : 'rounded-l-3xl',
+    [RoundedCornerVariant.All]: cl('object-cover', { 'rounded-md': isMedium, 'rounded-3xl': !isMedium }),
+    [RoundedCornerVariant.Asset]: 'rounded-[6px]',
+    [RoundedCornerVariant.Success]: 'rounded-[18px]',
+    [RoundedCornerVariant.Full]: 'rounded-full object-cover',
+    [RoundedCornerVariant.None]: ''
+  };
+  return classOptions[variant] || classOptions[RoundedCornerVariant.None];
 };
 
-const DynamicRoundedCornerMediaImage = dynamic<React.ComponentProps<typeof StaticRoundedCornerMediaImage>>(() => import('components/elements/RoundedCornerMediaImage').then(mod => mod.RoundedCornerMediaImage));
+export type RoundedCornerMediaLoaderProps = { classes?: string; }
+export const RoundedCornerMediaLoader: React.FC<RoundedCornerMediaLoaderProps> = ({ classes }) => (
+  <div
+    className={classes}
+  >
+    <div className={cl(
+      'animate-pulse bg-gray-300',
+      'rounded-md',
+      'object-contain'
 
-export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
+    )} />
+  </div>
+);
+
+export const RoundedCornerMedia = React.memo(function RoundedCornerMedia({
+  amount,
+  containerClasses,
+  extraClasses,
+  fallbackImage,
+  loader,
+  objectFit,
+  onClick,
+  priority,
+  src,
+  variant,
+  videoOverride
+}: RoundedCornerMediaProps) {
   const [imageSrc, setImageSrc] = useState(null);
   const [loading, setLoading] = useState(true);
-  const url = props?.src?.split('?')[0];
+  const defaultImgloader = loader || nftComCdnLoader;
+  const imageUrl = imageSrc || src;
+  const isFallback = !isNullOrEmpty(fallbackImage);
+  const isPresetWidth = src?.includes('?width=600');
+  const url = src?.split('?')[0];
   const ext = url?.split('.').pop();
-  useEffect(() => {
-    if(props?.src?.includes('?width=600')){
-      setImageSrc(props?.src);
+
+  // Fire once before component is rendered
+  useIsomorphicLayoutEffect(() => {
+    if(isPresetWidth){
+      setImageSrc(src);
     } else {
       if(ext === 'svg') {
         setImageSrc(url);
       } else {
-        setImageSrc(props?.src);
+        setImageSrc(src);
       }
     }
-  }, [props?.src, ext, url]);
+  }, [src, ext, url]);
 
-  const imageUrl = imageSrc || props?.src;
+  // Styling Helpers
+  const roundedClasses = getRoundedClass(variant, amount ?? RoundedCornerAmount.Default);
+  const isContained = objectFit === 'contain';
+  const baseClasses = cl(
+    'absolute w-full h-full justify-center object-cover',
+    {
+      'minmd:object-contain': isContained,
+    },
+    roundedClasses,
+    extraClasses
+  );
+
   const rawImageBool = (imageUrl?.indexOf('cdn.nft.com') >= 0 && imageUrl?.indexOf('.svg') >= 0) ||
   imageUrl?.indexOf('ens.domains') >= 0 ||
   (imageUrl?.indexOf('storage.googleapis.com') >= 0 && imageUrl?.indexOf('.svg') >= 0);
+  const isVideo = (videoOverride || imageUrl?.indexOf('data:') >= 0);
+  const videoSrcs = videoOverride || isVideo ? generateSrcSet(src) : null;
+  const isBase64Image = videoSrcs ? isBase64(src) : false;
+
+  const renderRawImage = (imageSrc?: string) => (
+    <BlurImage
+      alt='NFT Image'
+      key={src}
+      src={imageSrc || imageUrl}
+      fill
+      loader={loader}
+      className={baseClasses}
+    />);
 
   return (
-    <div className={tw(
+    <div className={cl(
       'relative object-cover aspect-square overflow-hidden',
-      getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-      props.containerClasses
+      roundedClasses,
+      containerClasses
     )}
-    onClick={props?.onClick}
+    onClick={onClick}
     >
-      {(props.videoOverride || imageUrl?.indexOf('data:') >= 0) ?
-        <div>
+      { isVideo ?
+        <>
           {loading &&
-            <div
-              className={tw(
-                props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
-                'absolute w-full h-full flex justify-center items-center',
-                getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-                props.extraClasses
-              )}
-            >
-              <div className={tw(
-                'animate-pulse bg-gray-300 h-11/12 aspect-square',
-                'rounded-md'
-              )} />
-            </div>
+            <RoundedCornerMediaLoader classes={cl(baseClasses, 'items-center !aspect-square')} />
           }
-          <video
-            autoPlay
-            muted={!props.videoOverride}
-            loop
-            key={props?.src}
-            src={props?.src}
-            poster={props?.src}
-            onLoadedData={() => setLoading(false)}
-            className={tw(
-              props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
-              'absolute w-full h-full justify-center',
-              getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-              props.extraClasses
-            )}
-          />
-        </div>
-        : rawImageBool ?
-          <Image
-            alt='NFT Image'
-            key={props.src}
-            src={imageUrl}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            loader={nftComCdnLoader}
-            className={tw(
-              props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
-              'absolute w-full h-full justify-center',
-              getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-              props.extraClasses
-            )}
-          /> :
+          {isBase64Image
+            ? (
+              <BlurImage
+                alt='NFT Image'
+                placeholder='empty'
+                src={videoSrcs.src}
+                fill
+                className={cl(baseClasses, 'aspect-square')}
+              />)
+            : (
+              <video
+                autoPlay
+                muted={!videoOverride}
+                loop
+                key={src}
+                poster={videoSrcs?.src}
+                onLoadedData={() => setLoading(false)}
+                className={cl(baseClasses, 'aspect-square')}
+              />)}
+          {/* { // TODO: Support adding media/file types if we add video/audio support
+              videoSrcs?.srcs.map(src => (<source src={src} key={src} />))
+            }
+          </video> */}
+        </>
+        : rawImageBool
+          ? renderRawImage()
+          :
           (imageUrl != 'null?width=600') && <DynamicRoundedCornerMediaImage
-            priority={props?.priority}
-            src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
-            loader={nftComCdnLoader}
+            priority={priority}
+            src={imageUrl}
+            width={300}
+            loader={defaultImgloader}
             onError={() => {
-              setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
+              setImageSrc(isFallback ? fallbackImage : isPresetWidth ? src?.split('?')[0] : src);
             }}
-            className={tw(
-              props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
-              'absolute w-full h-full justify-center',
-              getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-              props.extraClasses
-            )}
+            className={baseClasses}
           />
       }
     </div>

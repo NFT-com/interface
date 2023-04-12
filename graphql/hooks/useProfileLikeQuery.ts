@@ -3,7 +3,7 @@ import { ProfileLikeCountQuery } from 'graphql/generated/types';
 import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
 import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import useSWR, { mutate,SWRConfiguration } from 'swr';
 import { useAccount } from 'wagmi';

@@ -3,7 +3,7 @@ import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useGetTxByContractQuery } from 'graphql/hooks/useGetTxByContractQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { usePaginator } from 'hooks/usePaginator';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/format';
 
 import DetailPageTableRow from './DetailPageTableRow';
 
@@ -50,7 +50,7 @@ export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
       setTotalCount(txs?.data?.totalItems || 0);
     }
   }, [lastAddedPage, setTotalCount, afterCursor, txs?.data?.items, txs?.data?.pageInfo?.firstCursor, txs?.data?.totalItems, collectionData]);
-  
+
   useEffect(() => {
     if(defaultChainId !== '1' || !txs) {
       return;

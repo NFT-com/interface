@@ -9,7 +9,7 @@ import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useProfileExpiryDate } from 'hooks/useProfileExpiryDate';
 import { UserNotifications } from 'types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import moment from 'moment';
 import { useRouter } from 'next/router';
@@ -111,7 +111,7 @@ export function NotificationContextProvider(
       router.events.off('routeChangeStart', handleRouteChange);
     };
   }, [mutateSaleActivities, router.events]);
-  
+
   const hasUnclaimedProfiles = totalClaimableForThisAddress > 0;
   const { expiry } = useProfileExpiryDate(user?.currentProfileUrl);
   const now = moment();

@@ -2,7 +2,7 @@ import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Nft, PageInfo, } from 'graphql/generated/types';
 import useDebounce from 'hooks/useDebounce';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -22,13 +22,13 @@ export function useSearchVisibleNFTsForProfile(
   const sdk = useGraphQLSDK();
   const defaultChainId = useDefaultChainId();
   const debouncedSearch = useDebounce(query, 1000);
-  
+
   const keyString =
     'SearchVisibleNFTsForProfile' +
     url +
     debouncedSearch +
     defaultChainId;
-  
+
   const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(debouncedSearch)) {
       return null;

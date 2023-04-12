@@ -1,4 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import ClientOnly from 'components/elements/ClientOnly';
 import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { ProfileLayoutType } from 'graphql/generated/types';
@@ -8,10 +9,11 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { filterNulls, getBaseUrl } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
+import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { ProfileContext } from './ProfileContext';
+import { useProfileContext } from './ProfileContext';
 
 import { SearchIcon } from '@heroicons/react/outline';
 import delay from 'delay';
@@ -24,7 +26,7 @@ import GridIcon from 'public/layout_icon_grid.svg?svgr';
 import MosaicIcon from 'public/layout_icon_mosaic.svg?svgr';
 import SpotlightIcon from 'public/layout_icon_spotlight.svg?svgr';
 import GearIcon from 'public/settings_icon.svg?svgr';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 export interface ProfileMenuProps {
@@ -71,7 +73,7 @@ export function ProfileMenu({ profileURI }: ProfileMenuProps) {
     draftNftsDescriptionsVisible,
     setDraftNftsDescriptionsVisible,
     userIsAdmin
-  } = useContext(ProfileContext);
+  } = useProfileContext();
 
   const setLayout = useCallback((type: ProfileLayoutType) => {
     setSelectedLayout(type);
@@ -265,26 +267,28 @@ export function ProfileMenu({ profileURI }: ProfileMenuProps) {
             {editMode && userIsAdmin &&
               <div className='fixed minlg:relative bottom-0 left-0 bg-white minlg:bg-transparent flex w-full py-5 px-3 space-x-4 shadow-[0_-16px_32px_rgba(0,0,0,0.08)] minlg:shadow-none z-50'
               >
-                <Button
-                  label='Save changes'
-                  type={ButtonType.PRIMARY}
-                  size={ButtonSize.LARGE}
-                  extraClasses="whitespace-nowrap"
-                  onClick={() => {
-                    gtag('event', 'Update Profile', {
-                      ethereumAddress: currentAddress,
-                      profile: profileURI,
-                      newProfile: draftProfileImg?.preview ? true : false,
-                      newHeader: draftHeaderImg?.preview ? true : false,
-                      newDescription: draftBio,
-                    });
+                <ClientOnly>
+                  <Button
+                    label='Save changes'
+                    type={ButtonType.PRIMARY}
+                    size={ButtonSize.LARGE}
+                    extraClasses="whitespace-nowrap"
+                    onClick={() => {
+                      gtag('event', 'Update Profile', {
+                        ethereumAddress: currentAddress,
+                        profile: profileURI,
+                        newProfile: draftProfileImg?.preview ? true : false,
+                        newHeader: draftHeaderImg?.preview ? true : false,
+                        newDescription: draftBio,
+                      });
 
-                    saveProfile();
-                    setTimeout(() => {
-                      setEditMode(false);
-                    }, 3000);
-                  }}
-                />
+                      saveProfile();
+                      setTimeout(() => {
+                        setEditMode(false);
+                      }, 3000);
+                    }}
+                  />
+                </ClientOnly>
                 <Button
                   label='Cancel'
                   type={ButtonType.SECONDARY}

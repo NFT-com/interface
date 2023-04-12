@@ -1,4 +1,6 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import { isOfficialCollection } from 'utils/helpers';
+import { tw } from 'utils/tw';
 
 import { ResultsDropDownDisplay } from './ResultsDropDownDisplay';
 
@@ -18,7 +20,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
   const { setDropDownSearchResults } = useSearchModal();
   const clickByItemResult = (document) => {
     if (!document.nftName) {
-      router.push(`/app/collection/${document.contractAddr}/`);
+      router.push(`/app/collection/${isOfficialCollection({ name: document?.contractName, ...document })}`);
     } else {
       if(document.isProfile){
         router.push('/' + `${document.nftName}`);

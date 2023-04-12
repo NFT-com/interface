@@ -8,7 +8,7 @@ import { useMintedReservedProfileCount } from 'hooks/useMintedReservedProfileCou
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { useCallback, useEffect, useState } from 'react';

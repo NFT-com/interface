@@ -6,7 +6,7 @@ import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import useDebounce from 'hooks/useDebounce';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { cl } from 'utils/tw';
 
 import dynamic from 'next/dynamic';
@@ -43,7 +43,7 @@ export default function AssociatedProfileSelect({ profileId, associatedContract 
   const [error, setError] = useState<boolean | undefined>();
 
   useEffect(() => {
-    if (collectionQueryData) {
+    if (collectionQueryData?.collection) {
       const { collection } = collectionQueryData;
       setSelectedResult({
         id: collection.id,
@@ -78,7 +78,7 @@ export default function AssociatedProfileSelect({ profileId, associatedContract 
     if(isNullOrEmpty(searchState.associatedCollectionSearch)){
       return null;
     }
-    
+
     if(error){
       return (
         <>

@@ -2,7 +2,8 @@ import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Link from 'next/link';

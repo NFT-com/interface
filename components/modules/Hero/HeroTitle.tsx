@@ -1,4 +1,4 @@
-import { filterNulls } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import ReactRotatingText from 'react-rotating-text';

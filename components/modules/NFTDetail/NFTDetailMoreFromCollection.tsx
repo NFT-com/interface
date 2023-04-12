@@ -7,7 +7,8 @@ import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { useFetchCollectionNFTs } from 'graphql/hooks/useFetchCollectionNFTs';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnv } from 'utils/env';
-import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getChainIdString } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber, BigNumberish } from 'ethers';
@@ -29,7 +30,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
   const [my_swiper, set_my_swiper] = useState<SwiperClass>();
   const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
   const { chain } = useNetwork();
-  const { data } = useSWR('NFTDetailMoreFromCollection' + props.contract + props.hideTokenId, async () => {
+  const { data } = useSWR(() => props.contract && props.hideTokenId ? ['NFTDetailMoreFromCollection', props.contract, props.hideTokenId]: null, async () => {
     const result = await fetchCollectionsNFTs({
       chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
       collectionAddress: props.contract,

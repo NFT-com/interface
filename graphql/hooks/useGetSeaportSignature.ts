@@ -1,6 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { GetSeaportSignaturesQuery, Scalars } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useCallback } from 'react';
 

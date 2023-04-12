@@ -1,4 +1,4 @@
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { CheckCircle } from 'phosphor-react';
@@ -61,4 +61,3 @@ export default function OnboardingInput({ onSubmit, item, index, errorMessage, s
     </>
   );
 }
-    

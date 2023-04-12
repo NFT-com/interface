@@ -10,7 +10,8 @@ import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { CollectionSearchResult } from 'types';
-import { getPerPage, isNullOrEmpty, isOfficialCollection } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getPerPage, isOfficialCollection } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';

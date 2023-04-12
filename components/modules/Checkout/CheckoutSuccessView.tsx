@@ -2,7 +2,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { NFTListingsContext, StagedListing } from './NFTListingsContext';
@@ -51,7 +50,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
       return <div className='relative'>
         <RoundedCornerMedia
           containerClasses='w-[130px] h-[130px] mb-10 z-10'
-          src={processIPFSURL(list[0]?.nft?.metadata?.imageURL)}
+          src={list[0]?.nft?.metadata?.imageURL}
           variant={RoundedCornerVariant.Success}
         />
         <Check className={'absolute top-[-12px] right-[-12px] z-20 h-7 w-7 p-1 text-white font-medium aspect-square shrink-0 rounded-full -ml-4 bg-[#26AA73]'} />
@@ -64,7 +63,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
             <RoundedCornerMedia
               key={i}
               containerClasses={`w-[${130 - (i * 10)}px] h-[${130 - (i * 10)}px] z-${50 - i * 10} -ml-16 shadow-xl`}
-              src={processIPFSURL(item?.nft?.metadata?.imageURL)}
+              src={item?.nft?.metadata?.imageURL}
               variant={RoundedCornerVariant.Success}
             />
           )}
