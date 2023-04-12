@@ -2,6 +2,7 @@
 import 'aos/dist/aos.css';
 
 import DefaultSEO from 'config/next-seo.config';
+import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
 import contentfulBackupData from 'constants/contentful_backup_data.json';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { HomePageV2 } from 'types';
@@ -26,7 +27,7 @@ import LazyLoad from 'react-lazy-load';
 import { usePageVisibility } from 'react-page-visibility';
 
 const BlurImage = dynamic(import('components/elements/BlurImage'));
-const HomeLayout = dynamic(import('components/layouts/HomeLayout'));
+const HomeLayout = dynamic(import('components/layouts/HomeLayout'), { loading: () => <LoaderPageFallback /> });
 const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then(mod => mod.Player));
 const DynamicLeaderBoard = dynamic(import('components/modules/Profile/LeaderBoard'));
 const DynamicPreviewBanner = dynamic(import('components/elements/PreviewBanner'));
