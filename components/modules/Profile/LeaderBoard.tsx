@@ -95,3 +95,5 @@ export function LeaderBoard({ data }: LeaderBoardProps) {
     </table>
   </div>;
 }
+
+export default LeaderBoard;

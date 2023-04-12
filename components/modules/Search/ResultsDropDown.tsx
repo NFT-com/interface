@@ -1,6 +1,5 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { isOfficialCollection } from 'utils/helpers';
-import { tw } from 'utils/tw';
 
 import { ResultsDropDownDisplay } from './ResultsDropDownDisplay';
 

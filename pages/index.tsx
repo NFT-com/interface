@@ -2,19 +2,14 @@
 import 'aos/dist/aos.css';
 
 import DefaultSEO from 'config/next-seo.config';
-import BlurImage from 'components/elements/BlurImage';
-import StaticPreviewBanner from 'components/elements/PreviewBanner';
-import HomeLayout from 'components/layouts/HomeLayout';
-import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/LeaderBoard';
 import contentfulBackupData from 'constants/contentful_backup_data.json';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { HomePageV2 } from 'types';
-import { getBaseUrl, getStaticAsset } from 'utils/helpers';
-import { cl, tw } from 'utils/tw';
+import { getBaseUrl } from 'utils/isEnv';
+import { tw } from 'utils/tw';
 
 import { NextPageWithLayout } from './_app';
 
-import { Player } from '@lottiefiles/react-lottie-player';
 import AOS from 'aos';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
@@ -30,8 +25,11 @@ import Marquee from 'react-fast-marquee';
 import LazyLoad from 'react-lazy-load';
 import { usePageVisibility } from 'react-page-visibility';
 
-const DynamicLeaderBoard = dynamic<React.ComponentProps<typeof StaticLeaderboard>>(() => import('components/modules/Profile/LeaderBoard').then(mod => mod.LeaderBoard));
-const DynamicPreviewBanner = dynamic<React.ComponentProps<typeof StaticPreviewBanner>>(() => import('components/elements/PreviewBanner'));
+const BlurImage = dynamic(import('components/elements/BlurImage'));
+const HomeLayout = dynamic(import('components/layouts/HomeLayout'));
+const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then(mod => mod.Player));
+const DynamicLeaderBoard = dynamic(import('components/modules/Profile/LeaderBoard'));
+const DynamicPreviewBanner = dynamic(import('components/elements/PreviewBanner'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -373,7 +371,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 Community
                 <span className='inline-block rotate-[40deg]'>
                   <BlurImage
-                    className={cl(
+                    className={tw(
                       'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
                       'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
                       'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl',
@@ -674,7 +672,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
               'minmd:-order-1 -mx-5'
             )}>
               <LazyLoad offset={200}>
-                <video className='w-full' autoPlay loop muted playsInline src={getStaticAsset('public/video-discover.mp4')}></video>
+                <video className='w-full' autoPlay loop muted playsInline src='/video-discover.mp4'></video>
               </LazyLoad>
             </div>
           </div>

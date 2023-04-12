@@ -1,17 +1,18 @@
 'use client';
 import config from 'config/swr.config';
-import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListingsContext';
-import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
-import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
-import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
-
-import { CryptoWalletProvider } from './CryptoWalletContext';
 
 import { AnimatePresence } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import { ReactNode } from 'react';
-import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { SWRConfig } from 'swr';
+
+const CryptoWalletProvider = dynamic(import('./CryptoWalletContext'));
+const DndProvider = dynamic(() => import('react-dnd').then(mod => mod.DndProvider));
+const GraphQLProvider = dynamic(import('graphql/client/GraphQLProvider'));
+const NFTListingsContextProvider = dynamic(import('components/modules/Checkout/NFTListingsContext'));
+const NFTPurchaseContextProvider = dynamic(import('components/modules/Checkout/NFTPurchaseContext'));
+const NotificationContextProvider = dynamic(import('components/modules/Notifications/NotificationContext'));
 
 const RootProvider = ({ children }: { children: ReactNode }) => {
   return (

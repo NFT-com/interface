@@ -166,6 +166,11 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boo
       perPage = 2;
     }
   } else if (index === 'discover') {
+/**
+ * Returns a string representation of the given chain ID.
+ * @param {Maybe<number | string>} chainId - The chain ID to convert to a string.
+ * @returns {Maybe<string>} - The string representation of the chain ID, or null if the input is null or undefined.
+ */
     if (screenWidth >= 1200) {
       perPage = sideNavOpen ? 9 : 8;
     } else if (screenWidth >= 900) {

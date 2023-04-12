@@ -23,7 +23,7 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { goerli, mainnet } from 'wagmi/chains';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
-export const CryptoWalletProvider = ({ children }: { children: ReactNode }) => {
+const CryptoWalletProvider = ({ children }: { children: ReactNode }) => {
   const { chains, provider } = useMemo(() => {
     return configureChains(
       !isProd
@@ -100,3 +100,5 @@ export const CryptoWalletProvider = ({ children }: { children: ReactNode }) => {
     </>
   );
 };
+
+export default CryptoWalletProvider;
