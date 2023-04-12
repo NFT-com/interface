@@ -73,7 +73,7 @@ export const NFTPurchasesContext = React.createContext<NFTPurchaseContextType>({
   buyNowActive: false
 });
 
-export function NFTPurchaseContextProvider(
+export default function NFTPurchaseContextProvider(
   props: PropsWithChildren<any>
 ) {
   const [toBuy, setToBuy] = useState<Array<StagedPurchase>>([]);

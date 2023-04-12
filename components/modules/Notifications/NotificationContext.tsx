@@ -72,7 +72,7 @@ export const NotificationContext = React.createContext<NotificationContextType>(
   mutatePurchaseActivities: () => null,
 });
 
-export function NotificationContextProvider(
+export default function NotificationContextProvider(
   props: PropsWithChildren
 ) {
   const { address: currentAddress } = useAccount();

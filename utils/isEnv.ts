@@ -32,3 +32,12 @@ export const isEnv= (env: DeploymentEnv | DeploymentEnv[]) => Array.isArray(env)
  * @returns {boolean} - true if the given environment is not the current environment.
  */
 export const isNotEnv = (env: DeploymentEnv | DeploymentEnv[]) => !isEnv(env);
+
+/**
+ * Returns the base URL for the application. If an override is provided, it will be returned instead.
+ * @param {string} [override=''] - An optional override for the base URL.
+ * @returns {string} - The base URL for the application.
+ */
+export const getBaseUrl = (override = '') => {
+  return override || getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
+};

@@ -23,7 +23,7 @@ export const GraphQLProviderProps = {};
  * gQL provider which sets the required auth
  * headers specific to nft.com.
  */
-export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderProps>) {
+export default function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderProps>) {
   const { isSupported } = useSupportedNetwork();
   const { address: currentAddress } = useAccount();
 
