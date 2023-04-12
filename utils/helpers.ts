@@ -2,12 +2,11 @@ import { Collection, Maybe } from 'graphql/generated/types';
 
 import { Doppler, getEnv } from './env';
 import { isNullOrEmpty } from './format';
-
+import { ETHERSCAN_PREFIXES } from 'constants/misc';
 // TODO: split up ethers, ipfs, etc. utils into dynamically imported crypto util file
 import { getAddress } from '@ethersproject/address';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
-import { base32cid, cid, multihash } from 'is-ipfs';
 import { atom } from 'jotai';
 import moment, { Moment } from 'moment';
 import slugify from 'slugify';
@@ -20,14 +19,6 @@ export function isAddress(value: any): string | false {
   } catch {
     return false;
   }
-}
-
-export function isChromeBrowser() {
-  let isChromeBrowser = false;
-  if (typeof window !== 'undefined') {
-    isChromeBrowser = window.navigator.userAgent.toString().toLocaleLowerCase().includes('chrome');
-  }
-  return isChromeBrowser;
 }
 
 export const profileSaveCounter = atom(0);
@@ -59,42 +50,6 @@ export const getStaticAsset = (imagePath: string, cdn = true): string => {
   return imagePath;
 };
 
-function extractIPFSHashAndPathFromUrl(url: string): string | null {
-  // Define a regular expression pattern to match the IPFS hash format
-  // and capture any subsequent path after the hash.
-  const ipfsHashPattern = /(Qm[a-zA-Z0-9]{44}(\/.*)?)/;
-
-  // Find the match in the URL
-  const match = url.match(ipfsHashPattern);
-
-  // Return the matched IPFS hash and path or null if not found
-  return match ? match[0] : null;
-}
-
-export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
-  const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
-  if (image == null) {
-    return null;
-  } else if (image.indexOf('ipfs://ipfs/') === 0) {
-    return prefix + image.slice(12);
-  } else if (image.indexOf('ipfs://') === 0) {
-    return prefix + image.slice(7);
-  } else if (image.indexOf('https://ipfs.io/ipfs/') === 0) {
-    return prefix + image.slice(21);
-  } else if (image.indexOf('https://ipfs.infura.io/ipfs/') === 0) {
-    return prefix + image.slice(28);
-  } else if (image.indexOf('https://gateway.pinata.cloud/ipfs/') === 0) {
-    return prefix + image.slice(34);
-  } else if (image.indexOf('https://infura-ipfs.io/ipfs/') === 0) {
-    return prefix + image.slice(28);
-  } else if (image.includes('ipfs')) {
-    return prefix + extractIPFSHashAndPathFromUrl(image);
-  } else if (base32cid(image) || multihash(image) || cid(image)) {
-    return prefix + image;
-  }
-  return image;
-};
-
 export const formatID = (id: BigNumber) => {
   if (id.lt(10)) {
     return '0000' + id.toString();
@@ -116,9 +71,6 @@ export const getGenesisKeyThumbnail: (id: BigNumberish) => string = (id: BigNumb
   return 'https://cdn.nft.com/gk-min/' + BigNumber.from(id).toString() + '.jpeg';
 };
 
-export function getAPIURL() {
-  return getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL);
-}
 
 const ETHERSCAN_PREFIXES = {
   1: '',

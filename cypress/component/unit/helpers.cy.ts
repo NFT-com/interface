@@ -4,7 +4,6 @@ import { filterNulls, isNullOrEmpty, joinClasses, prettify, shorten, shortenStri
 import {
   collectionCardImages,
   formatID,
-  getAPIURL,
   getChainIdString,
   getDateFromTimeFrame,
   getEtherscanLink,
@@ -17,6 +16,7 @@ import {
   shortenAddress,
 } from '../../../utils/helpers';
 import { processIPFSURL } from '../../../utils/ipfs';
+import { getAPIURL } from '../../../utils/isEnv';
 
 import { BigNumber } from 'ethers';
 
