@@ -1,6 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useCallback,useState } from 'react';
 
@@ -9,7 +9,7 @@ export function useRefreshNftOrdersMutation() {
 
   const [error, setError] = useState<Maybe<string>>(null);
   const [loading, setLoading] = useState(false);
-  
+
   const refreshNftOrders = useCallback(
     async (nftId: string) => {
       if (isNullOrEmpty(nftId)) {
@@ -31,7 +31,7 @@ export function useRefreshNftOrdersMutation() {
     },
     [sdk]
   );
-  
+
   return {
     loading: loading,
     error: error,

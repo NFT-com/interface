@@ -1,5 +1,5 @@
 import Loader from 'components/elements/Loader/Loader';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { Dialog } from '@headlessui/react';
@@ -126,7 +126,7 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
                             </p>
                     }
                   </div>
-                     
+
                   {props.children}
                 </div>
               }

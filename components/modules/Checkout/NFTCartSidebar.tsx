@@ -1,6 +1,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { filterNulls } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { CartSidebarNft } from './CartSidebarNft';
@@ -49,7 +49,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
   useOutsideClickAlerter(sidebarRef, () => toggleCartSidebar());
 
   const initialHeight = stagedNFTs.length < 4 ? 'min-h-fit' : 'min-h-[19rem]';
-  
+
   return (
     <>
       <div className='fixed inset-0 z-[105] w-screen h-screen backdrop-blur bg-gray-900 bg-opacity-20 '></div>

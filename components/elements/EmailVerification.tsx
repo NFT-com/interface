@@ -9,7 +9,7 @@ import { useUpdateEmailMutation } from 'graphql/hooks/useUpdateEmailMutation';
 import { useUpdateMeMutation } from 'graphql/hooks/useUpdateMeMutation';
 import { useBidModal } from 'hooks/state/useBidModal';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty, joinClasses } from 'utils/helpers';
+import { isNullOrEmpty, joinClasses } from 'utils/format';
 
 import ClientOnly from './ClientOnly';
 

@@ -1,6 +1,6 @@
 
 import { Maybe } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useAllContracts } from './contracts/useAllContracts';
 import { useOwnedGenesisKeyTokens } from './useOwnedGenesisKeyTokens';
@@ -45,7 +45,7 @@ export function useClaimableProfileCount(address: string): ClaimableProfileCount
       setLoading(true);
       try {
         const isWhitelistPhaseOnly: boolean = await profileAuction.genKeyWhitelistOnly();
-  
+
         const promises: Promise<ClaimableCount>[] = (ownedGKTokens ?? []).map(async (token) => {
           const claimedByThisTokenId = await profileAuction.genesisKeyClaimNumber(BigNumber.from(token?.id?.tokenId).toNumber());
           return {
@@ -53,13 +53,13 @@ export function useClaimableProfileCount(address: string): ClaimableProfileCount
             claimable: (isWhitelistPhaseOnly ? 4 : 7) - claimedByThisTokenId.toNumber()
           } as ClaimableCount;
         });
-  
+
         const claimableCounts: ClaimableCount[] = await Promise.all(promises);
         const total = claimableCounts.reduce((
           previousValue: number,
           currentValue: ClaimableCount,
         ) => previousValue + currentValue.claimable, 0);
-  
+
         setLoading(false);
         return {
           claimableCounts,
@@ -73,7 +73,7 @@ export function useClaimableProfileCount(address: string): ClaimableProfileCount
         };
       }
     });
-  
+
   return {
     claimable: data?.claimableCounts ?? null,
     totalClaimable: data?.totalClaimable ?? null,

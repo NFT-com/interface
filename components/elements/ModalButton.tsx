@@ -1,5 +1,5 @@
 import Loader from 'components/elements/Loader/Loader';
-import { joinClasses } from 'utils/helpers';
+import { joinClasses } from 'utils/format';
 
 export interface ModalButtonProps {
   text: string;

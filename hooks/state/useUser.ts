@@ -1,6 +1,6 @@
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useCallback,useEffect, useState } from 'react';
 import useSWR from 'swr';

@@ -1,5 +1,5 @@
 import { get721Contract } from 'hooks/contracts/get721Contract';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { TransferProxyTarget } from './useNftCollectionAllowance';
 

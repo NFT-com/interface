@@ -5,10 +5,9 @@ import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuer
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { isNullOrEmpty } from 'utils/format';
 import {
   getGenesisKeyThumbnail,
-  isNullOrEmpty,
-  processIPFSURL,
   sameAddress,
 } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
@@ -53,7 +52,7 @@ export function CollectionCard(props: CollectionCardProps) {
 
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
-    : props?.images?.length > 0 ? props?.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
+    : props?.images?.length > 0 ? props?.images : [nft?.metadata?.imageURL];
 
   const { setLike, unsetLike } = useSetLikeMutation(
     props?.collectionId,

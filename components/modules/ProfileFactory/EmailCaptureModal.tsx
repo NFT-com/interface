@@ -2,7 +2,7 @@ import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useMeQuery } from 'graphql/hooks/useMeQuery';
 import { useUpdateMeMutation } from 'graphql/hooks/useUpdateMeMutation';
 import { useEmailCaptureModal } from 'hooks/state/useEmailCaptureModal';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { Dialog, Transition } from '@headlessui/react';
@@ -68,7 +68,7 @@ export default function EmailCaptureModal() {
                   color="#8C939A"
                   weight="fill"
                 />
-                
+
                 <div className='text-center font-noi-grotesk'>
                   <h3 className='text-[32px] mb-5 font-medium'>Stay tuned!</h3>
 
@@ -120,4 +120,3 @@ export default function EmailCaptureModal() {
     </Transition>
   );
 }
-    

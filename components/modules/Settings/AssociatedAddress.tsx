@@ -3,7 +3,8 @@ import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { useIgnoredEventsQuery } from 'graphql/hooks/useIgnoredEventsQuery';
 import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
+import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
 
@@ -112,11 +113,11 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
             </CustomTooltip>
           }
         </div>
-      
+
         <div className='flex items-center truncate w-1/2 mr-4'>
           <p className='truncate text-black'>{shortenAddress(address)}</p>
         </div>
-                
+
         <div className='flex items-center w-1/2 justify-between'>
           <p>Ethereum</p>
           <DropdownPickerModal
@@ -150,4 +151,3 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
     </>
   );
 }
-    

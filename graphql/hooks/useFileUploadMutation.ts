@@ -1,6 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { useCallback, useState } from 'react';

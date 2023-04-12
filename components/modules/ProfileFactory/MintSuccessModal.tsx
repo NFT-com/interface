@@ -2,7 +2,7 @@ import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useMeQuery } from 'graphql/hooks/useMeQuery';
 import { useEmailCaptureModal } from 'hooks/state/useEmailCaptureModal';
 import { useMintSuccessModal } from 'hooks/state/useMintSuccessModal';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { Dialog, Transition } from '@headlessui/react';
 import Image from 'next/image';

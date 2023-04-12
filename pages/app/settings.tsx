@@ -1,3 +1,4 @@
+import ClientOnly from 'components/elements/ClientOnly';
 import Toast from 'components/elements/Toast';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import MintPaidProfileCard from 'components/modules/ProfileFactory/MintPaidProfileCard';
@@ -17,7 +18,8 @@ import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useProfileExpiryDate } from 'hooks/useProfileExpiryDate';
 import { Doppler, getEnv } from 'utils/env';
-import { filterNulls, getChainIdString, isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/format';
+import { getChainIdString, shortenAddress } from 'utils/helpers';
 
 import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
@@ -117,9 +119,9 @@ export default function Settings() {
   }, [currentAddress, router]);
 
   const ownsProfilesAndSelectedProfile = myOwnedProfileTokens.length && myOwnedProfileTokens.some(t => t.title === selectedProfile);
-  
+
   return (
-    <>
+    <ClientOnly>
       <Toast />
       <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
         <div className='flex'>
@@ -157,13 +159,13 @@ export default function Settings() {
                   </>
                 )
                 : null}
-          
+
               <ConnectedProfiles associatedProfiles={associatedProfiles} />
             </div>
           </div>
         </div>
       </div>
-    </>
+    </ClientOnly>
   );
 }
 

@@ -1,5 +1,5 @@
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { ALCHEMY_KEYS, ALCHEMY_PREFIXES } from './alchemynft';
 
@@ -16,7 +16,7 @@ const ethRpcHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     '1': 'mainnet',
     '5': 'goerli',
   };
-  
+
   // infura keys
   const keys = [
     '460ed70fa7394604a709b7dff23f1641',

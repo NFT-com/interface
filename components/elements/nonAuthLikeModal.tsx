@@ -1,5 +1,5 @@
 import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
-import { sliceString } from 'utils/helpers';
+import { sliceString } from 'utils/format';
 
 import { Button, ButtonSize, ButtonType } from './Button';
 import { Modal } from './Modal';

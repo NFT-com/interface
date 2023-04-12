@@ -5,8 +5,9 @@ import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocol
 import { PurchaseErrorResponse } from 'hooks/useNFTPurchaseError';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
+import { filterDuplicates, } from 'utils/format';
 
-import { filterDuplicates, sameAddress } from './helpers';
+import { sameAddress } from './helpers';
 import { multiplyBasisPoints } from './seaportHelpers';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';
@@ -138,7 +139,7 @@ export function getTotalRoyaltiesUSD(
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
     } else if (stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
       const NFTCOMRoyaltyFee = nftComRoyaltyFees?.[index];
-      
+
       const royalty = Number(NFTCOMRoyaltyFee ?? 0);
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(

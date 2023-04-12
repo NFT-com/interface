@@ -48,12 +48,12 @@ export default function MintProfilesPage() {
     <div
       className={tw(
         'flex flex-col relative w-full items-center bg-black',
-        'overflow-y-auto -mb-20 pb-20'
+        'overflow-y-auto -mb-20 pb-20 min-h-screen justify-between'
       )}
     >
       {/* Header */}
       <div
-        className='bg-black h-max w-full relative overflow-hidden'
+        className='bg-black h-max w-full overflow-hidden relative'
       >
         <Player
           autoplay

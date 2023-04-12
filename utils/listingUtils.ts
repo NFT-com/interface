@@ -1,8 +1,9 @@
 import { NULL_ADDRESS } from 'constants/addresses';
 import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { ExternalProtocol } from 'types';
+import { isNullOrEmpty } from 'utils/format';
 
-import { isNullOrEmpty, sameAddress } from './helpers';
+import { sameAddress } from './helpers';
 import { getAddress } from './httpHooks';
 
 import { BigNumber, ethers } from 'ethers';

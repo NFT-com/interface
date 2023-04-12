@@ -7,7 +7,8 @@ import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedN
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
-import { filterNulls, getGenesisKeyThumbnail, isNullOrEmpty, isOfficialCollection, processIPFSURL, sameAddress } from 'utils/helpers';
+import { filterNulls,isNullOrEmpty, } from 'utils/format';
+import { getGenesisKeyThumbnail, isOfficialCollection, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
@@ -52,9 +53,9 @@ export default function AssetTableRow({
     { first: 1 }
   );
 
-  const processedImageURLs = sameAddress(item.contract, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(item.tokenId) ?
+  const imageUrls = sameAddress(item.contract, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(item.tokenId) ?
     [getGenesisKeyThumbnail(item.tokenId)]
-    : [item?.metadata?.imageURL].map(processIPFSURL);
+    : [item?.metadata?.imageURL];
 
   const getDisplayedProfiles = useCallback(() => {
     if (!profiles?.length) {
@@ -67,7 +68,7 @@ export default function AssetTableRow({
           containerClasses='w-[32px] h-[32px] aspect-square mr-3'
           variant={RoundedCornerVariant.Full}
           amount={RoundedCornerAmount.Medium}
-          src={processIPFSURL(profiles[0].photoURL)}
+          src={profiles[0].photoURL}
         />
         <Link href={`/${profiles[0].url}`}>
           <p className='font-bold hover:cursor-pointer'>
@@ -93,7 +94,7 @@ export default function AssetTableRow({
                     containerClasses='w-[32px] h-[32px] aspect-square mr-3'
                     variant={RoundedCornerVariant.Full}
                     amount={RoundedCornerAmount.Medium}
-                    src={processIPFSURL(profile.photoURL)}
+                    src={profile.photoURL}
                   />
                   <Link href={`/${profile.url}`}>
                     <p className='font-bold hover:cursor-pointer'>
@@ -127,7 +128,7 @@ export default function AssetTableRow({
         <div className='flex items-center h-full -mt-1 truncate ... text-ellipsis'>
           <RoundedCornerMedia
             containerClasses='min-w-[32px] w-[32px] h-[32px] mr-2'
-            src={processedImageURLs[0]}
+            src={imageUrls[0]}
             variant={RoundedCornerVariant.Asset}
           />
           <Link href={`/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`}>
