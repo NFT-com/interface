@@ -7,10 +7,12 @@ import DefaultSEO from 'config/next-seo.config';
 import BlurImage from 'components/elements/BlurImage';
 import StaticPreviewBanner from 'components/elements/PreviewBanner';
 import HomeLayout from 'components/layouts/HomeLayout';
+import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/LeaderBoard';
 import contentfulBackupData from 'constants/contentful_backup_data.json';
+import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { HomePageV2 } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
-import { getBaseUrl } from 'utils/helpers';
+import { getBaseUrl, getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { NextPageWithLayout } from './_app';
@@ -33,10 +35,12 @@ import benefitImage03 from 'public/img-benefit03.webp';
 import profileImage from 'public/profile-images.webp';
 import { useEffect } from 'react';
 import Marquee from 'react-fast-marquee';
+import LazyLoad from 'react-lazy-load';
 import { usePageVisibility } from 'react-page-visibility';
 import { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+const DynamicLeaderBoard = dynamic<React.ComponentProps<typeof StaticLeaderboard>>(() => import('components/modules/Profile/LeaderBoard').then(mod => mod.LeaderBoard));
 const DynamicPreviewBanner = dynamic<React.ComponentProps<typeof StaticPreviewBanner>>(() => import('components/elements/PreviewBanner'));
 
 gsap.registerPlugin(ScrollTrigger);
@@ -47,6 +51,7 @@ type HomePageProps = {
 };
 
 const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
+  const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
   const isVisible = usePageVisibility();
 
   useEffect(() => {
