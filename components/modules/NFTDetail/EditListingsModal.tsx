@@ -1,4 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import ClientOnly from 'components/elements/ClientOnly';
 import { Modal } from 'components/elements/Modal';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
@@ -7,7 +8,7 @@ import { Nft, TxActivity } from 'graphql/generated/types';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { ExternalProtocol } from 'types';
-import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { ListingButtonType } from './ExternalListingTile';
 import ExternalListingTile from './ExternalListingTile';
@@ -91,7 +92,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
       <div className="flex items-center">
         <RoundedCornerMedia
           containerClasses='w-2/4 aspect-square'
-          src={processIPFSURL(nft?.metadata?.imageURL)}
+          src={nft?.metadata?.imageURL}
           variant={RoundedCornerVariant.None}
         />
         <div className="flex flex-col px-8">
@@ -149,23 +150,25 @@ export function EditListingsModal(props: EditListingsModalProps) {
   }, [nft, collectionName, listings, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router]);
 
   return (
-    <Modal
-      visible={visible}
-      loading={false}
-      title={''}
-      onClose={onClose}
-      bgColor='white'
-      hideX
-      fullModal
-      pure
-    >
-      <div ref={modalRef} className='max-w-full minlg:max-w-[458px] minlg:h-[80vh] overflow-y-scroll hideScroll bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
-        <div className='font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-          <X onClick={onClose} className='absolute right-3 minlg:right-0 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
-          {<h2 className='text-4xl tracking-wide font-medium mb-10 mt-6'>Edit Listings</h2>}
-          {getModalContent()}
+    <ClientOnly>
+      <Modal
+        visible={visible}
+        loading={false}
+        title={''}
+        onClose={onClose}
+        bgColor='white'
+        hideX
+        fullModal
+        pure
+      >
+        <div ref={modalRef} className='max-w-full minlg:max-w-[458px] minlg:h-[80vh] overflow-y-scroll hideScroll bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
+          <div className='font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+            <X onClick={onClose} className='absolute right-3 minlg:right-0 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
+            {<h2 className='text-4xl tracking-wide font-medium mb-10 mt-6'>Edit Listings</h2>}
+            {getModalContent()}
+          </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
+    </ClientOnly>
   );
 }

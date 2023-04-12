@@ -1,5 +1,5 @@
 import { useMyPhotoQuery } from 'graphql/hooks/useMyPhotoQuery';
-import { joinClasses } from 'utils/helpers';
+import { joinClasses } from 'utils/format';
 
 import Jazzicon from '@metamask/jazzicon';
 import Image from 'next/image';

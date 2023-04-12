@@ -2,7 +2,8 @@ import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { MyNfTsQuery, Nft, PageInfo } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { profileSaveCounter } from 'utils/helpers';
 
 import { useAtom } from 'jotai';
 import { useContext } from 'react';
@@ -40,7 +41,7 @@ export function useMyNFTsQuery(first: number, profileId: string, beforeCursor?: 
     });
     return result;
   });
-  
+
   return {
     data: data?.myNFTs?.items ?? [],
     pageInfo: data?.myNFTs.pageInfo,

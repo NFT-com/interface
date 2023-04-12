@@ -1,6 +1,7 @@
 import useCopyClipboard from 'hooks/useCopyClipboard';
-import { getStaticAsset, joinClasses } from 'utils/helpers';
+import { joinClasses } from 'utils/format';
 
+import CopySvg from 'public/copy.svg?svgr';
 import React from 'react';
 import { CheckCircle } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -33,6 +34,7 @@ export default function CopyHelper(props: {
 }) {
   const [isCopied, setCopied] = useCopyClipboard();
   const { primaryIcon, alwaysWhite } = useThemeColors();
+  const size = parseInt(props.size) ?? 16;
   return (
     <>
       <button
@@ -59,8 +61,7 @@ export default function CopyHelper(props: {
           )
           : (
             <TransactionStatusText>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={getStaticAsset('public/copy.svg')} alt='copy' className='ml-1' style={{ height: props.size ?? '16px', width: props.size ?? '16px' }} />
+              <CopySvg alt='copy' className={`ml-1 h-[${size}px] w-[${size}px]`} />
             </TransactionStatusText>
           )}
         {props.after !== true && (props.keepContent !== true && isCopied ? '' : props.children)}

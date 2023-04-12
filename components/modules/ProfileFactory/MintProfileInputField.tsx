@@ -9,7 +9,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { ExternalProtocol } from 'types';
-import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
+import { filterDuplicates, isNullOrEmpty } from 'utils/format';
 import { getAddress } from 'utils/httpHooks';
 import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { filterValidListings } from 'utils/marketplaceUtils';

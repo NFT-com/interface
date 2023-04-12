@@ -2,7 +2,7 @@ import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { User } from 'graphql/generated/types';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useContext, useState } from 'react';
 import useSWR, { mutate } from 'swr';

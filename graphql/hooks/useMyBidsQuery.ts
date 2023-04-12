@@ -1,7 +1,8 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { BidsInput, MyBidsQuery } from 'graphql/generated/types';
-import { isNullOrEmpty, sameAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { sameAddress } from 'utils/helpers';
 
 import { useContext } from 'react';
 import useSWR, { mutate } from 'swr';

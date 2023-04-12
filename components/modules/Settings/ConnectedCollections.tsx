@@ -4,7 +4,8 @@ import { AddressTupleStructOutput } from 'constants/typechain/Nft_resolver';
 import { useAssociatedAddressesForContractQuery } from 'graphql/hooks/useAssociatedAddressesForContractQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { isNullOrEmpty, sameAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { sameAddress } from 'utils/helpers';
 
 import AssociatedProfile from './AssociatedProfile';
 import SettingsForm from './SettingsForm';
@@ -143,7 +144,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
       return (
         <>
           <h2 className='text-4xl tracking-wide font-bold mb-10'>Change Collection</h2>
-           
+
           <p className='mt-2 mb-4 text-[#6F6F6F]'>Enter the new address of the NFT collection you want to display on your profile.</p>
           <SettingsForm submitHandler={async () => {
             setChangeCollection(false);
@@ -162,7 +163,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
       return (
         <>
           <h2 className='text-4xl tracking-wide font-bold mb-10'>Not Authorized</h2>
-           
+
           <p className='mt-2 text-[#6F6F6F]'>It looks like the collection was not deployed by a address associated to your profile.</p>
           <p className='text-[#6F6F6F] mt-3 mb-6'>Please associate the deployer address or try another collection address.</p>
           <Button
@@ -181,7 +182,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         <>
           <h2 className='text-4xl tracking-wide font-bold mb-10'>Confirm Collection</h2>
           <p className='font-mono text-black text-xl break-words mt-2'>{inputVal}</p>
-             
+
           <p className='mt-2 text-[#6F6F6F]'>
             The address you have entered represents
             <span className='text-black font-bold'>
@@ -212,7 +213,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         <>
           <h2 className='text-4xl tracking-wide font-bold mb-10'>Success!</h2>
           <p className='font-mono text-black text-xl break-words mt-2'>{inputVal}</p>
-           
+
           <p className='mt-2 text-[#6F6F6F]'>Your collection will now display on your NFT profile.</p>
           <p className='text-[#6F6F6F] my-6'>You can always change the collection anytime by visiting your profile’s settings.</p>
           <Button
@@ -317,4 +318,3 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
     </>
   );
 }
-  

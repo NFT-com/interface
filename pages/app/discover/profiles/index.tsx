@@ -7,7 +7,8 @@ import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { usePaginator } from 'hooks/usePaginator';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { filterNulls, getPerPage } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
+import { getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import uniqBy from 'lodash/uniqBy';

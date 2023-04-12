@@ -1,3 +1,4 @@
+import ClientOnly from 'components/elements/ClientOnly';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -73,7 +74,9 @@ export function SidebarProfileCard({ profile, onClick, message, showSwitch, open
                   <p className='font-noi-grotesk text-base text-white leading-6 font-medium ml-3 tracking-wide w-full'>{profile?.title}</p>
                   <div className='flex ml-3'>
                     <Wallet size={23} color="#D5D5D5" weight="fill" className='mr-1' />
-                    <p className='font-mono text-base text-[#D5D5D5] leading-6 font-medium tracking-wide w-full'>{shortenAddress(currentAddress, 4)}</p>
+                    <ClientOnly>
+                      <p className='font-mono text-base text-[#D5D5D5] leading-6 font-medium tracking-wide w-full'>{shortenAddress(currentAddress, 4)}</p>
+                    </ClientOnly>
                   </div>
                 </div>
               </div>

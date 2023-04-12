@@ -2,7 +2,7 @@ import Loader from 'components/elements/Loader/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NFTDetailPage } from 'components/modules/NFTDetail/NFTDetailPage';
 import NotFoundPage from 'pages/404';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';

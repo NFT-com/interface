@@ -10,7 +10,7 @@ import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/format';
 import { getAddress } from 'utils/httpHooks';
 
 import MintProfileInputField from './MintProfileInputField';

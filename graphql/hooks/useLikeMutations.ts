@@ -4,6 +4,7 @@ import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
 import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { isClient } from 'utils/ssr';
 
 import * as gtag from 'lib/gtag';
 import { useRouter } from 'next/router';
@@ -77,7 +78,6 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         if (!result) {
           throw Error('SetLike mutation failed.');
         }
-        const isClient = typeof window !== 'undefined';
         const data = isClient ? localStorage.getItem('nonAuthLikeObject') : null;
         const storedLike = data ? JSON.parse(data) : null;
         if (storedLike && result) {

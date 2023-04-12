@@ -7,7 +7,8 @@ import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociatio
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useUpdateHiddenMutation } from 'graphql/hooks/useUpdateHiddenMutation';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
+import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
 

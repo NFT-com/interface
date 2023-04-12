@@ -1,7 +1,7 @@
 import { Maybe } from 'graphql/generated/types';
 import { AlchemyOwnedNFT } from 'types';
 import { getNftsByContractAndOwner } from 'utils/alchemyNFT';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { getAddress } from 'utils/httpHooks';
 
 import { useDefaultChainId } from './useDefaultChainId';

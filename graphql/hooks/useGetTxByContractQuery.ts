@@ -1,7 +1,7 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { GetTxByContract, PageInput } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import useSWR, { mutate } from 'swr';
 import { useNetwork } from 'wagmi';
@@ -35,7 +35,7 @@ export function useGetTxByContractQuery(contractAddress: string, pageInput: Page
     });
     return result;
   });
-  
+
   return {
     data: data?.getTxByContract ?? null,
     loading: data == null,

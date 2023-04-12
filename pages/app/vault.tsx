@@ -3,7 +3,7 @@ import { NullState } from 'components/elements/NullState';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';

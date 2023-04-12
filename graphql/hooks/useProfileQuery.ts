@@ -1,7 +1,8 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileQuery } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
-import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getChainIdString } from 'utils/helpers';
 
 import useSWR, { mutate,SWRConfiguration } from 'swr';
 import { useNetwork } from 'wagmi';
@@ -18,7 +19,7 @@ export function useProfileQuery(
 ): ProfileData {
   const sdk = useGraphQLSDK();
   const { chain } = useNetwork();
-  
+
   const keyString = 'ProfileQuery ' + url + chain?.id;
 
   const { data, error } = useSWR(keyString, async () => {

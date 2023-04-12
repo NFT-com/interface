@@ -5,7 +5,7 @@ import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCou
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
-import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import Link from 'next/link';
 import GK from 'public/Badge_Key.svg?svgr';
@@ -41,7 +41,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
               containerClasses='w-[44px] h-[44px] w-full aspect-square'
               variant={RoundedCornerVariant.Full}
               amount={RoundedCornerAmount.Medium}
-              src={processIPFSURL(profile?.photoURL)}
+              src={profile?.photoURL}
             />
             <div className="flex w-full items-center text-[20px] font-medium md:ml-3 ml-12 font-noi-grotesk my-4">
               <span className='font-dm-mono text-primary-yellow'>/</span>

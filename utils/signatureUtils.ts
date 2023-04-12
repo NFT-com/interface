@@ -1,6 +1,6 @@
 import { AssetClass } from 'graphql/generated/types';
 
-import { isNullOrEmpty } from './helpers';
+import { isNullOrEmpty } from './format';
 
 import {
   defaultAbiCoder,

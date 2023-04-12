@@ -2,7 +2,7 @@ import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Toast from 'components/elements/Toast';
 import { NFTDetailContext } from 'components/modules/NFTDetail/NFTDetailContext';
 import { Nft } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { useContext } from 'react';
@@ -103,4 +103,3 @@ export const NftMemo = (props: NftMemoProps) => {
     </>
   );
 };
-

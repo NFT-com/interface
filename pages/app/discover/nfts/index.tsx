@@ -6,7 +6,8 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { getPerPage, isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
@@ -156,7 +157,7 @@ export default function CollectionsPage() {
                     )}
                     </div>
                   </div>
-                  
+
                   {nftSData && nftSData.length < found && nftSData?.length > 0 &&
                     <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
                       <Button

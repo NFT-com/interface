@@ -6,7 +6,7 @@ import { useUser } from 'hooks/state/useUser';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/format';
 
 import { NotificationItem } from './NotificationItem';
 import { useNotifications } from './useNotifications';
