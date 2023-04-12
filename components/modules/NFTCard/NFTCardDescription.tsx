@@ -132,7 +132,7 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
             : null
           }
         </div>
-        <div className='flex minmd:hidden justify-between mt-4'>
+        <div className='flex minmd:hidden justify-between mt-4 flex-wrap-reverse'>
           {(props?.listings?.length || props?.nft?.listings?.items?.length) && props?.bestListing ?
             <>
               <p className="text-[#B2B2B2] font-normal text-sm mt-1 whitespace-nowrap">
