@@ -16,7 +16,8 @@ type LikeData = {
 type LikeCountProps = {
   count: number;
   isLiked: boolean;
-  mutate: () => void;
+  //used if a mutate is necessary, such as if we're trying to keep nft card and profile like count in sync
+  mutate?: () => void;
   likeData?: LikeData
 }
 
@@ -56,13 +57,13 @@ export default function LikeCount({ count, isLiked, mutate, likeData }: LikeCoun
         await timeout(700);
         setLiked(true);
         setClicked(false);
-        mutate();
+        mutate && mutate();
       } else {
         setLiked(false);
         setLikeCount(likeCount - 1);
         await timeout(700);
         setClicked(false);
-        mutate();
+        mutate && mutate();
       }
     }
   };

@@ -18,6 +18,7 @@ import { NFTCardDescription } from './NFTCardDescription';
 import { NFTCardEditMode } from './NFTCardEditMode';
 import { NFTCardImage } from './NFTCardImage';
 
+import { useRouter } from 'next/router';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftCardProps {
@@ -43,11 +44,18 @@ export function NFTCard(props: NftCardProps) {
   const defaultChainId = useDefaultChainId();
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
-
   const { getByContractAddress } = useSupportedCurrencies();
 
+  const router = useRouter();
+  const { profileURI } = router.query;
+  const processedProfileURI = profileURI?.toString().toLowerCase();
+  const isMatchingCurrentProfilePage = processedProfileURI === props?.nft?.metadata?.name;
+
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nft is passed by setting tokenId to null
-  const { data: nftLikeData, mutate: mutateNftLike } = useNftLikeQuery(props.contractAddr, props.tokenId);
+  
+  //if nft card matches current profile slug, this query is used to keep card and profile like count in sync
+  const { data: nftLikeData, mutate: mutateNftLike } = useNftLikeQuery(isMatchingCurrentProfilePage ? props.contractAddr : null, props.tokenId);
+
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
@@ -60,13 +68,13 @@ export function NFTCard(props: NftCardProps) {
       {props?.visible !== true && props?.visible !== false &&
         <div className='absolute top-4 right-4 z-50'>
           <LikeCount
-            mutate={mutateNftLike}
-            count={nftLikeData?.likeCount}
-            isLiked={nftLikeData?.isLikedBy}
+            count={isMatchingCurrentProfilePage ? nftLikeData?.likeCount : props?.nft?.likeCount ?? nft?.likeCount}
+            isLiked={isMatchingCurrentProfilePage ? nftLikeData?.isLikedBy :props?.nft?.isLikedBy ?? nft?.isLikedBy}
             likeData={{
               id: nft?.id ?? props?.nft?.id,
               type: LikeableType.Nft
             }}
+            mutate={isMatchingCurrentProfilePage && mutateNftLike}
           />
         </div>
       }
