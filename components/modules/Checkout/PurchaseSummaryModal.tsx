@@ -18,7 +18,8 @@ import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import useNFTPurchaseError, { PurchaseErrorResponse } from 'hooks/useNFTPurchaseError';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { Doppler, getEnv } from 'utils/env';
-import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
+import { filterDuplicates, filterNulls, isNullOrEmpty, } from 'utils/format';
+import { sameAddress } from 'utils/helpers';
 import { useBuyNow } from 'utils/marketplaceHelpers';
 import { getErrorText, getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, needsERC20Approvals } from 'utils/marketplaceUtils';
 
@@ -66,7 +67,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const [error, setError] = useState<Maybe<PurchaseErrorResponse['error']>>(null);
   const { saveUserActionForBuyNFTs } = useSaveUserActionForBuyNFTsMutation();
   const { mutatePurchaseActivities } = useContext(NotificationContext);
-  
+
   const { user } = useUser();
   const { profileData } = useProfileQuery(user.currentProfileUrl);
 
@@ -83,18 +84,18 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const {
     mutate: mutatePublicProfileNfts,
   } = useProfileNFTsQuery(profileData?.profile?.id,String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),8);
-  
+
   const {
     mutate: mutateAllOwnerNfts,
   } = useMyNFTsQuery(8, profileData?.profile?.id, '', null, true);
-    
+
   const nftsToBuy = buyNowActive ? toBuyNow : toBuy;
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
 
   const getNeedsApprovals = useCallback(() => {
     return needsERC20Approvals(nftsToBuy);
   }, [nftsToBuy]);
-    
+
   const getTotalPriceUSD = useCallback(() => {
     return getTotalFormattedPriceUSD(nftsToBuy, getByContractAddress);
   }, [nftsToBuy, getByContractAddress]);
@@ -102,7 +103,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const getTotalMarketplaceFees = useCallback(() => {
     return getTotalMarketplaceFeesUSD(nftsToBuy, looksrareProtocolFeeBps, getByContractAddress, hasGk);
   }, [nftsToBuy, looksrareProtocolFeeBps, getByContractAddress, hasGk]);
- 
+
   const getTotalRoyalties = useCallback(() => {
     return getTotalRoyaltiesUSD(nftsToBuy, looksrareProtocolFeeBps, getByContractAddress, nftComRoyalties);
   }, [getByContractAddress, looksrareProtocolFeeBps, nftsToBuy, nftComRoyalties]);

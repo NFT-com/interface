@@ -7,12 +7,13 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { ExternalProtocol } from 'types';
 import { nftcomBuyNow } from 'utils/nativeMarketplaceHelpers';
 
-import { getBaseUrl, isNullOrEmpty } from './helpers';
+import { isNullOrEmpty } from './format';
+import { getBaseUrl } from './helpers';
 import { looksrareBuyNow } from './looksrareHelpers';
 import { seaportBuyNow } from './seaportHelpers';
 import { X2Y2BuyNow } from './X2Y2Helpers';
 
-import { BigNumber, BigNumberish, ContractTransaction, ethers, Signer } from 'ethers';
+import { BigNumber, BigNumberish, ethers, Signer } from 'ethers';
 import { useCallback } from 'react';
 import { useAccount, useBalance } from 'wagmi';
 
@@ -97,7 +98,7 @@ export function useBuyNow(signer: Signer): BuyNowInterface {
   const seaportExchange = useSeaportContract(signer);
   const defaultChainId = useDefaultChainId();
   const { data: ethBalance } = useBalance({ address: currentAddress, watch: true });
-  
+
   const buyNow = useCallback(async (
     executorAddress: string,
     order: StagedPurchase,

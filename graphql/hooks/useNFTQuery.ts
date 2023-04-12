@@ -3,7 +3,8 @@ import { Nft } from 'graphql/generated/types';
 import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { Doppler, getEnv } from 'utils/env';
-import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getChainIdString } from 'utils/helpers';
 
 import { BigNumber, BigNumberish } from 'ethers';
 import { useCallback, useMemo } from 'react';

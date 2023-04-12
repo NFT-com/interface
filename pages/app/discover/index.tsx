@@ -18,7 +18,8 @@ import { usePaginator } from 'hooks/usePaginator';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { DiscoverPageProps } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
-import { collectionCardImages, filterNulls, getPerPage, isNullOrEmpty } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/format';
+import { collectionCardImages, getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { getCollection } from 'lib/contentful/api';

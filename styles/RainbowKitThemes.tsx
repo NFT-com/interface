@@ -1,3 +1,5 @@
+import fonts from 'config/fonts.config';
+
 import {
   darkTheme,
   lightTheme,
@@ -26,7 +28,7 @@ export const rainbowLight = merge(lightTheme(), {
     modalBackground: 'white',
   },
   fonts: {
-    body: 'Noi Grotesk Trial',
+    body: 'var(--noi-grotesk-font)',
   },
   radii: {
     modal: '10px',

@@ -3,7 +3,6 @@ import { Footer } from 'components/elements/Footer/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
-import ProfileSelectModal from 'components/modules/ProfileFactory/ProfileSelectModal';
 import { SearchModal } from 'components/modules/Search/SearchModal';
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useChangeWallet } from 'hooks/state/useChangeWallet';
@@ -23,7 +22,7 @@ type HomeLayoutProps = {
   hideHeader?: boolean;
 };
 
-const DynamicProfileSelectModal = dynamic<React.ComponentProps<typeof ProfileSelectModal>>(() => import('components/modules/ProfileFactory/ProfileSelectModal').then(mod => mod.default));
+const DynamicProfileSelectModal = dynamic(import('components/modules/ProfileFactory/ProfileSelectModal'));
 
 export default function HomeLayout({ children, hideFooter, hideHeader }: HomeLayoutProps) {
   const { setCurrentProfileUrl } = useUser();

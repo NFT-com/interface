@@ -1,5 +1,5 @@
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { Signer } from 'ethers';
 import { useAccount, useSigner } from 'wagmi';

@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import BlurImage from 'components/elements/BlurImage';
 import CustomTooltip from 'components/elements/CustomTooltip';
 import Loader from 'components/elements/Loader/Loader';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
@@ -14,8 +15,9 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useIsOwnerAndSignedIn } from 'hooks/useIsOwnerAndSignedIn';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
-import { getEtherscanLink, isNullOrEmpty, sameAddress, shortenAddress } from 'utils/helpers';
-import { tw } from 'utils/tw';
+import { isNullOrEmpty } from 'utils/format';
+import { getEtherscanLink, sameAddress, shortenAddress } from 'utils/helpers';
+import { cl } from 'utils/tw';
 
 import { ClaimProfileCard } from './ClaimProfileCard';
 import { LinksToSection } from './LinksToSection';
@@ -27,7 +29,6 @@ import { ProfileScrollContextProvider } from './ProfileScrollContext';
 
 import { BigNumber } from 'ethers';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
 import CameraIconEdit from 'public/camera_icon.svg?svgr';
 import { useCallback, useContext, useState } from 'react';
@@ -206,13 +207,13 @@ export function MintedProfile(props: MintedProfileProps) {
             </div>
           </BannerWrapper>
         </div>
-        <div className={tw(
+        <div className={cl(
           'flex-col',
           'max-w-[1400px] min-w-[60%] minxl:w-full',
           isMobile ? 'mx-2' : 'mx-2 minmd:mx-8 minxl:mx-auto',
         )}>
           <div
-            className={tw(
+            className={cl(
               'flex justify-start items-start',
               'flex-col'
             )}
@@ -229,7 +230,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 }}
               >
                 {({ getRootProps, getInputProps }) => (
-                  <div {...getRootProps()} className={tw(
+                  <div {...getRootProps()} className={cl(
                     'relative outline-none',
                     userIsAdmin ? '' : 'cursor-default',
                     'w-[88px] h-[88px] minlg:w-[120px] minlg:h-[120px] minlg:ml-20',
@@ -237,7 +238,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     <input {...getInputProps()} />
                     {saving && <div
                       style={{ zIndex: 102 }}
-                      className={tw(
+                      className={cl(
                         'bg-white/10 mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md',
                         'rounded-full absolute flex ',
                         'items-center justify-center h-full w-full',
@@ -247,7 +248,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     </div>}
 
                     <div
-                      className={tw(
+                      className={cl(
                         'object-center',
                         'h-full w-full group',
                         'shrink-0 aspect-square',
@@ -259,7 +260,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       {editMode && !saving && isOwnerAndSignedIn && <div
                         style={{ zIndex: 102, }}
-                        className={tw(
+                        className={cl(
                           'absolute -top-[5px] -bottom-[5px] -right-[5px] -left-[5px] rounded-full'
                         )}
                       >
@@ -280,7 +281,7 @@ export function MintedProfile(props: MintedProfileProps) {
                         </div>
                       </div>}
 
-                      <Image
+                      <BlurImage
                         src={
                           !isNullOrEmpty(draftProfileImg?.preview)
                             ? draftProfileImg?.preview
@@ -290,11 +291,11 @@ export function MintedProfile(props: MintedProfileProps) {
                               cameraIcon.src)
                         }
                         priority
-                        layout='fill'
+                        fill
                         alt="profilePicture"
                         draggable={false}
-                        className={tw(
-                          'rounded-full',
+                        className={cl(
+                          'rounded-full object-cover',
                         )}
                         style={{ zIndex: 101, overflow: 'hidden' }}
                       />
@@ -309,7 +310,7 @@ export function MintedProfile(props: MintedProfileProps) {
             />
           </div>
           <div
-            className={tw(
+            className={cl(
               'h-full',
               'mt-5 minmd:mt-0',
               'mt-6',
@@ -337,7 +338,7 @@ export function MintedProfile(props: MintedProfileProps) {
                   </div>
                   :
                   <>
-                    <div className={tw(
+                    <div className={cl(
                       'text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col mt-4',
                       addressOwner !== currentAddress ? 'cursor-pointer ' : ''
                     )}

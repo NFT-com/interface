@@ -22,13 +22,14 @@ import { useTabs, useToggle } from 'hooks/utils';
 import { CollectionContextType, CollectionHeaderProps, CollectionProps } from 'types/collection';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { shortenAddress } from 'utils/helpers';
 import { cl, tw } from 'utils/tw';
 
 import { CollectionInfo } from './CollectionInfo';
 
 import { Tab } from '@headlessui/react';
-import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
@@ -36,6 +37,8 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import useSWR from 'swr';
+
+const BlurImage = dynamic(import('components/elements/BlurImage'));
 
 export const collectionPropTypeGuard = (props: CollectionProps): {
   value: string;
@@ -245,10 +248,13 @@ export function Collection(props: CollectionProps) {
 
 export const CollectionBanner: React.FC = () => {
   const { collectionNFTInfo } = useCollectionContext();
+  const imageOverride = collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace('?w=500', '?w=3000') || collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url;
+
   return (
     <div className="mt-20">
       <BannerWrapper
-        imageOverride={collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace('?w=500', '?w=3000') || collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url}
+        loading={Boolean(collectionNFTInfo.loading)}
+        imageOverride={imageOverride}
         isCollection
       />
     </div>
@@ -287,7 +293,7 @@ export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) 
           <div className='flex'>
             {collectionPreferredOwnerData &&
               <div className='relative h-10 w-10 overflow-hidden'>
-                <Image src={processIPFSURL(collectionPreferredOwnerData?.profile?.photoURL) || 'https://cdn.nft.com/profile-image-default.svg'} alt='test' className='rounded-[10px] mr-2 object-cover' fill />
+                <BlurImage src={collectionPreferredOwnerData?.profile?.photoURL || 'https://cdn.nft.com/profile-image-default.svg'} alt='test' className='rounded-[10px] mr-2 object-cover' fill />
               </div>
             }
             <div className={tw(

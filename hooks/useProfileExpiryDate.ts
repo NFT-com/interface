@@ -1,4 +1,4 @@
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useAllContracts } from './contracts/useAllContracts';
 
@@ -8,7 +8,7 @@ import useSWR, { mutate } from 'swr';
 
 export function useProfileExpiryDate(profileURI: string | null) {
   const { nftProfile } = useAllContracts();
-  
+
   const keyString = 'ProfileExpiryDate-' + profileURI;
 
   const { data } = useSWR(keyString, async () => {

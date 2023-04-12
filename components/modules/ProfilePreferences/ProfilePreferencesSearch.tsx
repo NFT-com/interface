@@ -15,7 +15,7 @@ import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
 import { useTotalGKPublicRemaining } from 'hooks/useTotalGKPublicRemaining';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 

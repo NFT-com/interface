@@ -2,7 +2,8 @@ import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe, Nft, PageInfo } from 'graphql/generated/types';
 import { useUser } from 'hooks/state/useUser';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { profileSaveCounter } from 'utils/helpers';
 
 import { useAtom } from 'jotai';
 import { useState } from 'react';
@@ -28,7 +29,7 @@ export function useProfileNFTsQuery(
   const [savedCount,] = useAtom(profileSaveCounter);
   const [loading, setLoading] = useState(false);
   const { currentProfileId } = useUser();
-  
+
   const keyString = 'ProfileNFTsQuery' +
     profileId +
     first +
@@ -36,7 +37,7 @@ export function useProfileNFTsQuery(
     savedCount +
     query +
     currentProfileId;
-  
+
   const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(profileId)) {
       return null;

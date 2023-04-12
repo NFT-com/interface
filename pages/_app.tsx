@@ -2,6 +2,7 @@ import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/css/react-medium-image-zoom-styles.css';
 
+import fonts from 'config/fonts.config';
 import RootProvider from 'context';
 import useAnalyticsOnRouteChange from 'hooks/useAnalyticsOnRouteChange';
 
@@ -34,6 +35,16 @@ export default function MyApp({
 
   return (
     <>
+      <style jsx global>
+        {`
+          :root {
+            --dm-mono-font: ${fonts.dmMono.style.fontFamily};
+            --grotesk-font: ${fonts.grotesk.style.fontFamily};
+            --noi-grotesk-font: ${fonts.noiGrotesk.style.fontFamily};
+            --rubik-font: ${fonts.rubik.style.fontFamily};
+          }
+          `}
+      </style>
       <Head>
         <title>NFT.com</title>
         <script

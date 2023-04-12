@@ -13,7 +13,8 @@ import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMu
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getEtherscanLink, isOfficialCollection,shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { NFTDetailContextProvider } from './NFTDetailContext';
@@ -95,7 +96,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         'flex minmd:items-center w-full mt-8 py-4 px-4 justify-between',
       )}>
         <div className='flex flex-col whitespace-nowrap text-ellipsis overflow-hidden'>
-          <Link href={`/app/collection/${collection?.collection?.contract}`}>
+          <Link href={`/app/collection/${isOfficialCollection(collection?.collection)}`}>
             <div className="text-[18px] font-medium font-noi-grotesk mb-2 tracking-wide text-[#6A6A6A] cursor-pointer">
               {isNullOrEmpty(collectionName) ?
                 (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">

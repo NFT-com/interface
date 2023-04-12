@@ -1,5 +1,5 @@
 import { useDeployedCollectionsQuery } from 'graphql/hooks/useDeployedCollectionsQuery';
-import { filterDuplicates } from 'utils/helpers';
+import { filterDuplicates } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { DeployedCollectionCard } from './DeployedCollectionCard';

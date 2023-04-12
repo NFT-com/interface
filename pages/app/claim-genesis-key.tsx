@@ -8,7 +8,7 @@ import { useGenesisKeyInsiderMerkleCheck } from 'hooks/merkle/useGenesisKeyInsid
 import { useKeyBackground } from 'hooks/state/useKeyBackground';
 import { useInsiderGenesisKeyIDs } from 'hooks/useInsiderGenesisKeyIDs';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { useCallback, useEffect, useState } from 'react';

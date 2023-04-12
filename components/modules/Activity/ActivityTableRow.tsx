@@ -5,7 +5,8 @@ import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata, getNftMetadata } from 'utils/alchemyNFT';
-import { isNullOrEmpty, isObjEmpty, shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty, isObjEmpty } from 'utils/format';
+import { shortenAddress } from 'utils/helpers';
 import { getProtocolDisplayName } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
@@ -52,7 +53,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
           </>
         );
       }
-      
+
       return (
         <>
           <td className="text-body leading-body pr-8 minmd:pr-4" >
@@ -146,7 +147,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
           </>
         );
       }
-      
+
       return (
         <>
           <td className="text-body leading-body pr-8 minmd:pr-4" >
@@ -175,7 +176,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
           </>
         );
       }
-      
+
       return (
         <>
           <td className="text-body leading-body pr-8 minmd:pr-4" >
@@ -204,7 +205,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
     ethPriceUSD,
     getByContractAddress
   ]);
-  
+
   useEffect(() => {
     if(!isObjEmpty(item?.transaction)){
       setType('transaction');

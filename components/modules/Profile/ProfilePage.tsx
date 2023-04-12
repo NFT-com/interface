@@ -1,14 +1,12 @@
-import Loader from 'components/elements/Loader/Loader';
+import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
 import { NullState } from 'components/elements/NullState';
 import { MintedProfile } from 'components/modules/Profile/MintedProfile';
 import { ProfileContextProvider } from 'components/modules/Profile/ProfileContext';
 import { UnmintedOrUnavailableProfile } from 'components/modules/Profile/UnmintedOrUnavailableProfile';
-import MintSuccessModal from 'components/modules/ProfileFactory/MintSuccessModal';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
-import { tw } from 'utils/tw';
 
 import dynamic from 'next/dynamic';
 import { useCallback } from 'react';
@@ -17,12 +15,12 @@ export interface ProfilePageProps {
   uri: string | string[];
 }
 
-const DynamicMintSuccessModal = dynamic<React.ComponentProps<typeof MintSuccessModal>>(() => import('components/modules/ProfileFactory/MintSuccessModal').then(mod => mod.default));
+const DynamicMintSuccessModal = dynamic(import('components/modules/ProfileFactory/MintSuccessModal'));
 
 /**
  * Shows a public profile e.g. nft.com/satoshi
  */
-export function ProfilePage(props: ProfilePageProps) {
+export default function ProfilePage(props: ProfilePageProps) {
   const processedProfileURI = props?.uri?.toString().toLowerCase();
 
   const { profileTokenId, loading: loadingId } = useProfileTokenQuery(
@@ -61,13 +59,7 @@ export function ProfilePage(props: ProfilePageProps) {
         />
       </div>;
     } else if (loadingId || loadingOwner) {
-      return <div className={tw(
-        'text-primary-txt dark:text-primary-txt-dk flex flex-col bg-pagebg',
-        'items-center justify-center h-screen'
-      )}>
-        <div className="mb-2">Loading...</div>
-        <Loader />
-      </div>;
+      return <LoaderPageFallback />;
     } else if (currentURIBlocked || profileTokenId == null) {
       return <UnmintedOrUnavailableProfile
         notAvailable={currentURIBlocked}

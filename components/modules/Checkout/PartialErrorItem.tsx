@@ -1,6 +1,6 @@
 import { NftType } from 'graphql/generated/types';
 import { ExternalProtocol } from 'types';
-import { filterDuplicates } from 'utils/helpers';
+import { filterDuplicates } from 'utils/format';
 import { getProtocolDisplayName } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 

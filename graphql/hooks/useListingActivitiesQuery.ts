@@ -1,6 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ActivityExpiration, ActivityStatus, ActivityType, LooksrareProtocolData, Maybe, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useCallback } from 'react';
 import { mutate } from 'swr';
@@ -20,7 +20,7 @@ export function useListingActivitiesQuery(contract: string, tokenId: string, cha
     contract +
     tokenId +
     owner;
-    
+
   const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(contract) || isNullOrEmpty(tokenId) || isNullOrEmpty(chainId) || isNullOrEmpty(owner)) {
       return [];

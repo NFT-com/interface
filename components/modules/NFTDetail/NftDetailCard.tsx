@@ -1,5 +1,5 @@
 import useCopyClipboard from 'hooks/useCopyClipboard';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 export interface NftDetailCardProps {

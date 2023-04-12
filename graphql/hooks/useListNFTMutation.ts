@@ -5,7 +5,7 @@ import { Nft, Signature } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { SeaportOrderComponents } from 'types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { getMarketplaceAssetInput, onchainAuctionTypeToGqlAuctionType, unhashedMakeAsset, unhashedTakeAsset } from 'utils/nativeMarketplaceHelpers';
 import { getOrderHash } from 'utils/signatureUtils';
 import { encodeOrder } from 'utils/X2Y2Helpers';
@@ -45,7 +45,7 @@ export function useListNFTMutations(): ListNftResult {
 
   const defaultChainId = useDefaultChainId();
   const { getByContractAddress } = useSupportedCurrencies();
-  
+
   const listNftSeaport = useCallback(
     async (
       signature: string,

@@ -2,7 +2,6 @@ import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'c
 import { Profile } from 'graphql/generated/types';
 import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Link from 'next/link';
@@ -30,7 +29,7 @@ export function ProfileCard(props: ProfileCardProps) {
         containerClasses='w-full aspect-square'
         variant={RoundedCornerVariant.All}
         amount={RoundedCornerAmount.Medium}
-        src={processIPFSURL(props.profile?.photoURL)}
+        src={props.profile?.photoURL}
       />
       <div className="flex w-full font-noi-grotesk my-4">
         <span className='text-xl font-medium font-dm-mono text-primary-yellow'>/</span>

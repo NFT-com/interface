@@ -3,7 +3,8 @@ import { NftPortTxByContractTransactions } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useERC20Symbol } from 'hooks/useERC20Symbol';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
-import { getStaticAsset, shorten, shortenAddress } from 'utils/helpers';
+import { shorten } from 'utils/format';
+import { getStaticAsset, shortenAddress } from 'utils/helpers';
 import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { tw } from 'utils/tw';
 

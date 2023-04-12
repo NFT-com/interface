@@ -1,4 +1,4 @@
-import { joinClasses } from 'utils/helpers';
+import { joinClasses } from 'utils/format';
 
 import type { ClassValue } from 'clsx';
 import { clsx } from 'clsx';
