@@ -4,7 +4,6 @@ import DefaultLayout from 'components/layouts/DefaultLayout';
 import { ProfileCard } from 'components/modules/DiscoveryCards/ProfileCard';
 import { Profile } from 'graphql/generated/types';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
-import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { usePaginator } from 'hooks/usePaginator';
 import useWindowDimensions from 'hooks/useWindowDimensions';

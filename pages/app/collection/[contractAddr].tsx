@@ -13,7 +13,6 @@ import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { SWRConfig } from 'swr';
 
-
 const Collection = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.Collection), { loading: () => <LoaderPageFallback /> }); // Adds fallback while loading Collection
 const CollectionBanner = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionBanner));
 const CollectionBody = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionBody));

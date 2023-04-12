@@ -162,14 +162,12 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
               <CollectionCard
                 key={index}
                 redirectTo={`/app/collection/${collection?.collectionAddress}/`}
-                contractAddress={collection?.collectionAddress}
-                contract={collection?.collectionAddress}
+                contractAddr={collection?.collectionAddress}
                 collectionId={collection?.id}
-                userName={collection.nfts[0].metadata.name}
-                description={collection.nfts[0].metadata.description}
-                countOfElements={collection.actualNumberOfNFTs}
-                maxSymbolsInString={180}
-                images={collectionCardImages(collection)} />
+                images={collectionCardImages(collection)}
+                contractName={collection.document.contractName}
+                floorPrice={collection.document?.floor}
+              />
             );
           })}
         </div>

@@ -1,7 +1,6 @@
 import LikeCount from 'components/elements/LikeCount';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { LikeableType, Nft, TxActivity } from 'graphql/generated/types';
-import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import {
@@ -18,24 +17,17 @@ import { PartialDeep } from 'type-fest';
 
 export type DetailedNft = Nft & { hidden?: boolean };
 
+interface LikeInfo {
+  isLikedBy: boolean;
+  likeCount: number
+}
 export interface CollectionCardProps {
-  contract?: string
-  title?: string;
-  countOfElements?: number | string;
-  contractAddress?: string;
-  contractName?: string;
-  description?: string;
-  timePeriod?: string;
-  index?: number;
-  userName?: string;
-  userAvatar?: string;
-  isVerified?: boolean;
-  isLeaderBoard?: boolean;
-  redirectTo?: string;
-  floorPrice?: string | number;
+  contractName: string;
+  redirectTo: string;
+  floorPrice: string | number;
+  contractAddr: string;
+  likeInfo: LikeInfo
   totalVolume?: number;
-  maxSymbolsInString?: number;
-  contractAddr?: string;
   listings?: PartialDeep<TxActivity>[]
   nft?: PartialDeep<DetailedNft>;
   tokenId?: string;
@@ -48,7 +40,6 @@ export function CollectionCard(props: CollectionCardProps) {
   const defaultChainId = useDefaultChainId();
 
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings || props?.nft) ? null : props.tokenId);
-  const { data: collectionData, mutate: mutateCollectionData } = useCollectionLikeCountQuery(props?.contractAddr || props?.contractAddress);
 
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
@@ -74,9 +65,8 @@ export function CollectionCard(props: CollectionCardProps) {
       <div className="h-44 relative ">
         <div className='absolute top-4 right-4 z-50'>
           <LikeCount
-            count={collectionData?.collection?.likeCount}
-            isLiked={collectionData?.collection?.isLikedBy}
-            mutate={mutateCollectionData}
+            count={props?.likeInfo?.likeCount}
+            isLiked={props?.likeInfo?.isLikedBy}
             likeData={{
               id: props?.collectionId,
               type: LikeableType.Collection

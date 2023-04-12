@@ -12,28 +12,33 @@ export interface CollectionLikeCountData {
   mutate: () => void;
 }
 
-export function useCollectionLikeCountQuery(contract: string): CollectionLikeCountData {
+export function useCollectionLikeCountQuery(contracts: string[]): CollectionLikeCountData {
   const sdk = useGraphQLSDK();
   const { likeId } = useNonProfileModal();
   const defaultChainId = useDefaultChainId();
   const { currentProfileId } = useUser();
   const { address: currentAccount } = useAccount();
-  const keyString = 'CollectionLikeQuery' + contract + defaultChainId + likeId + currentProfileId + currentAccount;
+  const keyString = 'CollectionLikeQuery' + contracts + defaultChainId + likeId + currentProfileId + currentAccount;
+
+  const inputs = contracts.map((contract) => (
+    {
+      chainId: defaultChainId,
+      contract,
+      network: 'ethereum',
+    }
+  ));
 
   const { data } = useSWR(keyString, async () => {
-    if (!defaultChainId || !contract) {
+    if (!defaultChainId || !contracts) {
       return {};
     }
-    const result = await sdk.CollectionLikeCount({
-      input: {
-        chainId: defaultChainId,
-        contract,
-        network: 'ethereum',
-      },
+    const result = await sdk.CollectionsLikeCount({
+      input: inputs,
       likedById: currentProfileId
     });
-    return result?.collection ?? {};
+    return result?.collections ?? {};
   });
+
   return {
     data: data,
     loading: data == null,
