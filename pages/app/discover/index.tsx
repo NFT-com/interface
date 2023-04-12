@@ -167,6 +167,10 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                 images={collectionCardImages(collection)}
                 contractName={collection.document.contractName}
                 floorPrice={collection.document?.floor}
+                likeInfo={{
+                  likeCount: 0,
+                  isLikedBy: false
+                }}
               />
             );
           })}

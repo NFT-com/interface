@@ -108,7 +108,12 @@ const nextConfig = {
         source: '/app/gallery',
         destination: '/app/collection/official/nftcom-genesis-key',
         permanent: true,
-      }
+      },
+      {
+        source: '/app/discover',
+        destination: '/app/discover/collections',
+        permanent: true,
+      },
     ];
   },
   webpack(config, { dev: isDev, isServer }) {
