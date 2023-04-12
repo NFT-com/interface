@@ -48,6 +48,11 @@ const noiGrotesk = localFont({
       weight: '400',
     },
     {
+      path: '../public/fonts/NoiGroteskTrial/NoiGroteskTrial-RegularItalic.woff2',
+      weight: '400',
+      style: 'italic'
+    },
+    {
       path: '../public/fonts/NoiGroteskTrial/NoiGroteskTrial-Medium.woff2',
       weight: '500',
     },
