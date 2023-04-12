@@ -5,6 +5,7 @@ import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard
 import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { SideNav } from 'components/modules/Search/SideNav';
+import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
 import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollections';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
@@ -49,6 +50,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const prevSearchTerm = usePrevious(searchTerm);
   const addressesList = useRef([]);
   const prevFilters = usePrevious(searchType?.toString() === 'collections' ? collectionsResultsFilterBy : nftsResultsFilterBy);
+  const { data: collectionLikeData } = useCollectionLikeCountQuery(searchType?.toString() === 'collections' ? searchedData.map((c) => c?.document?.contractAddr) : null);
 
   useSWR(collectionsSliderData, async () => {
     searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
@@ -295,6 +297,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                             contractName={item.document.contractName}
                             isOfficial={item.document.isOfficial}
                             images={[item.document.bannerUrl]}
+                            likeInfo={collectionLikeData && collectionLikeData[index]}
                           />
                           :
                           <div key={item} role="status" className="space-y-8 animate-pulse p-1 last:ml-0 minmd:p-0">
