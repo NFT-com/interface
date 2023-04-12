@@ -1,5 +1,4 @@
-import { isBase64 } from 'utils/format';
-import { decodeBase64,defaultBlurPlaceholderUrl, getBase64Image } from 'utils/image';
+import { defaultBlurPlaceholderUrl, getBase64Image } from 'utils/image';
 import { cl } from 'utils/tw';
 
 import { nftComCdnLoader } from 'lib/image/loader';

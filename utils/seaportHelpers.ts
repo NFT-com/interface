@@ -19,7 +19,8 @@ import {
   SeaportOrderParameters
 } from 'types/seaport';
 
-import { filterNulls, getBaseUrl } from './helpers';
+import { filterNulls } from './format';
+import { getBaseUrl } from './helpers';
 import { libraryCall, seaportLib } from './marketplaceHelpers';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';

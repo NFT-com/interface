@@ -12,7 +12,6 @@ import { ExternalProtocol } from 'types';
 import { isNullOrEmpty } from 'utils/format';
 import { getGenesisKeyThumbnail, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
-import { getBase64Image } from 'utils/image';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { filterValidListings } from 'utils/marketplaceUtils';

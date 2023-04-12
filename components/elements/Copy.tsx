@@ -6,7 +6,6 @@ import React from 'react';
 import { CheckCircle } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
-
 type TransactionStatusTextProps = {
   children?: React.ReactNode;
   color?: boolean;
@@ -62,7 +61,6 @@ export default function CopyHelper(props: {
           )
           : (
             <TransactionStatusText>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <CopySvg alt='copy' className={`ml-1 h-[${size}px] w-[${size}px]`} />
             </TransactionStatusText>
           )}

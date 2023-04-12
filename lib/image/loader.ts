@@ -68,6 +68,6 @@ export function nftComCdnLoader({ src, width }: ImageLoaderProps) {
  * @param {ImageLoaderProps} props - An object containing the source URL and the desired width.
  * @returns {string} - The URL for the static NFT image with the given width.
  */
-export const staticNftComCdnLoader = ({ src, width }: ImageLoaderProps) => {
+export const staticNftComCdnLoader = ({ src }: ImageLoaderProps) => {
   return `https://cdn.nft.com/client/${src}`;
 };

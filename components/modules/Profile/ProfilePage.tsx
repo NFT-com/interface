@@ -8,7 +8,6 @@ import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
-import { cl } from 'utils/tw';
 
 import dynamic from 'next/dynamic';
 import { useCallback } from 'react';
