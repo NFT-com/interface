@@ -1,6 +1,7 @@
 import { Collection, Maybe } from 'graphql/generated/types';
 
 import { Doppler, getEnv } from './env';
+import { isNullOrEmpty } from './format';
 
 // TODO: split up ethers, ipfs, etc. utils into dynamically imported crypto util file
 import { getAddress } from '@ethersproject/address';
@@ -51,69 +52,6 @@ export function shortenAddress(address: string, chars?: number): string {
   }
   return `${parsed.substring(0, charsVal + 2)}...${parsed.substring(42 - charsVal)}`;
 }
-
-export function numberWithCommas(x: number) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
-
-export function shorten(address: string | null, mobile: boolean) {
-  if (address == null) {
-    return null;
-  }
-  return mobile
-    ? address.substring(0, 7) + '...' + address.substring(35, 42)
-    : address.substring(0, 10) + '...' + address.substring(32, 42);
-}
-
-export function shortenString(value: string | null | number, limit: number, length: number) {
-  if (value == null) {
-    return null;
-  }
-  return value.toString().length > limit ? value.toString().substring(0, length) + '...' : value;
-}
-
-export function prettify(num: number | string, dec?: number) {
-  if (num === 0 || Number(num) < 0.001) {
-    return '0';
-  }
-
-  if (Number(num) < 0.1) {
-    return Number(num).toFixed(3);
-  }
-
-  let extra = 0;
-  let formatted;
-
-  while (formatted === '0' || formatted == null) {
-    formatted = numberWithCommas(parseFloat(Number(num).toFixed(dec + extra)));
-    extra++;
-    if (extra > 5) {
-      return numberWithCommas(parseFloat(Number(num).toFixed(dec)));
-    }
-  }
-  return formatted;
-}
-export const convertValue = (value: number, first: number, second: number) => {
-  const start = value.toString().slice(0, first);
-  const end = value.toString().slice(first, second);
-  return {
-    start,
-    end
-  };
-};
-export const joinClasses = (...args: string[]) => filterNulls(args).join(' ');
-
-export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == null || val.length === 0;
-
-export const isNull = (val: string | any[] | null | undefined) => val == null;
-
-export const isObjEmpty = (obj: Record<string, unknown> | null | undefined) => obj == null || Object.keys(obj).length === 0;
-
-export const filterNulls = <T>(items: Maybe<T>[]): T[] => items.filter(item => item != null);
-
-export const filterDuplicates = <T>(items: T[], isSame: (first: T, second: T) => boolean): T[] => {
-  return items.filter((item, index) => items.findIndex((element) => isSame(item, element)) === index);
-};
 
 /* ------------ helper function with option of overriding cdn use ----------- */
 export const getStaticAsset = (imagePath: string, cdn = true): string => {
@@ -262,8 +200,18 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boo
   return perPage;
 }
 
+/**
+ * Returns the maximum value from a list of BigNumberish values.
+ * @param {...BigNumberish} args - The list of BigNumberish values to find the maximum from.
+ * @returns The maximum value from the list of BigNumberish values, or null if the list is empty.
+ */
 export function max(...args: BigNumberish[]) {
   if (isNullOrEmpty(args)) {
+    /**
+ * Returns the minimum value from a list of BigNumberish values.
+ * @param {...BigNumberish} args - The list of BigNumberish values to find the minimum from.
+ * @returns The minimum value from the list of BigNumberish values, or null if the list is empty.
+ */
     return null;
   }
   return args.reduce((acc, val) => BigNumber.from(acc ?? Number.MIN_VALUE).gt(val) ? acc : val);
@@ -332,11 +280,6 @@ export const checkImg = (images) => {
   return convertedImages[0];
 };
 
-export const generateRandomPreloader = () => {
-  const index = Math.floor(Math.random() * (4));
-  return index;
-};
-
 /**
  * Determines if the given Collection is an official collection and returns the url slug of the collection name or contract.
  * @param {PartialDeep<Collection>} collection - The Collection item to check.
@@ -346,6 +289,7 @@ export const isOfficialCollection = (collection: PartialDeep<Collection>) => col
   ? `official/${slugify(collection?.name, {
     lower: true,
     remove: /[*+~.()'"!:@]/g,
-    trim: true
+    trim: true,
+    strict: true,
   })}`
   : collection?.contract;

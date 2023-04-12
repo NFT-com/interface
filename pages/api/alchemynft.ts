@@ -1,4 +1,4 @@
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -20,18 +20,18 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (isNullOrEmpty(chainId) || Number.isNaN(Number(chainId)) || !(String(chainId) in ALCHEMY_KEYS)) {
     chainId = '1';
   }
-  
+
   const alchemyAPIKey = ALCHEMY_KEYS[chainId as string];
-  
+
   const apiUrl = `https://eth-${ALCHEMY_PREFIXES[chainId as string]}.alchemyapi.io/nft/v2/${alchemyAPIKey}`;
   const nftApiUrl = `https://eth-${ALCHEMY_PREFIXES[chainId as string]}.alchemyapi.io/nft/v2/${alchemyAPIKey}`;
-  
+
   switch (action) {
   case 'getNftMetadata': {
     const contractAddress = req.query['contractAddress'];
     const tokenId = req.query['tokenId'];
     const tokenType = req.query['tokenType'];
-  
+
     if (
       isNullOrEmpty(contractAddress) ||
         isNullOrEmpty(tokenId) ||
@@ -41,7 +41,7 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(400).json({ message: 'getNftMetadata: Invalid Arguments' });
       return;
     }
-  
+
     const requestUrl = new URL(apiUrl + '/getNFTMetadata/');
     requestUrl.searchParams.set('contractAddress', contractAddress as string);
     requestUrl.searchParams.set('tokenId', tokenId as string);
@@ -66,7 +66,7 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(400).json(JSON.stringify({ message: 'getNfts: Invalid Arguments' }));
       return;
     }
-  
+
     const requestUrl = new URL(apiUrl + '/getNFTs/');
     requestUrl.searchParams.append('contractAddresses[]', contractAddress as string);
     requestUrl.searchParams.set('owner', owner as string);
@@ -91,7 +91,7 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(400).json(JSON.stringify({ message: 'getContractMetadata: Invalid Arguments' }));
       return;
     }
-  
+
     const requestUrl = new URL(apiUrl + '/getContractMetadata/');
     requestUrl.searchParams.append('contractAddress', contractAddress as string);
     try {

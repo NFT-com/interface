@@ -4,7 +4,7 @@ import { LooksrareProtocolData, SeaportProtocolData, X2Y2ProtocolData } from 'gr
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { BigNumber as BN } from 'bignumber.js';
 import { BigNumber } from 'ethers';

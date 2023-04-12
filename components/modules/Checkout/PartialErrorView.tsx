@@ -1,6 +1,5 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { ExternalProtocol } from 'types';
-import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { StagedListing } from './NFTListingsContext';
@@ -26,7 +25,7 @@ export function PartialErrorView({ listing } : PartialErrorViewProps) {
         key={listing.nft?.metadata?.name}>
           <RoundedCornerMedia
             containerClasses='w-[82px] h-[82px] z-10 mr-5'
-            src={processIPFSURL(listing?.nft?.metadata?.imageURL)}
+            src={listing?.nft?.metadata?.imageURL}
             variant={RoundedCornerVariant.Success}
           />
           <div className='w-full'>

@@ -1,7 +1,7 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { MyProfilesQuery, ProfileStatus } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useContext } from 'react';
 import useSWR, { mutate } from 'swr';

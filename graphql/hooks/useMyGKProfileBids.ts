@@ -1,7 +1,7 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Bid, NftType } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useContext } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -34,7 +34,7 @@ export function useMyGKProfileBids(): MyGKProfileBids {
         nftType: NftType.GenesisKeyProfile
       }
     });
-    
+
     return result?.myBids?.items;
   });
   return {

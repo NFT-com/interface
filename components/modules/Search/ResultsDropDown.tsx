@@ -1,6 +1,6 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import { processIPFSURL } from 'utils/helpers';
+import { isOfficialCollection } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
@@ -27,9 +27,10 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
     nfts[0]
   ];
   const { keyword, setDropDownSearchResults } = useSearchModal();
+
   const clickByItemResult = (hit) => {
     if (!hit.document.nftName) {
-      router.push(`/app/collection/${hit.document.contractAddr}/`);
+      router.push(`/app/collection/${isOfficialCollection({ name: hit?.document?.contractName, ...hit.document })}`);
     } else {
       if(hit.document.isProfile){
         router.push('/' + `${hit.document.nftName}`);
@@ -100,7 +101,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                             height={600}
                             containerClasses='w-[100%] h-[100%]'
                             extraClasses='hover:scale-105 transition'
-                            src={name && name[0] === 'collections' ? hit.document.logoUrl : processIPFSURL(hit?.document?.imageURL)}
+                            src={name && name[0] === 'collections' ? hit.document.logoUrl : hit?.document?.imageURL}
                           />
                         </div>
                         : <div className="min-w-[48px] w-[48px] h-[48px] rounded-[50%] mr-2 bg-[#F2F2F2] flex justify-center items-center"><Image alt="preloader" color={'#B2B2B2'} size={32} /></div>}

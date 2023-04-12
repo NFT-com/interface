@@ -1,4 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import ClientOnly from 'components/elements/ClientOnly';
 import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { ProfileLayoutType } from 'graphql/generated/types';
@@ -8,7 +9,8 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { filterNulls, getBaseUrl } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
+import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useProfileContext } from './ProfileContext';
@@ -265,26 +267,28 @@ export function ProfileMenu({ profileURI }: ProfileMenuProps) {
             {editMode && userIsAdmin &&
               <div className='fixed minlg:relative bottom-0 left-0 bg-white minlg:bg-transparent flex w-full py-5 px-3 space-x-4 shadow-[0_-16px_32px_rgba(0,0,0,0.08)] minlg:shadow-none z-50'
               >
-                <Button
-                  label='Save changes'
-                  type={ButtonType.PRIMARY}
-                  size={ButtonSize.LARGE}
-                  extraClasses="whitespace-nowrap"
-                  onClick={() => {
-                    gtag('event', 'Update Profile', {
-                      ethereumAddress: currentAddress,
-                      profile: profileURI,
-                      newProfile: draftProfileImg?.preview ? true : false,
-                      newHeader: draftHeaderImg?.preview ? true : false,
-                      newDescription: draftBio,
-                    });
+                <ClientOnly>
+                  <Button
+                    label='Save changes'
+                    type={ButtonType.PRIMARY}
+                    size={ButtonSize.LARGE}
+                    extraClasses="whitespace-nowrap"
+                    onClick={() => {
+                      gtag('event', 'Update Profile', {
+                        ethereumAddress: currentAddress,
+                        profile: profileURI,
+                        newProfile: draftProfileImg?.preview ? true : false,
+                        newHeader: draftHeaderImg?.preview ? true : false,
+                        newDescription: draftBio,
+                      });
 
-                    saveProfile();
-                    setTimeout(() => {
-                      setEditMode(false);
-                    }, 3000);
-                  }}
-                />
+                      saveProfile();
+                      setTimeout(() => {
+                        setEditMode(false);
+                      }, 3000);
+                    }}
+                  />
+                </ClientOnly>
                 <Button
                   label='Cancel'
                   type={ButtonType.SECONDARY}

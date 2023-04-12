@@ -1,7 +1,7 @@
 import { Erc721 } from 'constants/typechain';
 import { Erc721__factory } from 'constants/typechain/factories/Erc721__factory';
 import { Maybe } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { Provider } from '@ethersproject/providers';
 

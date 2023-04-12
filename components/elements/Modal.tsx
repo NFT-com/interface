@@ -1,6 +1,6 @@
 import Loader from 'components/elements/Loader/Loader';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { Dialog } from '@headlessui/react';

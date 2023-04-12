@@ -6,7 +6,8 @@ import { Nft } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { Doppler, getEnv } from 'utils/env';
-import { getGenesisKeyThumbnail, isNullOrEmpty, sameAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getGenesisKeyThumbnail, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 

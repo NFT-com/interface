@@ -16,7 +16,7 @@ import { useSignNativeOrder } from 'hooks/useSignNativeOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol, Fee, SeaportOrderParameters } from 'types';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/format';
 import { getLowestPriceListing } from 'utils/listingUtils';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelpers';

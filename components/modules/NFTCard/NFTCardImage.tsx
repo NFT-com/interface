@@ -9,8 +9,10 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getGenesisKeyThumbnail, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
+import { getBase64Image } from 'utils/image';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { filterValidListings } from 'utils/marketplaceUtils';
@@ -45,9 +47,9 @@ export function NFTCardImage(props: NFTCardImageProps) {
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
-  const chainId = useDefaultChainId();
 
-  const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
+  const isAddressValid = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId);
+  const processedImageURLs = isAddressValid ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images : [props?.nft?.metadata?.imageURL];
 
@@ -127,7 +129,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
                 <button
                   onClick={async (e) => {
                     e.preventDefault();
-                    const allowance = await props?.currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
+                    const allowance = await props?.currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
                     const protocolAllowance = await props?.currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(props?.bestListing?.order?.protocol as ExternalProtocol));
                     const price = getListingPrice(props?.bestListing);
                     stagePurchase({

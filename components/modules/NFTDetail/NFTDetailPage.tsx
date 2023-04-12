@@ -5,7 +5,7 @@ import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
@@ -38,7 +38,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
 
   const { data: nft, mutate: mutateNft } = useNftQuery(props.collection, props.tokenId);
 
-  const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
+  const { data: collection } = useSWR(() => nft?.contract ? ['ContractMetadata', nft?.contract] : null, async () => {
     return await getContractMetadata(nft?.contract, defaultChainId);
   });
   const { refreshNft } = useRefreshNftMutation();
@@ -169,7 +169,11 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
       <div className="minxl:hidden flex flex-col minxl:flex-row w-full md:mb-6 minxl:max-w-nftcom minlg:max-w-[650px]">
         <DetailTabsComponent />
       </div>
-      <NFTDetailMoreFromCollection hideTokenId={nft?.tokenId} collectionName={nft?.contract?.toLowerCase() === '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'.toLowerCase() ? 'ENS: Ethereum Name Service' : collection?.contractMetadata?.name} contract={nft?.contract} />
+      <NFTDetailMoreFromCollection
+        hideTokenId={nft?.tokenId}
+        collectionName={nft?.contract?.toLowerCase() === '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'.toLowerCase() ? 'ENS: Ethereum Name Service' : collection?.contractMetadata?.name}
+        contract={nft?.contract}
+      />
       <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
         <NFTDetailFeaturedBy contract={nft?.contract} tokenId={nft?.tokenId} />
       </div>

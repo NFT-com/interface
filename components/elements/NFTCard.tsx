@@ -79,15 +79,18 @@ export function NFTCard(props: NFTCardProps) {
   const defaultChainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
   const { data: nft } = useNftQuery(props.contractAddress, (props?.listings || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nfts is passed by setting tokenId to null
-  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contractAddress + props.collectionName, async () => {
-    return props.collectionName || await getContractMetadata(props.contractAddress, defaultChainId);
-  });
+  const { data: collectionMetadata } = useSWR(
+    () => props.contractAddress && props.collectionName ? ['ContractMetadata', props.contractAddress, props.collectionName] : null,
+    async () => {
+      return props.collectionName || await getContractMetadata(props.contractAddress, defaultChainId);
+    });
   const collectionName = collectionMetadata?.contractMetadata?.name;
   const { tileBackground, pink, secondaryIcon } = useThemeColors();
   const { address: currentAddress } = useAccount();
   const [selected, setSelected] = useState(false);
 
-  const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
+  const isAddressValid = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId);
+  const processedImageURLs = isAddressValid ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images : [nft?.metadata?.imageURL];
 
@@ -95,8 +98,8 @@ export function NFTCard(props: NFTCardProps) {
     if (processedImageURLs.length > 2) {
       return [
         RoundedCornerVariant.Left,
-        RoundedCornerVariant.None,
         RoundedCornerVariant.Right,
+        RoundedCornerVariant.None,
       ];
     } else if (processedImageURLs.length === 2) {
       return [

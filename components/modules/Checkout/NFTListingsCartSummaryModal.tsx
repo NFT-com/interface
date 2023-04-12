@@ -9,7 +9,7 @@ import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { useX2Y2Royalties } from 'hooks/useX2Y2Royalties';
 import { ExternalProtocol } from 'types';
-import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
+import { filterDuplicates, isNullOrEmpty } from 'utils/format';
 import { getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD, getProtocolDisplayName } from 'utils/marketplaceUtils';
 
 import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';

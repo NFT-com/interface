@@ -15,7 +15,8 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useIsOwnerAndSignedIn } from 'hooks/useIsOwnerAndSignedIn';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
-import { getEtherscanLink, isNullOrEmpty, sameAddress, shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getEtherscanLink, sameAddress, shortenAddress } from 'utils/helpers';
 import { cl } from 'utils/tw';
 
 import { ClaimProfileCard } from './ClaimProfileCard';

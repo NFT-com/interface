@@ -1,6 +1,6 @@
 import { Maybe } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useState } from 'react';
 import useSWR, { mutate } from 'swr';

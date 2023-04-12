@@ -11,7 +11,8 @@ import useDebounce from 'hooks/useDebounce';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler,getEnv } from 'utils/env';
-import { getPerPage, isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getPerPage, profileSaveCounter } from 'utils/helpers';
 
 import { DetailedNft } from './NftGrid';
 

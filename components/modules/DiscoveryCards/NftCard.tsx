@@ -14,7 +14,8 @@ import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getGenesisKeyThumbnail, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getListingCurrencyAddress, getListingEndDate, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 import { filterValidListings } from 'utils/marketplaceUtils';
@@ -53,23 +54,26 @@ export interface NftCardProps {
 }
 
 export function NftCard(props: NftCardProps) {
+  const ethPriceUSD = useEthPriceUSD();
+  const currentDate = useGetCurrentDate();
+  const defaultChainId = useDefaultChainId();
+  const { address: currentAddress } = useAccount();
+  const { getByContractAddress } = useSupportedCurrencies();
   const { stagePurchase, stageBuyNow, togglePurchaseSummaryModal } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
-  const { address: currentAddress } = useAccount();
-  const defaultChainId = useDefaultChainId();
-  const { getByContractAddress } = useSupportedCurrencies();
+
+  // Queries
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nfts is passed by setting tokenId to null
-  const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
-    [getGenesisKeyThumbnail(props.tokenId)]
-    : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
-  const isOwnedByMe = props?.isOwnedByMe || (nft?.wallet?.address ?? nft?.owner) === currentAddress;
   const { profileData: nftProfileData } = useProfileQuery(!props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts is passed by setting null
-  const chainId = useDefaultChainId();
-  const ethPriceUSD = useEthPriceUSD();
-  const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
+  const isAddressValid = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId);
+  const processedImageURLs = isAddressValid ?
+    [getGenesisKeyThumbnail(props.tokenId)]
+    : props.images.length > 0 ? props.images : [nft?.metadata?.imageURL];
+
+  const isOwnedByMe = props?.isOwnedByMe || (nft?.wallet?.address ?? nft?.owner) === currentAddress;
+  const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, defaultChainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
-  const currentDate = useGetCurrentDate();
 
   const checkEndDate = () => {
     if (bestListing) {
@@ -86,21 +90,21 @@ export function NftCard(props: NftCardProps) {
 
   const getIcon = useCallback((contract: string, currency: string) => {
     switch (currency) {
-      case 'ETH':
-        return <ETH className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="ETH logo redirect" layout="fill" />;
-      case 'USDC':
-        return <USDC className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="USDC logo redirect" layout="fill" />;
-      default:
-        if (!contract) {
-          return <div>{currency}</div>;
-        }
-        // eslint-disable-next-line @next/next/no-img-element
-        return <div className='-ml-1 mr-1 flex items-center'><img
-          className='h-5 w-5 relative shrink-0'
-          src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract)}/logo.png`}
-          alt={currency}
-        />
-        </div>;
+    case 'ETH':
+      return <ETH className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="ETH logo redirect" layout="fill" />;
+    case 'USDC':
+      return <USDC className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="USDC logo redirect" layout="fill" />;
+    default:
+      if (!contract) {
+        return <div>{currency}</div>;
+      }
+      // eslint-disable-next-line @next/next/no-img-element
+      return <div className='-ml-1 mr-1 flex items-center'><img
+        className='h-5 w-5 relative shrink-0'
+        src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract)}/logo.png`}
+        alt={currency}
+      />
+      </div>;
     }
   }, []);
 
@@ -179,7 +183,7 @@ export function NftCard(props: NftCardProps) {
                         onClick={async (e) => {
                           e.preventDefault();
                           const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
-                          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
+                          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
                           const protocolAllowance = await currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(bestListing?.order?.protocol as ExternalProtocol));
                           const price = getListingPrice(bestListing, (bestListing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null);
                           const protocol = bestListing?.order?.protocol as ExternalProtocol;
@@ -209,7 +213,7 @@ export function NftCard(props: NftCardProps) {
                         onClick={async (e) => {
                           e.preventDefault();
                           const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
-                          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
+                          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
                           const protocolAllowance = await currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(bestListing?.order?.protocol as ExternalProtocol));
                           const price = getListingPrice(bestListing);
                           stagePurchase({

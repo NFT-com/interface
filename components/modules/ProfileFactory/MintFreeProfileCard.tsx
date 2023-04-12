@@ -4,7 +4,7 @@ import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { getAddress } from 'utils/httpHooks';
 
 import MintProfileInputField from './MintProfileInputField';

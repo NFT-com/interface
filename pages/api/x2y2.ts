@@ -1,4 +1,4 @@
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -59,11 +59,11 @@ const x2y2Handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const orderId = Number(req.query['orderId']);
       const signMessage = req.query['signMessage'];
       const sign = req.query['sign'];
-  
+
       const headers = new Headers();
       headers.append('X-API-KEY', process.env.X2Y2_API_KEY);
       headers.append('Content-Type', 'application/json');
-  
+
       const raw = JSON.stringify({
         caller,
         op,
@@ -71,13 +71,13 @@ const x2y2Handler = async (req: NextApiRequest, res: NextApiResponse) => {
         sign_message: signMessage,
         sign
       });
-  
+
       const requestOptions = {
         method: 'POST',
         headers: headers,
         body: raw
       };
-  
+
       const result = await fetch('https://api.x2y2.org/api/orders/cancel', requestOptions)
         .then(res => res.json());
       res.status(200).json( result );

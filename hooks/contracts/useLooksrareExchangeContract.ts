@@ -1,6 +1,6 @@
 import { LooksRareExchange, LooksRareExchange__factory } from 'constants/typechain/looksrare';
 import { Maybe } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { Provider } from '@ethersproject/providers';
 import { Addresses, addressesByNetwork } from '@looksrare/sdk';

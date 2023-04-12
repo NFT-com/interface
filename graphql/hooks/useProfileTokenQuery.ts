@@ -1,5 +1,5 @@
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { BigNumber } from '@ethersproject/bignumber';
 import { useState } from 'react';

@@ -2,7 +2,7 @@ import { Modal } from 'components/elements/Modal';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft, TxActivity } from 'graphql/generated/types';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { ListingButtonType } from './ExternalListingTile';
 import ExternalListingTile from './ExternalListingTile';
@@ -32,7 +32,7 @@ export function SelectListingModal(props: SelectListingsModalProps) {
       <div className="flex items-center">
         <RoundedCornerMedia
           containerClasses='w-2/4 aspect-square'
-          src={processIPFSURL(nft?.metadata?.imageURL)}
+          src={nft?.metadata?.imageURL}
           variant={RoundedCornerVariant.None}
         />
         <div className="flex flex-col px-8">

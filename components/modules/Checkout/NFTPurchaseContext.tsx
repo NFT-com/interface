@@ -5,7 +5,8 @@ import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { ExternalProtocol } from 'types';
-import { filterDuplicates, filterNulls, getBaseUrl, isNull, sameAddress } from 'utils/helpers';
+import { filterDuplicates, filterNulls,isNull, } from 'utils/format';
+import { getBaseUrl, sameAddress } from 'utils/helpers';
 import { getLooksrareHex } from 'utils/looksrareHelpers';
 import { getNftcomHex } from 'utils/nativeMarketplaceHelpers';
 import { getSeaportHex } from 'utils/seaportHelpers';
@@ -79,7 +80,7 @@ export function NFTPurchaseContextProvider(
   const [buyNowActive, setBuyNowActive] = useState<boolean>(false);
   const [toBuyNow, setToBuyNow] = useState<Array<StagedPurchase>>([]);
   const [showPurchaseSummaryModal, setShowPurchaseSummaryModal] = useState(false);
-  
+
   const { toggleCartSidebar } = useContext(NFTListingsContext);
 
   const { address: currentAddress } = useAccount();
@@ -143,7 +144,7 @@ export function NFTPurchaseContextProvider(
       }
     });
   }, [fetchAndUpdateSignature, toBuy, currentAddress]);
-  
+
   useEffect(() => {
     toBuyNow.forEach((purchase) => {
       if(purchase?.protocol === ExternalProtocol.Seaport && isNull((purchase?.protocolData as SeaportProtocolData)?.signature)){
@@ -282,7 +283,7 @@ export function NFTPurchaseContextProvider(
         ) :
         null
     ]);
-    
+
     const tx = await aggregator.batchTrade(
       erc20Details,
       tradeDetails,

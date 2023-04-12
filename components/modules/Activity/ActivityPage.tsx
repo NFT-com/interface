@@ -3,7 +3,7 @@ import { useActivitiesForAddressQuery } from 'graphql/hooks/useActivitiesForAddr
 import { useUpdateReadByIdsMutation } from 'graphql/hooks/useUpdateReadByIdsMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { usePaginator } from 'hooks/usePaginator';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/format';
 
 import ActivityTableRow from './ActivityTableRow';
 
@@ -43,7 +43,7 @@ export default function ActivityPages() {
       updateReadbyIds({ ids: [] });
     }
   }, [updateReadbyIds, currentAddress, activityData]);
-  
+
   useEffect(() => {
     setActivityData([]);
   }, [currentAddress]);
@@ -69,7 +69,7 @@ export default function ActivityPages() {
       }
     }
   }, [lastAddedPage, setTotalCount, activityData, loadedActivitiesNextPage, afterCursor, loadedActivitiesNextPage?.getActivities?.items]);
-  
+
   return (
     <div className='flex flex-col justify-between minlg:pt-28 px-4 font-noi-grotesk'>
       <div className='w-full max-w-nftcom mx-auto relative'>

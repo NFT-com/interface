@@ -1,7 +1,7 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { GetTxByNft, PageInput } from 'graphql/generated/types';
 import { Doppler,getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import useSWR, { mutate } from 'swr';
 import { useNetwork } from 'wagmi';

@@ -1,5 +1,5 @@
 import { Nft, TxActivity } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { NFTCardTrait } from './NFTCard';
 import { NFTCardListingIcons as StaticNFTCardListingIcons } from './NFTCardListingIcons';
@@ -44,7 +44,7 @@ export const NFTCardDescription = (props: {
         </div>)}
     </div>;
   }, [pink, secondaryText]);
-  
+
   return (
     <div className="flex flex-col">
       {props.imageLayout !== 'row' && <span className='text-[#6F6F6F] text-sm pt-[10px]'>{props.collectionName}</span>}
@@ -58,9 +58,9 @@ export const NFTCardDescription = (props: {
           </div>
           <span className="sr-only">Loading...</span>
         </div>)}
-  
+
       {props.imageLayout !== 'row' && (props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
-    
+
       {!isNullOrEmpty(props.description) && (
         <div className='mt-4 text-secondary-txt text-xs minmd:text-sm'>
           {props.description}
