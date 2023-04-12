@@ -22,7 +22,6 @@ type HomeLayoutProps = {
   hideHeader?: boolean;
 };
 
-// const useConnectModal = dynamic(() => import('@rainbow-me/rainbowkit/dist/index').then(mod => mod.useConnectModal));
 const DynamicProfileSelectModal = dynamic(import('components/modules/ProfileFactory/ProfileSelectModal'));
 
 export default function HomeLayout({ children, hideFooter, hideHeader }: HomeLayoutProps) {
