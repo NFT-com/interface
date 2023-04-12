@@ -10,6 +10,7 @@ import * as gtag from 'lib/gtag';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useAccount } from 'wagmi';
 
 export interface LikeMutationResult {
   likeLoading: boolean;
@@ -27,7 +28,7 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
   const { setProfileSelectModalOpen } = useProfileSelectModal();
   const { forceReload } = useNonProfileModal();
   const router = useRouter();
-
+  const { address: currentAddress, isConnected } = useAccount();
   const sdk = useGraphQLSDK();
   const [likeError, setLikeError] = useState<Maybe<string>>(null);
   const [likeLoading, setLikeLoading] = useState(false);
@@ -55,7 +56,7 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         profileName: profileName,
         location: location
       };
-      if (!user.currentProfileUrl && !currentProfileId) {
+      if (!user.currentProfileUrl && !currentProfileId && (!isConnected || !currentAddress)) {
         if(myOwnedProfileTokens && myOwnedProfileTokens.length){
           setProfileSelectModalOpen(true);
         }else{
@@ -98,10 +99,11 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
       } catch (err) {
         setLikeLoading(false);
         setLikeError('SetLike failed. Please try again.');
+        localStorage.removeItem('nonAuthLikeObject');
         return null;
       }
     },
-    [currentProfileId, forceReload, likedId, likedType, myOwnedProfileTokens, profileName, router.pathname, sdk, setLikeData, setProfileSelectModalOpen, user.currentProfileUrl]
+    [currentAddress, currentProfileId, forceReload, isConnected, likedId, likedType, myOwnedProfileTokens, profileName, router.pathname, sdk, setLikeData, setProfileSelectModalOpen, user.currentProfileUrl]
   );
 
   const unsetLike = useCallback(

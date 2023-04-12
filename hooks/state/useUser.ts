@@ -4,6 +4,7 @@ import { isNullOrEmpty } from 'utils/format';
 
 import { useCallback,useEffect, useState } from 'react';
 import useSWR from 'swr';
+import { ConnectorData, useAccount } from 'wagmi';
 
 export interface UserState {
   currentProfileUrl: string
@@ -12,6 +13,7 @@ export interface UserState {
 }
 
 export function useUser() {
+  const { connector: activeConnector } = useAccount();
   const [currentProfileId, setCurrentProfileId] = useState('');
   const { data, mutate } = useSWR('user', {
     fallbackData: {
@@ -89,6 +91,23 @@ export function useUser() {
   useEffect(() => {
     setCurrentProfileId(profileData?.profile?.id ?? '');
   }, [profileData]);
+
+  //resets current profile id on wallet change
+  useEffect(() => {
+    const handleConnectorUpdate = ({ account }: ConnectorData) => {
+      if (account) {
+        setCurrentProfileId('');
+      }
+    };
+
+    if (activeConnector) {
+      activeConnector.on('change', handleConnectorUpdate);
+    }
+
+    return () => {
+      activeConnector && activeConnector.off('change', handleConnectorUpdate);
+    };
+  }, [activeConnector]);
 
   return {
     user: data,

@@ -14,7 +14,6 @@ import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMu
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/format';
 import { getEtherscanLink, isOfficialCollection,shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -43,9 +42,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const defaultChainId = useDefaultChainId();
 
   const { data: collection } = useCollectionQuery({ chainId: String(defaultChainId), contract: props?.nft?.contract });
-  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.nft?.contract, async () => {
-    return await getContractMetadata(props.nft?.contract, defaultChainId);
-  });
+  const { data: collectionMetadata } = useSWR(
+    () => props?.nft?.contract ?
+      ['ContractMetadata', props?.nft?.contract]
+      : null,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async ([url, contract]) => {
+      return await getContractMetadata(contract, defaultChainId);
+    });
 
   const collectionName = collectionMetadata?.contractMetadata?.name || collectionMetadata?.contractMetadata?.openSea?.collectionName;
 
@@ -129,16 +133,15 @@ export const NFTDetail = (props: NFTDetailProps) => {
                       <GK />
                     </div>
                   }
-                  {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-                    <div className='ml-3'>
-                      <LikeCount
-                        onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
-                        mutate={mutateNftLike}
-                        count={nftLikeData?.likeCount}
-                        isLiked={nftLikeData?.isLikedBy}
-                      />
-                    </div>
-                  }
+
+                  <div className='ml-3'>
+                    <LikeCount
+                      onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
+                      mutate={mutateNftLike}
+                      count={nftLikeData?.likeCount}
+                      isLiked={nftLikeData?.isLikedBy}
+                    />
+                  </div>
                 </>
               )
             }

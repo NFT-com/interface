@@ -19,7 +19,6 @@ export const SearchModal = () => {
   return (
     <Modal
       fullModal
-      bgColor='transparent'
       transparentOverlay
       title={''}
       visible={searchModalOpen && screenWidth < 900}
@@ -32,11 +31,11 @@ export const SearchModal = () => {
         'absolute top-0 left-0 min-h-screen overflow-scroll w-screen',
         'bg-[rgba(0,0,0,0.4)] flex items-center justify-center',
         'text-primary-txt',
-        'py-12'
+        'py-12 bg-white'
       )}>
-        {modalType === 'search' && <DynamicCollectionsFiltersContent />}
+        {modalType === 'search' && <DynamicSearchContent />}
         {modalType === 'filters' && <DynamicNFTsFiltersContent />}
-        {modalType === 'collectionFilters' && <DynamicSearchContent />}
+        {modalType === 'collectionFilters' && <DynamicCollectionsFiltersContent />}
       </div>
     </Modal>);
 };

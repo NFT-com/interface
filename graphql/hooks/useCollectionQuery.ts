@@ -5,8 +5,10 @@ import { useUser } from 'hooks/state/useUser';
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
 
+export type CollectionResponse = PartialDeep<CollectionInfo>;
+
 export interface CollectionData {
-  data: PartialDeep<CollectionInfo>;
+  data: CollectionResponse;
   error: any;
   loading: boolean;
   mutate: () => void;

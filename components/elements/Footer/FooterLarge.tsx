@@ -31,6 +31,7 @@ export const FooterLarge = () => {
   const [email, setEmail] = useState<string>('');
   const router = useRouter();
   const location = router && router?.pathname;
+  const isValidEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 
   useEffect(() => {
     AOS.init({
@@ -273,6 +274,7 @@ export const FooterLarge = () => {
                 'shadow-none focus:border-transparent focus:ring-0'
               )} />
               <button
+                disabled={!email.match(isValidEmail)}
                 type="submit"
                 onClick={async () => {
                   await subscribe(email)
