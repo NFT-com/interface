@@ -34,9 +34,19 @@ export function useNftQuery(contract: string, id: BigNumberish, listingsOwner?: 
   const stopFetch = [isNullOrEmpty(contract), id == null, getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== defaultChainId].includes(true);
   const { data } = useSWR(!stopFetch ? keyString : null, async () => {
     // All NFT IDs are stored in hex string format.
-    const input = listingsOwner ?
-      { chainId: getChainIdString(defaultChainId) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID), contract, id: BigNumber.from(id).toHexString(), listingsOwner, likedById: currentProfileId } :
-      { chainId: getChainIdString(defaultChainId) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID), contract, id: BigNumber.from(id).toHexString(), likedById: currentProfileId };
+    const defaultInput = {
+      chainId: getChainIdString(defaultChainId) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+      contract,
+      id: BigNumber.from(id).toHexString(),
+      likedById: currentProfileId
+    };
+      
+    const input = listingsOwner
+      ? {
+        ...defaultInput,
+        listingsOwner
+      }
+      : defaultInput;
 
     const result = await sdk.Nft(input);
     return result?.nft;
