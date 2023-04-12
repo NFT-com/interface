@@ -17,7 +17,7 @@ import { AggregatorResponse } from 'types';
 import { AssetStruct, AssetTypeStruct, MarketAsk, OrderStruct } from 'types/nativeMarketplace';
 
 import { isNullOrEmpty } from './format';
-import { getBaseUrl } from './helpers';
+import { getBaseUrl } from './isEnv';
 import { libraryCall, NFTCOMLib } from './marketplaceHelpers';
 import { encodeAssetClass, getAssetBytes, getAssetTypeBytes } from './signatureUtils';
 

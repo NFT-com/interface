@@ -3,7 +3,7 @@
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-import { getBaseUrl } from 'utils/helpers';
+import { getBaseUrl } from 'utils/isEnv';
 import { tw } from 'utils/tw';
 
 import Link from 'next/link';

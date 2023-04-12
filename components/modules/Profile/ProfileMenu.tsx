@@ -10,7 +10,7 @@ import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/format';
-import { getBaseUrl } from 'utils/helpers';
+import { getBaseUrl } from 'utils/isEnv';
 import { tw } from 'utils/tw';
 
 import { useProfileContext } from './ProfileContext';

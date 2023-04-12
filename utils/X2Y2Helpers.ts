@@ -18,7 +18,7 @@ import {
 } from 'types';
 
 import { isNullOrEmpty } from './format';
-import { getBaseUrl } from './helpers';
+import { getBaseUrl } from './isEnv';
 import { libraryCall, X2Y2Lib } from './marketplaceHelpers';
 
 import { OP_CANCEL_OFFER } from '@x2y2-io/sdk';

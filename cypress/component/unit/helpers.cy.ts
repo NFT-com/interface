@@ -1,8 +1,8 @@
 /// <reference types="cypress" />
 
+import { filterNulls, isNullOrEmpty, joinClasses, prettify, shorten, shortenString } from '../../../utils/format';
 import {
   collectionCardImages,
-  filterNulls,
   formatID,
   getAPIURL,
   getChainIdString,
@@ -11,17 +11,12 @@ import {
   getGenesisKeyThumbnail,
   getPerPage,
   isAddress,
-  isNullOrEmpty,
-  joinClasses,
   max,
   min,
-  prettify,
-  processIPFSURL,
   sameAddress,
-  shorten,
   shortenAddress,
-  shortenString
 } from '../../../utils/helpers';
+import { processIPFSURL } from '../../../utils/ipfs';
 
 import { BigNumber } from 'ethers';
 
