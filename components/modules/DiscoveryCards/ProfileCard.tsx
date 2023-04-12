@@ -1,6 +1,7 @@
 import LikeCount from 'components/elements/LikeCount';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { LikeableType, Profile } from 'graphql/generated/types';
+import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
 import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
@@ -28,6 +29,8 @@ export function ProfileCard(props: ProfileCardProps) {
     [props?.profile?.id],
     defaultChainId
   );
+
+  const { profileData: profileLikeData } = useProfileLikeQuery(props?.profile?.url);
 
   if(isLeaderBoard){
     return (
@@ -68,8 +71,8 @@ export function ProfileCard(props: ProfileCardProps) {
         <div className="bg-black h-[99px] relative">
           <div className='absolute top-4 right-4 z-50'>
             <LikeCount
-              count={props?.profile?.likeCount}
-              isLiked={props?.profile?.isLikedBy}
+              count={profileLikeData?.profile?.likeCount || 0}
+              isLiked={profileLikeData?.profile?.isLikedBy || false}
               likeData={{
                 id: props?.id ?? props?.profile?.id,
                 type: LikeableType.Profile,

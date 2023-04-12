@@ -3612,7 +3612,7 @@ export type ProfilesLikeCountQueryVariables = Exact<{
 }>;
 
 
-export type ProfilesLikeCountQuery = { __typename?: 'Query', profiles: Array<{ __typename?: 'Profile', likeCount?: number | null, isLikedByUser?: boolean | null, isLikedBy?: boolean | null }> };
+export type ProfilesLikeCountQuery = { __typename?: 'Query', profiles: Array<{ __typename?: 'Profile', likeCount?: number | null, isLikedBy?: boolean | null }> };
 
 export type ProfilesMintedByGkQueryVariables = Exact<{
   tokenId: Scalars['String'];
@@ -6109,7 +6109,6 @@ export const ProfilesLikeCountDocument = gql`
     query ProfilesLikeCount($input: [ProfilesByURLInput!]!, $likedById: ID!) {
   profiles(input: $input) {
     likeCount
-    isLikedByUser
     isLikedBy(likedById: $likedById)
   }
 }

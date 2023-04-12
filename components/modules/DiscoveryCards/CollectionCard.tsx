@@ -17,7 +17,7 @@ import { PartialDeep } from 'type-fest';
 
 export type DetailedNft = Nft & { hidden?: boolean };
 
-interface LikeInfo {
+export interface LikeInfo {
   isLikedBy: boolean;
   likeCount: number
 }
