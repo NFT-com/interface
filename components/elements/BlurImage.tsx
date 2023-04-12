@@ -1,7 +1,7 @@
-import { defaultBlurPlaceholderUrl } from 'utils/image';
+import { isBase64 } from 'utils/format';
+import { decodeBase64,defaultBlurPlaceholderUrl, getBase64Image } from 'utils/image';
 import { cl } from 'utils/tw';
 
-import fallbackPlaceholder from '/public/assets/fallback-image.svg';
 import { nftComCdnLoader } from 'lib/image/loader';
 import Image, { ImageProps } from 'next/image';
 import { useState } from 'react';
@@ -14,21 +14,25 @@ type BlurImageProps = {
 export default function BlurImage({ alt, className, loader, width, height, fill, src, ...props } : BlurImageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const blurLoader = src ? (loader || nftComCdnLoader) : undefined;
-
   const layoutProps = fill ? { fill } : { width, height };
+  // Support base64 encoded images
+  if (src) {
+    src = getBase64Image(src as string);
+  }
+
   return (
     <Image
       alt={alt}
       loader={blurLoader}
       placeholder="blur"
-      src={src ?? fallbackPlaceholder}
+      src={src ?? defaultBlurPlaceholderUrl}
       blurDataURL={defaultBlurPlaceholderUrl}
       className={cl(
         className,
         'duration-500 ease-in-out',
         isLoading
-          ? 'scale-110'
-          : 'scale-100'
+          ? 'blur scale-110 animate-pulse'
+          : 'blur-0 scale-100'
       )}
       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       onLoadingComplete={() => setIsLoading(false)}

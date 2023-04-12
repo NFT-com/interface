@@ -1,3 +1,4 @@
+import { isBase64 } from './format';
 import { isClient } from './ssr';
 
 /**
@@ -36,6 +37,30 @@ export const toBase64 = (str: string) =>
     : window.btoa(str);
 
 /**
+ * Decodes a base64 encoded string to utf-8 format.
+ * @param {string} str - The base64 encoded string to decode.
+ * @returns {string} - The decoded string in utf-8 format.
+ */
+export const decodeBase64 = (str: string) => {
+  if (str.startsWith('data:application/json;base64,')) {
+    const base64Data = str.slice(29);
+    const decodedData = JSON.parse(Buffer.from(base64Data, 'base64').toString('utf-8'));
+    return decodedData;
+  } else {
+    // Normal b64 decode
+    return Buffer.from(str, 'base64').toString('utf-8');
+  }
+};
+
+/**
+ * Takes in a source string and checks if it is a base64 encoded image. If it is, it decodes
+ * the base64 string and returns the image data. If it is not, it returns the original source string.
+ * @param {string} src - the source string to check
+ * @returns {string} - the image data if the source is a base64 encoded image, otherwise the original source string
+ */
+export const getBase64Image = (src: string) => isBase64(src) ? decodeBase64(src)?.image_data : src;
+
+/**
  * The default URL for the blurred image placeholder. It is a base64 encoded SVG image
  * generated from the customFallbackSvg function.
  * @returns {string} - The default URL for the blurred image placeholder.
@@ -44,6 +69,12 @@ export const defaultBlurPlaceholderUrl = `data:image/svg+xml;base64,${toBase64(
   customFallbackSvg(1200, 600)
 )}`;
 
+/**
+ * Converts an image URL to a base64 encoded string.
+ * @param {string} url - The URL of the image to convert.
+ * @returns {Promise<string>} A promise that resolves with the base64 encoded string of the image.
+ * If the conversion fails, the promise is rejected with an error.
+ */
 export function imageUrlToBase64(url) {
   return fetch(url)
     .then(response => response.blob())
@@ -62,4 +93,9 @@ export function imageUrlToBase64(url) {
     });
 }
 
+/**
+ * Converts the given source to a base64 data URL with the "image/svg+xml" MIME type.
+ * @param {any} src - The source to convert to a base64 data URL.
+ * @returns A base64 data URL with the "image/svg+xml" MIME type.
+ */
 export const toBase64DataUrl = (src: any) => `data:image/svg+xml;base64,${toBase64(src)}`;

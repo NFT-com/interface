@@ -2,13 +2,17 @@ import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Copy from 'components/elements/Copy';
 import { Modal } from 'components/elements/Modal';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
-import { getStaticAsset, shorten } from 'utils/helpers';
+import { shorten } from 'utils/format';
 import { tw } from 'utils/tw';
 
+import { staticNftComCdnLoader } from 'lib/image/loader';
+import dynamic from 'next/dynamic';
 import QRCode from 'qrcode.react';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
+
+const BlurImage = dynamic(import('components/elements/BlurImage'));
 
 export interface AddFundsDialogProps {
   currentAddress: string;
@@ -89,8 +93,13 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
     <div className="font-hero-heading1 minlg:mx-[18%] mx-0 minlg:mb-5 mb-0">
       <Button
         icon={!showWyreDisclaimer ?
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={getStaticAsset('public/fiat.svg')} alt='fiat' /> :
+          <BlurImage
+            src={'public/fiat.svg'}
+            alt='fiat'
+            loader={staticNftComCdnLoader}
+            width={64}
+            height={64}
+          /> :
           null
         }
         type={ButtonType.PRIMARY}

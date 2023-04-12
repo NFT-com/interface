@@ -1,6 +1,37 @@
+import { isBase64 } from 'utils/format';
 import { getBaseUrl, processIPFSURL } from 'utils/helpers';
+import { decodeBase64 } from 'utils/image';
 
 import { ImageLoaderProps } from 'next/image';
+
+/**
+ * Generates a srcset for the given image URL using a set of predefined widths.
+ * @param {string} url - The URL of the image to generate the srcset for.
+ * @returns An object containing the src, srcs, and srcset for the image.
+ */
+export function generateSrcSet(url: string) {
+  const widths = [256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840];
+  const encodedUrl = isBase64(url)
+    ? url
+    : `${getBaseUrl(
+      'https://www.nft.com/'
+    )}api/imageFetcher?url=${encodeURIComponent(processIPFSURL(url))}`;
+
+  const srcs = widths.map((width) => {
+    return isBase64(url) ? encodedUrl : `${encodedUrl} ${width}w`;
+  });
+  const srcset = srcs.join(', ');
+  return { src: srcs.at(-1), srcs, srcset };
+}
+
+/**
+ * Generates a random number between 0 and 3 to be used as an index for selecting a preloader.
+ * @returns {number} - A random number between 0 and 3.
+ */
+export const generateRandomPreloader = () => {
+  const index = Math.floor(Math.random() * (4));
+  return index;
+};
 
 /**
  * A function that takes in an object of ImageLoaderProps and returns a URL string with
@@ -25,22 +56,18 @@ export function contentfulLoader({ src, quality, width }: ImageLoaderProps) {
  * @returns {string} - The URL of the image to be loaded.
  */
 export function nftComCdnLoader({ src, width }: ImageLoaderProps) {
-  return `${getBaseUrl(
-    'https://www.nft.com/'
-  )}api/imageFetcher?url=${encodeURIComponent(processIPFSURL(src))}&width=${width || 300}`;
+  const base64 = isBase64(src) ? decodeBase64(src) : false;
+  return base64 ||
+    `${getBaseUrl(
+      'https://www.nft.com/'
+    )}api/imageFetcher?url=${encodeURIComponent(processIPFSURL(src))}&width=${width || 300}`;
 }
 
 /**
- * Generates a srcset for the given image URL using a set of predefined widths.
- * @param {string} url - The URL of the image to generate the srcset for.
- * @returns An object containing the src, srcs, and srcset for the image.
+ * Returns the URL for a static NFT image from the Composable CDN with the given width.
+ * @param {ImageLoaderProps} props - An object containing the source URL and the desired width.
+ * @returns {string} - The URL for the static NFT image with the given width.
  */
-export function generateSrcSet(url: string) {
-  const widths = [256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840];
-  const encodedUrl = encodeURIComponent(processIPFSURL(url));
-  const srcs = widths.map((width) => {
-    return `https://www.nft.com/api/imageFetcher?url=${encodedUrl}&width=${width} ${width}w`;
-  });
-  const srcset = srcs.join(', ');
-  return { src: srcs.at(-1), srcs, srcset };
-}
+export const staticNftComCdnLoader = ({ src, width }: ImageLoaderProps) => {
+  return `https://cdn.nft.com/client/${src}`;
+};

@@ -1,7 +1,6 @@
 import BlurImage from 'components/elements/BlurImage';
 import Loader from 'components/elements/Loader/Loader';
 import { Doppler, getEnvBool } from 'utils/env';
-import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { nftComCdnLoader } from 'lib/image/loader';
@@ -20,13 +19,13 @@ const defaultBanner = getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
   'https://cdn.nft.com/collectionBanner_default.png'
   : 'https://cdn.nft.com/profile-banner-default-logo-key.png';
 
-export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
-  const imageUrl = props.imageOverride || defaultBanner;
+export function BannerWrapper({ children, imageOverride,loading, onMouseEnter, onMouseLeave }: PropsWithChildren<BannerWrapperProps>) {
+  const imageUrl = imageOverride || defaultBanner;
 
   return (
     <div
-      onMouseEnter={props.onMouseEnter}
-      onMouseLeave={props.onMouseLeave}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
         'bg-cover bg-center',
@@ -45,7 +44,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
         quality='100'
         alt='banner'
       />}
-      {props.loading && <div
+      {loading && <div
         style={{ zIndex: 102 }}
         className={tw(
           'absolute flex bg-white/10',
@@ -61,7 +60,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
           maxWidth: '100%'
         }}
       >
-        {props.children}
+        {children}
       </div>
     </div>
   );
