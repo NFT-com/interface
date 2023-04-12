@@ -1,3 +1,6 @@
+const { fontFamily } = require('tailwindcss/defaultTheme');
+
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -121,8 +124,9 @@ module.exports = {
 
       },
       fontFamily: {
-        'noi-grotesk': ['Noi Grotesk Trial', 'Rubik', 'sans-serif'],
-        'dm-mono': ['DM Mono']
+        'dm-mono': ['var(--dm-mono-font)', ...fontFamily.sans],
+        'grotesk': ['var(--grotesk-font)', ...fontFamily.sans],
+        'noi-grotesk': ['var(--noi-grotesk-font)', 'var(--rubik-font)','sans-serif', ...fontFamily.sans],
       },
       fontSize: {
         'copy-size': '0.825rem',
