@@ -353,34 +353,68 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
       });
     });
   }, []);
-  return (
-    <>
-      <NextSeo
-        {...DefaultSEO}
-        title='NFT.com | The Social NFT Marketplace'
-        description='Join NFT.com to display, trade, and engage with your NFTs.'
-        openGraph={{
-          url: 'https://www.nft.com',
-          title: 'NFT.com | The Social NFT Marketplace',
-          description: 'Join NFT.com to display, trade, and engage with your NFTs.',
-          site_name: 'NFT.com',
-        }}
-      />
-      <main id='anim-main-trigger' className='font-noi-grotesk not-italic HomePageContainer'>
-        {/* Block: Intro */}
-        <div id='anim-hero-trigger' className='minlg:h-screen'>
-          <div className='bg-white relative'>
-            {/* Intro Text */}
-            <div id='anim-hero-text' className={tw(
-              'pt-[10rem] pb-[3.75rem] minlg:py-[4vh] pl-[5vw] flex flex-col justify-center items-start',
-              'minlg:w-[55%] minxl:w-[58.5%] minlg:h-screen'
-            )}>
-              <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                'text-[2.5rem] minmd:text-[5.2rem] minlg:text-[3.3rem] minxl:text-[5.2rem] minxxl:text-[6.8rem] leading-[1.5] minmd:leading-[1.15]',
-                'text-black font-normal tracking-tight mb-14'
+  if (getEnvBool(Doppler.NEXT_PUBLIC_HP_V3_ENABLED)) {
+    return (
+      <>
+        <NextSeo
+          {...DefaultSEO}
+          title='NFT.com | The Social NFT Marketplace'
+          description='Join NFT.com to display, trade, and engage with your NFTs.'
+          openGraph={{
+            url: 'https://www.nft.com',
+            title: 'NFT.com | The Social NFT Marketplace',
+            description: 'Join NFT.com to display, trade, and engage with your NFTs.',
+            site_name: 'NFT.com',
+          }}
+        />
+        <main id='anim-main-trigger' className='font-noi-grotesk not-italic HomePageContainer'>
+          {/* Block: Intro */}
+          <HeroSection data={data_v2}/>
+          {/* Block: What you can do */}
+          <WhatWeCanDo/>
+          {/* Block: Marquee */}
+          <DynamicLinks data={data_v2} isVisible={isVisible}/>
+          {/* Block: Discover Collections */}
+          <DiscoverCollections data={data_v2}/>
+          {/* Block: Text/Image */}
+          <SocialSection/>
+          {/* Block: Insights */}
+          <BlogSection data={data_v2}/>
+          {/* Block: Profile */}
+          <BuildProfile data={data_v2}/>
+        </main>
+        {preview && <DynamicPreviewBanner />}
+      </>
+    );
+  }else {
+    return (
+      <>
+        <NextSeo
+          {...DefaultSEO}
+          title='NFT.com | The Social NFT Marketplace'
+          description='Join NFT.com to display, trade, and engage with your NFTs.'
+          openGraph={{
+            url: 'https://www.nft.com',
+            title: 'NFT.com | The Social NFT Marketplace',
+            description: 'Join NFT.com to display, trade, and engage with your NFTs.',
+            site_name: 'NFT.com',
+          }}
+        />
+        <main id='anim-main-trigger' className='font-noi-grotesk not-italic HomePageContainer'>
+          {/* Block: Intro */}
+          <div id='anim-hero-trigger' className='minlg:h-screen'>
+            <div className='bg-white relative'>
+              {/* Intro Text */}
+              <div id='anim-hero-text' className={tw(
+                'pt-[10rem] pb-[3.75rem] minlg:py-[4vh] pl-[5vw] flex flex-col justify-center items-start',
+                'minlg:w-[55%] minxl:w-[58.5%] minlg:h-screen'
               )}>
-                Join Your NFT
-                <span className='inline-block rotate-[40deg]'>
+                <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
+                  'text-[2.5rem] minmd:text-[5.2rem] minlg:text-[3.3rem] minxl:text-[5.2rem] minxxl:text-[6.8rem] leading-[1.5] minmd:leading-[1.15]',
+                  'text-black font-normal tracking-tight mb-14'
+                )}>
+                  Join Your NFT
+                  <span className='inline-block rotate-[40deg]'>
                   <BlurImage
                     className={tw(
                       'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s]',
@@ -394,9 +428,9 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     alt="NFT image"
                   />
                 </span>
-                <br />
-                Community
-                <span className='inline-block rotate-[40deg]'>
+                  <br />
+                  Community
+                  <span className='inline-block rotate-[40deg]'>
                   <BlurImage
                     className={cl(
                       'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
@@ -409,12 +443,12 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     src={data_v2?.heroNfTsCollection?.items[1]?.url}
                     alt="NFT image" />
                 </span>
-                on{' '}
-                <span data-aos="fade-left" data-aos-delay="200"
-                  className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>
+                  on{' '}
+                  <span data-aos="fade-left" data-aos-delay="200"
+                        className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>
                     NFT.com
                 </span>
-              </h2>
+                </h2>
 
                 <a data-aos="zoom-out" data-aos-delay="300" href={data_v2?.heroCta?.link} className={tw(
                   'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
@@ -500,28 +534,28 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
             </div>
           </div>
 
-        {/* Block: NFT profile */}
-        <div id='anim-profile-trigger'>
-          <div id='anim-profile' className={tw(
-            'will-change-transform minlg:px-14 minxxl:px-20 mb-[3.3125rem] minlg:mb-[6.5rem] relative z-[10]',
-          )}>
-            <span role='presentation' id='anim-profile-bg' className='bg-black origin-top-left h-[61.4%] absolute left-0 right-0 top-[-1px]'></span>
-            <span role='presentation' id='anim-profile-shadow-dark' className={tw(
-              'opacity-0 translate-y-1/2 minlg:transform-gpu',
-              'absolute bottom-full left-0 -z-10 bg-img-shadow-dark',
-              'w-full h-[28.75rem] pointer-events-none'
-            )}></span>
-            <div className={tw(
-              'w-full mx-auto pt-10 px-5 minlg:px-9 bg-black', /* pb-[8.5rem] minlg:pb-40 */
-              'minlg:rounded-3xl flow-root relative z-10',
+          {/* Block: NFT profile */}
+          <div id='anim-profile-trigger'>
+            <div id='anim-profile' className={tw(
+              'will-change-transform minlg:px-14 minxxl:px-20 mb-[3.3125rem] minlg:mb-[6.5rem] relative z-[10]',
             )}>
-              <h2 data-aos="fade-up" data-aos-delay="200" id='anim-profile-head' className={tw(
-                'minlg:translate-y-[400px] minlg:transform-gpu',
-                'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
-                'leading-[1.0854] -tracking-[0.03em] font-normal text-white mb-14 minxxl:mb-20'
+              <span role='presentation' id='anim-profile-bg' className='bg-black origin-top-left h-[61.4%] absolute left-0 right-0 top-[-1px]'></span>
+              <span role='presentation' id='anim-profile-shadow-dark' className={tw(
+                'opacity-0 translate-y-1/2 minlg:transform-gpu',
+                'absolute bottom-full left-0 -z-10 bg-img-shadow-dark',
+                'w-full h-[28.75rem] pointer-events-none'
+              )}></span>
+              <div className={tw(
+                'w-full mx-auto pt-10 px-5 minlg:px-9 bg-black', /* pb-[8.5rem] minlg:pb-40 */
+                'minlg:rounded-3xl flow-root relative z-10',
               )}>
-                The Social
-                <span className='inline-block rotate-[40deg]'>
+                <h2 data-aos="fade-up" data-aos-delay="200" id='anim-profile-head' className={tw(
+                  'minlg:translate-y-[400px] minlg:transform-gpu',
+                  'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
+                  'leading-[1.0854] -tracking-[0.03em] font-normal text-white mb-14 minxxl:mb-20'
+                )}>
+                  The Social
+                  <span className='inline-block rotate-[40deg]'>
                   <BlurImage
                     id='anim-profile-ttl-icon'
                     width={120}
@@ -534,7 +568,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     )}
                     src={data_v2?.wycdTitleNfTs?.url} alt="NFT image" />
                 </span>
-                <span className='block transform-gpu bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Marketplace</span></h2>
+                  <span className='block transform-gpu bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Marketplace</span></h2>
 
                 <div id='anim-profile-content' className={tw(
                   'minlg:translate-y-[400px] transform-gpu',
@@ -639,35 +673,35 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                         </Marquee>
                       </div>
 
-                    <div data-aos="fade-left" data-aos-delay="250" className="image-ticker h-16 minxl:h-28 minxxl:h-36">
-                      <Marquee gradient={false} speed={60} loop={0} play={isVisible} className="flex">
-                        {(data_v2?.wycdBlock2Row2NftsCollection?.items as {url: string}[]).map((image, index) =>
-                          <div key={index} className='block relative h-16 w-16 minxl:w-28 minxl:h-28 minxxl:w-36 minxxl:h-36 mx-[10px]'>
-                            <BlurImage fill src={image.url} className='rounded-full w-full' alt="NFT image" />
-                          </div>
-                        )}
-                      </Marquee>
+                      <div data-aos="fade-left" data-aos-delay="250" className="image-ticker h-16 minxl:h-28 minxxl:h-36">
+                        <Marquee gradient={false} speed={60} loop={0} play={isVisible} className="flex">
+                          {(data_v2?.wycdBlock2Row2NftsCollection?.items as {url: string}[]).map((image, index) =>
+                            <div key={index} className='block relative h-16 w-16 minxl:w-28 minxl:h-28 minxxl:w-36 minxxl:h-36 mx-[10px]'>
+                              <BlurImage fill src={image.url} className='rounded-full w-full' alt="NFT image" />
+                            </div>
+                          )}
+                        </Marquee>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Block: Discover */}
-        <div id='anim-discover-trigger' className="px-5 pt-8 minlg:mt-[-200px] minlg:pt-16 minxxl:pt-24 minmd:px-14 minxxl:px-20">
-          <div className='grid minmd:grid-cols-2 items-center mb-12 minmd:mb-[5.5rem]'>
-            <div className='minmd:ml-7 minxl:pr-[24%]'>
-              <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal',
-                'mb-6 minxxl:mb-9'
-              )}>
+          {/* Block: Discover */}
+          <div id='anim-discover-trigger' className="px-5 pt-8 minlg:mt-[-200px] minlg:pt-16 minxxl:pt-24 minmd:px-14 minxxl:px-20">
+            <div className='grid minmd:grid-cols-2 items-center mb-12 minmd:mb-[5.5rem]'>
+              <div className='minmd:ml-7 minxl:pr-[24%]'>
+                <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
+                  'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal',
+                  'mb-6 minxxl:mb-9'
+                )}>
                 <span id='anim-discover-ttl-line-1' data-aos="fade-up" data-aos-delay="200"
-                  className={tw(
-                    'minlg:translate-y-40 transform-gpu relative z-50',
-                    'block bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]'
-                  )}>
+                      className={tw(
+                        'minlg:translate-y-40 transform-gpu relative z-50',
+                        'block bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]'
+                      )}>
                   Discover <br />
                   <span className='inline-block rotate-[40deg]'>
                     <BlurImage
@@ -686,13 +720,13 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   </span>
                   a
                 </span>
-                <span id='anim-discover-ttl-line-2' className='block minlg:translate-y-40 transform-gpu'>New World</span>
-              </h2>
-              <p id='anim-discover-txt' data-aos="fade-up" data-aos-delay="300" className={tw(
-                'minlg:translate-y-40 transform-gpu',
-                'text-[1rem] minlg:text-[1.375rem] minxxl:text-[2rem] leading-[1.455]'
-              )}>{data_v2?.discoverDescription}</p>
-            </div>
+                  <span id='anim-discover-ttl-line-2' className='block minlg:translate-y-40 transform-gpu'>New World</span>
+                </h2>
+                <p id='anim-discover-txt' data-aos="fade-up" data-aos-delay="300" className={tw(
+                  'minlg:translate-y-40 transform-gpu',
+                  'text-[1rem] minlg:text-[1.375rem] minxxl:text-[2rem] leading-[1.455]'
+                )}>{data_v2?.discoverDescription}</p>
+              </div>
 
               <div id='anim-discover-img' data-aos="fade-up" data-aos-delay="400" className={tw(
                 'minlg:translate-y-1/2 transform-gpu',
@@ -738,63 +772,63 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 <p data-aos="fade-up" data-aos-delay="200" className='text-base minlg:text-[1.625rem] minxxl:text-4xl mb-8'>{data_v2?.hiwSubtitle}</p>
               </div>
 
-            <div className='grid minlg:grid-cols-3 minmd:grid-cols-3 minmd:gap-4 minxxl:gap-7 mb-[-7.5rem]'>
-              <div className={tw(
-                'minlg:translate-y-full minlg:opacity-0 transform-gpu',
-                'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
-              )}>
-                <BlurImage
-                  width={500}
-                  height={400}
-                  loader={contentfulLoader}
-                  data-aos="zoom-in"
-                  data-aos-delay="100"
-                  className='w-full bg-white rounded-2xl mb-6'
-                  src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(data_v2?.hiwBlock1Image?.url)}`}
-                  alt="Claim your profile"
-                />
-                <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock1Title}</h3>
-                <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock1Description}</p>
-              </div>
+              <div className='grid minlg:grid-cols-3 minmd:grid-cols-3 minmd:gap-4 minxxl:gap-7 mb-[-7.5rem]'>
+                <div className={tw(
+                  'minlg:translate-y-full minlg:opacity-0 transform-gpu',
+                  'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
+                )}>
+                  <BlurImage
+                    width={500}
+                    height={400}
+                    loader={contentfulLoader}
+                    data-aos="zoom-in"
+                    data-aos-delay="100"
+                    className='w-full bg-white rounded-2xl mb-6'
+                    src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(data_v2?.hiwBlock1Image?.url)}`}
+                    alt="Claim your profile"
+                  />
+                  <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock1Title}</h3>
+                  <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock1Description}</p>
+                </div>
 
-              <div className={tw(
-                'minlg:translate-y-full minlg:opacity-0 transform-gpu',
-                'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
-              )}>
-                <BlurImage
-                  width={500}
-                  height={400}
-                  loader={contentfulLoader}
-                  data-aos="zoom-in"
-                  data-aos-delay="100"
-                  className='w-full bg-white rounded-2xl mb-6'
-                  src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(data_v2?.hiwBlock2Image?.url)}`}
-                  alt="Display your collection"
-                />
-                <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock2Title}</h3>
-                <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock2Description}</p>
-              </div>
+                <div className={tw(
+                  'minlg:translate-y-full minlg:opacity-0 transform-gpu',
+                  'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
+                )}>
+                  <BlurImage
+                    width={500}
+                    height={400}
+                    loader={contentfulLoader}
+                    data-aos="zoom-in"
+                    data-aos-delay="100"
+                    className='w-full bg-white rounded-2xl mb-6'
+                    src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(data_v2?.hiwBlock2Image?.url)}`}
+                    alt="Display your collection"
+                  />
+                  <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock2Title}</h3>
+                  <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock2Description}</p>
+                </div>
 
-              <div className={tw(
-                'minlg:translate-y-full minlg:opacity-0 transform-gpu',
-                'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
-              )}>
-                <BlurImage
-                  width={500}
-                  height={400}
-                  loader={contentfulLoader}
-                  data-aos="zoom-in"
-                  data-aos-delay="100"
-                  className='w-full bg-white rounded-2xl mb-6'
-                  src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(data_v2?.hiwBlock3Image?.url)}`}
-                  alt="Discover your community"
-                />
-                <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock3Title}</h3>
-                <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock3Description}</p>
+                <div className={tw(
+                  'minlg:translate-y-full minlg:opacity-0 transform-gpu',
+                  'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
+                )}>
+                  <BlurImage
+                    width={500}
+                    height={400}
+                    loader={contentfulLoader}
+                    data-aos="zoom-in"
+                    data-aos-delay="100"
+                    className='w-full bg-white rounded-2xl mb-6'
+                    src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(data_v2?.hiwBlock3Image?.url)}`}
+                    alt="Discover your community"
+                  />
+                  <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock3Title}</h3>
+                  <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock3Description}</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
           {/* Block: Leaderboard */}
           <div id='anim-leaderboard' className={tw(
@@ -857,7 +891,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   <path className='anim-corner anim-corner-news-2' d="M193.373 0H111.357C110.624 0 109.967 0.453661 109.708 1.13943L81.9036 74.6122C81.467 75.7659 82.3195 77 83.5531 77H163.326C164.042 77 164.687 76.5669 164.958 75.904L195.006 2.43123C195.48 1.27098 194.627 0 193.373 0Z" fill="white" />
                   <path className='anim-corner anim-corner-news' d="M251.373 57H169.357C168.624 57 167.967 57.4537 167.708 58.1394L139.904 131.612C139.467 132.766 140.319 134 141.553 134H221.326C222.042 134 222.687 133.567 222.958 132.904L253.006 59.4312C253.48 58.271 252.627 57 251.373 57Z" fill="white" />
                 </svg>
-  67
+                67
                 <svg className={tw(
                   'absolute -z-10 top-0 right-0 max-w-[250px] minxl:max-w-none',
                   'translate-x-[20px] -translate-y-[67px]',
@@ -873,23 +907,23 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   <p data-aos="fade-up" data-aos-delay="100" className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>{data_v2?.newsSubtitle}</p>
                 </div>
 
-              <div className='-mx-9 overflow-hidden mb-12'>
-                <div id='anim-news-content' data-aos="fade-left" className='minlg:translate-x-full minlg:transform-gpu'>
-                  <Marquee gradient={false} speed={60} loop={0} play={isVisible} className="flex" style={{ flex: 'flex' }}>
-                    {data_v2?.newsSlidesCollection?.items.map((preview) =>
-                      <Link key={preview.slug} href={`articles/${preview.slug}`} className={tw(
-                        'bg-white flex flex-col h-full rounded-lg md:mb-5 text-black',
-                        'mx-[10px] minlg:mx-4 minxxl:mx-5 cursor-pointer',
-                        'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem] '
-                      )}>
-                        <div className='before:pb-[54.129%] before:block relative overflow-hidden aspect-4/3'>
-                          <BlurImage
-                            fill
-                            className='rounded-t-lg object-cover'
-                            src={preview?.heroImage?.url}
-                            alt={preview.title}
-                          />
-                        </div>
+                <div className='-mx-9 overflow-hidden mb-12'>
+                  <div id='anim-news-content' data-aos="fade-left" className='minlg:translate-x-full minlg:transform-gpu'>
+                    <Marquee gradient={false} speed={60} loop={0} play={isVisible} className="flex" style={{ flex: 'flex' }}>
+                      {data_v2?.newsSlidesCollection?.items.map((preview) =>
+                        <Link key={preview.slug} href={`articles/${preview.slug}`} className={tw(
+                          'bg-white flex flex-col h-full rounded-lg md:mb-5 text-black',
+                          'mx-[10px] minlg:mx-4 minxxl:mx-5 cursor-pointer',
+                          'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem] '
+                        )}>
+                          <div className='before:pb-[54.129%] before:block relative overflow-hidden aspect-4/3'>
+                            <BlurImage
+                              fill
+                              className='rounded-t-lg object-cover'
+                              src={preview?.heroImage?.url}
+                              alt={preview.title}
+                            />
+                          </div>
 
                           <div className='py-5 px-4 minxxl:py-8 minxxl:px-7 flex-grow flex flex-col items-start'>
                             <h3 className={tw(
@@ -935,11 +969,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     'px-2 minlg:px-10 minxxl:px-14 flex items-baseline group', index === 0 ? 'mr-2 minlg:mr-10 minxxl:mr-14': ''
                   )}
                   ><div role='presentation' className={tw(
-                      'mr-2 minxxl:mr-3 skew-x-[-20deg]',
-                      'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                      'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
-                      'bg-[#B2B2B2] rounded-[3px]'
-                    )}></div>
+                    'mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                    'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                    'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
+                    'bg-[#B2B2B2] rounded-[3px]'
+                  )}></div>
 
                     <i className={tw(
                       'animate-text-gadient bg-[length:200%_200%]',
@@ -960,11 +994,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     'px-3 minlg:px-10 minxxl:px-14 flex items-baseline group', index === 0 ? 'mr-2 minlg:mr-10 minxxl:mr-14': ''
                   )}
                   ><div role='presentation' className={tw(
-                      'mr-2 minxxl:mr-3 skew-x-[-20deg]',
-                      'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                      'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
-                      'bg-[#B2B2B2] rounded-[3px]'
-                    )}></div>
+                    'mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                    'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                    'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
+                    'bg-[#B2B2B2] rounded-[3px]'
+                  )}></div>
 
                     <i className={tw(
                       'animate-text-gadient bg-[length:200%_200%] whitespace-nowrap',
@@ -1008,15 +1042,15 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   <path className='anim-corner anim-corner-profile-4' fill='white' d="M 594.4413,0.625 472.60537,0.21093 342.9667,337.51562 c -0.444,1.16 0.40753,2.4004 1.64453,2.4004 h 116.60156 c 0.728,0 1.38053,-0.4509 1.64453,-1.1309 z" />
                 </svg>
 
-              <div className={tw(
-                'minlg:flex justify-between items-end pr-[3%]',
-                'text-[calc(52px+112*(100vw-375px)/1545)] minlg:text-[4.5rem] minxl:text-[calc(52px+112*(100vw-375px)/1545)]'
-              )}>
-                <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                  'text-[1em] text-center minlg:text-left',
-                  'text-black font-normal leading-[1.1] relative',
-                  'mb-14 minlg:mb-0 minlg:pl-8 minxxl:pl-16 tracking-[-3px]'
+                <div className={tw(
+                  'minlg:flex justify-between items-end pr-[3%]',
+                  'text-[calc(52px+112*(100vw-375px)/1545)] minlg:text-[4.5rem] minxl:text-[calc(52px+112*(100vw-375px)/1545)]'
                 )}>
+                  <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
+                    'text-[1em] text-center minlg:text-left',
+                    'text-black font-normal leading-[1.1] relative',
+                    'mb-14 minlg:mb-0 minlg:pl-8 minxxl:pl-16 tracking-[-3px]'
+                  )}>
                   <span id='anim-build-profile-ttl-1' className='minlg:translate-y-[18rem] transform-gpu'>
                     Build
                     <span
@@ -1036,14 +1070,14 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     </span>
                     Your
                   </span>
-                  <span
-                    id='anim-build-profile-ttl-2'
-                    data-aos="fade-up"
-                    data-aos-delay="200"
-                    className={tw(
-                      'block minlg:pl-12 minxl:pl-24 minlg:-mr-24 ',
-                      'minlg:translate-y-[18rem] transform-gpu'
-                    )}>
+                    <span
+                      id='anim-build-profile-ttl-2'
+                      data-aos="fade-up"
+                      data-aos-delay="200"
+                      className={tw(
+                        'block minlg:pl-12 minxl:pl-24 minlg:-mr-24 ',
+                        'minlg:translate-y-[18rem] transform-gpu'
+                      )}>
                     NFT
                     <span className='inline-block rotate-[40deg]'>
                       <BlurImage
@@ -1060,14 +1094,14 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     </span>
                     Profile
                   </span>
-                </h2>
-                <div className="text-center minlg:text-right pb-8 leading-[0]">
-                  <svg role='presentation' className={tw(
-                    'hidden minlg:block mb-[.1em] w-[3.246em] minxxl:h-[.754em]',
-                    '-translate-x-[16%] minxxl:-translate-x-[20%]'
-                  )} viewBox="0 0 397 93" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M1.04904e-05 0.61084L341.924 0.610877C352.896 0.610883 361.792 9.47563 361.792 20.4109V59.0953L384.119 36.7397L396.636 49.1557L352.961 92.8851L309.287 49.1557L321.804 36.7397L344.131 59.0953V20.4109C344.131 19.1958 343.143 18.2109 341.924 18.2109L0 18.2108L1.04904e-05 0.61084Z" fill="black" />
-                  </svg>
+                  </h2>
+                  <div className="text-center minlg:text-right pb-8 leading-[0]">
+                    <svg role='presentation' className={tw(
+                      'hidden minlg:block mb-[.1em] w-[3.246em] minxxl:h-[.754em]',
+                      '-translate-x-[16%] minxxl:-translate-x-[20%]'
+                    )} viewBox="0 0 397 93" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M1.04904e-05 0.61084L341.924 0.610877C352.896 0.610883 361.792 9.47563 361.792 20.4109V59.0953L384.119 36.7397L396.636 49.1557L352.961 92.8851L309.287 49.1557L321.804 36.7397L344.131 59.0953V20.4109C344.131 19.1958 343.143 18.2109 341.924 18.2109L0 18.2108L1.04904e-05 0.61084Z" fill="black" />
+                    </svg>
 
                     <div data-aos="fade-down" data-aos-delay="200">
                       <svg role='presentation' className='minlg:hidden block mb-[1.875rem] mx-auto' width="33" height="96" viewBox="0 0 33 96" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,8 +1,9 @@
+import BlurImage from 'components/elements/BlurImage';
 import { HomePageV2 } from 'types';
-import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Player } from '@lottiefiles/react-lottie-player';
+import { contentfulLoader } from 'lib/image/loader';
 
 export interface HomePageData {
   data?: HomePageV2;
@@ -23,26 +24,34 @@ export function HeroSection({ data }: HomePageData) {
           )}>
             Own your
             <span className='inline-block rotate-[40deg]'>
-              <img
+              <BlurImage
                 className={tw(
                   'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s]',
                   'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
                   'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl'
                 )}
-                src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(data?.heroNfTsCollection?.items[0]?.url)}`}
+                width={120}
+                height={120}
+                loader={contentfulLoader}
+                src={data?.heroNfTsCollection?.items[0]?.url}
                 alt="NFT image"
               />
             </span>
             <br />
             NFT
             <span className='inline-block rotate-[40deg]'>
-              <img className={tw(
-                'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
-                'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
-                'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl',
-              )}
-              src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(data?.heroNfTsCollection?.items[1]?.url)}`}
-              alt="NFT image" />
+              <BlurImage
+                className={tw(
+                  'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
+                  'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
+                  'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl',
+                )}
+                width={120}
+                height={120}
+                loader={contentfulLoader}
+                src={data?.heroNfTsCollection?.items[1]?.url}
+                alt="NFT image"
+              />
             </span>
             <span data-aos="fade-left" data-aos-delay="200"
               className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>
