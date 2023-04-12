@@ -1,6 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
