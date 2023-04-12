@@ -43,7 +43,8 @@ export default function AssociatedProfileSelect({ profileId, associatedContract 
   const [error, setError] = useState<boolean | undefined>();
 
   useEffect(() => {
-    if (collectionQueryData) {
+    console.log({ collectionQueryData, message: 'Collection QUERY DATA'});
+    if (collectionQueryData?.collection) {
       const { collection } = collectionQueryData;
       setSelectedResult({
         id: collection.id,
