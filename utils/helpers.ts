@@ -1,8 +1,9 @@
+import { ETHERSCAN_PREFIXES } from 'constants/misc';
 import { Collection, Maybe } from 'graphql/generated/types';
 
 import { Doppler, getEnv } from './env';
 import { isNullOrEmpty } from './format';
-import { ETHERSCAN_PREFIXES } from 'constants/misc';
+
 // TODO: split up ethers, ipfs, etc. utils into dynamically imported crypto util file
 import { getAddress } from '@ethersproject/address';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
@@ -71,14 +72,6 @@ export const getGenesisKeyThumbnail: (id: BigNumberish) => string = (id: BigNumb
   return 'https://cdn.nft.com/gk-min/' + BigNumber.from(id).toString() + '.jpeg';
 };
 
-
-const ETHERSCAN_PREFIXES = {
-  1: '',
-  3: 'ropsten.',
-  5: 'goerli.',
-  42: 'kovan.',
-};
-
 export function getEtherscanLink(
   chainId: number,
   data: string,
@@ -118,7 +111,7 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boo
       perPage = 2;
     }
   } else if (index === 'discover') {
-/**
+    /**
  * Returns a string representation of the given chain ID.
  * @param {Maybe<number | string>} chainId - The chain ID to convert to a string.
  * @returns {Maybe<string>} - The string representation of the chain ID, or null if the input is null or undefined.
@@ -225,16 +218,6 @@ export const sliceString = (description: string, maxCount: number, isStringCut: 
     newDescription = description;
   }
   return newDescription;
-};
-
-export const checkImg = (images) => {
-  if (!images) return;
-  const convertedImages = images.map(image => {
-    if (image) {
-      return processIPFSURL(image);
-    }
-  }).filter(Boolean);
-  return convertedImages[0];
 };
 
 /**
