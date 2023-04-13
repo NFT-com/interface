@@ -84,7 +84,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         {item.icon && <Image
           width={20}
           height={20}
-          style={{ objectFit: 'contain' , position:'relative', marginRight: 6 }}
+          className='object-contain relative mr-1'
           src={item.icon}
           alt={item.label} />}
         {item.label}
