@@ -1,4 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import { Tabs } from 'components/elements/Tabs';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { filterNulls } from 'utils/format';
 import { tw } from 'utils/tw';
@@ -8,17 +9,11 @@ import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 import { NFTPurchasesContext, StagedPurchase } from './NFTPurchaseContext';
 import { PurchaseSummary } from './PurchaseSummary';
 
-import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { X } from 'phosphor-react';
 import { useContext, useRef, useState } from 'react';
 
 export type CartSidebarTab = 'Buy' | 'Sell';
-
-const cartTabTypes = {
-  0: 'Buy',
-  1: 'Sell'
-};
 
 export interface NFTCartSidebarProps {
   selectedTab: CartSidebarTab;
@@ -50,6 +45,29 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
 
   const initialHeight = stagedNFTs.length < 4 ? 'min-h-fit' : 'min-h-[19rem]';
 
+  const tabs = [
+    {
+      label: 'Buy',
+      labelChild: <span
+        className={tw(
+          'rounded-full h-5 w-5 flex items-center justify-center text-sm ml-2 justify-self-center',
+          props?.selectedTab === 'Buy' ? 'bg-white text-black' : 'bg-[#6F6F6F] text-white'
+        )}>
+        {toBuy.length}
+      </span>
+    },
+    {
+      label: 'Sell',
+      labelChild: <span
+        className={tw(
+          'rounded-full h-5 w-5 flex items-center justify-center text-sm ml-2 justify-self-center',
+          props?.selectedTab === 'Sell' ? 'bg-white text-black' : 'bg-[#6F6F6F] text-white'
+        )}>
+        {toList.length}
+      </span>
+    },
+  ];
+
   return (
     <>
       <div className='fixed inset-0 z-[105] w-screen h-screen backdrop-blur bg-gray-900 bg-opacity-20 '></div>
@@ -61,30 +79,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
           </div>
         </div>
         <div className='w-full px-5'>
-          <Tab.Group onChange={(index) => props.onChangeTab(cartTabTypes[index])} selectedIndex={props.selectedTab === 'Buy' ? 0 : 1}>
-            <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
-              {['Buy', 'Sell'].map((detailTab, index) => (
-                <Tab
-                  key={detailTab}
-                  className={({ selected }) =>
-                    tw(
-                      'flex items-center justify-center w-1/2 rounded-3xl py-2.5 text-[#6F6F6F] font-noi-grotesk text-base font-semibold leading-6',
-                      selected && 'bg-black text-[#F8F8F8]'
-                    )
-                  }
-                >
-                  <span className='font-semibold ml-2'>{cartTabTypes[index]}</span>
-                  <div
-                    className={tw(
-                      'rounded-full h-5 w-5 flex items-center justify-center text-sm ml-2 justify-self-center',
-                      cartTabTypes[index] === props.selectedTab ? 'bg-white text-black' : 'bg-[#6F6F6F] text-white'
-                    )}>
-                    {(cartTabTypes[index] === 'Buy' ? toBuy : toList).length}
-                  </div>
-                </Tab>
-              ))}
-            </Tab.List>
-          </Tab.Group>
+          <Tabs onTabChange={props?.onChangeTab} tabOptions={tabs} defaultTab={props.selectedTab === 'Buy' ? 0 : 1} />
         </div>
         <div className='flex items-center justify-between w-full font-semibold font-noi-grotesk px-5 py-6'>
           <span>{stagedNFTs.length} items</span>
