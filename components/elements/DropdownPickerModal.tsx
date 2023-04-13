@@ -102,7 +102,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
             'h-full',
             'justify-between rounded-xl w-full',
           )}
-          key={props.options[props.selectedIndex].label || props.options[props.selectedIndex].icon}
+          key={`${props.options[props.selectedIndex].label}-${props.selectedIndex}`}
           onClick={() => {
             setExpanded(!expanded);
           }}
