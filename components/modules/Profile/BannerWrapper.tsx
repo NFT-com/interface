@@ -7,6 +7,7 @@ import { nftComCdnLoader } from 'lib/image/loader';
 import { PropsWithChildren } from 'react';
 
 export interface BannerWrapperProps {
+  alt: string;
   imageOverride?: string;
   draft?: boolean;
   loading?: boolean;
@@ -19,7 +20,7 @@ const defaultBanner = getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
   'https://cdn.nft.com/collectionBanner_default.png'
   : 'https://cdn.nft.com/profile-banner-default-logo-key.png';
 
-export function BannerWrapper({ children, imageOverride,loading, onMouseEnter, onMouseLeave }: PropsWithChildren<BannerWrapperProps>) {
+export function BannerWrapper({ alt = 'banner image', children, imageOverride, loading, onMouseEnter, onMouseLeave }: PropsWithChildren<BannerWrapperProps>) {
   const imageUrl = imageOverride || defaultBanner;
 
   return (
@@ -34,6 +35,7 @@ export function BannerWrapper({ children, imageOverride,loading, onMouseEnter, o
     >
       {imageUrl &&
       <BlurImage
+        alt={alt}
         src={imageUrl}
         width={3000}
         loader={nftComCdnLoader}
@@ -41,8 +43,7 @@ export function BannerWrapper({ children, imageOverride,loading, onMouseEnter, o
         className="object-cover"
         fill
         priority
-        quality='100'
-        alt='banner'
+        quality="100"
       />}
       {loading && <div
         style={{ zIndex: 102 }}
