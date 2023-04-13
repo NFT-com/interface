@@ -1,10 +1,11 @@
-query RecentProfiles($input: LatestProfilesInput) {
+query RecentProfiles($input: LatestProfilesInput, $likedById: ID!) {
   latestProfiles(input: $input) {
     items {
       id
       bannerURL
       isGKMinted
       likeCount
+      isLikedBy(likedById: $likedById)
       owner {
         address
       }

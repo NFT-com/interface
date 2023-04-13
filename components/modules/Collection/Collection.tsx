@@ -262,7 +262,7 @@ export const CollectionBanner: React.FC = () => {
 };
 
 export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) => {
-  const { collectionContract, collectionData, mutateCollectionData, collectionName, collectionPreferredOwnerData, setLike, unsetLike } = useCollectionContext();
+  const { collectionContract, collectionData, mutateCollectionData, collectionName, collectionPreferredOwnerData } = useCollectionContext();
   return (
     <>
       <div className='font-noi-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
@@ -281,8 +281,11 @@ export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) 
             <LikeCount
               count={collectionData?.collection?.likeCount}
               isLiked={collectionData?.collection?.isLikedBy}
-              onClick={collectionData?.collection?.isLikedBy ? unsetLike : setLike}
               mutate={mutateCollectionData}
+              likeData={{
+                id: collectionData?.collection?.id,
+                type: LikeableType.Collection
+              }}
             />
           </div>
         </div>
