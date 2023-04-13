@@ -142,7 +142,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
           tabOptions={activityTabs}
           onTabChange={setSelectedTab}
           defaultTab={0}
-          constrainTabs
+          customTabWidth={'w-max'}
         />
       </div>
       {nftData?.length > 0 && selectedTab === 'Sales' &&

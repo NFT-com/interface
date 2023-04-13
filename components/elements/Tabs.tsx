@@ -14,11 +14,11 @@ type TabsProps = {
   tabOptions: Tab[];
   defaultTab?: number;
   onTabChange?: (selectedTab: string) => void;
-  //contrains tab with to max label content
-  constrainTabs?: boolean
+  //set tab width classes
+  customTabWidth?: string
 };
 
-export function Tabs({ tabOptions, defaultTab, onTabChange, constrainTabs }: TabsProps) {
+export function Tabs({ tabOptions, defaultTab, onTabChange, customTabWidth }: TabsProps) {
   const [selectedTab, setSelectedTab] = useTabs(defaultTab ?? 0, tabOptions.reduce((obj, string, index) => (obj[index] = string, obj), {}));
 
   const handleTabChange = useCallback((index: number) => {
@@ -32,13 +32,13 @@ export function Tabs({ tabOptions, defaultTab, onTabChange, constrainTabs }: Tab
     <Tab.Group>
       <Tab.List className={tw(
         'flex space-x-2 bg-[#F6F6F6] rounded-3xl',
-        constrainTabs ? 'w-max' : 'w-full'
+        customTabWidth ?? 'w-full'
       )}>
         {tabOptions.map((tab, index) => (
           <Tab
             key={`tab-${index}`}
             className={tw(
-              constrainTabs ? 'w-max' : 'w-full',
+              'w-full',
               'rounded-3xl py-2.5 md:px-5 px-8 font-noi-grotesk text-[16px] font-medium leading-5 text-[#6F6F6F] flex justify-center',
               selectedTab === index && 'bg-black text-[#F8F8F8]'
             )

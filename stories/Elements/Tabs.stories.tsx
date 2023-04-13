@@ -57,7 +57,12 @@ WithLabelChild.args = {
 
 export const FullWidth = Template.bind({});
 
-export const ConstrainedWidth = Template.bind({});
-ConstrainedWidth.args = {
-  constrainTabs: true
+export const WidthMax = Template.bind({});
+WidthMax.args = {
+  customTabWidth: 'w-max'
+};
+
+export const CustomWidth = Template.bind({});
+CustomWidth.args = {
+  customTabWidth: 'minlg:max-w-md minlg:w-[448px]'
 };

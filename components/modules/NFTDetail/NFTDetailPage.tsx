@@ -98,7 +98,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
             <div className='justify-start'>
               <Tabs
                 tabOptions={tabs}
-                constrainTabs
+                customTabWidth={'w-max'}
               />
             </div>
           </div>
