@@ -1,7 +1,8 @@
 import { CollectionResponse } from 'graphql/hooks/useCollectionQuery';
 import { gql, request } from 'graphql-request';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 
+import { utils } from 'ethers';
 import { ParsedUrlQuery } from 'querystring';
 import { unstable_serialize } from 'swr';
 
@@ -13,6 +14,17 @@ export const getCollectionPage = async (params: ParsedUrlQuery) => {
     network: 'ethereum',
   };
   const input = contract ? { input: { ...baseInput, contract } } : { input: { ...baseInput, slug } };
+  const caseInsensitiveAddr = contract?.toString().toLowerCase();
+
+  if (!utils.isAddress(caseInsensitiveAddr) || !getEnvBool(Doppler.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED)) {
+    return {
+      props: {
+        fallback: {
+          [unstable_serialize(['CollectionQuery', slug, chainId, undefined])]: {}
+        }
+      },
+    };
+  }
 
   const query = gql`
   query Collection($input: CollectionInput!) {
