@@ -247,12 +247,17 @@ export function Collection(props: CollectionProps) {
 }
 
 export const CollectionBanner: React.FC = () => {
-  const { collectionNFTInfo } = useCollectionContext();
-  const imageOverride = collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace('?w=500', '?w=3000') || collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url;
+  const { collectionNFTInfo, collectionData } = useCollectionContext();
+
+  // ! NOTE: Added fallback banner from collectionData, but image might be low res/quality.
+  const imageOverride = !collectionNFTInfo?.error
+    ? (collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace('?w=500', '?w=3000') || collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url)
+    : collectionData?.collection?.bannerUrl;
 
   return (
     <div className="mt-20">
       <BannerWrapper
+        alt={`${collectionData?.collection?.name} Banner Image`}
         loading={Boolean(collectionNFTInfo.loading)}
         imageOverride={imageOverride}
         isCollection
