@@ -1,10 +1,15 @@
 import { DropdownPicker, PickerOption } from 'components/elements/DropdownPicker';
 
+// eslint-disable-next-line no-restricted-imports
+import { MockWagmiDecorator } from '../../.storybook/decorators';
+
 import { Meta } from '@storybook/react';
+import { Wallet } from 'ethers';
 import React from 'react';
+const demoWallet = new Wallet('0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80');
 
 export default {
-  title: 'Components/DropdownPicker',
+  title: 'Elements/DropdownPicker',
   component: DropdownPicker,
   argTypes: {
     selectedIndex: { control: 'number' },
@@ -14,7 +19,7 @@ export default {
     showKeyIcon: { control: 'boolean' },
     v2: { control: 'boolean' },
   },
-  
+  decorators: [MockWagmiDecorator(demoWallet)]
 } as Meta;
 
 const options: Array<PickerOption> = [

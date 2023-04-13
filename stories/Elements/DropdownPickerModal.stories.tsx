@@ -7,13 +7,12 @@ import LayoutIcon3 from 'public/layout-icon-3.svg?svgr';
 import React, { PropsWithChildren } from 'react';
 
 export default {
-  title: 'Components/DropdownPickerModal',
+  title: 'Elements/DropdownPickerModal',
   component: DropdownPickerModal,
   argTypes: {
     options: { control: { disable: true } },
     selectedIndex: { control: { disable: true } },
-  
-  },
+  }
 } as Meta;
 
 const Template = (args: PropsWithChildren<DropdownPickerModalProps>) => (
