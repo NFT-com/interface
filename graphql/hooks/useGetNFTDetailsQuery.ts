@@ -3,41 +3,54 @@ import { NftDetail } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/format';
 
-import useSWR, { mutate } from 'swr';
+import useSWRImmutable, { mutate } from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface NFTDetailsData {
   data: NftDetail;
+  error: Error | undefined;
   loading: boolean;
   mutate: () => void;
 }
 
+/**
+ * A custom React hook that fetches NFT details data from the GraphQL API using the given contract address and token ID.
+ * @param {string} contractAddress - The contract address of the NFT.
+ * @param {string} tokenId - The token ID of the NFT.
+ * @returns {NFTDetailsData} An object containing the NFT details data, error, loading state, and a mutate function to refetch the data.
+ */
 export function useGetNFTDetailsQuery(contractAddress: string, tokenId: string): NFTDetailsData {
   const sdk = useGraphQLSDK();
   const { chain } = useNetwork();
+  const publicId = getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
+  const isEthMainNet = chain?.id === 1 && publicId === '1';
+  const hasMissingArgs = isNullOrEmpty(contractAddress) || isNullOrEmpty(tokenId);
+  const shouldFetch = !hasMissingArgs && !isEthMainNet;
+  const args = {
+    chainId: String(chain?.id || publicId),
+    contractAddress,
+    tokenId
+  };
+  const keyString = () => shouldFetch ? { query: 'GetNFTDetailsQuery ', args } : null;
 
-  const keyString = () => contractAddress && tokenId ? ['GetNFTDetailsQuery ', String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddress, tokenId] : null;
-
-  const { data } = useSWR(keyString, async () => {
-    if(chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') {
-      return null;
-    }
-    if(isNullOrEmpty(contractAddress) || tokenId == null) {
-      return null;
-    }
-
-    const result = await sdk.GetNFTDetails({
-      input: {
+  const { data, isLoading, error } = useSWRImmutable(keyString, async (
+    {
+      args: {
         contractAddress,
         tokenId
       }
-    });
-    return result;
-  });
+    }) => await sdk.GetNFTDetails({
+    input: {
+      contractAddress,
+      tokenId
+    }
+  })
+  );
 
   return {
     data: data?.getNFTDetails ?? null,
-    loading: data == null,
+    error,
+    loading: isLoading,
     mutate: () => {
       mutate(keyString);
     },
