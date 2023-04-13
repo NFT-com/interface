@@ -7,7 +7,6 @@ import { useHasGk } from 'hooks/useHasGk';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { tw } from 'utils/tw';
 
-import { Tab } from '@headlessui/react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
