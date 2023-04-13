@@ -4,9 +4,6 @@ import 'swiper/css';
 import 'swiper/css/scrollbar';
 
 import DefaultSEO from 'config/next-seo.config';
-import BlurImage from 'components/elements/BlurImage';
-import StaticPreviewBanner from 'components/elements/PreviewBanner';
-import HomeLayout from 'components/layouts/HomeLayout';
 import { BlogSection } from 'components/modules/HomePage/BlogSection';
 import { BuildProfile } from 'components/modules/HomePage/BuildProfile';
 import { DiscoverCollections } from 'components/modules/HomePage/DiscoverCollections';
@@ -14,13 +11,12 @@ import { DynamicLinks } from 'components/modules/HomePage/DynamicLinks';
 import { HeroSection } from 'components/modules/HomePage/HeroSection';
 import { SocialSection } from 'components/modules/HomePage/SocialSection';
 import { WhatWeCanDo } from 'components/modules/HomePage/WhatWeCanDo';
-import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/LeaderBoard';
 import contentfulBackupData from 'constants/contentful_backup_data.json';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { HomePageV2 } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getBaseUrl, getStaticAsset } from 'utils/helpers';
-import { cl, tw } from 'utils/tw';
+import { tw } from 'utils/tw';
 
 import { NextPageWithLayout } from './_app';
 
