@@ -161,7 +161,7 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
 /**
  * This context provides state management and helper functions for the NFT listings cart.
  */
-export function NFTListingsContextProvider(
+export default function NFTListingsContextProvider(
   props: PropsWithChildren<any>
 ) {
   const [toList, setToList] = useState<Array<StagedListing>>([]);

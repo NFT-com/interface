@@ -1,8 +1,7 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileQuery } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/format';
-import { getChainIdString } from 'utils/helpers';
+import { getChainIdString, isNullOrEmpty } from 'utils/format';
 
 import useSWR, { mutate,SWRConfiguration } from 'swr';
 import { useNetwork } from 'wagmi';

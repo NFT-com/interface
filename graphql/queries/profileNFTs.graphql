@@ -1,4 +1,4 @@
-mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
+mutation ProfileNFTs($input: UpdateNFTsForProfileInput, $likedById: ID!) {
   updateNFTsForProfile(input: $input) {
     pageInfo {
       firstCursor
@@ -12,6 +12,9 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
       id
       tokenId
       isGKMinted
+      likeCount
+      isLikedByUser
+      isLikedBy(likedById: $likedById)
       type
       collection {
           contract

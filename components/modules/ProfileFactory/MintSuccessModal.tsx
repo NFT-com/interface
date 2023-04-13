@@ -9,9 +9,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { X } from 'phosphor-react';
-import { Fragment } from 'react';
+import { FC, Fragment } from 'react';
 
-export default function MintProfileSuccessModal() {
+const MintProfileSuccessModal: FC = () =>{
   const router = useRouter();
   const { me } = useMeQuery();
   const { mintSuccessModal, setMintSuccessModalOpen } = useMintSuccessModal();
@@ -99,4 +99,6 @@ export default function MintProfileSuccessModal() {
       </Dialog>
     </Transition>
   );
-}
+};
+
+export default MintProfileSuccessModal;

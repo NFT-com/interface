@@ -5,6 +5,7 @@ import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard
 import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { SideNav } from 'components/modules/Search/SideNav';
+import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
 import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollections';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
@@ -49,6 +50,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const prevSearchTerm = usePrevious(searchTerm);
   const addressesList = useRef([]);
   const prevFilters = usePrevious(searchType?.toString() === 'collections' ? collectionsResultsFilterBy : nftsResultsFilterBy);
+  const { data: collectionLikeData } = useCollectionLikeCountQuery(searchType?.toString() === 'collections' ? searchedData.map((c) => c?.document?.contractAddr) : null);
 
   useSWR(collectionsSliderData, async () => {
     searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
@@ -276,7 +278,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 searchType?.toString() === 'collections' ? `minmd:grid gap-3 minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4 ${sideNavOpen ? 'minlg:grid-cols-2 minxl:grid-cols-3' : ''}` : `grid grid-cols-2 ${sideNavOpen ? 'gap-2 minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3  minlg:grid-cols-2  minmd:grid-cols-2' : 'gap-2 minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 '} `,
               )}>
                 {searchedData && searchedData.map((item, index) => {
-                  const collectionImages = nftsForCollections?.filter(i => i.collectionAddress === item.document.contractAddr);
                   return (
                     <div key={index}
                       className={tw(
@@ -288,20 +289,16 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                           ? <CollectionCard
                             key={index}
                             redirectTo={`/app/collection/${item.document?.contractAddr}/`}
-                            contractAddress={item.document?.collectionAddress}
                             collectionId={item?.document?.id}
-                            contract={item.document?.contractAddr}
-                            userName={item.document.contractName}
-                            contractAddr={item.document.contractAddr}
+                            contractAddr={item.document.contractAddr ?? item.document?.collectionAddress}
                             tokenId={item.document.tokenId}
                             floorPrice={item.document?.floor}
                             totalVolume={item.document?.volume}
                             contractName={item.document.contractName}
                             isOfficial={item.document.isOfficial}
                             images={[item.document.bannerUrl]}
-                            countOfElements={collectionImages[0]?.actualNumberOfNFTs}
-                            description={item?.document.description}
-                            maxSymbolsInString={180}/>
+                            likeInfo={collectionLikeData && collectionLikeData[index]}
+                          />
                           :
                           <div key={item} role="status" className="space-y-8 animate-pulse p-1 last:ml-0 minmd:p-0">
                             <div className="flex justify-center items-center bg-gray-300 rounded-[6px] overflow-hidden full-width dark:bg-gray-700">

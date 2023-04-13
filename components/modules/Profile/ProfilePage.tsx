@@ -3,7 +3,6 @@ import { NullState } from 'components/elements/NullState';
 import { MintedProfile } from 'components/modules/Profile/MintedProfile';
 import { ProfileContextProvider } from 'components/modules/Profile/ProfileContext';
 import { UnmintedOrUnavailableProfile } from 'components/modules/Profile/UnmintedOrUnavailableProfile';
-import MintSuccessModal from 'components/modules/ProfileFactory/MintSuccessModal';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
@@ -16,12 +15,12 @@ export interface ProfilePageProps {
   uri: string | string[];
 }
 
-const DynamicMintSuccessModal = dynamic<React.ComponentProps<typeof MintSuccessModal>>(() => import('components/modules/ProfileFactory/MintSuccessModal').then(mod => mod.default));
+const DynamicMintSuccessModal = dynamic(import('components/modules/ProfileFactory/MintSuccessModal'));
 
 /**
  * Shows a public profile e.g. nft.com/satoshi
  */
-export function ProfilePage(props: ProfilePageProps) {
+export default function ProfilePage(props: ProfilePageProps) {
   const processedProfileURI = props?.uri?.toString().toLowerCase();
 
   const { profileTokenId, loading: loadingId } = useProfileTokenQuery(

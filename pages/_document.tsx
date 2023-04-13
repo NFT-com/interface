@@ -96,19 +96,7 @@ class MyDocument extends Document {
           <meta name="msapplication-TileColor" content="#ffffff" />
           <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
           <meta name="theme-color" content="#0C0F17" />
-
           <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link
-            href="https://fonts.googleapis.com/css?family=Rubik:400,500,700,900&display=swap"
-            rel="stylesheet"
-          />
-          <link
-            href="https://fonts.googleapis.com/css?family=DM+Mono:300,400,500&display=swap"
-            rel="stylesheet"
-          />
           <script
             data-partytown-config
             dangerouslySetInnerHTML={{
