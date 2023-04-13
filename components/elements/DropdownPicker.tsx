@@ -73,7 +73,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         style={{ height: activeRowRef.current.clientHeight }}
         className={`flex flex-row w-full pl-2.5 py-3 items-center
         ${props.centeredText && 'justify-center'} 
-        ${ index === optionHoverIndex ? 'text-primary-txt hover:bg-[#FFF4CA]' : 'text-secondary-txt'}`}
+        ${ index === optionHoverIndex ? 'text-primary-txt hover:bg-[#FFF4CA] font-medium' : 'text-secondary-txt'}`}
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
