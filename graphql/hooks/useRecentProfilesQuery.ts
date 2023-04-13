@@ -1,5 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { PageInput, ProfileSortType, RecentProfilesQuery } from 'graphql/generated/types';
+import { useUser } from 'hooks/state/useUser';
 
 import useSWR, { mutate } from 'swr';
 
@@ -14,7 +15,8 @@ export interface RecentProfilesQueryData {
  */
 export function useRecentProfilesQuery(pageInput: PageInput): RecentProfilesQueryData {
   const sdk = useGraphQLSDK();
-  const keyString = 'RecentProfilesQuery ' + JSON.stringify(pageInput);
+  const { currentProfileId } = useUser();
+  const keyString = 'RecentProfilesQuery ' + JSON.stringify(pageInput) + currentProfileId;
 
   const { data } = useSWR(keyString, async () => {
     const result = await sdk.RecentProfiles({
@@ -22,6 +24,7 @@ export function useRecentProfilesQuery(pageInput: PageInput): RecentProfilesQuer
         pageInput,
         sortBy: ProfileSortType.RecentUpdated
       },
+      likedById: currentProfileId
     });
     return result;
   });

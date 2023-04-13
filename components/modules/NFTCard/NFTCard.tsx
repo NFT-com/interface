@@ -2,7 +2,6 @@ import LikeCount from 'components/elements/LikeCount';
 import { DetailedNft } from 'components/modules/DiscoveryCards/CollectionCard';
 import { WETH } from 'constants/tokens';
 import { LikeableType, TxActivity } from 'graphql/generated/types';
-import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -20,6 +19,7 @@ import { NFTCardDescription } from './NFTCardDescription';
 import { NFTCardEditMode } from './NFTCardEditMode';
 import { NFTCardImage } from './NFTCardImage';
 
+import { useRouter } from 'next/router';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftCardProps {
@@ -41,69 +41,87 @@ export interface NftCardProps {
 }
 
 export function NFTCard(props: NftCardProps) {
+  const {
+    name,
+    images,
+    contractAddr,
+    tokenId,
+    redirectTo,
+    listings,
+    nft,
+    isOwnedByMe,
+    visible,
+    onClick,
+    descriptionVisible,
+    preventDefault
+  } = props;
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
-
   const { getByContractAddress } = useSupportedCurrencies();
 
-  const { data: nft } = useNftQuery(props.contractAddr, (props?.listings?.length || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nft is passed by setting tokenId to null
-  const { data: nftLikeData, mutate: mutateNftLike } = useNftLikeQuery(props.contractAddr, props.tokenId);
-  const isAddressValid = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId);
-  const processedImageURLs = isAddressValid ?
-    [getGenesisKeyThumbnail(props.tokenId)]
-    : props.images.length > 0 ? props.images : [nft?.metadata?.imageURL];
-  const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
-  const isOwnedByMe = props?.isOwnedByMe || (props?.nft?.wallet?.address ?? props?.nft?.owner) === currentAddress;
-  const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
+  const router = useRouter();
+  const { profileURI } = router.query;
+  const processedProfileURI = profileURI?.toString().toLowerCase();
+  const isMatchingCurrentProfilePage = processedProfileURI === nft?.metadata?.name;
 
-  const { setLike, unsetLike } = useSetLikeMutation(
-    nft?.id ?? props?.nft?.id,
-    LikeableType.Nft
-  );
+  const { data: nftData } = useNftQuery(contractAddr, (listings?.length || nft) ? null : tokenId); // skip query if listings are passed, or if nft is passed by setting tokenId to null
+  //if nft card matches current profile slug, this query is used to keep card and profile like count in sync
+  const { data: nftLikeData, mutate: mutateNftLike } = useNftLikeQuery(isMatchingCurrentProfilePage ? contractAddr : null, tokenId);
+
+  const isAddressValid = sameAddress(contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(tokenId);
+  const processedImageURLs = isAddressValid ?
+    [getGenesisKeyThumbnail(tokenId)]
+    : images.length > 0 ? images : [nftData?.metadata?.imageURL];
+  const bestListing = getLowestPriceListing(filterValidListings(listings ?? nftData?.listings?.items), ethPriceUSD, chainId);
+  const isOwnedByUser = isOwnedByMe || (nft?.wallet?.address ?? nft?.owner) === currentAddress;
+  const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
 
   return (
     <div className='relative w-full h-full'>
-      {props?.visible !== true && props?.visible !== false &&
+      {visible !== true && visible !== false &&
         <div className='absolute top-4 right-4 z-50'>
           <LikeCount
-            onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
-            mutate={mutateNftLike}
-            count={nftLikeData?.likeCount}
-            isLiked={nftLikeData?.isLikedBy}
+            count={isMatchingCurrentProfilePage ? nftLikeData?.likeCount : nft?.likeCount ?? nftData?.likeCount}
+            isLiked={isMatchingCurrentProfilePage ? nftLikeData?.isLikedBy :nft?.isLikedBy ?? nftData?.isLikedBy}
+            likeData={{
+              id: nftData?.id ?? nft?.id,
+              type: LikeableType.Nft
+            }}
+            mutate={isMatchingCurrentProfilePage && mutateNftLike}
           />
         </div>
       }
 
       <div className={tw(
         'group/ntfCard transition-all cursor-pointer rounded-2xl shadow-xl relative w-full h-full minmd:mb-0 overflow-visible',
-        props.descriptionVisible != false ? '' : 'h-max'
+        descriptionVisible != false ? '' : 'h-max'
       )}>
         <NFTCardEditMode {...props} />
         <a
-          href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'}
+          href={redirectTo && redirectTo !== '' ? redirectTo : '#'}
           onClick={(e) => {
             e.stopPropagation();
-            props.preventDefault && e.preventDefault();
-            gtag('event', `${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
+            preventDefault && e.preventDefault();
+            gtag('event', `${visible ? 'Hide' : 'Show'} Single NFT`, {
               ethereumAddress: currentAddress,
-              title: props?.name,
+              title: name,
               processedImageURLs: processedImageURLs?.[0]
             });
-            props.onClick && props.onClick();
+            onClick && onClick();
           }}
         >
           <div className={tw(
             'relative object-cover w-full h-max flex flex-col',
-            !bestListing && props.descriptionVisible && 'mb-10'
+            !bestListing && descriptionVisible && 'mb-10'
           )}>
-            <NFTCardImage {...props} bestListing={bestListing} nft={nft} isOwnedByMe={isOwnedByMe} currencyData={currencyData} />
-            {props.descriptionVisible != false &&
-              <NFTCardDescription {...props} bestListing={bestListing} nft={nft} currencyData={currencyData} />
+            <NFTCardImage {...props} bestListing={bestListing} nft={nftData} isOwnedByMe={isOwnedByUser} currencyData={currencyData} />
+            {descriptionVisible != false &&
+              <NFTCardDescription {...props} bestListing={bestListing} nft={nftData} currencyData={currencyData} />
             }
-            {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && props?.descriptionVisible !== false && !isOwnedByMe ?
-              <NFTCardButton {...props} bestListing={bestListing} nft={nft} currencyData={currencyData} />
+            {(listings?.length || nftData?.listings?.items?.length) && bestListing && descriptionVisible !== false && !isOwnedByUser ?
+              <NFTCardButton {...props} bestListing={bestListing} nft={nftData} currencyData={currencyData} />
               : null
             }
           </div>
