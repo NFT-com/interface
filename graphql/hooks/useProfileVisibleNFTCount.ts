@@ -1,6 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import useSWR from 'swr';
 
@@ -14,11 +14,11 @@ export function useProfileVisibleNFTCount(
   chainId: Maybe<string>,
 ): ProfileVisibleNFTCountQueryData {
   const sdk = useGraphQLSDK();
-  
+
   const keyString = 'ProfileVisibleNFTCountQuery' +
     JSON.stringify(profileIds) +
     chainId;
-  
+
   const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(profileIds)) {
       return null;

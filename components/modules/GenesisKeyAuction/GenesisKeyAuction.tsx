@@ -1,11 +1,11 @@
-import { LoadedContainer } from 'components/elements/LoadedContainer';
+import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
 import { NetworkErrorTile as StaticNetworkErrorTile } from 'components/elements/NetworkErrorTile';
 import { useKeyBackground } from 'hooks/state/useKeyBackground';
 import { useGenesisKeyPublicSaleData } from 'hooks/useGenesisKeyPublicSaleData';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
 import { useTotalGKPublicRemaining } from 'hooks/useTotalGKPublicRemaining';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { GenesisKeyPublicSale } from './GenesisKeyPublicSale';
@@ -78,13 +78,13 @@ export function GenesisKeyAuction() {
   const [auctionEnded, setAuctionEnded] = useState(
     totalRemaining?.lte(0) ?? false
   );
-  
+
   useEffect(() => {
     setAuctionEnded(totalRemaining?.lte(0) ?? false);
   }, [liveAuctionName, totalRemaining]);
 
   const getAuctionContent = useCallback(() => {
-    if(!currentAddress){
+    if (!currentAddress) {
       return (
         <div className='w-full flex h-full flex-col items-center'>
           <SignedOutView auctionText />
@@ -101,14 +101,14 @@ export function GenesisKeyAuction() {
     if (!auctionEnded && currentAddress) {
       return (
         <div className='w-full flex flex-col h-full items-center'>
-          <GenesisKeyPublicSale currentPrice={currentPrice}/>
+          <GenesisKeyPublicSale currentPrice={currentPrice} />
         </div>
       );
     }
     if (auctionEnded) {
       if (!currentAddress) {
         return <div className='w-full h-full flex flex-col items-center'>
-          <SignedOutView auctionText ended/>
+          <SignedOutView auctionText ended />
         </div>;
       }
       return (
@@ -154,30 +154,30 @@ export function GenesisKeyAuction() {
       }
       >
         {!isMobile &&
-            <div
-              className={tw(
-                'absolute items-center w-full h-full justify-center drop-shadow-md',
-                'overflow-auto z-20 flex justify-center',
-                isNullOrEmpty(keyBackground.img)
-                  ? '' // fall through to splash key behind this component.
-                  // otherwise, fill in the background behind the minted key.
-                  : keyBackground.bg === 'white' ?
-                    'bg-[#C0C0C0]'
-                    : 'bg-black'
-              )}
-            >
-              <video
-                className="h-full"
-                id='keyVideo'
-                src={keyBackground.img}
-                autoPlay
-                muted
-                loop
-              />
-            </div>
+          <div
+            className={tw(
+              'absolute items-center w-full h-full justify-center drop-shadow-md',
+              'overflow-auto z-20 flex justify-center',
+              isNullOrEmpty(keyBackground.img)
+                ? '' // fall through to splash key behind this component.
+                // otherwise, fill in the background behind the minted key.
+                : keyBackground.bg === 'white' ?
+                  'bg-[#C0C0C0]'
+                  : 'bg-black'
+            )}
+          >
+            <video
+              className="h-full"
+              id='keyVideo'
+              src={keyBackground.img}
+              autoPlay
+              muted
+              loop
+            />
+          </div>
         }
         <div
-          className={tw('w-full h-full absolute z-40' )}
+          className={tw('w-full h-full absolute z-40')}
           // eslint-disable-next-line max-len
           style={{
             background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)'

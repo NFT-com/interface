@@ -43,11 +43,20 @@ export const gqlQueries = {
       officialCollections(input: $input) {
         items {
           contract
-          name
+          slug
           chainId
         }
         pageCount
         totalItems
+      }
+    }
+  `,
+  collectionBySlug: gql`
+    query Collection($input: CollectionInput!) {
+      collection(input: $input) {
+        collection {
+          contract
+        }
       }
     }
   `,
@@ -56,6 +65,7 @@ export const gqlQueries = {
       officialCollectionNFTs(input: $input) {
         items {
           tokenId
+          updatedAt
         }
         pageCount
         totalItems

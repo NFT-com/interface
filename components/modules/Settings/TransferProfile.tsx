@@ -16,7 +16,7 @@ type TransferProfileProps = {
   selectedProfile: string
 }
 
-export default function TransferProfile({ selectedProfile }: TransferProfileProps ) {
+export default function TransferProfile({ selectedProfile }: TransferProfileProps) {
   const { setCurrentProfileUrl, setHiddenProfileWithExpiry } = useUser();
   const { toggleSidebar } = useSidebar();
   const { nftProfile } = useAllContracts();
@@ -33,10 +33,10 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
     const tx = await nftProfile.transferFrom(currentAddress, inputVal, BigNumber.from(profileToken));
     setVisible(true);
     setTransactionPending(true);
-    if(tx){
+    if (tx) {
       tx.wait(1)
         .then(() => {
-          analytics.track('Profile Transferred', {
+          gtag('event', 'Profile Transferred', {
             ethereumAddress: currentAddress,
             profile: selectedProfile,
             destinationAddress: inputVal
@@ -51,7 +51,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
   };
 
   const closeModal = () => {
-    if(success){
+    if (success) {
       toggleSidebar();
       setCurrentProfileUrl('');
       setHiddenProfileWithExpiry(selectedProfile);
@@ -97,7 +97,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                     <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2 animate-spin-slow' />
                     <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
                   </div>
-                  
+
                   <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
                 </>
                 :
@@ -106,7 +106,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                   (
                     <>
                       <h2 className='text-4xl tracking-wide font-bold mb-10'>Transfer In Progress</h2>
-                  
+
                       <p className='text-[#6F6F6F] mb-6'>
                         You can confirm this transaction on{' '}
                         <a
@@ -119,7 +119,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                         type={ButtonType.PRIMARY}
                         size={ButtonSize.LARGE}
                         label='Return to NFT.com'
-                        onClick={() => {closeModal();}}
+                        onClick={() => { closeModal(); }}
                         stretch
                       />
                     </>
@@ -137,7 +137,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                           {inputVal}
                         </span>
                       </p>
-            
+
                       <p className='my-6 text-[#6F6F6F]'>
                         Please confirm this address is correct. Once the transfer process begins, you will lose access to this profile.
                       </p>

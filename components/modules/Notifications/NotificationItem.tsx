@@ -1,7 +1,7 @@
 import { ActivityType } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getNftMetadata } from 'utils/alchemyNFT';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import moment from 'moment';
@@ -52,4 +52,3 @@ export const NotificationItem = ({ buttonText, onClick, date, nft }: Notificatio
     </div>
   );
 };
-

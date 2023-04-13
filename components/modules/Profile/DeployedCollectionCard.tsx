@@ -2,7 +2,7 @@ import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'c
 import { Collection } from 'graphql/generated/types';
 import { AlchemyNFTMetaDataResponse } from 'types/alchemy';
 import { getNftsForCollection } from 'utils/alchemyNFT';
-import { filterNulls, processIPFSURL } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
@@ -36,7 +36,7 @@ export function DeployedCollectionCard(props: DeployedCollectionCardProps) {
       <div className='flex justify-center w-full min-h-XL min-h-2XL'>
         {filterNulls(data ?? [])
           .map((nft: PartialDeep<AlchemyNFTMetaDataResponse>) => nft?.metadata?.image)
-          .map(processIPFSURL).slice(0,3).map((image: string, index: number) => {
+          .slice(0,3).map((image: string, index: number) => {
             const variants = [
               RoundedCornerVariant.Left,
               RoundedCornerVariant.None,

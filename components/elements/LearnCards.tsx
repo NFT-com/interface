@@ -35,7 +35,7 @@ export const LearnCards = (props: LearnCardsProps) => {
             )}
             onClick={() => router.push(card['linkTo'])}
             style={{
-              background: `url("${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(props.cardImages[index].url)}&height=${1084}&width=${1084}")`,
+              background: `url("${getBaseUrl('https://www.nft.com/')}api/imageFetcher?url=${encodeURIComponent(props.cardImages[index].url)}&height=${1084}&width=${1084}")`,
               backgroundPosition: 'center center',
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',

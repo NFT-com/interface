@@ -1,5 +1,6 @@
 import { BidStatusIcon } from 'components/elements/BidStatusIcon';
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
+import { getAddressForChain, nftProfile } from 'constants/contracts';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { ProfileStatus } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
@@ -8,14 +9,16 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { ExternalProtocol } from 'types';
-import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
+import { filterDuplicates, isNullOrEmpty } from 'utils/format';
 import { getAddress } from 'utils/httpHooks';
+import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
+import { BigNumber } from 'ethers';
 import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
 import OpenseaIcon from 'public/opensea-icon.svg?svgr';
-import { useCallback, useEffect, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useState } from 'react';
 
 type MintProfileInputFieldProps = {
   setGKProfile?: (input: string[]) => void
@@ -55,10 +58,6 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
       return (
         <p className='text-[#2AAE47] mb-3'>Great! Profile name is available :)</p>
       );
-    case ProfileStatus.Pending:
-      return (
-        <p>Pending Claim</p>
-      );
     case ProfileStatus.Owned:
       return isOwner
         ? (
@@ -78,7 +77,16 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
             ? <p className='font-normal flex items-center justify-center mb-3'>
                   This profile is available on
               <span className='font-medium inline-flex items-center mx-1'>
-                <LooksrareIcon className='h-6 w-6 relative shrink-0 mr-1' alt="Opensea logo redirect" layout="fill"/>
+                <LooksrareIcon
+                  onClick={(e: MouseEvent<any>) => {
+                    e.preventDefault();
+                    window.open(
+                      getLooksrareAssetPageUrl(getAddressForChain(nftProfile, defaultChainId), BigNumber.from(profileTokenId).toString()),
+                      '_blank'
+                    );
+                    e.stopPropagation();
+                  }}
+                  className='h-6 w-6 relative shrink-0 mr-1 hover:cursor-pointer' alt="Looksrare logo redirect" layout="fill"/>
                     LooksRare
               </span>
                   and
@@ -97,7 +105,17 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
                 </span>
                 :
                 <span className='font-medium inline-flex items-center mx-1'>
-                  <LooksrareIcon className='h-6 w-6 relative shrink-0 mr-1' alt="Opensea logo redirect" layout="fill"/>
+                  <LooksrareIcon
+                    onClick={(e: MouseEvent<any>) => {
+                      e.preventDefault();
+                      window.open(
+                        getLooksrareAssetPageUrl(getAddressForChain(nftProfile, defaultChainId), BigNumber.from(profileTokenId).toString()),
+                        '_blank'
+                      );
+                      e.stopPropagation();
+                    }}
+                    className='h-6 w-6 relative shrink-0 mr-1 hover:cursor-pointer' alt="Looksrare logo redirect" layout="fill"
+                  />
                       LooksRare
                 </span>
               }
@@ -106,11 +124,11 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
     default:
       return null;
     }
-  }, [listings]);
+  }, [defaultChainId, listings, profileTokenId]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      if(type === 'Free'){
+      if (type === 'Free') {
         setFreeProfile(inputValue);
       } else {
         setGKProfile([inputValue, name]);
@@ -128,7 +146,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
           'rounded-l-lg py-3 text-lg',
           'bg-[#F8F8F8]'
         )}>
-      NFT.com/
+          NFT.com/
         </div>
         <input
           name={name}
@@ -149,7 +167,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
               const validReg = /^[a-z0-9_]*$/;
               if (
                 validReg.test(e.target.value.toLowerCase()) &&
-                    e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
+                e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
               ) {
                 setInputValue(e.target.value.toLowerCase());
                 setError(null);

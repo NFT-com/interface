@@ -1,7 +1,7 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useContext, useState } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -37,7 +37,7 @@ export function useInsiderReservedProfiles(): InsiderReservedProfileResults {
     setLoading(false);
     return data?.insiderReservedProfiles ?? [];
   });
-  
+
   return {
     reservedProfiles: data ?? null,
     loading,

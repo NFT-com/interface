@@ -1,5 +1,5 @@
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { Modal } from './Modal';
@@ -34,10 +34,10 @@ export interface DropdownPickerModalProps {
 /**
  * Drop-down picker component. Provided the options and selected option,
  * this will render the selected option with a v or ^ symbol.
- * 
+ *
  * When clicked, the rest of the options will appear above or below the component,
  * using absolute positioning (so expect them to overflow and cover the surrounding UI).
- * 
+ *
  * Configuration:
  * - constrain: add this to use a self-constrained width and height, with no guarantees about
  *              the resulting size or layout. by default, this component fills the width and

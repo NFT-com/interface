@@ -1,7 +1,7 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useContext } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -28,7 +28,7 @@ export function useGetProfileClaimHash(profileUrl: string) {
       if (isNullOrEmpty(currentAddress) || !signed || isNullOrEmpty(profileUrl)) {
         return null;
       }
-  
+
       const data = await sdk.SignHashProfile({ profileUrl });
       return data?.signHashProfile;
     },

@@ -1,4 +1,4 @@
-import { joinClasses } from 'utils/helpers';
+import { joinClasses } from 'utils/format';
 
 import * as gtag from 'lib/gtag';
 import React, { HTMLProps, useCallback } from 'react';

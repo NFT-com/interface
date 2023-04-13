@@ -1,45 +1,86 @@
-import Loader from 'components/elements/Loader';
+import DefaultSEO from 'config/next-seo.config';
+import ClientOnly from 'components/elements/ClientOnly';
+import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import { NFTDetailPage } from 'components/modules/NFTDetail/NFTDetailPage';
+import { NftResponse } from 'graphql/hooks/useNFTQuery';
 import NotFoundPage from 'pages/404';
-import { isNullOrEmpty } from 'utils/helpers';
-import { tw } from 'utils/tw';
+import { isNullOrEmpty } from 'utils/format';
+import { isValidContractSimple } from 'utils/helpers';
 
 import { BigNumber } from 'ethers';
+import { getNftPage } from 'lib/graphql-ssr/nft';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import { NextSeo } from 'next-seo';
+import { SWRConfig } from 'swr';
 
-/**
- * Shows a public profile e.g. nft.com/satoshi
- */
-export default function ProfileURI() {
+const NFTDetailPage =
+  dynamic(() => import('components/modules/NFTDetail/NFTDetailPage').then(mod => mod.NFTDetailPage), { loading: () => <LoaderPageFallback /> });
+
+export default function NftPage({ fallback }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const { collection, tokenId } = router.query;
-  const validCollectionReg = /^0x[a-fA-F0-9]{40}$/;
 
-  if(collection === undefined || tokenId === undefined) {
-    return (<div className={tw(
-      'text-primary-txt dark:text-primary-txt-dk flex flex-col',
-      'items-center justify-center h-screen'
-    )}>
-      <div className="mb-2">Loading...</div>
-      <Loader />
-    </div>);
-  } else if(
-    isNullOrEmpty(collection) ||
-    isNullOrEmpty(tokenId) ||
-    !validCollectionReg.test(collection as string)
-  )
-  {
-    return <NotFoundPage />;
-  } else {
-    return <NFTDetailPage collection={collection as string} tokenId={BigNumber.from(tokenId).toHexString()} />;
+  const nft = Object.values(fallback)[0] ?? {};
+  const seoTitle = `NFT: ${nft?.metadata?.name}`;
+  const seoConfig = {
+    ...DefaultSEO,
+    title: seoTitle,
+    description: nft?.metadata?.description,
+    openGraph: {
+      url: `https://www.nft.com/app/nft/${collection}/${tokenId}`,
+      title: seoTitle,
+      description: nft?.metadata?.description,
+      images: [
+        {
+          url: nft?.metadata?.imageURL,
+          alt: `${nft?.metadata?.name} - NFT`,
+        },
+      ],
+      site_name: 'NFT.com',
+    }
+  };
+
+  if (collection === undefined || tokenId === undefined) {
+    return <LoaderPageFallback />;
   }
+
+  if (
+    [
+      isNullOrEmpty(collection),
+      isNullOrEmpty(tokenId),
+      !isValidContractSimple(collection as string)
+    ].includes(true)
+  ) {
+    return <NotFoundPage />;
+  }
+
+  return <SWRConfig value={fallback}>
+    <NextSeo
+      {...seoConfig}
+    />
+    <ClientOnly>
+      <NFTDetailPage
+        collection={collection as string}
+        tokenId={BigNumber.from(tokenId).toHexString()}
+      />
+    </ClientOnly>
+  </SWRConfig>;
 }
 
-ProfileURI.getLayout = function getLayout(page) {
+NftPage.getLayout = function getLayout(page) {
   return (
     <DefaultLayout>
-      { page }
+      {page}
     </DefaultLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<{
+  fallback: {
+    [x: string]: NftResponse,
+  }
+}> = async ({ params }) => {
+  return await getNftPage(params);
 };

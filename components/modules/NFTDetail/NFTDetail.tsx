@@ -14,8 +14,8 @@ import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMu
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnvBool } from 'utils/env';
-import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getEtherscanLink, isOfficialCollection,shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { NFTDetailContextProvider } from './NFTDetailContext';
@@ -41,10 +41,15 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
   const defaultChainId = useDefaultChainId();
 
-  const { data: collection } = useCollectionQuery(String(defaultChainId), props?.nft?.contract);
-  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.nft?.contract, async () => {
-    return await getContractMetadata(props.nft?.contract, defaultChainId);
-  });
+  const { data: collection } = useCollectionQuery({ chainId: String(defaultChainId), contract: props?.nft?.contract });
+  const { data: collectionMetadata } = useSWR(
+    () => props?.nft?.contract ?
+      ['ContractMetadata', props?.nft?.contract]
+      : null,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async ([url, contract]) => {
+      return await getContractMetadata(contract, defaultChainId);
+    });
 
   const collectionName = collectionMetadata?.contractMetadata?.name || collectionMetadata?.contractMetadata?.openSea?.collectionName;
 
@@ -97,7 +102,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         'flex minmd:items-center w-full mt-8 py-4 px-4 justify-between',
       )}>
         <div className='flex flex-col whitespace-nowrap text-ellipsis overflow-hidden'>
-          <Link href={`/app/collection/${collection?.collection?.contract}`}>
+          <Link href={`/app/collection/${isOfficialCollection(collection?.collection)}`}>
             <div className="text-[18px] font-medium font-noi-grotesk mb-2 tracking-wide text-[#6A6A6A] cursor-pointer">
               {isNullOrEmpty(collectionName) ?
                 (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
@@ -128,16 +133,15 @@ export const NFTDetail = (props: NFTDetailProps) => {
                       <GK />
                     </div>
                   }
-                  {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-                    <div className='ml-3'>
-                      <LikeCount
-                        onClick={nftLikeData?.isLikedByUser ? unsetLike : setLike}
-                        mutate={mutateNftLike}
-                        count={nftLikeData?.likeCount}
-                        isLiked={nftLikeData?.isLikedByUser}
-                      />
-                    </div>
-                  }
+
+                  <div className='ml-3'>
+                    <LikeCount
+                      onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
+                      mutate={mutateNftLike}
+                      count={nftLikeData?.likeCount}
+                      isLiked={nftLikeData?.isLikedBy}
+                    />
+                  </div>
                 </>
               )
             }
@@ -154,7 +158,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 loading && !success ? 'animate-spin' : null,
               )}
             >
-              <ArrowClockwise className='text-[#6F6F6F] h-5 w-5'/>
+              <ArrowClockwise className='text-[#6F6F6F] h-5 w-5' />
             </div>
           }
         </div>
@@ -285,12 +289,12 @@ export const NFTDetail = (props: NFTDetailProps) => {
         (
           (currentAddress === props.nft?.wallet?.address && !isNullOrEmpty(currentAddress)) ||
           (currentAddress !== props.nft?.wallet?.address && !isNullOrEmpty(props.nft?.wallet?.address) && !isNullOrEmpty(props.nft?.memo)))
-          &&
-          <div className="flex minxl:basis-1/2">
-            <NFTDetailContextProvider nft={props.nft} >
-              <NftMemo nft={props.nft} />
-            </NFTDetailContextProvider>
-          </div>
+        &&
+        <div className="flex minxl:basis-1/2">
+          <NFTDetailContextProvider nft={props.nft} >
+            <NftMemo nft={props.nft} />
+          </NFTDetailContextProvider>
+        </div>
       }
     </div>
   );

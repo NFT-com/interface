@@ -1,4 +1,4 @@
-query Collection($input: CollectionInput!) {
+query Collection($input: CollectionInput!, $likedById: ID!) {
   collection(input: $input) {
     collection {
       id
@@ -13,6 +13,8 @@ query Collection($input: CollectionInput!) {
       isSpam
       likeCount
       isLikedByUser
+      isLikedBy(likedById: $likedById)
+      isOfficial
     }
     nftPortResults {
       name

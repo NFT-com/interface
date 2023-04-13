@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { ProfileCard } from 'components/modules/DiscoveryCards/ProfileCard';
 import { Profile } from 'graphql/generated/types';
@@ -7,7 +7,8 @@ import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { usePaginator } from 'hooks/usePaginator';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { filterNulls, getPerPage } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
+import { getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import uniqBy from 'lodash/uniqBy';
@@ -62,7 +63,7 @@ export default function ProfilePage() {
   };
 
   const filterUniqProfiles = () => {
-    if(!allLoadedProfiles && !allLoadedProfiles.length) return;
+    if (!allLoadedProfiles && !allLoadedProfiles.length) return;
     const uniqData = uniqBy(allLoadedProfiles, (e) => e.id);
     return uniqData.map((profile, index) => {
       return (
@@ -75,7 +76,7 @@ export default function ProfilePage() {
   };
 
   const returnProfileBlock = () => {
-    if(allLoadedProfiles && allLoadedProfiles.length){
+    if (allLoadedProfiles && allLoadedProfiles.length) {
       return (
         <div>
           <div className={tw(
@@ -122,7 +123,7 @@ export default function ProfilePage() {
           </div>
         </div>
       );
-    }else {
+    } else {
       return (
         <div className="flex items-center justify-center min-h-[16rem] w-full">
           <Loader />
@@ -130,7 +131,7 @@ export default function ProfilePage() {
       );
     }
   };
-  return(
+  return (
     <>
       <div className="p-2 minmd:p-4 minlg:p-8 minhd:p-16 minmd:m-0 mb-10 minlg:mb-10 minlg:mt-20 minmd:max-w-full self-center minmd:self-stretch minxl:mx-auto min-h-screen ">
         <div className="flex">
@@ -140,9 +141,13 @@ export default function ProfilePage() {
                 <div className='flex justify-between items-center'>
                   <div className="flex flex-col minmd:flex-row minmd:items-center">
                     {isLeaderBoard && <span className="text-[1.75rem] font-[500] mr-10">Leaderboard</span>}
-                    <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
-                      {!isLeaderBoard ? <LeaderBoardIcon className="mr-2"/> : null}
-                      {!isLeaderBoard ? 'Show leaderboard' : 'View Profiles' }
+                    <button onClick={(e) => {
+                      e.preventDefault();
+                      toggleLeaderBoardState(!isLeaderBoard);
+                    }}
+                    className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
+                      {!isLeaderBoard ? <LeaderBoardIcon className="mr-2" /> : null}
+                      {!isLeaderBoard ? 'Show leaderboard' : 'View Profiles'}
                     </button>
                   </div>
                 </div>
@@ -159,7 +164,7 @@ export default function ProfilePage() {
 ProfilePage.getLayout = function getLayout(page) {
   return (
     <DefaultLayout showDNavigation={true}>
-      { page }
+      {page}
     </DefaultLayout>
   );
 };

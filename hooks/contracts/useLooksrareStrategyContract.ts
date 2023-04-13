@@ -1,6 +1,6 @@
 import { IExecutionStrategy } from 'constants/typechain/looksrare';
 import { IExecutionStrategy__factory } from 'constants/typechain/looksrare/factories/IExecutionStrategy__factory';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { Provider } from '@ethersproject/providers';
 import { Addresses, addressesByNetwork } from '@looksrare/sdk';

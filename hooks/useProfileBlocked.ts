@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import useSWR, { mutate } from 'swr';
 
@@ -27,7 +27,7 @@ export function useProfileBlocked(inputURL: string, blockReserved: boolean): Pro
 
     return data?.blockedProfileURI;
   });
-  
+
   return {
     blocked: data ?? false,
     loading: data == null,

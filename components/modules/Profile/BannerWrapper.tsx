@@ -1,9 +1,9 @@
-import Loader from 'components/elements/Loader';
+import BlurImage from 'components/elements/BlurImage';
+import Loader from 'components/elements/Loader/Loader';
 import { Doppler, getEnvBool } from 'utils/env';
-import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
+import { nftComCdnLoader } from 'lib/image/loader';
 import { PropsWithChildren } from 'react';
 
 export interface BannerWrapperProps {
@@ -19,36 +19,39 @@ const defaultBanner = getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
   'https://cdn.nft.com/collectionBanner_default.png'
   : 'https://cdn.nft.com/profile-banner-default-logo-key.png';
 
-export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
-  const imageUrl = props.imageOverride || defaultBanner;
+export function BannerWrapper({ children, imageOverride,loading, onMouseEnter, onMouseLeave }: PropsWithChildren<BannerWrapperProps>) {
+  const imageUrl = imageOverride || defaultBanner;
 
   return (
     <div
-      onMouseEnter={props.onMouseEnter}
-      onMouseLeave={props.onMouseLeave}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
         'bg-cover bg-center',
         'h-[120px] minlg:h-[320px]',
       )}
     >
-      {imageUrl && <Image
-        src={props?.draft ? imageUrl : imageUrl.indexOf('.svg') >= 0 ? imageUrl : `${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(imageUrl)}&width=3000`}
-        layout='fill'
+      {imageUrl &&
+      <BlurImage
+        src={imageUrl}
+        width={3000}
+        loader={nftComCdnLoader}
+        sizes="100vw"
+        className="object-cover"
+        fill
         priority
         quality='100'
-        objectFit='cover'
-        objectPosition='center'
         alt='banner'
       />}
-      {props.loading && <div
+      {loading && <div
         style={{ zIndex: 102 }}
         className={tw(
           'absolute flex bg-white/10',
           'items-center justify-center w-full h-full'
         )}
       >
-        <Loader/>
+        <Loader />
       </div>}
       <div
         className="flex justify-start items-end h-full"
@@ -57,7 +60,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
           maxWidth: '100%'
         }}
       >
-        {props.children}
+        {children}
       </div>
     </div>
   );

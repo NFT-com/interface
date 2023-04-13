@@ -1,6 +1,6 @@
 import 'rc-slider/assets/index.css';
 
-import { convertValue } from 'utils/helpers';
+import { convertValue } from 'utils/format';
 
 import Slider from 'rc-slider';
 import React, { useEffect, useState } from 'react';

@@ -4,7 +4,7 @@ import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
 import { Button,ButtonSize,ButtonType } from 'components/elements/Button';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
-import EllipseX from 'public/ellipse-x.svg?svgr';
+import { X } from 'phosphor-react';
 import { useState } from 'react';
 
 const IdFilter = (props: {
@@ -63,11 +63,12 @@ export const CollectionsFiltersContent = () => {
     <>
       <div className="flex flex-col w-full">
         <div
-          className="block minmd:hidden p-5 justify-end cursor-pointer"
+          className="flex w-full minlg:hidden p-5 justify-end cursor-pointer"
           onClick={() => {
             setSearchModalOpen(false, 'collectionFilters');
           }}>
-          <EllipseX />
+          <X
+            className='hover:cursor-pointer' size={32} color="black" weight="bold" />
         </div>
         <div className="block minlg:hidden font-noi-grotesk font-black text-4xl self-start px-4">Filter</div>
         <div className="px-4 flex flex-col my-7">

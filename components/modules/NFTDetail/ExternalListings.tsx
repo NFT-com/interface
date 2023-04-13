@@ -12,8 +12,9 @@ import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { getListingCurrencyAddress, getListingEndDate, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
+import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { filterValidListings, getAuctionTypeDisplayName, getProtocolDisplayName } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
@@ -29,7 +30,7 @@ import NFTLogo from 'public/nft_logo_yellow.webp';
 import OpenseaIcon from 'public/opensea-icon.svg?svgr';
 import USDC from 'public/usdc.svg?svgr';
 import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
-import { useCallback, useContext, useState } from 'react';
+import { MouseEvent, useCallback, useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
@@ -108,14 +109,27 @@ export function ExternalListings(props: ExternalListingsProps) {
       <span className='sm:hidden'>Current price on</span>
       <div className='flex items-center'>
         {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='ml-1.5 mr-1 sm:ml-0 h-7 w-7 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
-        {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='ml-1.5 mr-1 sm:ml-0 h-7 w-7 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
+        {listing?.order?.protocol === ExternalProtocol.LooksRare &&
+          <LooksrareIcon
+            onClick={(e: MouseEvent<any>) => {
+              e.preventDefault();
+              window.open(
+                getLooksrareAssetPageUrl(props?.nft?.contract, BigNumber.from(props?.nft?.tokenId).toString()),
+                '_blank'
+              );
+              e.stopPropagation();
+            }}
+            className='ml-1.5 mr-1 sm:ml-0 h-7 w-7 relative shrink-0 hover:cursor-pointer'
+            alt="Looksrare logo redirect"
+            layout="fill"/>
+        }
         {listing?.order?.protocol === ExternalProtocol.X2Y2 && <X2Y2Icon className='ml-1.5 mr-1 sm:ml-0 h-7 w-7 relative shrink-0' alt="X2Y2 logo redirect" layout="fill"/>}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         {listing?.order?.protocol === ExternalProtocol.NFTCOM && <img src={NFTLogo.src} className='ml-1.5 mr-1 sm:ml-0 h-6 w-6 relative shrink-0' alt="NFT.com logo redirect" />}
         <span className='text-black'>{getProtocolDisplayName(protocolName)}</span>
       </div>
     </div>;
-  }, []);
+  }, [props?.nft?.contract, props?.nft?.tokenId]);
 
   const getIcon = useCallback((contract: string, currency: string) => {
     switch (currency) {

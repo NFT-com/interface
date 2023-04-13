@@ -3,7 +3,7 @@ import { Nft, TxActivity } from 'graphql/generated/types';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import {
   convertValue,
-} from 'utils/helpers';
+} from 'utils/format';
 
 import VolumeIcon from 'public/volumeIcon.svg?svgr';
 import { PartialDeep } from 'type-fest';

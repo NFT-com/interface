@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { CheckCircle, X } from 'phosphor-react';
 import Error from 'public/error.svg';
 import Warning from 'public/warning.svg';
+import { useEffect } from 'react';
 
 export enum AlertType {
   SUCCESS = 'SUCCESS',
@@ -11,14 +12,20 @@ export enum AlertType {
   ERROR = 'ERROR',
   INFO = 'INFO'
 }
-
+export enum AlertPosition {
+  FIXED = 'FIXED',
+  RELATIVE = 'RELATIVE',
+}
 type AlertProps = {
   type: AlertType;
   heading: string;
+  position?: AlertPosition;
   description: string;
   onClick?: () => void;
   onClose?: () => void
   hideX?: boolean;
+  autoClose?: boolean;
+  autoCloseTime?: number;
 }
 
 const getAlertStyles = (type: AlertType) => {
@@ -40,8 +47,20 @@ const getAlertStyles = (type: AlertType) => {
   }
   }
 };
-
-const getAlertIcon =(type: AlertType) => {
+const getAlertPosition = (type: AlertPosition) => {
+  switch (type) {
+  case AlertPosition.FIXED: {
+    return 'fixed left-[32px] bottom-[32px] w-auto z-50';
+  }
+  case AlertPosition.RELATIVE: {
+    return 'relative';
+  }
+  default: {
+    return 'w-full';
+  }
+  }
+};
+const getAlertIcon = (type: AlertType) => {
   switch (type) {
   case AlertType.ERROR: {
     return <Image src={Error} color="#6A6A6A" className='relative shrink-0 w-7 ' alt={'Error'} />;
@@ -61,7 +80,13 @@ const getAlertIcon =(type: AlertType) => {
   }
 };
 
-export default function Alert({ type, heading, description, onClick, onClose, hideX }: AlertProps) {
+export default function Alert({ type, heading, description, onClick, onClose, hideX, position, autoClose, autoCloseTime }: AlertProps) {
+  useEffect(() => {
+    if(!autoClose) return;
+    setTimeout(() => {
+      onClose();
+    }, autoCloseTime ? autoCloseTime : 3000);
+  }, [autoClose, autoCloseTime, onClose]);
   return (
     <div
       onClick={(e) => {
@@ -69,8 +94,9 @@ export default function Alert({ type, heading, description, onClick, onClose, hi
         onClick && onClick();
       }}
       className={tw(
-        'flex w-full p-4 border-2 rounded font-noi-grotesk hover:cursor-pointer',
-        getAlertStyles(type)
+        'flex p-4 border-2 rounded font-noi-grotesk hover:cursor-pointer',
+        getAlertStyles(type),
+        getAlertPosition(position)
       )}
     >
       <div className='flex w-full items-start'>
@@ -99,7 +125,7 @@ export default function Alert({ type, heading, description, onClick, onClose, hi
             e.preventDefault();
             onClose && onClose();
           }}
-          className='relative shrink-0 h-5 w-5 hover:cursor-pointer'
+          className='relative shrink-0 h-5 w-5 hover:cursor-pointer ml-4'
           weight='bold'
           color="#6A6A6A" />
       }

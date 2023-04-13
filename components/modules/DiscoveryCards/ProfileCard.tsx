@@ -1,3 +1,4 @@
+import BlurImage from 'components/elements/BlurImage';
 import LikeCount from 'components/elements/LikeCount';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { LikeableType, Profile } from 'graphql/generated/types';
@@ -5,9 +6,8 @@ import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
 import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { Doppler, getEnvBool } from 'utils/env';
 
-import Image from 'next/image';
+import { nftComCdnLoader } from 'lib/image/loader';
 import GK from 'public/Badge_Key.svg?svgr';
 import BannerPreview from 'public/banner_1@2x.png';
 import ProfilePreview from 'public/profilePreview.png';
@@ -36,7 +36,8 @@ export function ProfileCard(props: ProfileCardProps) {
 
   const { setLike, unsetLike } = useSetLikeMutation(
     props?.id ?? props?.profile?.id,
-    LikeableType.Profile
+    LikeableType.Profile,
+    props?.profile?.url
   );
 
   if(isLeaderBoard){
@@ -76,16 +77,15 @@ export function ProfileCard(props: ProfileCardProps) {
     return (
       <a href={'/' + props.profile?.url} className="mb-3 minmd:mb-0 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p h-[212px]">
         <div className="bg-black h-[99px] relative">
-          {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-            <div className='absolute top-4 right-4 z-50'>
-              <LikeCount
-                count={profileLikeData?.profile?.likeCount || 0}
-                isLiked={profileLikeData?.profile?.isLikedByUser || false}
-                onClick={profileLikeData?.profile?.isLikedByUser ? unsetLike :setLike}
-                mutate={mutate}
-              />
-            </div>
-          }
+          <div className='absolute top-4 right-4 z-50'>
+            <LikeCount
+              count={profileLikeData?.profile?.likeCount || 0}
+              isLiked={profileLikeData?.profile?.isLikedBy || false}
+              onClick={profileLikeData?.profile?.isLikedBy ? unsetLike :setLike}
+              mutate={mutate}
+            />
+          </div>
+
           {
             props.profile.bannerURL
               ? (
@@ -93,17 +93,19 @@ export function ProfileCard(props: ProfileCardProps) {
                   variant={RoundedCornerVariant.None}
                   width={600}
                   height={600}
+                  loader={nftComCdnLoader}
                   containerClasses='w-[100%] object-cover h-[100%]'
                   src={props.profile.bannerURL}
                   extraClasses="hover:scale-105 transition"
                 />
               )
               : (
-                <Image
-                  className="object-cover h-full"
-                  src={BannerPreview}
-                  alt="key Splash"
+                <BlurImage
                   fill
+                  alt="key Splash"
+                  src={BannerPreview}
+                  loader={nftComCdnLoader}
+                  className="object-cover h-full"
                 />
               )
           }
@@ -121,11 +123,11 @@ export function ProfileCard(props: ProfileCardProps) {
                   />
                 )
                 : (
-                  <Image
-                    className="object-cover h-full"
-                    src={ProfilePreview}
-                    alt="key Splash"
+                  <BlurImage
                     fill
+                    alt="key Splash"
+                    src={ProfilePreview}
+                    className="object-cover h-full"
                   />
                 )
             }

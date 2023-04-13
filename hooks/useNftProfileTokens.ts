@@ -1,7 +1,7 @@
 import { AlchemyOwnedNFT } from 'types';
 import { getNftsByContractAndOwner } from 'utils/alchemyNFT';
 import { Doppler,getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { getAddress } from 'utils/httpHooks';
 
 import useSWR, { mutate } from 'swr';
@@ -44,7 +44,7 @@ export function useNftProfileTokens(owner: string): ProfileTokenResults {
     }
     return ownedTokens;
   });
-  
+
   return {
     profileTokens: data ?? [],
     error: error,

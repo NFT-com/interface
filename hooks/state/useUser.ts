@@ -1,9 +1,10 @@
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
-import { useCallback,useEffect } from 'react';
+import { useCallback,useEffect, useState } from 'react';
 import useSWR from 'swr';
+import { ConnectorData, useAccount } from 'wagmi';
 
 export interface UserState {
   currentProfileUrl: string
@@ -12,6 +13,8 @@ export interface UserState {
 }
 
 export function useUser() {
+  const { connector: activeConnector } = useAccount();
+  const [currentProfileId, setCurrentProfileId] = useState('');
   const { data, mutate } = useSWR('user', {
     fallbackData: {
       isDarkMode: false,
@@ -85,9 +88,30 @@ export function useUser() {
     setCurrentProfileUrl(result);
   }, [setCurrentProfileUrl, result]);
 
+  useEffect(() => {
+    setCurrentProfileId(profileData?.profile?.id ?? '');
+  }, [profileData]);
+
+  //resets current profile id on wallet change
+  useEffect(() => {
+    const handleConnectorUpdate = ({ account }: ConnectorData) => {
+      if (account) {
+        setCurrentProfileId('');
+      }
+    };
+
+    if (activeConnector) {
+      activeConnector.on('change', handleConnectorUpdate);
+    }
+
+    return () => {
+      activeConnector && activeConnector.off('change', handleConnectorUpdate);
+    };
+  }, [activeConnector]);
+
   return {
     user: data,
-    currentProfileId: profileData?.profile?.id,
+    currentProfileId: currentProfileId,
     loading,
     setDarkMode,
     setCurrentProfileUrl,

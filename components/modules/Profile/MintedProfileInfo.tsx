@@ -1,12 +1,11 @@
 import CustomTooltip from 'components/elements/CustomTooltip';
 import LikeCount from 'components/elements/LikeCount';
-import Toast from 'components/elements/Toast';
 import { LikeableType } from 'graphql/generated/types';
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
-import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
+import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
@@ -24,7 +23,8 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { user } = useUser();
   const { profileData } = useProfileQuery(profileURI);
-  const { profileData: profileLikeData, mutate: mutateProfileLikeData } = useProfileLikeQuery(profileURI);
+  const { nftProfile } = useAllContracts();
+  const { data: profileLikeData, mutate: mutateProfileLikeData } = useNftLikeQuery(nftProfile.address, profileData?.profile?.tokenId);
   const {
     editMode,
     draftBio,
@@ -34,7 +34,8 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
 
   const { setLike, unsetLike } = useSetLikeMutation(
     profileData?.profile?.id,
-    LikeableType.Profile
+    LikeableType.Profile,
+    profileData?.profile?.url
   );
 
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
@@ -52,7 +53,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       'mt-[-25px] minlg:mt-[-50px] px-4 minlg:px-20 font-noi-grotesk minlg:mb-12'
     )}
     >
-      <Toast />
       <div className={tw('flex w-full items-center',
         `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : ''}`,
         'justify-start minlg:justify-between minlg:mt-3'
@@ -72,17 +72,15 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
               <GK />
             </div>
             }
-            {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-              <LikeCount
-                count={profileLikeData?.profile?.likeCount}
-                isLiked={profileLikeData?.profile?.isLikedByUser}
-                onClick={profileLikeData?.profile?.isLikedByUser ? unsetLike : setLike}
-                mutate={mutateProfileLikeData}
-              />
-            }
+            <LikeCount
+              count={profileLikeData?.likeCount}
+              isLiked={profileLikeData?.isLikedBy}
+              onClick={profileLikeData?.isLikedBy ? unsetLike : setLike}
+              mutate={mutateProfileLikeData}
+            />
           </div>
         </div>
-        
+
         <div className='hidden minlg:block'>
           <ProfileMenu profileURI={profileURI} />
         </div>
@@ -113,7 +111,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       {editMode && userIsAdmin &&
         <div className={tw(
           'w-full minlg:w-1/2 flex flex-col text-[#6A6A6A] group',
-          getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) ? 'items-start' : 'items-end'
+          'items-start'
         )}
         >
           <CustomTooltip

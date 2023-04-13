@@ -1,5 +1,5 @@
-import Loader from 'components/elements/Loader';
-import { isNullOrEmpty } from 'utils/helpers';
+import Loader from 'components/elements/Loader/Loader';
+import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import { Dialog } from '@headlessui/react';
@@ -21,6 +21,7 @@ export interface ModalProps {
   dark?: boolean;
   longModal?: boolean;
   noCancelBtn?: boolean;
+  closeBtnNoPaddings?: boolean;
   fullModal?: boolean;
   bgColor?: string;
   transparentOverlay?: boolean;
@@ -61,36 +62,36 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
           <div
             className={tw(
               'transition-all fixed rounded-lg sm:rounded-none',
-              props.pure ? '' : `pb-4 px-7 minmd:px-24 ${props.longModal ? '' : 'pt-14' }`,
+              props.pure ? '' : `pb-4 px-7 minmd:px-24 ${props.longModal ? '' : 'pt-14'}`,
               'text-left overflow-hidden shadow-xl absolute z-50 overflow-y-auto',
               'min-w-[600px] sm:min-w-[1px] sm:max-w-screen',
               'sm:overflow-x-hidden sm:overflow-y-auto',
               `${props.bgColor ?? 'bg-pagebg dark:bg-pagebg-dk'}`,
-              `${props.longModal ? 'max-h-screen' : '' }`,
-              `${!props.longModal ? 'min4xl:-mt-28 md:h-full' : '' }`,
-              `${props.fullModal ? 'min-h-screen w-full' : 'min-w-[600px] sm:min-w-[1px] sm:max-w-screen' }`,
+              `${props.longModal ? 'max-h-screen' : ''}`,
+              `${!props.longModal ? 'min4xl:-mt-28 md:h-full' : ''}`,
+              `${props.fullModal ? 'min-h-screen w-full' : 'min-w-[600px] sm:min-w-[1px] sm:max-w-screen'}`,
             )}
           >
             <div className='items-center'>
               {props.loading ?
                 <Loader /> :
-                <div className={`text-center ${props.longModal ? `px-6 ${props.longModal ? 'pt-8' : 'pt-20' }` : '' }`}>
-                  {(typeof(props.title) !== 'string')
+                <div className={`text-center ${props.longModal ? `px-6 ${props.longModal ? 'pt-8' : 'pt-20'}` : ''}`}>
+                  {(typeof (props.title) !== 'string')
                     ? (
                       <Dialog.Title
                         className={tw(
                           props.pure ? 'hidden' : '',
                           'text-center font-medium text-xl minmd:text-3xl',
                           'font-noi-grotesk text-primary-txt',
-                          `${props.longModal ? 'minmd:top-[-38%]' : '' }`
+                          `${props.longModal ? 'minmd:top-[-38%]' : ''}`
                         )}
                       >
                         <div className="flex flex-col">
                           <div className="minmd:h-full">
-                            {typeof(props.title) !== 'string' && props.title.topLine}
+                            {typeof (props.title) !== 'string' && props.title.topLine}
                           </div>
                           <div className="">
-                            {typeof(props.title) !== 'string' && props.title.bottomLine}
+                            {typeof (props.title) !== 'string' && props.title.bottomLine}
                           </div>
                         </div>
                       </Dialog.Title>
@@ -102,12 +103,12 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
                         'text-primary-txt dark:text-primary-txt-dk'
                       )}
                     >
-                      {typeof(props.title) === 'string' && props.title}
+                      {typeof (props.title) === 'string' && props.title}
                     </Dialog.Title>
 
                   }
-                  <div className={tw('mt-2', props.pure ? 'hidden' : '',)}>
-                    {!props.noCancelBtn && <div className='hidden pt-4 pr-4 absolute right-0 top-0'>
+                  <div className={tw(props.closeBtnNoPaddings ? '' : 'mt-2', props.pure && !props.closeBtnNoPaddings ? 'hidden' : '',)}>
+                    {!props.noCancelBtn && <div className={`pt-4 pr-4 absolute right-0 top-0 ${props.closeBtnNoPaddings ? '' : 'hidden'}`}>
                       <button
                         type="button"
                         className="rounded-md focus:outline-none
@@ -120,18 +121,20 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
                     </div>}
                     {
                       !isNullOrEmpty(props.subtitle) &&
-                          <p className="text-sm text-gray-500">
-                            {props.subtitle}
-                          </p>
+                            <p className="text-sm text-gray-500">
+                              {props.subtitle}
+                            </p>
                     }
                   </div>
+
                   {props.children}
                 </div>
               }
             </div>
           </div>
-        </div>
-      </Dialog>
-    )}
-  </AnimatePresence>;
+        </div >
+      </Dialog >
+    )
+    }
+  </AnimatePresence >;
 }

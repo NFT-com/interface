@@ -1,13 +1,17 @@
-import { Maybe } from 'graphql/generated/types';
+import { Collection, Maybe } from 'graphql/generated/types';
 
 import { Doppler, getEnv } from './env';
+import { isNullOrEmpty } from './format';
 
+// TODO: split up ethers, ipfs, etc. utils into dynamically imported crypto util file
 import { getAddress } from '@ethersproject/address';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
 import { base32cid, cid, multihash } from 'is-ipfs';
 import { atom } from 'jotai';
 import moment, { Moment } from 'moment';
+import slugify from 'slugify';
+import { PartialDeep } from 'type-fest';
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -49,74 +53,23 @@ export function shortenAddress(address: string, chars?: number): string {
   return `${parsed.substring(0, charsVal + 2)}...${parsed.substring(42 - charsVal)}`;
 }
 
-export function numberWithCommas(x: number) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
-
-export function shorten(address: string | null, mobile: boolean) {
-  if (address == null) {
-    return null;
-  }
-  return mobile
-    ? address.substring(0, 7) + '...' + address.substring(35, 42)
-    : address.substring(0, 10) + '...' + address.substring(32, 42);
-}
-
-export function shortenString(value: string | null | number, limit: number, length: number) {
-  if (value == null) {
-    return null;
-  }
-  return value.toString().length > limit ? value.toString().substring(0, length) + '...' : value;
-}
-
-export function prettify(num: number | string, dec?: number) {
-  if (num === 0 || Number(num) < 0.001) {
-    return '0';
-  }
-
-  if (Number(num) < 0.1) {
-    return Number(num).toFixed(3);
-  }
-
-  let extra = 0;
-  let formatted;
-
-  while (formatted === '0' || formatted == null) {
-    formatted = numberWithCommas(parseFloat(Number(num).toFixed(dec + extra)));
-    extra++;
-    if (extra > 5) {
-      return numberWithCommas(parseFloat(Number(num).toFixed(dec)));
-    }
-  }
-  return formatted;
-}
-export const convertValue = (value: number, first: number, second: number) => {
-  const start = value.toString().slice(0,first);
-  const end = value.toString().slice(first,second);
-  return {
-    start,
-    end
-  };
-};
-export const joinClasses = (...args: string[]) => filterNulls(args).join(' ');
-
-export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == null || val.length === 0;
-
-export const isNull = (val: string | any[] | null | undefined) => val == null;
-
-export const isObjEmpty = (obj: Record<string, unknown> | null | undefined) => obj== null || Object.keys(obj).length === 0;
-
-export const filterNulls = <T>(items: Maybe<T>[]): T[] => items.filter(item => item != null);
-
-export const filterDuplicates = <T>(items: T[], isSame: (first: T, second: T) => boolean): T[] => {
-  return items.filter((item, index) => items.findIndex((element) => isSame(item, element)) === index);
-};
-
 /* ------------ helper function with option of overriding cdn use ----------- */
 export const getStaticAsset = (imagePath: string, cdn = true): string => {
   if (cdn) return `https://cdn.nft.com/client/${imagePath}`;
   return imagePath;
 };
+
+function extractIPFSHashAndPathFromUrl(url: string): string | null {
+  // Define a regular expression pattern to match the IPFS hash format
+  // and capture any subsequent path after the hash.
+  const ipfsHashPattern = /(Qm[a-zA-Z0-9]{44}(\/.*)?)/;
+
+  // Find the match in the URL
+  const match = url.match(ipfsHashPattern);
+
+  // Return the matched IPFS hash and path or null if not found
+  return match ? match[0] : null;
+}
 
 export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
   const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
@@ -134,6 +87,8 @@ export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
     return prefix + image.slice(34);
   } else if (image.indexOf('https://infura-ipfs.io/ipfs/') === 0) {
     return prefix + image.slice(28);
+  } else if (image.includes('ipfs')) {
+    return prefix + extractIPFSHashAndPathFromUrl(image);
   } else if (base32cid(image) || multihash(image) || cid(image)) {
     return prefix + image;
   }
@@ -203,7 +158,7 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boo
   if (index === 'collections') {
     if (screenWidth >= 1200) {
       perPage = sideNavOpen ? 9 : 12;
-    } else if (screenWidth >= 900 ) {
+    } else if (screenWidth >= 900) {
       perPage = sideNavOpen ? 4 : 6;
     } else if (screenWidth >= 600) {
       perPage = 4;
@@ -211,9 +166,14 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boo
       perPage = 2;
     }
   } else if (index === 'discover') {
+/**
+ * Returns a string representation of the given chain ID.
+ * @param {Maybe<number | string>} chainId - The chain ID to convert to a string.
+ * @returns {Maybe<string>} - The string representation of the chain ID, or null if the input is null or undefined.
+ */
     if (screenWidth >= 1200) {
       perPage = sideNavOpen ? 9 : 8;
-    } else if (screenWidth >= 900 ) {
+    } else if (screenWidth >= 900) {
       perPage = sideNavOpen ? 6 : 9;
     } else if (screenWidth >= 600) {
       perPage = 4;
@@ -234,7 +194,7 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boo
   } else {
     if (screenWidth >= 1200) {
       perPage = sideNavOpen ? 9 : 12;
-    } else if (screenWidth >= 900 ) {
+    } else if (screenWidth >= 900) {
       perPage = sideNavOpen ? 6 : 8;
     } else if (screenWidth >= 600) {
       perPage = 6;
@@ -245,8 +205,18 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boo
   return perPage;
 }
 
+/**
+ * Returns the maximum value from a list of BigNumberish values.
+ * @param {...BigNumberish} args - The list of BigNumberish values to find the maximum from.
+ * @returns The maximum value from the list of BigNumberish values, or null if the list is empty.
+ */
 export function max(...args: BigNumberish[]) {
   if (isNullOrEmpty(args)) {
+    /**
+ * Returns the minimum value from a list of BigNumberish values.
+ * @param {...BigNumberish} args - The list of BigNumberish values to find the minimum from.
+ * @returns The minimum value from the list of BigNumberish values, or null if the list is empty.
+ */
     return null;
   }
   return args.reduce((acc, val) => BigNumber.from(acc ?? Number.MIN_VALUE).gt(val) ? acc : val);
@@ -264,19 +234,19 @@ export function fetcher(url: string): Promise<any> {
 }
 
 export function getDateFromTimeFrame(timeFrame: string): Moment {
-  if(timeFrame === '1D') {
+  if (timeFrame === '1D') {
     return moment().subtract(1, 'd');
   }
-  if(timeFrame === '7D') {
+  if (timeFrame === '7D') {
     return moment().subtract(7, 'd');
   }
-  if(timeFrame === '1M') {
+  if (timeFrame === '1M') {
     return moment().subtract(1, 'M');
   }
-  if(timeFrame === '3M') {
+  if (timeFrame === '3M') {
     return moment().subtract(3, 'M');
   }
-  if(timeFrame === '1Y') {
+  if (timeFrame === '1Y') {
     return moment().subtract(1, 'year');
   }
 }
@@ -294,28 +264,44 @@ export const getBaseUrl = (override = '') => {
 };
 
 export const sliceString = (description: string, maxCount: number, isStringCut: boolean) => {
-  if(!description) return;
+  if (!description) return;
   let newDescription;
-  if(description?.length > maxCount){
+  if (description?.length > maxCount) {
     const newString = description?.slice(0, !isStringCut ? maxCount : description?.length);
     newDescription = !isStringCut ? `${newString}...` : newString;
-  }else {
+  } else {
     newDescription = description;
   }
   return newDescription;
 };
 
 export const checkImg = (images) => {
-  if(!images) return;
+  if (!images) return;
   const convertedImages = images.map(image => {
-    if(image){
+    if (image) {
       return processIPFSURL(image);
     }
   }).filter(Boolean);
   return convertedImages[0];
 };
 
-export const genereteRandomPreloader = () => {
-  const index = Math.floor(Math.random() * (4));
-  return index;
-};
+/**
+ * Determines if the given Collection is an official collection and returns the url slug of the collection name or contract.
+ * @param {PartialDeep<Collection>} collection - The Collection item to check.
+ * @returns {string} - The encoded name of the collection if it is official, otherwise the contract address of the item.
+ */
+export const isOfficialCollection = (collection: PartialDeep<Collection>) => collection?.isOfficial
+  ? `official/${slugify(collection?.name, {
+    lower: true,
+    remove: /[*+~.()'"!:@]/g,
+    trim: true,
+    strict: true,
+  })}`
+  : collection?.contract;
+
+/**
+ * Simple check if the given string is a valid Ethereum contract address.
+ * @param {string} contract - The contract address to validate.
+ * @returns {boolean} - True if the contract address is valid, false otherwise.
+ */
+export const isValidContractSimple = (contract: string) => /^0x[a-fA-F0-9]{40}$/.test(contract);

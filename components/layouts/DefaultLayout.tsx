@@ -2,6 +2,7 @@ import ClientOnly from 'components/elements/ClientOnly';
 import { Footer } from 'components/elements/Footer/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';
+import { NonAuthLikeModal } from 'components/elements/nonAuthLikeModal';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { DiscoveryNavigation } from 'components/modules/DiscoveryNavigation/DiscoveryNavigation';
 import EmailCaptureModal from 'components/modules/ProfileFactory/EmailCaptureModal';
@@ -19,7 +20,7 @@ import { tw } from 'utils/tw';
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import dynamic from 'next/dynamic';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 
 type DefaultLayoutProps = {
   children: React.ReactNode;
@@ -41,27 +42,27 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
   const { emailCaptureModal } = useEmailCaptureModal();
   const { signed } = useContext(GraphQLContext);
   const { searchModalOpen } = useSearchModal();
+
   return (
     <div className={tw('flex flex-col',
-      'h-screen w-full min-w-screen min-h-screen',
+      'h-screen',
     )}>
       <div
-        className='flex-1 w-full'
-        style={{ minHeight: '100vh' }}
+        className='flex-1 w-full h-full'
       >
         {!hideHeader &&
-        <ClientOnly>
-          <Header />
-          <MobileSidebar/>
-          {searchModalOpen && <SearchModal />}
-        </ClientOnly>
+          <ClientOnly>
+            <Header />
+            <MobileSidebar />
+            {searchModalOpen && <SearchModal />}
+          </ClientOnly>
         }
         {!hideSearch &&
-          <div className='mt-24  mb-8 block minlg:hidden'>
+          <div className='mt-24 mb-8 block minlg:hidden'>
             <SearchContent isHeader mobileSearch mobileSidebar={false} />
           </div>
         }
-        {showDNavigation && <DiscoveryNavigation/>}
+        {showDNavigation && <DiscoveryNavigation />}
 
         {children}
 
@@ -69,20 +70,21 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
 
         {emailCaptureModal && <DynamicEmailCaptureModal />}
         {signOutDialogOpen &&
-         <SignOutModal
-           visible={signOutDialogOpen}
-           onClose={() => {
-             setSignOutDialogOpen(false);
-             changeWallet && openConnectModal();
-             setChangeWallet(false);
-             setProfileSelectModalOpen(false);
-             setCurrentProfileUrl('');
-           }}
-         />
+          <SignOutModal
+            visible={signOutDialogOpen}
+            onClose={() => {
+              setSignOutDialogOpen(false);
+              changeWallet && openConnectModal();
+              setChangeWallet(false);
+              setProfileSelectModalOpen(false);
+              setCurrentProfileUrl('');
+            }}
+          />
         }
 
         {!hideFooter && <Footer />}
       </div>
+      <NonAuthLikeModal />
     </div>
   );
 }

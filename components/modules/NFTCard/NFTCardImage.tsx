@@ -9,9 +9,11 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getGenesisKeyThumbnail, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
+import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
@@ -21,7 +23,7 @@ import NFTLogo from 'public/nft_logo_yellow.svg?svgr';
 import OpenseaIcon from 'public/OS_gray_card.svg?svgr';
 import ShopIcon from 'public/shop-icon.svg?svgr';
 import X2Y2Gray from 'public/x2y2_gray.svg?svgr';
-import { useCallback, useContext } from 'react';
+import { MouseEvent, useCallback, useContext } from 'react';
 import { PartialDeep } from 'type-fest';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
 import { useAccount } from 'wagmi';
@@ -44,11 +46,11 @@ export function NFTCardImage(props: NFTCardImageProps) {
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
-  const chainId = useDefaultChainId();
 
-  const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
+  const isAddressValid = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId);
+  const processedImageURLs = isAddressValid ?
     [getGenesisKeyThumbnail(props.tokenId)]
-    : props.images.length > 0 ? props.images?.map(processIPFSURL) : [props?.nft?.metadata?.imageURL].map(processIPFSURL);
+    : props.images.length > 0 ? props.images : [props?.nft?.metadata?.imageURL];
 
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
 
@@ -60,14 +62,24 @@ export function NFTCardImage(props: NFTCardImageProps) {
           className='h-[25px] w-[25px] relative shrink-0'
           alt="NFT.com logo redirect"
           layout="fill"
+          key='nft-com-logo'
         />
       );
     case ExternalProtocol.LooksRare:
       return (
         <LooksrareIcon
+          onClick={(e: MouseEvent<any>) => {
+            e.preventDefault();
+            window.open(
+              getLooksrareAssetPageUrl(props.contractAddr, BigNumber.from(props.tokenId).toString()),
+              '_blank'
+            );
+            e.stopPropagation();
+          }}
           className='h-[25px] w-[25px] relative shrink-0 grayscale'
           alt="Looksrare logo redirect"
           layout="fill"
+          key='looksrare-icon'
         />
       );
     case ExternalProtocol.Seaport:
@@ -76,6 +88,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
           className='h-[25px] w-[25px] relative shrink-0 grayscale'
           alt="Opensea logo redirect"
           layout="fill"
+          key='opensea-icon'
         />
       );
     case ExternalProtocol.X2Y2:
@@ -84,12 +97,13 @@ export function NFTCardImage(props: NFTCardImageProps) {
           className='h-[25px] w-[25px] relative shrink-0 grayscale'
           alt="Opensea logo redirect"
           layout="fill"
+          key='x2y2-gray-icon'
         />
       );
     default:
       break;
     }
-  }, []);
+  }, [props]);
 
   const validListings = filterValidListings(props?.listings || props?.nft?.listings?.items);
 
@@ -114,7 +128,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
                 <button
                   onClick={async (e) => {
                     e.preventDefault();
-                    const allowance = await props?.currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
+                    const allowance = await props?.currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
                     const protocolAllowance = await props?.currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(props?.bestListing?.order?.protocol as ExternalProtocol));
                     const price = getListingPrice(props?.bestListing);
                     stagePurchase({
@@ -133,13 +147,13 @@ export function NFTCardImage(props: NFTCardImageProps) {
                       protocolData: props?.bestListing?.order?.protocol === ExternalProtocol.Seaport ?
                         props?.bestListing?.order?.protocolData as SeaportProtocolData :
                         props?.bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
-                          props?.bestListing?.order?.protocolData as X2Y2ProtocolData:
+                          props?.bestListing?.order?.protocolData as X2Y2ProtocolData :
                           props?.bestListing?.order?.protocolData as LooksrareProtocolData
                     });
                     toggleCartSidebar('Buy');
                   }}
                   className="p-[11px] bg-footer-bg hover:bg-[#ECECEC] text-button-tertiary-hover rounded-[10px] h-10 w-10">
-                  <ShopIcon/>
+                  <ShopIcon />
                 </button>
               </div>
               <div className='absolute bottom-7 left-7 flex flex-row w-full justify-between items-center pr-14 flex-wrap'>
@@ -156,7 +170,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
                 )}
               </div>
             </div>
-            : null }
+            : null}
         </div>
       </div>
     </div>

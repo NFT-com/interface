@@ -1,23 +1,19 @@
-/* eslint-disable @next/next/no-img-element */
-import { genereteRandomPreloader, getStaticAsset } from 'utils/helpers';
+import { generateRandomPreloader, staticNftComCdnLoader } from 'lib/image/loader';
+import dynamic from 'next/dynamic';
+const BlurImage = dynamic(import('components/elements/BlurImage'));
 
 export default function PreloaderImage() {
   const getPreloader = () => {
-    const index = genereteRandomPreloader();
-    switch (index) {
-    case 0:
-      return <img src={getStaticAsset('public/preloaderImg-1.svg')} alt='public/preloaderImg-1.svg'/>;
-    case 1:
-      return <img src={getStaticAsset('public/preloaderImg-2.svg')} alt='public/preloaderImg-2.svg'/>;
-    case 2:
-      return <img src={getStaticAsset('public/preloaderImg-3.svg')} alt='public/preloaderImg-3.svg'/>;
-    case 3:
-      return <img src={getStaticAsset('public/preloaderImg-4.svg')} alt='public/preloaderImg-4.svg'/>;
-    case 4:
-      return <img src={getStaticAsset('public/preloaderImg-5.svg')} alt='public/preloaderImg-5.svg'/>;
-    default:
-      return 0;
-    }
+    const index = generateRandomPreloader();
+    const imageProps = { alt: 'grey placeholder image', loader: staticNftComCdnLoader };
+    const options = {
+      0: <BlurImage src={'public/preloaderImg-1.svg'} {...imageProps}/>,
+      1: <BlurImage src={'public/preloaderImg-2.svg'} {...imageProps}/>,
+      2: <BlurImage src={'public/preloaderImg-3.svg'} {...imageProps}/>,
+      3: <BlurImage src={'public/preloaderImg-4.svg'} {...imageProps}/>,
+      4: <BlurImage src={'public/preloaderImg-5.svg'} {...imageProps}/>,
+    };
+    return options[index] || options[0];
   };
 
   return (

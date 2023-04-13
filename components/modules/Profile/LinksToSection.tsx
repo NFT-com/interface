@@ -39,8 +39,8 @@ export function LinksToSection(props: LinksToSectionParams) {
       image: '/link-to-green-key.png',
       section: 'GALLERY',
       title: 'NFT.COM Gallery',
-      description: 'Explore all Genesis Keys and existing NFT.com Profiles in our Gallery.',
-      linkTo: '/app/gallery'
+      description: 'Explore all our Genesis Keys.',
+      linkTo: '/app/collection/official/nftcom-genesis-key'
     },
     {
       image: '/link-to-nftcom-2.png',
@@ -70,8 +70,8 @@ export function LinksToSection(props: LinksToSectionParams) {
       image: '/link-to-green-key.png',
       section: 'GALLERY',
       title: 'NFT.COM Gallery',
-      description: 'Explore all Genesis Keys and existing NFT.com Profiles in our Gallery.',
-      linkTo: '/app/gallery'
+      description: 'Explore all our Genesis Keys.',
+      linkTo: '/app/collection/official/nftcom-genesis-key'
     },
     {
       image: '/link-to-nftcom-2.png',

@@ -1,10 +1,12 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileLikeCountQuery } from 'graphql/generated/types';
-import { Doppler, getEnv } from 'utils/env';
-import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
+import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
+import { useUser } from 'hooks/state/useUser';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { isNullOrEmpty } from 'utils/format';
 
 import useSWR, { mutate,SWRConfiguration } from 'swr';
-import { useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 export interface ProfileLikeData {
   profileData: ProfileLikeCountQuery;
@@ -17,9 +19,12 @@ export function useProfileLikeQuery(
   url: string, options?: SWRConfiguration
 ): ProfileLikeData {
   const sdk = useGraphQLSDK();
-  const { chain } = useNetwork();
-  
-  const keyString = 'ProfileLikeQuery' + url + chain?.id;
+  const { likeId } = useNonProfileModal();
+  const defaultChainId = useDefaultChainId();
+  const { currentProfileId } = useUser();
+  const { address: currentAccount } = useAccount();
+
+  const keyString = 'ProfileLikeQuery' + url + defaultChainId + likeId + currentProfileId + currentAccount;
 
   const { data, error } = useSWR(keyString, async () => {
     if (isNullOrEmpty(url)) {
@@ -28,7 +33,8 @@ export function useProfileLikeQuery(
     try {
       const result = await sdk.ProfileLikeCount({
         url,
-        chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
+        chainId: defaultChainId,
+        likedById: currentProfileId
       });
       return result;
     } catch (error) {

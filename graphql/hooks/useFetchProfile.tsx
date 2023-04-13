@@ -1,7 +1,8 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileQuery } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
-import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { getChainIdString } from 'utils/helpers';
 
 import { useCallback,useState } from 'react';
 import { useNetwork } from 'wagmi';
@@ -26,6 +27,7 @@ export function useFetchProfile(): FetchProfile {
       const result = await sdk.Profile({
         url,
         chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+        likedById: ''
       });
       setLoading(false);
       return result;

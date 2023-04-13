@@ -3,12 +3,14 @@ import Toast from 'components/elements/Toast';
 import { useEmailSubscribe } from 'hooks/useEmailSubscribe';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { filterNulls, getStaticAsset, isNullOrEmpty } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import AOS from 'aos';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import { staticNftComCdnLoader } from 'lib/image/loader';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import DiscordLogo from 'public/discord.svg?svgr';
@@ -16,6 +18,8 @@ import TwitterLogo from 'public/twitter.svg?svgr';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
+
+const BlurImage = dynamic(import('components/elements/BlurImage'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,6 +31,7 @@ export const FooterLarge = () => {
   const [email, setEmail] = useState<string>('');
   const router = useRouter();
   const location = router && router?.pathname;
+  const isValidEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 
   useEffect(() => {
     AOS.init({
@@ -61,11 +66,6 @@ export const FooterLarge = () => {
     {
       title: 'Learn',
       links: filterNulls([
-        {
-          name: 'Gallery',
-          link: '/app/gallery',
-          newTab: false,
-        },
         !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(profileTokens)
           ? {
             name: 'Vault',
@@ -172,7 +172,7 @@ export const FooterLarge = () => {
             <div data-aos="fade-right" data-aos-delay="100" className='flex items-center mb-[2.625rem] minlg:mb-0'>
               <Link href='/' passHref>
                 <div className='w-[3.8rem] h-[3.8rem]'>
-                  <img src={getStaticAsset('public/LogoFooterWhite.svg')} alt='public/LogoFooterWhite.svg' className='w-[3.8rem] h-[3.8rem] justify-start' />
+                  <BlurImage src={'public/LogoFooterWhite.svg'} loader={staticNftComCdnLoader} alt='public/LogoFooterWhite.svg' width={60} height={60} className='w-[3.8rem] h-[3.8rem] justify-start' />
                 </div>
               </Link>
 
@@ -274,6 +274,7 @@ export const FooterLarge = () => {
                 'shadow-none focus:border-transparent focus:ring-0'
               )} />
               <button
+                disabled={!email.match(isValidEmail)}
                 type="submit"
                 onClick={async () => {
                   await subscribe(email)

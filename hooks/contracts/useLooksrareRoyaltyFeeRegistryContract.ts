@@ -1,7 +1,7 @@
 import { RoyaltyFeeRegistry } from 'constants/typechain/looksrare';
 import { RoyaltyFeeRegistry__factory } from 'constants/typechain/looksrare/factories/RoyaltyFeeRegistry__factory';
 import { Maybe } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { Provider } from '@ethersproject/providers';
 import { Addresses, addressesByNetwork } from '@looksrare/sdk';

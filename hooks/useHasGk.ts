@@ -1,4 +1,4 @@
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useOwnedGenesisKeyTokens } from './useOwnedGenesisKeyTokens';
 

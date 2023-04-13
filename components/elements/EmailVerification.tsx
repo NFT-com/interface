@@ -1,5 +1,5 @@
 import EmailStatusIcon from 'components/elements/EmailStatusIcon';
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { ModalButton } from 'components/elements/ModalButton';
 import { useConfirmEmailMutation } from 'graphql/hooks/useConfirmEmailMutation';
 import { useCreateUserMutation } from 'graphql/hooks/useCreateUserMutation';
@@ -9,7 +9,7 @@ import { useUpdateEmailMutation } from 'graphql/hooks/useUpdateEmailMutation';
 import { useUpdateMeMutation } from 'graphql/hooks/useUpdateMeMutation';
 import { useBidModal } from 'hooks/state/useBidModal';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty, joinClasses } from 'utils/helpers';
+import { isNullOrEmpty, joinClasses } from 'utils/format';
 
 import ClientOnly from './ClientOnly';
 

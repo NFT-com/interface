@@ -2,7 +2,7 @@ import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useCreateUserMutation } from 'graphql/hooks/useCreateUserMutation';
 import { useMeQuery } from 'graphql/hooks/useMeQuery';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 
 import { useSupportedNetwork } from './useSupportedNetwork';
 
@@ -77,7 +77,7 @@ export function useMaybeCreateUser(): void {
                 network: 'ethereum',
               }
             };
-          
+
           const result = await createUser(userData);
 
           mutateMe();

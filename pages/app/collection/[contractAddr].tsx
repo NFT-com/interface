@@ -1,64 +1,83 @@
+import DefaultSEO from 'config/next-seo.config';
+import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import { Collection } from 'components/modules/Collection/Collection';
+import { CollectionResponse } from 'graphql/hooks/useCollectionQuery';
 import NotFoundPage from 'pages/404';
 import { Doppler, getEnvBool } from 'utils/env';
-import { tw } from 'utils/tw';
 
 import { ethers } from 'ethers';
+import { getCollectionPage } from 'lib/graphql-ssr/collection';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import { NextSeo } from 'next-seo';
+import { SWRConfig } from 'swr';
 
-export type CollectionPageRouteParams = {
-  address: string;
-}
+const Collection = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.Collection), { loading: () => <LoaderPageFallback /> }); // Adds fallback while loading Collection
+const CollectionBanner = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionBanner));
+const CollectionBody = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionBody));
+const CollectionDescription = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionDescription));
+const CollectionDetails = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionDetails));
+const CollectionHeader = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.CollectionHeader));
 
-interface InfoCardProps {
-  title: string;
-  value: string;
-  unit?: string
-}
-
-export const InfoCard = ({ title, value, unit }: InfoCardProps) => {
-  return (
-    <div className="bg-white rounded-xl pl-5 pt-5 pb-5">
-      <div className="text-base font-bold text-gray-500 tracking-normal">{title}</div>
-      <div className="font-medium text-black text-3xl mt-1">
-        <b>{value} </b>
-        <span className="text-lg font-normal">{unit}</span>
-      </div>
-    </div>
-  );
-};
-
-export const CardsView = () => {
-  return (
-    <div className={tw('grid gap-3 minlg:gap-4 minlg:grid-cols-4',
-      'grid-cols-2 minlg:my-[11.2rem] my-[6.82rem]')}>
-      <InfoCard title={'Total NFT Value'} value={'14.08'} unit={'ETH'} />
-      <InfoCard title={'Number of Transactions'} value={'128'} />
-      <InfoCard title={'Price Change'} value={'0.7'} unit={'%'} />
-      <InfoCard title={'Volume'} value={'0.7'} unit={'ETH'} />
-    </div>
-  );
-};
-
-export default function CollectionPage() {
+export default function UnofficialCollectionPage({ fallback }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { collection: preCollection } = Object.values(fallback)[0] ?? {};
   const router = useRouter();
   const { contractAddr } = router.query;
-
   const caseInsensitiveAddr = contractAddr?.toString().toLowerCase();
+
+  const seoTitle = `NFT Collection: ${preCollection.name}`;
+  const seoConfig = {
+    ...DefaultSEO,
+    title: seoTitle,
+    description: preCollection?.description,
+    openGraph: {
+      url: `https://www.nft.com/app/collection/${contractAddr}`,
+      title: seoTitle,
+      description: preCollection.description,
+      images: [
+        {
+          url: preCollection?.logoUrl,
+          alt: `${preCollection?.name} Logo`,
+        },
+      ],
+      site_name: 'NFT.com',
+    }
+  };
+
   if (!ethers.utils.isAddress(caseInsensitiveAddr) || !getEnvBool(Doppler.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED)) {
     return <NotFoundPage />;
   }
 
   return (
-    <Collection contract={contractAddr as string} />
+    <SWRConfig value={fallback}>
+      <NextSeo
+        {...{ ...seoConfig }}
+      />
+      <Collection contract={contractAddr as string} >
+        <CollectionBanner />
+        <CollectionHeader>
+          <CollectionDescription />
+          <CollectionDetails />
+        </CollectionHeader>
+        <CollectionBody />
+      </Collection >
+    </SWRConfig>
   );
 }
 
-CollectionPage.getLayout = function getLayout(page) {
+UnofficialCollectionPage.getLayout = function getLayout(page) {
   return (
     <DefaultLayout>
-      { page }
+      {page}
     </DefaultLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<{
+  fallback: {
+    [x: string]: CollectionResponse,
+  }
+}> = async ({ params }) => {
+  return await getCollectionPage(params);
 };

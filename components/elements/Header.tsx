@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { WalletDropdown } from 'components/modules/Header/WalletDropdown';
@@ -8,8 +7,10 @@ import { useScrollPosition } from 'graphql/hooks/useScrollPosition';
 import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
+import { useCheckIsProfileLoaded } from 'hooks/useCheckIsProfileLoaded';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
-import { filterNulls, getStaticAsset } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
+import { getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { DropdownPickerModal } from './DropdownPickerModal';
@@ -24,11 +25,15 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { CaretDown, List, X } from 'phosphor-react';
+import BetaIcon from 'public/beta-icon.svg?svgr';
+import CartIcon from 'public/cart.svg?svgr';
+import WalletIcon from 'public/header_wallet.svg?svgr';
 import React, { useContext, useEffect } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
+const BlurImage = dynamic(import('components/elements/BlurImage'));
 const DynamicNotificationBadge = dynamic<React.ComponentProps<typeof StaticNotificationBadge>>(() => import('components/modules/Notifications/NotificationBadge').then(mod => mod.NotificationBadge));
 
 type HeaderProps = {
@@ -51,6 +56,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
   const { user } = useUser();
 
   useMaybeCreateUser();
+  useCheckIsProfileLoaded();
 
   const useDarkMode = user?.isDarkMode;
 
@@ -63,6 +69,10 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
       duration : 700
     });
   });
+
+  const renderLogoMode = () => useDarkMode ?
+    <BlurImage width={40} height={40} src={getStaticAsset('public/LogoLight.svg')} alt='NFT.com Logo' className='justify-start' /> :
+    <BlurImage width={40} height={40} src={getStaticAsset('public/Logo.svg')} alt='NFT.com Logo' className='justify-start' />;
 
   if (homepageHeader) {
     return (
@@ -86,23 +96,29 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
               <div className="flex items-center">
                 <Link href='/' passHref>
                   <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-8">
-                    {mobileSidebarOpen ?
-                      <p className='font-medium'>MENU</p>
-                      :
+                    <div className='block minlg:hidden'>
+                      {mobileSidebarOpen ?
+                        <p className='font-medium'>MENU</p>
+                        :
+                        <div className='w-10 h-10'>
+                          {renderLogoMode()}
+                        </div>
+                      }
+                    </div>
+
+                    <div className='hidden minlg:block'>
                       <div className='w-10 h-10'>
-                        {useDarkMode ?
-                          <img src={getStaticAsset('public/LogoLight.svg')} alt='public/LogoLight.svg' className='justify-start' /> :
-                          <img src={getStaticAsset('public/Logo.svg')} alt='public/Logo.svg' className='justify-start' />
-                        }
+                        {renderLogoMode()}
                       </div>
-                    }
+                    </div>
+
                     <svg className='ml-3 hidden minlg:block' width="63" height="18" viewBox="0 0 63 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M16.3704 0.875H19.9551V17.1235H16.3704L3.51321 5.26179L3.58454 7.83843V17.1235H-6.10352e-05V0.875H3.58454L16.4418 12.7603L16.3704 10.1601V0.875Z" fill="black" />
                       <path d="M26.3558 10.393V17.125H22.7712V0.875H40.9113V4.12529H26.3574V7.14268H39.4787V10.393H26.3558Z" fill="black" />
                       <path d="M54.6126 4.12529V17.125H51.028V4.12529H43.1409V0.875H62.4996V4.12529H54.6126Z" fill="black" />
                     </svg>
                     <div className='w-9 h-4 ml-2'>
-                      <img src={getStaticAsset('public/beta-icon.svg')} alt='public/beta-icon.svg' />
+                      <BetaIcon alt="NFT.com Beta Icon" />
                     </div>
                   </div>
                 </Link>
@@ -152,10 +168,6 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     <CaretDown size={20} color="black" weight="bold" className='ml-2' />
                   </a>
                 </DropdownPickerModal>
-
-                <Link href='/app/gallery' legacyBehavior>
-                  <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>Gallery</a>
-                </Link>
 
                 <DropdownPickerModal
                   closeModalOnClick
@@ -213,7 +225,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
+                      <WalletIcon alt='Wallet Icon' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -236,7 +248,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     'flex items-center justify-center cursor-pointer'
                   )}
                 >
-                  <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
+                  <CartIcon alt='Cart Icon' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                 </button>
               </div>
               <WalletRainbowKitButton header bgLight={!useDarkMode} showWhenConnected signInButton={true} headerButtonColor />
@@ -259,7 +271,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
+                      <WalletIcon alt="Wallet Icon" className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -283,7 +295,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     'flex items-center justify-center cursor-pointer'
                   )}
                 >
-                  <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
+                  <CartIcon alt='Cart Icon' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                 </button>
               </div>
             </div>
@@ -322,23 +334,28 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
             <div className="flex items-center">
               <Link href='/' passHref>
                 <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-8">
-                  {mobileSidebarOpen ?
-                    <p className='font-medium'>MENU</p>
-                    :
+                  <div className='block minlg:hidden'>
+                    {mobileSidebarOpen ?
+                      <p className='font-medium'>MENU</p>
+                      :
+                      <div className='w-10 h-10'>
+                        {renderLogoMode()}
+                      </div>
+                    }
+                  </div>
+
+                  <div className='hidden minlg:block'>
                     <div className='w-10 h-10'>
-                      {useDarkMode ?
-                        <img src={getStaticAsset('public/LogoLight.svg')} alt='public/LogoLight.svg' className='justify-start' /> :
-                        <img src={getStaticAsset('public/Logo.svg')} alt='public/Logo.svg' className='justify-start' />
-                      }
+                      {renderLogoMode()}
                     </div>
-                  }
+                  </div>
                   <svg className='ml-3 hidden minlg:block' width="63" height="18" viewBox="0 0 63 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16.3704 0.875H19.9551V17.1235H16.3704L3.51321 5.26179L3.58454 7.83843V17.1235H-6.10352e-05V0.875H3.58454L16.4418 12.7603L16.3704 10.1601V0.875Z" fill="black" />
                     <path d="M26.3558 10.393V17.125H22.7712V0.875H40.9113V4.12529H26.3574V7.14268H39.4787V10.393H26.3558Z" fill="black" />
                     <path d="M54.6126 4.12529V17.125H51.028V4.12529H43.1409V0.875H62.4996V4.12529H54.6126Z" fill="black" />
                   </svg>
                   <div className='w-9 h-4 ml-2'>
-                    <img src={getStaticAsset('public/beta-icon.svg')} alt='public/beta-icon.svg' />
+                    <BetaIcon alt='NFT.com Beta Icon' />
                   </div>
                 </div>
               </Link>
@@ -390,10 +407,6 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   <CaretDown size={20} color="black" weight="bold" className='ml-2' />
                 </a>
               </DropdownPickerModal>
-
-              <Link href='/app/gallery' legacyBehavior>
-                <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>Gallery</a>
-              </Link>
 
               <DropdownPickerModal
                 closeModalOnClick
@@ -462,7 +475,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
+                      <WalletIcon alt='Wallet Icon' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -485,7 +498,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   'flex items-center justify-center cursor-pointer'
                 )}
               >
-                <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
+                <CartIcon alt="Cart Icon" className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
               </button>
             </div>
             <WalletRainbowKitButton header bgLight={!useDarkMode} showWhenConnected signInButton={true} headerButtonColor />
@@ -508,7 +521,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                         'flex items-center justify-center cursor-pointer'
                       )}
                     >
-                      <img src={getStaticAsset('public/header_wallet.svg')} alt='public/header_wallet.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
+                      <WalletIcon alt='Wallet Icon' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
                     </button>
                   </div>
                 </WalletDropdown>
@@ -532,7 +545,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   'flex items-center justify-center cursor-pointer'
                 )}
               >
-                <img src={getStaticAsset('public/cart.svg')} alt='public/cart.svg' className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
+                <CartIcon alt="Cart Icon" className='h-[24px] w-[24px]' color={useDarkMode ? primaryIcon : 'black'} />
               </button>
             </div>
           </div>

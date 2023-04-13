@@ -1,21 +1,26 @@
-import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import { ImageProps } from 'next/image';
 
-export const RoundedCornerMediaImage = (props: {
+const BlurImage = dynamic(import('./BlurImage'));
+
+export interface RoundedCornerMediaImageProps extends Omit<ImageProps, 'alt'> {
+  alt?: string;
   src: any;
   priority?: boolean;
   onError: () => void;
   className: string;
-}) => {
+}
+
+const RoundedCornerMediaImage = (props: RoundedCornerMediaImageProps) => {
   return (
-    <Image
+    <BlurImage
       alt='NFT Image'
       key={props.src}
       quality='50'
       fill
-      priority={props?.priority}
-      src={props.src}
-      onError={props.onError}
-      className={props.className}
+      {...props}
     />
   );
 };
+
+export default RoundedCornerMediaImage;

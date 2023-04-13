@@ -2,7 +2,8 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Toast from 'components/elements/Toast';
 import { useEmailSubscribe } from 'hooks/useEmailSubscribe';
-import { filterNulls, getStaticAsset } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
+import { getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Dialog, Transition } from '@headlessui/react';
@@ -27,11 +28,6 @@ export const FooterSmall = () => {
     {
       title: 'Learn',
       links: filterNulls([
-        {
-          name: 'Gallery',
-          link: '/app/gallery',
-          newTab: false,
-        },
         {
           name: 'Docs',
           link: 'https://docs.nft.com',

@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Nft } from 'graphql/generated/types';
@@ -9,7 +9,7 @@ import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { usePaginator } from 'hooks/usePaginator';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
-import { filterNulls } from 'utils/helpers';
+import { filterNulls } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import AssetTableRow from './AssetTableRow';
@@ -47,7 +47,7 @@ export default function AssetsPages() {
       loadedAssetsNextPage?.myNFTs?.items?.length > 0 &&
       lastAddedPage !== loadedAssetsNextPage?.myNFTs?.pageInfo?.firstCursor
     ) {
-      if(assetData?.length > 0 && assetData[0]?.wallet?.address === currentAddress){
+      if (assetData?.length > 0 && assetData[0]?.wallet?.address === currentAddress) {
         setAssetData([
           ...assetData,
           ...filterNulls(loadedAssetsNextPage?.myNFTs?.items)
@@ -69,7 +69,7 @@ export default function AssetsPages() {
 
   const onChangeHandler = useCallback(async (asset) => {
     const index = selectedAssets.findIndex((item) => item.id === asset.id);
-    if(index !== -1) {
+    if (index !== -1) {
       setSelectedAssets(selectedAssets.filter((_, i) => i !== index));
     } else {
       setSelectedAssets([...selectedAssets, asset]);
@@ -89,7 +89,7 @@ export default function AssetsPages() {
       <div className='w-full max-w-nftcom mx-auto relative'>
         <h2 className='font-bold text-black text-[40px] mb-6'>
           <span className='text-[#F9D963] mr-1'>/</span>
-            My Assets
+          My Assets
         </h2>
         <div className='flex'>
           {selectedAssets.length ?
@@ -162,7 +162,7 @@ export default function AssetsPages() {
             </div>
           }
           {selectedAssets.length ?
-            <div onClick={() => {setSelectedAssets([]);}} className='hover:cursor-pointer w-full minlg:w-[200px] ml-2 bg-white text-[#1F2127] font-bold p-2 rounded-[20px] text-center border border-[#D5D5D5]'>
+            <div onClick={() => { setSelectedAssets([]); }} className='hover:cursor-pointer w-full minlg:w-[200px] ml-2 bg-white text-[#1F2127] font-bold p-2 rounded-[20px] text-center border border-[#D5D5D5]'>
               <p>Cancel</p>
             </div>
             : null

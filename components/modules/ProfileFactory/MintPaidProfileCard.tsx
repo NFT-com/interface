@@ -9,7 +9,7 @@ import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 

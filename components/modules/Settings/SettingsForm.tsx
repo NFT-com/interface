@@ -1,5 +1,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import { isNullOrEmpty, sameAddress } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/format';
+import { sameAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ethers } from 'ethers';
@@ -98,4 +99,3 @@ export default function SettingsForm({ buttonText, inputVal, changeHandler, subm
     </div>
   );
 }
-  

@@ -1,4 +1,4 @@
-import Loader from 'components/elements/Loader';
+import Loader from 'components/elements/Loader/Loader';
 import { LeaderboardQuery } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
@@ -95,3 +95,5 @@ export function LeaderBoard({ data }: LeaderBoardProps) {
     </table>
   </div>;
 }
+
+export default LeaderBoard;

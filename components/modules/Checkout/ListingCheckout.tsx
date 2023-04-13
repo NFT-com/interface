@@ -14,7 +14,7 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/format';
 import { getEtherscanLink, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 

@@ -5,11 +5,9 @@ import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuer
 import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { Doppler, getEnvBool } from 'utils/env';
+import { isNullOrEmpty } from 'utils/format';
 import {
   getGenesisKeyThumbnail,
-  isNullOrEmpty,
-  processIPFSURL,
   sameAddress,
 } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
@@ -48,12 +46,13 @@ export interface CollectionCardProps {
 
 export function CollectionCard(props: CollectionCardProps) {
   const defaultChainId = useDefaultChainId();
+
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings || props?.nft) ? null : props.tokenId);
-  const { data: collectionData, mutate: mutateCollectionData } = useCollectionLikeCountQuery(defaultChainId, props?.contractAddr || props?.contractAddress);
+  const { data: collectionData, mutate: mutateCollectionData } = useCollectionLikeCountQuery(props?.contractAddr || props?.contractAddress);
 
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
-    : props?.images?.length > 0 ? props?.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
+    : props?.images?.length > 0 ? props?.images : [nft?.metadata?.imageURL];
 
   const { setLike, unsetLike } = useSetLikeMutation(
     props?.collectionId,
@@ -78,16 +77,15 @@ export function CollectionCard(props: CollectionCardProps) {
   return (
     <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden">
       <div className="h-44 relative ">
-        {getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) &&
-          <div className='absolute top-4 right-4 z-50'>
-            <LikeCount
-              count={collectionData?.collection?.likeCount}
-              isLiked={collectionData?.collection?.isLikedByUser}
-              onClick={collectionData?.collection?.isLikedByUser ? unsetLike :setLike}
-              mutate={mutateCollectionData}
-            />
-          </div>
-        }
+        <div className='absolute top-4 right-4 z-50'>
+          <LikeCount
+            count={collectionData?.collection?.likeCount}
+            isLiked={collectionData?.collection?.isLikedBy}
+            onClick={collectionData?.collection?.isLikedBy ? unsetLike :setLike}
+            mutate={mutateCollectionData}
+          />
+        </div>
+
         <RoundedCornerMedia
           variant={RoundedCornerVariant.None}
           width={600}
