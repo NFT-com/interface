@@ -2,44 +2,51 @@ import { useTabs } from 'hooks/utils';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
-import { ReactNode } from 'react';
+import { ReactNode, useCallback } from 'react';
 
 type Tab = {
   label: string;
-  content: ReactNode;
+  content?: ReactNode;
+  labelChild?: ReactNode;
 };
 
 type TabsProps = {
   tabOptions: Tab[];
   defaultTab?: number;
   onTabChange?: (selectedTab: string) => void;
+  //contrains tab with to max label content
+  constrainTabs?: boolean
 };
 
-export function Tabs({ tabOptions, defaultTab = 0, onTabChange }: TabsProps) {
-  const [selectedTab, setSelectedTab] = useTabs(defaultTab, tabOptions.reduce((obj, string, index) => (obj[index] = string, obj), {}));
+export function Tabs({ tabOptions, defaultTab, onTabChange, constrainTabs }: TabsProps) {
+  const [selectedTab, setSelectedTab] = useTabs(defaultTab ?? 0, tabOptions.reduce((obj, string, index) => (obj[index] = string, obj), {}));
 
-  const handleTabChange = (index: number) => {
+  const handleTabChange = useCallback((index: number) => {
     setSelectedTab(index);
     if (onTabChange) {
       onTabChange(tabOptions[index]?.label);
     }
-  };
+  }, [onTabChange, setSelectedTab, tabOptions]);
 
   return (
     <Tab.Group>
-      <Tab.List className="flex space-x-4 bg-[#F6F6F6] rounded-3xl">
+      <Tab.List className={tw(
+        'flex space-x-2 bg-[#F6F6F6] rounded-3xl',
+        constrainTabs ? 'w-max' : 'w-full'
+      )}>
         {tabOptions.map((tab, index) => (
           <Tab
             key={`tab-${index}`}
-            className={({ selected }) =>
-              tw(
-                'w-full rounded-3xl py-2.5 md:px-5 px-8 font-noi-grotesk text-[16px] font-medium leading-5 text-[#6F6F6F]',
-                selected && 'bg-black text-[#F8F8F8]'
-              )
+            className={tw(
+              constrainTabs ? 'w-max' : 'w-full',
+              'rounded-3xl py-2.5 md:px-5 px-8 font-noi-grotesk text-[16px] font-medium leading-5 text-[#6F6F6F] flex justify-center',
+              selectedTab === index && 'bg-black text-[#F8F8F8]'
+            )
             }
             onClick={() => handleTabChange(index)}
           >
             {tab.label}
+            {tab?.labelChild}
           </Tab>
         ))}
       </Tab.List>

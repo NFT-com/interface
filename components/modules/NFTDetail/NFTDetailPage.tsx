@@ -1,4 +1,5 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
+import { Tabs } from 'components/elements/Tabs';
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
@@ -17,8 +18,7 @@ import { NFTDetailFeaturedBy } from './NFTDetailFeaturedBy';
 import { NFTDetailMoreFromCollection } from './NFTDetailMoreFromCollection';
 import { Properties } from './Properties';
 
-import { Tab } from '@headlessui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 import { useAccount } from 'wagmi';
 
@@ -26,11 +26,6 @@ export interface NFTDetailPageProps {
   collection: string;
   tokenId: string;
 }
-
-const detailTabTypes = {
-  0: 'Info',
-  1: 'Traits'
-};
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
   const { address: currentAddress } = useAccount();
@@ -57,11 +52,33 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     return () => clearTimeout(delayDebounceFn);
   }, [nft?.id, refreshNft]);
 
-  const [selectedDetailTab, setSelectedDetailTab] = useState(0);
-
   const showListings = useMemo(() => {
     return !isNullOrEmpty(filterValidListings(nft?.listings?.items));
   }, [nft]);
+
+  const tabs = [
+    {
+      label: 'Info',
+      content: <>
+        <div className='flex w-full p-4 font-noi-grotesk'>
+          <DescriptionDetail nft={nft} />
+        </div>
+        <div className='flex w-full p-4 font-noi-grotesk'>
+          <NftChainInfo nft={nft} />
+        </div>
+      </>
+    },
+    {
+      label: 'Traits',
+      content: <>
+        <div className='flex w-full p-4'>
+          <div className='py-4 font-noi-grotesk w-full'>
+            <Properties nft={nft} />
+          </div>
+        </div>
+      </>
+    },
+  ];
 
   const DetailTabsComponent = () => {
     return (
@@ -79,47 +96,12 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           </div>
           <div className='flex w-full items-center p-4 pb-0 justify-start'>
             <div className='justify-start'>
-              <Tab.Group selectedIndex={selectedDetailTab} onChange={(index) => { setSelectedDetailTab(index); }}>
-                <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
-                  {Object.keys(detailTabTypes).map((detailTab) => (
-                    <Tab key={detailTab}>
-                      {({ selected }) =>
-                        <div
-                          className={
-                            tw(
-                              'rounded-3xl py-2.5 md:px-5 px-8 text-[#6F6F6F] font-medium font-noi-grotesk text-[16px] md:w-[110px] w-[150px] leading-6',
-                              selected && 'bg-black text-[#F8F8F8] font-noi-grotesk text-[16px] leading-6'
-                            )
-                          }
-                        >
-                          {detailTabTypes[detailTab]}
-                        </div>
-                      }
-                    </Tab>
-                  ))}
-                </Tab.List>
-              </Tab.Group>
+              <Tabs
+                tabOptions={tabs}
+                constrainTabs
+              />
             </div>
           </div>
-          {selectedDetailTab == 0 &&
-            <>
-              <div className='flex w-full p-4 font-noi-grotesk'>
-                <DescriptionDetail nft={nft} />
-              </div>
-              <div className='flex w-full p-4 font-noi-grotesk'>
-                <NftChainInfo nft={nft} />
-              </div>
-            </>
-          }
-          {selectedDetailTab == 1 &&
-            <>
-              <div className='flex w-full p-4'>
-                <div className='py-4 font-noi-grotesk w-full'>
-                  <Properties nft={nft} />
-                </div>
-              </div>
-            </>
-          }
         </div>
       </div>
     );
