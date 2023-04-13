@@ -11,7 +11,7 @@ export interface PickerOption {
   label: string;
   onSelect: () => void;
   color?: string;
-  icon?: any;
+  icon?: string | ReactNode;
   imageSize?: number;
   customIconClass?: string;
   disabled?: boolean
