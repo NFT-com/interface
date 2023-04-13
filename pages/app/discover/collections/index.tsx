@@ -6,6 +6,7 @@ import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard
 import { CollectionLeaderBoardCard } from 'components/modules/DiscoveryCards/CollectionLeaderBoardCard';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeaderBoardQuery';
+import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -36,10 +37,9 @@ export default function CollectionsPage() {
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
   const prevFilters = usePrevious(collectionsResultsFilterBy);
-
   const { width: screenWidth } = useWindowDimensions();
-
   const COLLECTIONS_LOAD_COUNT = getPerPage('discoverCollections', screenWidth, sideNavOpen);
+  const { data: collectionLikeData } = useCollectionLikeCountQuery(collections.map((c) => c?.document?.contractAddr));
 
   useEffect(() => {
     !isDiscoverCollections && setIsDiscoverCollections(true);
@@ -107,18 +107,15 @@ export default function CollectionsPage() {
               <CollectionCard
                 key={index}
                 redirectTo={`/app/collection/${isOfficialCollection({ name: collection.document.contractName, isOfficial: collection.document.isOfficial })}/`}
-                contractAddress={collection.document?.contractAddr}
+                contractAddr={collection.document?.contractAddr}
                 collectionId={collection?.document?.id}
-                contract={collection.document?.contractAddr}
                 floorPrice={collection.document?.floor}
                 totalVolume={collection.document?.volume}
-                userName={collection.document.contractName}
                 contractName={collection.document.contractName}
                 isOfficial={collection.document.isOfficial}
-                description={collection.document.description}
-                countOfElements={collection.document.actualNumberOfNFTs}
-                maxSymbolsInString={180}
-                images={[collection.document.bannerUrl]} />
+                images={[collection.document.bannerUrl]}
+                likeInfo={collectionLikeData && collectionLikeData[index]}
+              />
             );
           })}
         </div>

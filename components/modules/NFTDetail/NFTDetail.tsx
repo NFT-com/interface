@@ -6,7 +6,6 @@ import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { getAddressForChain, nftProfile } from 'constants/contracts';
 import { LikeableType, Nft, NftType, Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
-import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useNftLikeQuery } from 'graphql/hooks/useNFTLikeQuery';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -81,11 +80,6 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const { refreshNft, loading, success } = useRefreshNftMutation();
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
 
-  const { setLike, unsetLike } = useSetLikeMutation(
-    props?.nft?.id,
-    LikeableType.Nft
-  );
-
   const refreshNftCallback = useCallback(() => {
     (async () => {
       const result = await refreshNft(props.nft?.id);
@@ -136,10 +130,13 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
                   <div className='ml-3'>
                     <LikeCount
-                      onClick={nftLikeData?.isLikedBy ? unsetLike : setLike}
                       mutate={mutateNftLike}
                       count={nftLikeData?.likeCount}
                       isLiked={nftLikeData?.isLikedBy}
+                      likeData={{
+                        id: props?.nft?.id,
+                        type: LikeableType.Nft
+                      }}
                     />
                   </div>
                 </>

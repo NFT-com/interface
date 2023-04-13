@@ -4,7 +4,7 @@ import { Meta } from '@storybook/react';
 import React, { PropsWithChildren } from 'react';
 
 export default {
-  title: 'Tooltip',
+  title: 'Elements/Tooltip',
   component: Tooltip,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   args: {
