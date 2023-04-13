@@ -131,7 +131,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
               color="white"
               weight="fill"
               className={tw(
-                'absolute -top-[18px]',
+                'absolute -top-[18px] h-7',
                 props.align === 'center' && ' left-1/2 -translate-x-1/2',
                 props.align === 'right' && (props.options[0]?.label ? 'right-8' : 'right-2.5'),
                 props.align === 'left' && (props.options[0]?.label ? 'left-8' : 'left-2.5'),

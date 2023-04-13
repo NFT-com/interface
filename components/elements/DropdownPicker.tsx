@@ -168,7 +168,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
             'border border-select-brdr',
             'divide-y',
             'bg-white',
-            'w-full absolute z-50',
+            'w-full absolute z-[51]',
             'shadow-lg',
             'max-h-[200px] overflow-auto'
           )}
