@@ -69,7 +69,7 @@ export default function CollectionsPage() {
   const showNftView = () => {
     return (
       <div className={tw(
-        'gap-2 minmd:grid minmd:gap-4 space-y-4 minmd:space-x-0 minlg:gap-4',
+        'gap-2 minmd:grid minmd:gap-4 space-y-4 minmd:space-y-0 minmd:space-x-0 minlg:gap-4',
         sideNavOpen
           ? 'minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2 minmd:grid-cols-2 grid-cols-1 w-full' :
           'minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1 w-full')}
