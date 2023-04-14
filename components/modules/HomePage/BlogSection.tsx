@@ -13,7 +13,7 @@ export interface HomePageData {
   data?: HomePageV3BlogSection;
   blogSectionTitle:{
     title: string,
-    subTitle: string,
+    subTitle: string
   }
   goToBlogButton: {
     title: string,
