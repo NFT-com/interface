@@ -60,7 +60,7 @@ export function BlogSection({ data, goToBlogButton, blogSectionTitle }: HomePage
               'disableOnInteraction': false
             }}
             className='insights-swiper flex !pl-[4vw]'>
-            {data?.items.map((preview,i ) =>
+            {data?.items.map((preview ) =>
               <SwiperSlide key={preview.slug} className='!h-auto'>
                 <Link key={preview.slug} href={`articles/${preview.slug}`} className={tw(
                   'bg-white flex flex-col flex-shrink-0 h-full rounded-lg md:mb-5 text-black',

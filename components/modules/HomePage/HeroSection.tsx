@@ -55,7 +55,7 @@ export function HeroSection({ data }: HomePageData) {
             </span>
             <span data-aos="fade-left" data-aos-delay="200"
               className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>
-                      {data?.heroTextData?.titleDrop?.thirdPhrase}
+              {data?.heroTextData?.titleDrop?.thirdPhrase}
             </span>
           </h2>
 
