@@ -3,7 +3,7 @@ import { tw } from 'utils/tw';
 
 import Image from 'next/image';
 import KeyIcon from 'public/mint-key.svg?svgr';
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
@@ -11,7 +11,7 @@ export interface PickerOption {
   label: string;
   onSelect: () => void;
   color?: string;
-  icon?: string | ReactNode;
+  icon?: string;
   imageSize?: number;
   customIconClass?: string;
   disabled?: boolean
