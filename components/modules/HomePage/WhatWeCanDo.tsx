@@ -1,5 +1,5 @@
 import BlurImage from 'components/elements/BlurImage';
-import { HomePageV3WhatWeCanDo } from 'types';
+import { HomePageV3WhatWeCanDo } from 'types/HomePage';
 import { tw } from 'utils/tw';
 
 import React from 'react';

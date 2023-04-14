@@ -1,5 +1,5 @@
 import BlurImage from 'components/elements/BlurImage';
-import { HomePageV3Hero } from 'types';
+import { HomePageV3Hero } from 'types/HomePage';
 import { tw } from 'utils/tw';
 
 import { Player } from '@lottiefiles/react-lottie-player';

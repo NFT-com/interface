@@ -1,5 +1,5 @@
 import BlurImage from 'components/elements/BlurImage';
-import { HomePageV3SocialSection } from 'types';
+import { HomePageV3SocialSection } from 'types/HomePage';
 import { tw } from 'utils/tw';
 
 import { contentfulLoader } from 'lib/image/loader';
@@ -10,7 +10,7 @@ export function SocialSection({ data }: HomePageData) {
   return(
     <div className="pt-8 minxxl:pt-16 pb-2">
       {
-        data && data?.textAndImageCollection?.items.map((item, i) => {
+        data && data?.items.map((item, i) => {
           return (
             <div key={i} className='grid minmd:grid-cols-2 items-center'>
               <div className='px-5 minmd:px-0 minmd:ml-[14.7vw] minmd:max-w-[25rem] minxxl:max-w-[29vw] minlg:pb-[9.6rem]'>

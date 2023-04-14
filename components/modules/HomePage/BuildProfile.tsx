@@ -1,4 +1,4 @@
-import { HomePageV3BuildProfileSection } from 'types';
+import { HomePageV3BuildProfileSection } from 'types/HomePage';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
@@ -46,7 +46,7 @@ export function BuildProfile({ data }: HomePageData) {
           </div>
 
           <div className='minmd:w-[58%] text-right'>
-            <Image className='ml-auto h-full object-cover' src={profileImage} alt='' />
+            <Image className='ml-auto h-full object-cover' width={721} height={621} src={profileImage} alt='Example profile image' />
           </div>
         </div>
       </div>

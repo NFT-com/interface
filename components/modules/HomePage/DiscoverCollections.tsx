@@ -1,7 +1,7 @@
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
 import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
-import { HomePageV3CollectionsSection } from 'types';
+import { HomePageV3CollectionsSection } from 'types/HomePage';
 import { isOfficialCollection } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -17,7 +17,7 @@ export function DiscoverCollections({ data }: HomePageData) {
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [collections, setCollectionData] = useState(null);
   const { data: collectionLikeData } = useCollectionLikeCountQuery(collections?.map((c) => c?.document?.contractAddr));
-  const addressIds = data?.collectionsSection?.collectionsAddressIds;
+  const addressIds = data?.collectionsAddressIds;
   useEffect(() => {
     fetchTypesenseSearch({
       facet_by: ',floor,nftType,volume,issuance',
@@ -46,11 +46,11 @@ export function DiscoverCollections({ data }: HomePageData) {
           <h2 data-aos="fade-up" className={tw(
             'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal text-white',
             'mb-10 minmd:mb-[6.625rem]'
-          )}>{data?.collectionsSection?.sectionTitle}</h2>
+          )}>{data?.sectionTitle}</h2>
         </div>
 
         <div className='overflow-hidden mb-12'>
-          <div id='anim-discover-content' data-aos="fade-left" className='minlg:translate-x-full minlg:transform-gpu'>
+          <div id='anim-discover-content'>
             <Swiper
               modules={[Scrollbar]}
               spaceBetween={16}
@@ -98,11 +98,11 @@ export function DiscoverCollections({ data }: HomePageData) {
         </div>
 
         <div data-aos="zoom-in" data-aos-delay="100" className='text-center'>
-          <a href={data?.collectionsSection?.ctaButtonLink} className={tw(
+          <a href={data?.ctaButtonLink} className={tw(
             'bg-[#F9D54C] hover:bg-[#dcaf07] drop-shadow-lg rounded-full transition-colors',
             'inline-flex items-center justify-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
             'text-xl minxxl:text-3xl text-black font-medium uppercase'
-          )}>{data?.collectionsSection?.ctaButtonText}</a>
+          )}>{data?.ctaButtonText}</a>
         </div>
       </div>
     </div>

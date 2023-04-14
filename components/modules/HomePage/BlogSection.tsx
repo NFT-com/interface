@@ -1,9 +1,9 @@
 import BlurImage from 'components/elements/BlurImage';
-import { HomePageV3BlogSection } from 'types';
+import { HomePageV3BlogSection } from 'types/HomePage';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
+import { contentfulLoader } from 'lib/image/loader';
 import Link from 'next/link';
 import ArrowNav from 'public/icons/arrow-right.svg?svgr';
 import { Navigation, Scrollbar } from 'swiper';
@@ -60,7 +60,7 @@ export function BlogSection({ data, goToBlogButton, blogSectionTitle }: HomePage
               'disableOnInteraction': false
             }}
             className='insights-swiper flex !pl-[4vw]'>
-            {data?.blogCollection?.items.map((preview,i ) =>
+            {data?.items.map((preview,i ) =>
               <SwiperSlide key={preview.slug} className='!h-auto'>
                 <Link key={preview.slug} href={`articles/${preview.slug}`} className={tw(
                   'bg-white flex flex-col flex-shrink-0 h-full rounded-lg md:mb-5 text-black',
@@ -72,6 +72,7 @@ export function BlogSection({ data, goToBlogButton, blogSectionTitle }: HomePage
                       className='rounded-t-lg object-cover'
                       src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(preview?.heroImage?.url)}`}
                       alt={preview.title}
+                      loader={contentfulLoader}
                     />
                   </div>
 
@@ -85,7 +86,13 @@ export function BlogSection({ data, goToBlogButton, blogSectionTitle }: HomePage
                         'relative rounded-full mr-[6px] minlg:mr-3 block object-cover',
                         'h-5 minlg:h-9 minxxl:h-12 w-5 minlg:w-9 minxxl:w-12'
                       )}>
-                        <Image fill className='object-cover rounded-full' src={preview.author?.image?.url} alt={`Image for author, ${preview.author?.name}`} />
+                        <BlurImage
+                          fill
+                          className='object-cover rounded-full'
+                          src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(preview.author?.image?.url)}`}
+                          alt={`Image for author, ${preview.author?.name}`}
+                          loader={contentfulLoader}
+                        />
                       </div>
                       {preview.author?.name}
                     </div>
