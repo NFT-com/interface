@@ -5,7 +5,7 @@ import { tw } from 'utils/tw';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import ArrowNav from 'public/arrow-right.svg?svgr';
+import ArrowNav from 'public/icons/arrow-right.svg?svgr';
 import { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
