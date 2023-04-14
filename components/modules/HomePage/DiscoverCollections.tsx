@@ -24,7 +24,7 @@ export function DiscoverCollections({ data }: HomePageData) {
       index: 'collections',
       q: '*',
       query_by: 'contractAddr,contractName',
-      filter_by: addressIds && addressIds?.length > 0 ? `isOfficial:true && contractAddr:${addressIds.toString()}}` : 'isOfficial:true',
+      filter_by: addressIds && addressIds?.length > 0 ? `isOfficial:true && contractAddr:=[${addressIds.toString()}]` : 'isOfficial:true',
       per_page: 10,
       page: 1,
     }).then((results) => {
