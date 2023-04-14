@@ -33,75 +33,6 @@ export type CuratedCollection = {
   contractAddresses: string[]
 }
 
-export type HomePageV2 = {
-  plants: string
-  dynamicUrl: any
-  heroCta: {
-    link: string,
-    title: string,
-  }
-  wycdBlock1Title: string[]
-  wycdBlock1Description: string;
-  wycdBlock1Cta: {
-    link: string,
-    title: string,
-  }
-  wycdBlock2Title: string;
-  wycdBlock2Description: string;
-  wycdNfTs: string;
-  discoverDescription: string;
-  discoverImage: {
-    url: string,
-    description: string,
-  }
-  hiwTitle: string;
-  hiwSubtitle: string;
-  hiwBlock1Title: string;
-  hiwBlock1Description: string;
-  hiwBlock1Image: {
-    url: string,
-    description: string,
-  }
-  hiwBlock2Title: string;
-  hiwBlock2Description: string;
-  hiwBlock2Image: {
-    url: string,
-    description: string,
-  }
-  hiwBlock3Title: string;
-  hiwBlock3Description: string;
-  hiwBlock3Image: {
-    url: string,
-    description: string,
-  }
-  newsTitle: string;
-  newsSubtitle: string;
-  newsSlidesCollection: any;
-  newsCta: {
-    link: string,
-    title: string,
-  }
-  tags: {
-    tags1: string[],
-    tags2: string[]
-  };
-  bynpCta: {
-    link: string,
-    title: string,
-  }
-  wycdBlock2Row1NftsCollection: any,
-  wycdBlock2Row2NftsCollection: any,
-  heroNfTsCollection: any,
-  wycdTitleNfTs: {
-    url: string,
-  },
-  discoverTitleNfTs: {
-    url: string,
-  },
-  bynpTitleNfTsCollection: any
-  leaderboardTitle: string
-}
-
 export type ResultsPageProps = {
   data: CuratedCollection[]
 };
@@ -109,10 +40,6 @@ export type ResultsPageProps = {
 export type DiscoverPageProps = {
   data: CuratedCollection[]
   dataDev: CuratedCollection[]
-};
-
-export type HomePageProps = {
-  data: HomePageV2[]
 };
 
 export type SitemapField = {

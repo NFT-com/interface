@@ -82,7 +82,7 @@ export function CollectionCard(props: CollectionCardProps) {
           extraClasses="hover:scale-105 transition"
         />
       </div>
-      <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-51rem">
+      <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-51rem bg-white">
         <div className="border-b-[1px] border-[#F2F2F2] pb-[11px] mb-[16px]">
           <div className="flex justify-between items-start">
             <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">
