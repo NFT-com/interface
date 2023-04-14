@@ -10,6 +10,7 @@ export interface HomePageData {
 }
 
 export function HeroSection({ data }: HomePageData) {
+  console.log(data?.heroImagesCollection.items[0]?.url)
   return(
     <div id='anim-hero-trigger' className='minlg:h-screen'>
       <div className='bg-white relative'>
@@ -33,7 +34,7 @@ export function HeroSection({ data }: HomePageData) {
                 width={120}
                 height={120}
                 loader={contentfulLoader}
-                src={data?.heroImagesCollection[0]?.url}
+                src={data?.heroImagesCollection.items[0]?.url}
                 alt="NFT image"
               />
             </span>
@@ -49,7 +50,7 @@ export function HeroSection({ data }: HomePageData) {
                 width={120}
                 height={120}
                 loader={contentfulLoader}
-                src={data?.heroImagesCollection[1]?.url}
+                src={data?.heroImagesCollection.items[1]?.url}
                 alt="NFT image"
               />
             </span>
