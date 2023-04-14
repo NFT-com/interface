@@ -1,5 +1,5 @@
 import BlurImage from 'components/elements/BlurImage';
-import { HomePageV2 } from 'types';
+import { HomePageV2 } from 'types/HomePage';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
