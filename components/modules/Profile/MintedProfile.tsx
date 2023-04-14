@@ -156,6 +156,7 @@ export function MintedProfile(props: MintedProfileProps) {
       <ProfileScrollContextProvider>
         <div className='w-full group'>
           <BannerWrapper
+            alt={`${profileData?.profile?.url} profile banner image`}
             draft={!isNullOrEmpty(draftHeaderImg?.preview)}
             imageOverride={
               editMode ?

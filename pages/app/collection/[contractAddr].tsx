@@ -5,7 +5,7 @@ import { CollectionResponse } from 'graphql/hooks/useCollectionQuery';
 import NotFoundPage from 'pages/404';
 import { Doppler, getEnvBool } from 'utils/env';
 
-import { ethers } from 'ethers';
+import { utils } from 'ethers';
 import { getCollectionPage } from 'lib/graphql-ssr/collection';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import dynamic from 'next/dynamic';
@@ -26,7 +26,7 @@ export default function UnofficialCollectionPage({ fallback }: InferGetServerSid
   const { contractAddr } = router.query;
   const caseInsensitiveAddr = contractAddr?.toString().toLowerCase();
 
-  const seoTitle = `NFT Collection: ${preCollection.name}`;
+  const seoTitle = `NFT Collection: ${preCollection?.name}`;
   const seoConfig = {
     ...DefaultSEO,
     title: seoTitle,
@@ -34,7 +34,7 @@ export default function UnofficialCollectionPage({ fallback }: InferGetServerSid
     openGraph: {
       url: `https://www.nft.com/app/collection/${contractAddr}`,
       title: seoTitle,
-      description: preCollection.description,
+      description: preCollection?.description,
       images: [
         {
           url: preCollection?.logoUrl,
@@ -45,7 +45,7 @@ export default function UnofficialCollectionPage({ fallback }: InferGetServerSid
     }
   };
 
-  if (!ethers.utils.isAddress(caseInsensitiveAddr) || !getEnvBool(Doppler.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED)) {
+  if (!utils.isAddress(caseInsensitiveAddr) || !getEnvBool(Doppler.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED)) {
     return <NotFoundPage />;
   }
 

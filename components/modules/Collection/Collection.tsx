@@ -1,5 +1,6 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import LikeCount from 'components/elements/LikeCount';
+import { Tabs } from 'components/elements/Tabs';
 import { CollectionActivity } from 'components/modules/Analytics/CollectionActivity';
 import { NFTCard } from 'components/modules/NFTCard/NFTCard';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
@@ -28,7 +29,6 @@ import { cl, tw } from 'utils/tw';
 
 import { CollectionInfo } from './CollectionInfo';
 
-import { Tab } from '@headlessui/react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -247,12 +247,17 @@ export function Collection(props: CollectionProps) {
 }
 
 export const CollectionBanner: React.FC = () => {
-  const { collectionNFTInfo } = useCollectionContext();
-  const imageOverride = collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace('?w=500', '?w=3000') || collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url;
+  const { collectionNFTInfo, collectionData } = useCollectionContext();
+
+  // ! NOTE: Added fallback banner from collectionData, but image might be low res/quality.
+  const imageOverride = !collectionNFTInfo?.error
+    ? (collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace('?w=500', '?w=3000') || collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url)
+    : collectionData?.collection?.bannerUrl;
 
   return (
     <div className="mt-20">
       <BannerWrapper
+        alt={`${collectionData?.collection?.name} Banner Image`}
         loading={Boolean(collectionNFTInfo.loading)}
         imageOverride={imageOverride}
         isCollection
@@ -452,68 +457,6 @@ export const CollectionDetails: React.FC = () => {
   );
 };
 
-export const CollectionMenu = () => {
-  const { width: screenWidth } = useWindowDimensions();
-  const { setModalType, setSearchModalOpen, selectedTab, setSelectedTab, tabs, sideNavOpen, setSideNavOpen } = useCollectionContext();
-
-  return (
-    <>
-      {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
-        <div className='block minlg:flex minlg:flex-row-reverse w-full minlg:w-max mb-6 justify-between items-center'>
-          <div className='block minlg:flex items-center mb-6 minlg:mb-0'>
-            <Tab.Group onChange={(index) => { setSelectedTab(index); }}>
-              <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-noi-grotesk minlg:max-w-md minlg:w-[448px]">
-                {Object.keys(tabs).map((tab) => (
-                  <Tab
-                    key={tab}
-                    className={({ selected }) =>
-                      tw(
-                        'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
-                        selected
-                        && 'bg-black text-[#F8F8F8]'
-                      )
-                    }
-                  >
-                    {tabs[tab]}
-                  </Tab>
-                ))}
-              </Tab.List>
-            </Tab.Group>
-          </div>
-          <div
-            className={tw(
-              sideNavOpen ? 'mr-5' : '',
-              'w-full mb-6 minlg:mb-0 minlg:mr-3 items-center flex minlg:flex-auto')}
-            onClick={() => {
-              if (screenWidth < 900) {
-                setModalType('collectionFilters');
-                setSearchModalOpen(true, 'collectionFilters');
-              } else {
-                setSideNavOpen(!sideNavOpen);
-              }
-            }}>
-            <div
-              className={tw(
-                'cursor-pointer w-full minlg:h-10',
-                'bg-white text-[#1F2127] font-noi-grotesk font-bold p-1 rounded-[20px]',
-                'flex items-center justify-center border border-[#D5D5D5]')}
-            >
-              <div className='minlg:hidden flex items-center justify-center'>
-                <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7' />
-                <p>Filter</p>
-              </div>
-              <div className='hidden minlg:block'>
-                {(!sideNavOpen || (sideNavOpen && tabs[selectedTab] !== 'NFTs')) && <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7' />}
-                {sideNavOpen && tabs[selectedTab] === 'NFTs' && <p className="px-[6.5rem]">Close Filters</p>}
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-    </>
-  );
-};
-
 export const CollectionNfts: React.FC = () => {
   const { collectionNfts, currentPage, setCurrentPage, found } = useCollectionContext();
   const onNextPage = () => setCurrentPage(currentPage + 1);
@@ -564,7 +507,19 @@ export const CollectionNfts: React.FC = () => {
 };
 
 export const CollectionBody: React.FC = () => {
-  const { collectionContract, selectedTab, tabs } = useCollectionContext();
+  const { width: screenWidth } = useWindowDimensions();
+  const { setModalType, setSearchModalOpen, sideNavOpen, setSideNavOpen, collectionContract } = useCollectionContext();
+  const [selectedTab, setSelectedTab] = useState('NFTs');
+
+  const tabs = [
+    {
+      label: 'NFTs',
+    },
+    {
+      label: 'Activity',
+    }
+  ];
+  
   return (
     <>
       <div className={cl(
@@ -573,11 +528,49 @@ export const CollectionBody: React.FC = () => {
         'min-h-screen'
       )}
       >
-        <CollectionMenu />
-        {tabs[selectedTab] === 'NFTs' &&
+        {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+        <div className='block minlg:flex minlg:flex-row-reverse w-full minlg:w-max mb-6 justify-between items-center'>
+          <div className='block minlg:flex items-center mb-6 minlg:mb-0'>
+            <Tabs
+              tabOptions={tabs}
+              onTabChange={setSelectedTab}
+              customTabWidth={'minlg:max-w-md minlg:w-[448px]'}
+            />
+          </div>
+          <div
+            className={tw(
+              sideNavOpen ? 'mr-5' : '',
+              'w-full mb-6 minlg:mb-0 minlg:mr-3 items-center flex minlg:flex-auto')}
+            onClick={() => {
+              if (screenWidth < 900) {
+                setModalType('collectionFilters');
+                setSearchModalOpen(true, 'collectionFilters');
+              } else {
+                setSideNavOpen(!sideNavOpen);
+              }
+            }}>
+            <div
+              className={tw(
+                'cursor-pointer w-full minlg:h-10',
+                'bg-white text-[#1F2127] font-noi-grotesk font-bold p-1 rounded-[20px]',
+                'flex items-center justify-center border border-[#D5D5D5]')}
+            >
+              <div className='minlg:hidden flex items-center justify-center'>
+                <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7' />
+                <p>Filter</p>
+              </div>
+              <div className='hidden minlg:block'>
+                {(!sideNavOpen || (sideNavOpen && tabs[selectedTab] !== 'NFTs')) && <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7' />}
+                {sideNavOpen && tabs[selectedTab] === 'NFTs' && <p className="px-[6.5rem]">Close Filters</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+        {selectedTab === 'NFTs' &&
           <CollectionNfts />
         }
-        {tabs[selectedTab] === 'Activity' &&
+        {selectedTab === 'Activity' &&
           <CollectionActivity contract={collectionContract} />
         }
       </div>

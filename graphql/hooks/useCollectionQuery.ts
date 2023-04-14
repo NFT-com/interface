@@ -9,7 +9,7 @@ export type CollectionResponse = PartialDeep<CollectionInfo>;
 
 export interface CollectionData {
   data: CollectionResponse;
-  error: any;
+  error: Error | undefined;
   loading: boolean;
   mutate: () => void;
 }
@@ -47,7 +47,7 @@ export function useCollectionQuery(args: { chainId: string, contract: string } |
   return {
     data: data,
     error,
-    loading: [isLoading, !query.value, data == null].includes(true),
+    loading: isLoading,
     mutate: () => {
       mutate(keyString);
     },
