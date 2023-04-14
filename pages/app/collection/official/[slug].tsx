@@ -28,7 +28,7 @@ export default function OfficialCollectionSlugPage({ fallback }: InferGetServerS
   const slug = slugQuery && slugQuery.toString();
   const defaultChainId = useDefaultChainId();
 
-  const seoTitle = `NFT Collection: ${preCollection.name}`;
+  const seoTitle = `NFT Collection: ${preCollection?.name}`;
   const seoConfig = {
     ...DefaultSEO,
     title: seoTitle,
@@ -36,7 +36,7 @@ export default function OfficialCollectionSlugPage({ fallback }: InferGetServerS
     openGraph: {
       url: `https://www.nft.com/app/collection/official/${slug}`,
       title: seoTitle,
-      description: preCollection.description,
+      description: preCollection?.description,
       images: [
         {
           url: preCollection?.logoUrl,

@@ -10,7 +10,6 @@ import { useUser } from 'hooks/state/useUser';
 import { useCheckIsProfileLoaded } from 'hooks/useCheckIsProfileLoaded';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { filterNulls } from 'utils/format';
-import { getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { DropdownPickerModal } from './DropdownPickerModal';
@@ -22,6 +21,7 @@ import AOS from 'aos';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { CaretDown, List, X } from 'phosphor-react';
@@ -33,7 +33,6 @@ import { Link as ScrollLink } from 'react-scroll';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
-const BlurImage = dynamic(import('components/elements/BlurImage'));
 const DynamicNotificationBadge = dynamic<React.ComponentProps<typeof StaticNotificationBadge>>(() => import('components/modules/Notifications/NotificationBadge').then(mod => mod.NotificationBadge));
 
 type HeaderProps = {
@@ -71,8 +70,8 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
   });
 
   const renderLogoMode = () => useDarkMode ?
-    <BlurImage width={40} height={40} src={getStaticAsset('public/LogoLight.svg')} alt='NFT.com Logo' className='justify-start' /> :
-    <BlurImage width={40} height={40} src={getStaticAsset('public/Logo.svg')} alt='NFT.com Logo' className='justify-start' />;
+    <Image width={40} height={40} src='/LogoLight.svg' alt='NFT.com Logo' className='justify-start' /> :
+    <Image width={40} height={40} src='/Logo.svg' alt='NFT.com Logo' className='justify-start' />;
 
   if (homepageHeader) {
     return (

@@ -19,7 +19,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
   const { setDropDownSearchResults } = useSearchModal();
   const clickByItemResult = (document) => {
     if (!document.nftName) {
-      router.push(`/app/collection/${isOfficialCollection({ name: document?.contractName, ...document })}`);
+      router.push(`/app/collection/${isOfficialCollection({ name: document?.contractName, contract: document?.contractAddr, ...document })}`);
     } else {
       if(document.isProfile){
         router.push('/' + `${document.nftName}`);

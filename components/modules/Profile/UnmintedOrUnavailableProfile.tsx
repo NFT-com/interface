@@ -18,7 +18,7 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
 
   return (
     <div className="minlg:mt-20 pb-10 h-max bg-pagebg w-full flex flex-col">
-      <BannerWrapper />
+      <BannerWrapper alt='unminted or unavailable banner image'/>
       <div
         className={tw(
           'mb-0 minlg:mb-8 mx-16 flex justify-start',
