@@ -1,12 +1,12 @@
 import BlurImage from 'components/elements/BlurImage';
-import { HomePageV2 } from 'types';
+import { HomePageV3Hero } from 'types';
 import { tw } from 'utils/tw';
 
 import { Player } from '@lottiefiles/react-lottie-player';
 import { contentfulLoader } from 'lib/image/loader';
 
 export interface HomePageData {
-  data?: HomePageV2;
+  data: HomePageV3Hero
 }
 
 export function HeroSection({ data }: HomePageData) {
@@ -22,7 +22,7 @@ export function HeroSection({ data }: HomePageData) {
             'text-[2.5rem] minmd:text-[5.2rem] minlg:text-[3.3rem] minxl:text-[5.2rem] minxxl:text-[6.8rem] leading-[1.5] minmd:leading-[1.15]',
             'text-black font-normal tracking-tight mb-11'
           )}>
-            Own your
+            {data?.heroTextData?.titleDrop?.firstPhrase}
             <span className='inline-block rotate-[40deg]'>
               <BlurImage
                 className={tw(
@@ -33,12 +33,12 @@ export function HeroSection({ data }: HomePageData) {
                 width={120}
                 height={120}
                 loader={contentfulLoader}
-                src={data?.heroNfTsCollection?.items[0]?.url}
+                src={data?.heroImagesCollection[0]?.url}
                 alt="NFT image"
               />
             </span>
             <br />
-            NFT
+            {data?.heroTextData?.titleDrop?.secondPhrase}
             <span className='inline-block rotate-[40deg]'>
               <BlurImage
                 className={tw(
@@ -49,23 +49,23 @@ export function HeroSection({ data }: HomePageData) {
                 width={120}
                 height={120}
                 loader={contentfulLoader}
-                src={data?.heroNfTsCollection?.items[1]?.url}
+                src={data?.heroImagesCollection[1]?.url}
                 alt="NFT image"
               />
             </span>
             <span data-aos="fade-left" data-aos-delay="200"
               className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>
-                      identity
+                      {data?.heroTextData?.titleDrop?.thirdPhrase}
             </span>
           </h2>
 
-          <p className='text-xl mb-9'>NFTs enable new forms of community engagement.</p>
+          <p className='text-xl mb-9'>{data?.heroTextData.subTitle}</p>
 
-          <a data-aos="zoom-out" data-aos-delay="300" href={data?.heroCta?.link} className={tw(
+          <a data-aos="zoom-out" data-aos-delay="300" href={data?.heroTextData?.ctaLink} className={tw(
             'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
             'inline-flex items-center justify-center text-center h-[4.1875rem] minxxl:h-[6rem] px-6 minxxl:px-9',
             'text-xl minxxl:text-3xl text-white font-medium uppercase'
-          )}>{data?.heroCta?.title}</a>
+          )}>{data?.heroTextData?.ctaButton}</a>
         </div>
 
         {/* Hero */}
@@ -116,7 +116,7 @@ export function HeroSection({ data }: HomePageData) {
                 'absolute inset-x-4 minlg:inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
                 'text-white flex'
               )}>
-                {data?.dynamicUrl['url'].map(word =>
+                {data?.dynamicUrls?.map(word =>
                   <a key={word} href={'/app/mint-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
                     <span className='text-white/40'>NFT.COM</span>
                     <span role='presentation' className={tw(

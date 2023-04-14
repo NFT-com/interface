@@ -32,7 +32,158 @@ export type CuratedCollection = {
   tabTitle: string;
   contractAddresses: string[]
 }
-
+export type HomePageV3Hero = {
+  dynamicUrls: string[];
+  heroTextData: {
+    title: string,
+    titleDrop: {
+      firstPhrase: string,
+      secondPhrase: string,
+      thirdPhrase: string,
+    }
+    subTitle: string,
+    ctaButton: string,
+    ctaLink: string,
+  },
+  heroImagesCollection: {
+    items: Array<{url: string}>;
+  },
+}
+export type HomePageV3WhatWeCanDo = {
+  whatWeCanDoTitle: {
+    fullTitle?: string,
+    gradientTitle?: {
+      blackWord: string,
+      orangeWord: string
+    }
+  },
+  whatWeCanDoImage: {
+    url: string,
+  }
+}
+export type HomePageV3SectionDynamicLinks = {
+  sectionDynamicLinks: string[];
+}
+export type HomePageV3SocialSection = {
+  textAndImageCollection?: {
+    items: Array<{
+      titleArray?: Array<{text?: string, isOrange?: boolean}>
+      leftImage?: boolean;
+      subTitle?: string;
+      buttonText?: string;
+      buttonLink?: string;
+      image?: {
+        url: string
+      }
+    }>
+  }
+}
+export type HomePageV3BuildProfileSection = {
+  title: string,
+  subTitle: string,
+  ctaButton: string,
+  ctaLink: string
+}
+export type HomePageV3BlogSection = {
+  blogCollection: {
+    items: Array<{
+      slug: string;
+      title: string;
+      author: {
+        name: string;
+        image: {
+          url: string;
+        };
+      }
+      heroImage: {
+        url: string;
+      };
+    }>
+  }
+}
+export type HomePageV3CollectionsSection = {
+  collectionsSection: {
+    collectionsAddressIds: Array<''>;
+    ctaButtonLink: string;
+    ctaButtonText: string;
+    sectionTitle: string;
+  }
+}
+export type HomePageV3 = {
+  dynamicUrls: string[];
+  heroTextData?: {
+    title: string,
+    titleDrop: {
+      firstPhrase: string,
+      secondPhrase: string,
+      thirdPhrase: string,
+    }
+    subTitle: string,
+    ctaButton: string,
+    ctaLink: string,
+  },
+  heroImagesCollection: {
+    items: Array<{url: string}>;
+  },
+  whatWeCanDoTitle: {
+    fullTitle: string,
+    gradientTitle?: {
+      blackWord: string,
+      orangeWord: string
+    }
+  },
+  whatWeCanDoImage: {
+    url: string,
+  },
+  sectionDynamicLinks: string[],
+  textAndImageCollection?: {
+    items: Array<{
+      titleArray?: Array<{text?: string, isOrange?: boolean}>
+      leftImage?: boolean;
+      subTitle?: string;
+      buttonText?: string;
+      buttonLink?: string;
+      image?: {
+        url: string
+      }
+    }>
+  }
+  buildProfileSection?: {
+    title: string,
+    subTitle: string,
+    ctaButton: string,
+    ctaLink: string
+  };
+  blogSectionTitle: {
+    title: string,
+    subTitle: string,
+  }
+  goToBlogButton: {
+    title: string,
+    link: string,
+  }
+  blogCollection: {
+    items: Array<{
+      slug: string;
+      title: string;
+      author: {
+        name: string;
+        image: {
+          url: string;
+        };
+      }
+      heroImage: {
+        url: string;
+      };
+    }>
+  }
+  collectionsSection: {
+    collectionsAddressIds: Array<''>;
+    ctaButtonLink: string;
+    ctaButtonText: string;
+    sectionTitle: string;
+  }
+}
 export type HomePageV2 = {
   plants: string
   dynamicUrl: any

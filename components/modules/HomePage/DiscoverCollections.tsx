@@ -1,18 +1,37 @@
-import BlurImage from 'components/elements/BlurImage';
-import { HomePageV2 } from 'types';
-import { getBaseUrl } from 'utils/helpers';
+import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
+import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
+import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
+import { HomePageV3CollectionsSection } from 'types';
+import { isOfficialCollection } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
-import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import { Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface HomePageData {
-  data?: HomePageV2;
+  data?: HomePageV3CollectionsSection;
 }
 
 export function DiscoverCollections({ data }: HomePageData) {
+  const { fetchTypesenseSearch } = useFetchTypesenseSearch();
+  const [collections, setCollectionData] = useState(null);
+  const { data: collectionLikeData } = useCollectionLikeCountQuery(collections?.map((c) => c?.document?.contractAddr));
+  const addressIds = data?.collectionsSection?.collectionsAddressIds;
+  useEffect(() => {
+    fetchTypesenseSearch({
+      facet_by: ',floor,nftType,volume,issuance',
+      index: 'collections',
+      q: '*',
+      query_by: 'contractAddr,contractName',
+      filter_by: addressIds && addressIds?.length > 0 ? `isOfficial:true && contractAddr:${addressIds.toString()}}` : 'isOfficial:true',
+      per_page: 10,
+      page: 1,
+    }).then((results) => {
+      setCollectionData(results?.hits);
+    });
+  }, [addressIds, fetchTypesenseSearch]);
+
   return(
     <div id='anim-discover-trigger' className={tw(
       'bg-black relative',
@@ -27,7 +46,7 @@ export function DiscoverCollections({ data }: HomePageData) {
           <h2 data-aos="fade-up" className={tw(
             'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal text-white',
             'mb-10 minmd:mb-[6.625rem]'
-          )}>Discover Collections</h2>
+          )}>{data?.collectionsSection?.sectionTitle}</h2>
         </div>
 
         <div className='overflow-hidden mb-12'>
@@ -55,49 +74,35 @@ export function DiscoverCollections({ data }: HomePageData) {
               }}
               scrollbar={{ draggable: true }}
               className='flex !pb-12 minxl:!pb-[4.875rem]'>
-              {data?.newsSlidesCollection?.items.map((preview) =>
-                <SwiperSlide key={preview.slug} className='!h-auto'>
-                  <Link key={preview.slug} href={`articles/${preview.slug}`} className={tw(
-                    'bg-white flex flex-col flex-shrink-0 rounded-2xl md:mb-5 text-black',
-                    'h-full cursor-pointer'
-                  )}>
-                    <div className='before:pb-[40.249%] before:block relative overflow-hidden'>
-                      <BlurImage
-                        fill
-                        className='rounded-t-2xl object-cover'
-                        src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(preview?.heroImage?.url)}`}
-                        alt={preview.title}
-                      />
-                    </div>
+              {collections && collections?.length > 0 && collections?.map((collection, index) => {
+                return (
+                  <SwiperSlide key={index} className='!h-auto'>
+                    <CollectionCard
+                      key={index}
+                      redirectTo={`/app/collection/${isOfficialCollection({ name: collection.document.contractName, isOfficial: collection.document.isOfficial })}/`}
+                      contractAddr={collection.document?.contractAddr}
+                      collectionId={collection?.document?.id}
+                      floorPrice={collection.document?.floor}
+                      totalVolume={collection.document?.volume}
+                      contractName={collection.document.contractName}
+                      isOfficial={collection.document.isOfficial}
+                      images={[collection.document.bannerUrl]}
+                      likeInfo={collectionLikeData && collectionLikeData[index]}
+                    />
+                  </SwiperSlide>
 
-                    <div className='py-5 px-4 minxxl:py-8 minxxl:px-7 flex-grow flex flex-col items-start'>
-                      <h3 className={tw(
-                        'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] font-semibold',
-                        'mb-11 minxxl:mb-16'
-                      )}>{preview.title}</h3>
-                      <div className='flex items-center mt-auto text-xs minlg:text-xl minxxl:text-3xl font-medium text-[#605A45]/60'>
-                        <div className={tw(
-                          'relative rounded-full mr-[6px] minlg:mr-3 block object-cover',
-                          'h-5 minlg:h-9 minxxl:h-12 w-5 minlg:w-9 minxxl:w-12'
-                        )}>
-                          <Image fill className='object-cover rounded-full' src={preview.author?.image?.url} alt={`Image for author, ${preview.author?.name}`} />
-                        </div>
-                        {preview.author?.name}
-                      </div>
-                    </div>
-                  </Link>
-                </SwiperSlide>
-              )}
+                );
+              })}
             </Swiper>
           </div>
         </div>
 
         <div data-aos="zoom-in" data-aos-delay="100" className='text-center'>
-          <a href={data?.newsCta?.link} className={tw(
+          <a href={data?.collectionsSection?.ctaButtonLink} className={tw(
             'bg-[#F9D54C] hover:bg-[#dcaf07] drop-shadow-lg rounded-full transition-colors',
             'inline-flex items-center justify-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
             'text-xl minxxl:text-3xl text-black font-medium uppercase'
-          )}>View all collections</a>
+          )}>{data?.collectionsSection?.ctaButtonText}</a>
         </div>
       </div>
     </div>

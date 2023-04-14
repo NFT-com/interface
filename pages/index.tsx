@@ -4,6 +4,7 @@ import 'swiper/css';
 import 'swiper/css/scrollbar';
 
 import DefaultSEO from 'config/next-seo.config';
+import { NonAuthLikeModal } from 'components/elements/nonAuthLikeModal';
 import { BlogSection } from 'components/modules/HomePage/BlogSection';
 import { BuildProfile } from 'components/modules/HomePage/BuildProfile';
 import { DiscoverCollections } from 'components/modules/HomePage/DiscoverCollections';
@@ -13,7 +14,7 @@ import { SocialSection } from 'components/modules/HomePage/SocialSection';
 import { WhatWeCanDo } from 'components/modules/HomePage/WhatWeCanDo';
 import contentfulBackupData from 'constants/contentful_backup_data.json';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
-import { HomePageV2 } from 'types';
+import { HomePageV2, HomePageV3 } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getBaseUrl, getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -24,13 +25,13 @@ import AOS from 'aos';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { getCollection } from 'lib/contentful/api';
-import { HOME_PAGE_FIELDS_V2 } from 'lib/contentful/schemas';
+import { HOME_PAGE_FIELDS_V2, HOME_PAGE_FIELDS_V3 } from 'lib/contentful/schemas';
 import { contentfulLoader } from 'lib/image/loader';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { NextSeo } from 'next-seo';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Marquee from 'react-fast-marquee';
 import LazyLoad from 'react-lazy-load';
 import { usePageVisibility } from 'react-page-visibility';
@@ -46,9 +47,10 @@ gsap.registerPlugin(ScrollTrigger);
 type HomePageProps = {
   preview: boolean;
   data_v2?: HomePageV2;
+  homePageDataV3?: HomePageV3;
 };
 
-const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
+const Index: NextPageWithLayout = ({ preview, data_v2, homePageDataV3 }: HomePageProps) => {
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
   const isVisible = usePageVisibility();
 
@@ -366,22 +368,38 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           }}
         />
         <main id='anim-main-trigger' className='font-noi-grotesk not-italic HomePageContainer'>
-          {/* Block: Intro */}
-          <HeroSection data={data_v2}/>
-          {/* Block: What you can do */}
-          <WhatWeCanDo/>
-          {/* Block: Marquee */}
-          <DynamicLinks data={data_v2} isVisible={isVisible}/>
-          {/* Block: Discover Collections */}
-          <DiscoverCollections data={data_v2}/>
-          {/* Block: Text/Image */}
-          <SocialSection/>
-          {/* Block: Insights */}
-          <BlogSection data={data_v2}/>
-          {/* Block: Profile */}
-          <BuildProfile data={data_v2}/>
+          <HeroSection data={{
+            dynamicUrls: homePageDataV3?.dynamicUrls,
+            heroTextData: homePageDataV3?.heroTextData,
+            heroImagesCollection: homePageDataV3?.heroImagesCollection
+          }}/>
+          <WhatWeCanDo data={{
+            whatWeCanDoTitle: {
+              gradientTitle: homePageDataV3?.whatWeCanDoTitle?.gradientTitle
+            },
+            whatWeCanDoImage: {
+              url: homePageDataV3?.whatWeCanDoImage?.url
+            }
+          }}/>
+          <DynamicLinks data={{
+            sectionDynamicLinks: homePageDataV3.sectionDynamicLinks
+          }} isVisible={isVisible}/>
+          <DiscoverCollections data={{
+            collectionsSection: homePageDataV3.collectionsSection
+          }}/>
+          <SocialSection data={{
+            textAndImageCollection: homePageDataV3?.textAndImageCollection
+          }}/>
+          <BlogSection
+            blogSectionTitle={homePageDataV3.blogSectionTitle}
+            goToBlogButton={homePageDataV3.goToBlogButton}
+            data={{
+              blogCollection: homePageDataV3.blogCollection
+            }}/>
+          <BuildProfile data={homePageDataV3?.buildProfileSection}/>
         </main>
         {preview && <DynamicPreviewBanner />}
+        <NonAuthLikeModal />
       </>
     );
   }else {
@@ -413,39 +431,39 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 )}>
                   Join Your NFT
                   <span className='inline-block rotate-[40deg]'>
-                  <BlurImage
-                    className={tw(
-                      'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s]',
-                      'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
-                      'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl'
-                    )}
-                    width={120}
-                    height={120}
-                    loader={contentfulLoader}
-                    src={data_v2?.heroNfTsCollection?.items[0]?.url}
-                    alt="NFT image"
-                  />
-                </span>
+                    <BlurImage
+                      className={tw(
+                        'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s]',
+                        'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
+                        'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl'
+                      )}
+                      width={120}
+                      height={120}
+                      loader={contentfulLoader}
+                      src={data_v2?.heroNfTsCollection?.items[0]?.url}
+                      alt="NFT image"
+                    />
+                  </span>
                   <br />
                   Community
                   <span className='inline-block rotate-[40deg]'>
-                  <BlurImage
-                    className={tw(
-                      'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
-                      'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
-                      'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl',
-                    )}
-                    width={120}
-                    height={120}
-                    loader={contentfulLoader}
-                    src={data_v2?.heroNfTsCollection?.items[1]?.url}
-                    alt="NFT image" />
-                </span>
+                    <BlurImage
+                      className={tw(
+                        'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
+                        'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
+                        'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl',
+                      )}
+                      width={120}
+                      height={120}
+                      loader={contentfulLoader}
+                      src={data_v2?.heroNfTsCollection?.items[1]?.url}
+                      alt="NFT image" />
+                  </span>
                   on{' '}
                   <span data-aos="fade-left" data-aos-delay="200"
-                        className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>
+                    className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>
                     NFT.com
-                </span>
+                  </span>
                 </h2>
 
                 <a data-aos="zoom-out" data-aos-delay="300" href={data_v2?.heroCta?.link} className={tw(
@@ -554,18 +572,18 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 )}>
                   The Social
                   <span className='inline-block rotate-[40deg]'>
-                  <BlurImage
-                    id='anim-profile-ttl-icon'
-                    width={120}
-                    height={120}
-                    loader={contentfulLoader}
-                    className={tw(
-                      'drop-shadow-md inline-block w-[2.5rem] minxxl:w-[5.5rem]',
-                      'mx-[0.4em] -my-[0.7rem] rounded-xl',
-                      '-translate-y-[120vw]'
-                    )}
-                    src={data_v2?.wycdTitleNfTs?.url} alt="NFT image" />
-                </span>
+                    <BlurImage
+                      id='anim-profile-ttl-icon'
+                      width={120}
+                      height={120}
+                      loader={contentfulLoader}
+                      className={tw(
+                        'drop-shadow-md inline-block w-[2.5rem] minxxl:w-[5.5rem]',
+                        'mx-[0.4em] -my-[0.7rem] rounded-xl',
+                        '-translate-y-[120vw]'
+                      )}
+                      src={data_v2?.wycdTitleNfTs?.url} alt="NFT image" />
+                  </span>
                   <span className='block transform-gpu bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Marketplace</span></h2>
 
                 <div id='anim-profile-content' className={tw(
@@ -695,29 +713,29 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal',
                   'mb-6 minxxl:mb-9'
                 )}>
-                <span id='anim-discover-ttl-line-1' data-aos="fade-up" data-aos-delay="200"
-                      className={tw(
-                        'minlg:translate-y-40 transform-gpu relative z-50',
-                        'block bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]'
-                      )}>
+                  <span id='anim-discover-ttl-line-1' data-aos="fade-up" data-aos-delay="200"
+                    className={tw(
+                      'minlg:translate-y-40 transform-gpu relative z-50',
+                      'block bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]'
+                    )}>
                   Discover <br />
-                  <span className='inline-block rotate-[40deg]'>
-                    <BlurImage
-                      width={180}
-                      height={180}
-                      loader={contentfulLoader}
-                      id='anim-discover-ttl-icon'
-                      className={tw(
-                        'inline-block w-[0.833em] minxxl:w-[5.5rem]',
-                        'mx-[0.45em] -mt-[.75rem] -mb-[.4rem] rounded-xl',
-                        '-translate-y-[120vw]'
-                      )}
-                      src={data_v2?.discoverTitleNfTs.url}
-                      alt="NFT image"
-                    />
-                  </span>
+                    <span className='inline-block rotate-[40deg]'>
+                      <BlurImage
+                        width={180}
+                        height={180}
+                        loader={contentfulLoader}
+                        id='anim-discover-ttl-icon'
+                        className={tw(
+                          'inline-block w-[0.833em] minxxl:w-[5.5rem]',
+                          'mx-[0.45em] -mt-[.75rem] -mb-[.4rem] rounded-xl',
+                          '-translate-y-[120vw]'
+                        )}
+                        src={data_v2?.discoverTitleNfTs.url}
+                        alt="NFT image"
+                      />
+                    </span>
                   a
-                </span>
+                  </span>
                   <span id='anim-discover-ttl-line-2' className='block minlg:translate-y-40 transform-gpu'>New World</span>
                 </h2>
                 <p id='anim-discover-txt' data-aos="fade-up" data-aos-delay="300" className={tw(
@@ -889,7 +907,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   <path className='anim-corner anim-corner-news-2' d="M193.373 0H111.357C110.624 0 109.967 0.453661 109.708 1.13943L81.9036 74.6122C81.467 75.7659 82.3195 77 83.5531 77H163.326C164.042 77 164.687 76.5669 164.958 75.904L195.006 2.43123C195.48 1.27098 194.627 0 193.373 0Z" fill="white" />
                   <path className='anim-corner anim-corner-news' d="M251.373 57H169.357C168.624 57 167.967 57.4537 167.708 58.1394L139.904 131.612C139.467 132.766 140.319 134 141.553 134H221.326C222.042 134 222.687 133.567 222.958 132.904L253.006 59.4312C253.48 58.271 252.627 57 251.373 57Z" fill="white" />
                 </svg>
-                67
+  67
                 <svg className={tw(
                   'absolute -z-10 top-0 right-0 max-w-[250px] minxl:max-w-none',
                   'translate-x-[20px] -translate-y-[67px]',
@@ -967,11 +985,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     'px-2 minlg:px-10 minxxl:px-14 flex items-baseline group', index === 0 ? 'mr-2 minlg:mr-10 minxxl:mr-14': ''
                   )}
                   ><div role='presentation' className={tw(
-                    'mr-2 minxxl:mr-3 skew-x-[-20deg]',
-                    'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                    'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
-                    'bg-[#B2B2B2] rounded-[3px]'
-                  )}></div>
+                      'mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                      'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                      'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
+                      'bg-[#B2B2B2] rounded-[3px]'
+                    )}></div>
 
                     <i className={tw(
                       'animate-text-gadient bg-[length:200%_200%]',
@@ -992,11 +1010,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     'px-3 minlg:px-10 minxxl:px-14 flex items-baseline group', index === 0 ? 'mr-2 minlg:mr-10 minxxl:mr-14': ''
                   )}
                   ><div role='presentation' className={tw(
-                    'mr-2 minxxl:mr-3 skew-x-[-20deg]',
-                    'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                    'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
-                    'bg-[#B2B2B2] rounded-[3px]'
-                  )}></div>
+                      'mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                      'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                      'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
+                      'bg-[#B2B2B2] rounded-[3px]'
+                    )}></div>
 
                     <i className={tw(
                       'animate-text-gadient bg-[length:200%_200%] whitespace-nowrap',
@@ -1049,25 +1067,25 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     'text-black font-normal leading-[1.1] relative',
                     'mb-14 minlg:mb-0 minlg:pl-8 minxxl:pl-16 tracking-[-3px]'
                   )}>
-                  <span id='anim-build-profile-ttl-1' className='minlg:translate-y-[18rem] transform-gpu'>
+                    <span id='anim-build-profile-ttl-1' className='minlg:translate-y-[18rem] transform-gpu'>
                     Build
-                    <span
-                      className='inline-block rotate-[40deg]'
-                    >
-                      <BlurImage
-                        width={160}
-                        height={200}
-                        loader={contentfulLoader}
-                        className={tw(
-                          'anim-build-profile-ttl-icon -translate-y-[120vw]',
-                          'drop-shadow-md inline-block w-[0.8em] minxxl:w-[5.5rem]',
-                          '-mt-9 minlg:-mt-7 mx-[.4em] rounded-xl',
-                        )}
-                        src={data_v2?.bynpTitleNfTsCollection.items[0].url}
-                        alt="NFT image" />
-                    </span>
+                      <span
+                        className='inline-block rotate-[40deg]'
+                      >
+                        <BlurImage
+                          width={160}
+                          height={200}
+                          loader={contentfulLoader}
+                          className={tw(
+                            'anim-build-profile-ttl-icon -translate-y-[120vw]',
+                            'drop-shadow-md inline-block w-[0.8em] minxxl:w-[5.5rem]',
+                            '-mt-9 minlg:-mt-7 mx-[.4em] rounded-xl',
+                          )}
+                          src={data_v2?.bynpTitleNfTsCollection.items[0].url}
+                          alt="NFT image" />
+                      </span>
                     Your
-                  </span>
+                    </span>
                     <span
                       id='anim-build-profile-ttl-2'
                       data-aos="fade-up"
@@ -1077,21 +1095,21 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                         'minlg:translate-y-[18rem] transform-gpu'
                       )}>
                     NFT
-                    <span className='inline-block rotate-[40deg]'>
-                      <BlurImage
-                        width={160}
-                        height={200}
-                        loader={contentfulLoader}
-                        className={tw(
-                          'anim-build-profile-ttl-icon-2 -translate-y-[120vw]',
-                          'drop-shadow-md inline-block w-[0.8em] minxxl:w-[5.5rem]',
-                          'minlg:-mt-7 mx-[.4em] rounded-xl',
-                        )}
-                        src={data_v2?.bynpTitleNfTsCollection.items[1].url}
-                        alt="NFT image" />
-                    </span>
+                      <span className='inline-block rotate-[40deg]'>
+                        <BlurImage
+                          width={160}
+                          height={200}
+                          loader={contentfulLoader}
+                          className={tw(
+                            'anim-build-profile-ttl-icon-2 -translate-y-[120vw]',
+                            'drop-shadow-md inline-block w-[0.8em] minxxl:w-[5.5rem]',
+                            'minlg:-mt-7 mx-[.4em] rounded-xl',
+                          )}
+                          src={data_v2?.bynpTitleNfTsCollection.items[1].url}
+                          alt="NFT image" />
+                      </span>
                     Profile
-                  </span>
+                    </span>
                   </h2>
                   <div className="text-center minlg:text-right pb-8 leading-[0]">
                     <svg role='presentation' className={tw(
@@ -1134,10 +1152,12 @@ Index.getLayout = function getLayout(page) {
 
 export async function getStaticProps({ preview = false }) {
   const homeDataV2 = await getCollection(false, 10, 'homepageV2Collection', HOME_PAGE_FIELDS_V2);
+  const homeDataV3 = await getCollection(false, 10, 'homepageV3TestCollection', HOME_PAGE_FIELDS_V3);
   return {
     props: {
       preview,
       data_v2: homeDataV2[0] ?? contentfulBackupData[0],
+      homePageDataV3: homeDataV3 && homeDataV3[0],
     }
   };
 }

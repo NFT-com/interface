@@ -1,10 +1,10 @@
-import { HomePageV2 } from 'types';
+import { HomePageV3SectionDynamicLinks } from 'types';
 import { tw } from 'utils/tw';
 
 import Marquee from 'react-fast-marquee';
 
 export interface HomePageData {
-  data?: HomePageV2;
+  data?: HomePageV3SectionDynamicLinks;
   isVisible?: boolean;
 }
 
@@ -15,7 +15,7 @@ export function DynamicLinks({ data, isVisible }: HomePageData) {
         'text-4xl minlg:text-7xl minxxl:text-9xl -ml-7'
       )}>
         <Marquee gradient={false} speed={60} loop={0} direction='right' play={isVisible} className="flex flex-row">
-          {data?.tags?.tags1.map((tag, index) =>
+          {data?.sectionDynamicLinks.map((tag, index) =>
             <div key={tag} className={tw(
               'px-2 minlg:px-10 minxxl:px-14 flex items-baseline group', index === 0 ? 'mr-2 minlg:mr-10 minxxl:mr-14': ''
             )}

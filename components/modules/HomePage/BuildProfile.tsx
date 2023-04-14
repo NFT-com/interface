@@ -1,11 +1,11 @@
-import { HomePageV2 } from 'types';
+import { HomePageV3BuildProfileSection } from 'types';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
 import profileImage from 'public/profile-images.webp';
 
 export interface HomePageData {
-  data?: HomePageV2;
+  data?: HomePageV3BuildProfileSection;
 }
 
 export function BuildProfile({ data }: HomePageData) {
@@ -31,27 +31,18 @@ export function BuildProfile({ data }: HomePageData) {
               'mb-4 minlg:mb-2 tracking-[-3px]'
             )}>
               <span className='text-[1em]'>
-                      Build your
-              </span>
-              <span
-                data-aos="fade-up"
-                data-aos-delay="200"
-                className={tw(
-                  'text-[1em] block'
-                )}>
-                      NFT
-                      Profile
+                {data?.title}
               </span>
             </h2>
 
             <p className={tw(
               'text-lg leading-[1.333] mb-9'
-            )}>Join other 10k NFT profiles!</p>
-            <a data-aos="zoom-out" data-aos-delay="300" href={data?.bynpCta?.link} className={tw(
+            )}>{data?.subTitle}</p>
+            <a data-aos="zoom-out" data-aos-delay="300" href={data?.ctaLink} className={tw(
               'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
               'inline-flex items-center justify-center text-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
               'text-xl minxxl:text-3xl text-white font-medium uppercase'
-            )}>{data?.bynpCta?.title}</a>
+            )}>{data?.ctaButton}</a>
           </div>
 
           <div className='minmd:w-[58%] text-right'>

@@ -83,6 +83,7 @@ export const BLOG_LIST_HOME_FIELDS = `
       slug
       description
       body
+      link
       publishDate
       heroImage{
         url
@@ -143,7 +144,51 @@ export const HOME_PAGE_FIELDS = `
   featuredProfile
   entryTitle
 `;
-
+export const HOME_PAGE_FIELDS_V3 = `
+    heroImagesCollection{
+      items{
+        url
+      }
+    }
+    heroTextData
+    dynamicUrls
+    whatWeCanDoTitle
+    whatWeCanDoImage{
+      url
+    }
+    sectionDynamicLinks
+    buildProfileSection
+    goToBlogButton
+    blogSectionTitle
+    collectionsSection
+    textAndImageCollection{
+      items{
+        leftImage
+        subTitle
+        buttonText
+        titleArray
+        buttonLink
+        image{
+          url
+        }
+      }
+    }
+    blogCollection{
+      items{
+        slug
+        title
+        author {
+          name
+          image {
+            url
+          }
+        }
+        heroImage{
+          url
+        }
+      }
+    }
+`;
 export const HOME_PAGE_FIELDS_V2 = `
   heroTitleNfTs
   dynamicUrl
