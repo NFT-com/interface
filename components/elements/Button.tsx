@@ -120,13 +120,13 @@ export function Button(props: ButtonProps) {
     case ButtonType.PRIMARY:
       return `bg-[${primaryButtonBackground}] hover:bg-[${primaryButtonBackgroundHover}] focus:bg-[${primaryButtonBackgroundFocus}] text-[${primaryButtonText}]`;
     case ButtonType.SECONDARY:
-      return `bg-[${secondaryButtonBackground}] hover:bg-button-secondary-hover focus:bg-[${secondaryButtonBackgroundFocus}] text-[${secondaryButtonText}]`;
+      return `bg-[${secondaryButtonBackground}] hover:bg-button-secondary-hover focus:bg-[${secondaryButtonBackgroundFocus}] text-white`;
     case ButtonType.TERTIARY:
       return !isNullOrEmpty(props.label) ?
         `rounded-full bg-[${tertiaryButtonBackground}] border-black hover:border-button-tertiary-hover focus:border-button-tertiary-hover text-black hover:text-button-tertiary-hover focus:text-button-tertiary-hover`:
         `rounded-full bg-[${tertiaryButtonBackground}] border-black hover:border-button-tertiary-hover focus:border-button-tertiary-hover text-black hover:text-button-tertiary-hover focus:text-button-tertiary-hover border-[1.5px]`;
     }
-  }, [primaryButtonBackground, primaryButtonBackgroundFocus, primaryButtonBackgroundHover, primaryButtonText, props.label, props.type, secondaryButtonBackground, secondaryButtonBackgroundFocus, secondaryButtonText, tertiaryButtonBackground]);
+  }, [primaryButtonBackground, primaryButtonBackgroundFocus, primaryButtonBackgroundHover, primaryButtonText, props.label, props.type, secondaryButtonBackground, secondaryButtonBackgroundFocus, tertiaryButtonBackground]);
 
   const getLoader = useCallback(() => {
     switch (props.size) {
@@ -206,7 +206,7 @@ export function Button(props: ButtonProps) {
           {getLoader()}
           {props?.loadingText && <span className="flex ml-2 whitespace-normal">{props?.loadingText}</span>}
         </div> :
-        <div className='flex justify-center items-center'>
+        <div className='flex justify-center items-center text-inherit'>
           {props?.icon &&
             <div className={tw('relative flex items-center',
               !isNullOrEmpty(props.label) ?
