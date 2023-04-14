@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import 'aos/dist/aos.css';
 import 'swiper/css';
 import 'swiper/css/scrollbar';
@@ -12,14 +11,14 @@ import { DynamicLinks } from 'components/modules/HomePage/DynamicLinks';
 import { HeroSection } from 'components/modules/HomePage/HeroSection';
 import { SocialSection } from 'components/modules/HomePage/SocialSection';
 import { WhatWeCanDo } from 'components/modules/HomePage/WhatWeCanDo';
-import contentfulBackupData from 'constants/contentful_backup_data.json';
-
 import HomePageV2Layout from 'components/modules/HomePageV2/HomePageV2';
+import contentfulBackupData from 'constants/contentful_backup_data.json';
 import { HomePageV2, HomePageV3 } from 'types/HomePage';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import { NextPageWithLayout } from './_app';
 
+import AOS from 'aos';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { getCollection } from 'lib/contentful/api';
@@ -44,6 +43,13 @@ const Index: NextPageWithLayout = ({ preview, data_v2, homePageDataV3 }: HomePag
   const isVisible = usePageVisibility();
 
   useEffect(() => {
+    AOS.init({
+      disable: function () {
+        const maxWidth = 900;
+        return window.innerWidth >= maxWidth;
+      },
+      duration: 700
+    });
     ScrollTrigger.saveStyles('#anim-hero-player, #anim-hero-caption');
     const matchMedia = gsap.matchMedia();
 
