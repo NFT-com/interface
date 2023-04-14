@@ -10,7 +10,6 @@ export interface HomePageData {
 }
 
 export function HeroSection({ data }: HomePageData) {
-  console.log(data?.heroImagesCollection.items[0]?.url)
   return(
     <div id='anim-hero-trigger' className='minlg:h-screen'>
       <div className='bg-white relative'>
