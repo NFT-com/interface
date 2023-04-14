@@ -14,15 +14,13 @@ export function generateSrcSet(url: string) {
   const widths = [256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840];
   const encodedUrl = isBase64(url)
     ? url
-    : `${getBaseUrl(
-      'https://www.nft.com/'
-    )}api/imageFetcher?url=${encodeURIComponent(processIPFSURL(url))}`;
+    : `${getBaseUrl()}api/imageFetcher?url=${encodeURIComponent(processIPFSURL(url))}`;
 
   const srcs = widths.map((width) => {
     return isBase64(url) ? encodedUrl : `${encodedUrl} ${width}w`;
   });
   const srcset = srcs.join(', ');
-  return { src: srcs.at(-1), srcs, srcset };
+  return { src: encodedUrl, srcs, srcset };
 }
 
 /**
@@ -59,9 +57,7 @@ export function contentfulLoader({ src, quality, width }: ImageLoaderProps) {
 export function nftComCdnLoader({ src, width }: ImageLoaderProps) {
   const base64 = isBase64(src) ? decodeBase64(src) : false;
   return base64 ||
-    `${getBaseUrl(
-      'https://www.nft.com/'
-    )}api/imageFetcher?url=${encodeURIComponent(processIPFSURL(src))}&width=${width || 300}`;
+    `${getBaseUrl()}api/imageFetcher?url=${encodeURIComponent(processIPFSURL(src))}&width=${width || 300}`;
 }
 
 /**

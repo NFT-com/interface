@@ -26,6 +26,7 @@ export interface DropdownPickerProps {
   onChange?: (label: string) => void;
   showKeyIcon?: boolean;
   v2?: boolean;
+  centeredText?: boolean;
 }
 
 /**
@@ -70,8 +71,9 @@ export function DropdownPicker(props: DropdownPickerProps) {
       item && <div
         key={item.label}
         style={{ height: activeRowRef.current.clientHeight }}
-        className={`flex flex-row w-full pl-2.5 py-3
-        ${ index === optionHoverIndex ? 'text-primary-txt' : 'text-secondary-txt'}`}
+        className={`flex flex-row w-full pl-2.5 py-3 items-center
+        ${props.centeredText && 'justify-center'}
+        ${ index === optionHoverIndex ? 'text-primary-txt hover:bg-[#FFF4CA] font-medium' : 'text-secondary-txt'}`}
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
@@ -79,10 +81,16 @@ export function DropdownPicker(props: DropdownPickerProps) {
           setSelected(item);
         }}
       >
+        {item.icon && <Image
+          width={20}
+          height={20}
+          className='object-contain relative mr-1'
+          src={item.icon}
+          alt={item.label} />}
         {item.label}
       </div>
     );
-  }, [optionHoverIndex]);
+  }, [optionHoverIndex, props.centeredText]);
 
   const expandedIcon = useMemo(() => props.above ?
     <ChevronDown size={24} color={primaryIcon} /> :
@@ -160,7 +168,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
             'border border-select-brdr',
             'divide-y',
             'bg-white',
-            'w-full absolute z-50',
+            'w-full absolute z-[51]',
             'shadow-lg',
             'max-h-[200px] overflow-auto'
           )}

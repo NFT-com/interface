@@ -1,8 +1,12 @@
 import LikeCount from 'components/elements/LikeCount';
 
-import { useArgs } from '@storybook/client-api';
+// eslint-disable-next-line no-restricted-imports
+import { MockWagmiDecorator } from '../../.storybook/decorators';
+
 import { Meta, StoryFn } from '@storybook/react';
+import { Wallet } from 'ethers';
 import React from 'react';
+const demoWallet = new Wallet('0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80');
 
 export default {
   title: 'elements/LikeCount',
@@ -11,20 +15,12 @@ export default {
     onClick: {
       action: 'clicked',
     }
-  }
+  },
+  decorators: [MockWagmiDecorator(demoWallet)]
 } as Meta<typeof LikeCount>;
 
 const Template: StoryFn<typeof LikeCount> = (args) => {
-  const [, updateArgs] = useArgs();
-  function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-  const handle = async() => {
-    await timeout(700);
-    updateArgs({ ...args, isLiked: !args.isLiked, count: args.isLiked ? args.count - 1 : args.count + 1 });
-  };
-
-  return <LikeCount {...args} onClick={handle} mutate={() => null} />;
+  return <LikeCount {...args} mutate={() => null} />;
 };
 
 export const Liked = Template.bind({});

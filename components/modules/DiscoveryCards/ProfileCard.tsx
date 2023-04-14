@@ -2,7 +2,6 @@ import BlurImage from 'components/elements/BlurImage';
 import LikeCount from 'components/elements/LikeCount';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { LikeableType, Profile } from 'graphql/generated/types';
-import { useSetLikeMutation } from 'graphql/hooks/useLikeMutations';
 import { useProfileLikeQuery } from 'graphql/hooks/useProfileLikeQuery';
 import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -32,13 +31,7 @@ export function ProfileCard(props: ProfileCardProps) {
     defaultChainId
   );
 
-  const { profileData: profileLikeData, mutate } = useProfileLikeQuery(props?.profile?.url);
-
-  const { setLike, unsetLike } = useSetLikeMutation(
-    props?.id ?? props?.profile?.id,
-    LikeableType.Profile,
-    props?.profile?.url
-  );
+  const { profileData: profileLikeData } = useProfileLikeQuery(props?.profile?.url);
 
   if(isLeaderBoard){
     return (
@@ -81,8 +74,11 @@ export function ProfileCard(props: ProfileCardProps) {
             <LikeCount
               count={profileLikeData?.profile?.likeCount || 0}
               isLiked={profileLikeData?.profile?.isLikedBy || false}
-              onClick={profileLikeData?.profile?.isLikedBy ? unsetLike :setLike}
-              mutate={mutate}
+              likeData={{
+                id: props?.id ?? props?.profile?.id,
+                type: LikeableType.Profile,
+                profileName: props?.profile?.url
+              }}
             />
           </div>
 

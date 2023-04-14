@@ -29,21 +29,21 @@ export default function Post({ post, preview }: PostProps) {
   }
 
   const seoConfig = {
-    title:post.title,
-    description:post.description,
+    title:post?.title,
+    description:post?.description,
     openGraph: {
-      url: `https://www.nft.com/articles/${post.slug}`,
-      title: post.title,
-      description: post.description,
+      url: `https://www.nft.com/articles/${post?.slug}`,
+      title: post?.title,
+      description: post?.description,
       type: 'article',
       article: {
-        publishedTime: post.publishDate,
-        tags: post.tags,
+        publishedTime: post?.publishDate,
+        tags: post?.tags,
       },
       images: [
         {
-          url: post.heroImage.url,
-          alt: post.heroImage.description,
+          url: post?.heroImage?.url,
+          alt: post?.heroImage?.description,
         },
       ],
       site_name: 'NFT.com',

@@ -1,5 +1,6 @@
 import PreloaderImage from 'components/elements/PreloaderImage';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
+import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { tw } from 'utils/tw';
@@ -18,6 +19,7 @@ export const CollectionsResults = (props:
   const { setClearedFilters } = useSearchModal();
 
   const { searchTerm, found, nftsForCollections, sideNavOpen, typesenseCollections } = props;
+  const { data: collectionLikeData } = useCollectionLikeCountQuery(typesenseCollections.map((c) => c?.document?.contractAddr));
 
   const showCollectionsItems = () => {
     const preloadersArray = screenWidth < 1200 ? [1,2] : sideNavOpen ? [1,2] : [1,2,3];
@@ -39,17 +41,14 @@ export const CollectionsResults = (props:
           key={'collection'+i}
           redirectTo={`/app/collection/${collection.document?.contractAddr}/`}
           collectionId={collection?.document?.id}
-          contractAddress={collection.document?.collectionAddress}
-          contract={collection.document?.collectionAddress}
-          description={collection?.document.description}
           isOfficial={collection.document.isOfficial}
           floorPrice={collection.document?.floor}
           totalVolume={collection.document?.volume}
           images={[collection.document.bannerUrl]}
           contractName={collection.document.contractName}
-          maxSymbolsInString={180}
-          userName={collection.document.contractName}
-          contractAddr={collection.document.contractAddr} />
+          contractAddr={collection.document.contractAddr ?? collection.document?.collectionAddress}
+          likeInfo={collectionLikeData && collectionLikeData[i]}
+        />
         );
       });
     }

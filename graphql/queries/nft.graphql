@@ -4,7 +4,8 @@ query Nft(
   $chainId: String,
   $listingsPageInput: PageInput, 
   $listingsExpirationType: ActivityExpiration,
-  $listingsOwner: Address
+  $listingsOwner: Address,
+  $likedById: ID!
 ) {
   nft(contract: $contract, id: $id, chainId: $chainId) {
     id
@@ -17,6 +18,9 @@ query Nft(
     owner
     previewLink
     isGKMinted
+    likeCount
+    isLikedByUser
+    isLikedBy(likedById: $likedById)
     wallet {
       address
       chainId
