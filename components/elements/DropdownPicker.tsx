@@ -3,7 +3,7 @@ import { tw } from 'utils/tw';
 
 import Image from 'next/image';
 import KeyIcon from 'public/mint-key.svg?svgr';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
@@ -72,7 +72,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         key={item.label}
         style={{ height: activeRowRef.current.clientHeight }}
         className={`flex flex-row w-full pl-2.5 py-3 items-center
-        ${props.centeredText && 'justify-center'} 
+        ${props.centeredText && 'justify-center'}
         ${ index === optionHoverIndex ? 'text-primary-txt hover:bg-[#FFF4CA] font-medium' : 'text-secondary-txt'}`}
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
