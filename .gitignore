@@ -15,7 +15,6 @@
 
 # production
 /build
-.netlify
 
 # misc
 .DS_Store
@@ -39,6 +38,10 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+#caching
+.stylelintcache
+.eslintcache
 
 # compiled
 **/tailwind.css

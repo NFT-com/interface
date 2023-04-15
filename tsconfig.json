@@ -1,43 +1,39 @@
 {
   "compilerOptions": {
-    // "noErrorTruncation": true,
-    "target": "ESNext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "baseUrl": ".",
     "allowJs": true,
-    "skipLibCheck": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
+    "alwaysStrict": true,
+    "baseUrl": ".",
+    "declaration": true,
+    "downlevelIteration": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "downlevelIteration": true,
-    "allowSyntheticDefaultImports": true,
-    "incremental": true,
-    "types": [
-      "jest"
-    ],
-    "noFallthroughCasesInSwitch": true
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    // "noErrorTruncation": true, // Prints full TS types in IDE
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "target": "ESNext",
+    "types": ["jest"]
   },
-  "include": [
-    "next-env.d.ts",
-    "modules.d.ts",
-    "**/*.js",
-    "**/*.ts",
-    "**/*.tsx",
-    "types/**/*.d.ts",
-    "additional.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "cypress"
-  ]
+  "exclude": ["node_modules", "cypress"],
+  "include": ["next-env.d.ts", "modules.d.ts", "**/*.js", "**/*.ts", "**/*.tsx", "types/**/*.d.ts", "additional.d.ts"]
 }
