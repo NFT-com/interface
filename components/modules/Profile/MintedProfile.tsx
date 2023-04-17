@@ -126,7 +126,7 @@ export function MintedProfile(props: MintedProfileProps) {
     }
   };
   if (
-    associatedContract != null &&
+    associatedContract?.chainAddr?.length &&
     (Doppler.NEXT_PUBLIC_OFFCHAIN_ASSOCIATION_ENABLED ||
     (associatedAddresses?.find(addr => sameAddress(addr?.chainAddr, associatedCollectionWithDeployer?.deployer)) || sameAddress(profileData?.profile?.owner?.address, associatedCollectionWithDeployer?.deployer)))
   ) {
