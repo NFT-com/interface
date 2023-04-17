@@ -19,8 +19,9 @@ const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof ResultsDropDo
 type AssociatedProfileSelectProps = {
   profileId: string;
   associatedContract?: string;
+  onAssociatedContract: () => void;
 };
-export default function AssociatedProfileSelect({ profileId, associatedContract }: AssociatedProfileSelectProps) {
+export default function AssociatedProfileSelect({ profileId, associatedContract, onAssociatedContract }: AssociatedProfileSelectProps) {
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const { updateProfile } = useUpdateProfileMutation();
   const defaultChainId = useDefaultChainId();
@@ -137,6 +138,7 @@ export default function AssociatedProfileSelect({ profileId, associatedContract 
   const onButtonClickHandler = () => {
     if (selectedResult) {
       toast.success('Saved!');
+      onAssociatedContract();
       updateProfile({
         id: profileId,
         associatedContract: selectedResult.contractAddr,
