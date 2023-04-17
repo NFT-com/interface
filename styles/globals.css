@@ -2305,3 +2305,86 @@ input[type="range"]::-moz-range-thumb {
     transform: translateX(-50%);
   }
 }
+
+.swiper-horizontal > .swiper-scrollbar.swiper-scrollbar-horizontal {
+  background-color: #4D4D4D;
+  border-radius: 2px;
+  left: 4%;
+  right: 4%;
+  width: auto;
+}
+
+.swiper-horizontal > .swiper-scrollbar .swiper-scrollbar-drag {
+  background-color: #F9D54C;
+  border-radius: 2px;
+}
+
+[class^="insights-swiper__btn"] {
+  flex: 0 0 2.875rem;
+  width: 2.875rem;
+  height: 2.875rem;
+  border-radius: 50%;
+  border: 1px solid #B2B2B2;
+  background-color: #B2B2B2;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 599px) {
+  .insights-swiper__buttons {
+    display: flex;
+    justify-content: center;
+  }
+
+  [class^="insights-swiper__btn"] {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
+
+@media (min-width: 600px) {
+  [class^="insights-swiper__btn"] {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+[class^="insights-swiper__btn"]:hover {
+  transition: .27s;
+  opacity: .8;
+}
+
+[class^="insights-swiper__btn"].swiper-button-disabled {
+  border-color: currentColor;
+  color: #6A6A6A;
+  background-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+
+.insights-swiper__btn-next {
+  right: 2.75rem;
+}
+
+.insights-swiper__btn-prev {
+  right: 6.75rem;
+}
+
+[class^="insights-swiper__btn"] svg {
+  transition: .27s;
+}
+
+.insights-swiper__btn-prev svg {
+  transform: scaleX(-1);
+}
+
+.insights-swiper__btn-next:hover svg {
+  transform: translateX(2px);
+}
+
+.insights-swiper__btn-prev:hover svg {
+  transform: translateX(-2px) scaleX(-1);
+}

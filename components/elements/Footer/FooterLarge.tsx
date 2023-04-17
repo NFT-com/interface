@@ -4,7 +4,7 @@ import { useEmailSubscribe } from 'hooks/useEmailSubscribe';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { filterNulls, isNullOrEmpty } from 'utils/format';
-import { tw } from 'utils/tw';
+import { cl,tw } from 'utils/tw';
 
 import AOS from 'aos';
 import { gsap } from 'gsap';
@@ -152,13 +152,11 @@ export const FooterLarge = () => {
   ];
 
   return (
-    <footer id="FooterContainer" className={`page-footer overflow-hidden ${location === '/' ? '-mt-9 minlg:-mt-[20.8rem]' : fixFooter?.includes(location) ? '-mt-[4.3rem] z-50' : ''}`}>
+    <footer id="FooterContainer" className={cl('page-footer overflow-hidden', { '-mt-[4.3rem] z-50': fixFooter?.includes(location) && location !== '/' })}>
       <Toast />
       <div id='footer-content' className={tw(
         'font-noi-grotesk text-primary-txt-dk relative',
-        'bg-black rounded-t-[40px] minlg:rounded-t-[75px]',
-        'transform-gpu',
-        location === '/' && 'minlg:translate-y-1/3 minxl:translate-y-1/2'
+        'bg-black'
       )}>
         <div className={tw(
           'minlg:flex minlg:flex-row relative justify-between',

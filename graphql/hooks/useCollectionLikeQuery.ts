@@ -20,7 +20,7 @@ export function useCollectionLikeCountQuery(contracts: string[]): CollectionLike
   const { address: currentAccount } = useAccount();
   const keyString = 'CollectionLikeQuery' + contracts + defaultChainId + likeId + currentProfileId + currentAccount;
 
-  const inputs = contracts.map((contract) => (
+  const inputs = contracts && contracts?.map((contract) => (
     {
       chainId: defaultChainId,
       contract,
