@@ -172,6 +172,7 @@ export const FooterLarge = () => {
                   <BlurImage
                     src='/icons/LogoFooterWhite.svg'
                     alt='NFT.com white footer logo'
+                    localImage
                     width={60}
                     height={60}
                     className='w-[3.8rem] h-[3.8rem] justify-start'
