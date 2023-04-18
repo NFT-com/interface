@@ -104,7 +104,7 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
                     {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_POINTS_ENABLED) && <div className='bg-[#FFF4CA] w-max rounded-full flex items-center py-1 pl-4 pr-1 mx-auto mt-2 mb-9'>
                       +{selectedItem?.coins}
                       <div className='h-[24px] w-[24px] minmd:h-[34px] minmd:w-[34px] ml-[5px]'>
-                        <BlurImage alt="default profile photo" src="/assets/nft_profile_default.webp" fill/>
+                        <BlurImage alt="default profile photo" src="/assets/nft_profile_default.webp" fill localImage/>
                       </div>
                     </div>}
 

@@ -96,7 +96,7 @@ export default function OnboardingModal({ profileURI, onClose } : OnboardingModa
                   </h3>
                   {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_POINTS_ENABLED) && <div className='bg-[#FFF4CA] rounded-full flex items-center py-1 pl-1 pr-4'>
                     <div className='h-[24px] w-[24px] minmd:h-[34px] minmd:w-[34px] mr-[5px]'>
-                      <BlurImage alt="default profile photo" src="/assets/nft_profile_default.webp" fill/>
+                      <BlurImage alt="default profile photo" src="/assets/nft_profile_default.webp" fill localImage />
                     </div>
 
                     {profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5}/<span className='text-[#6A6A6A]'>{totalPoints || '-'}</span>

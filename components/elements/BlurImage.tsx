@@ -8,11 +8,22 @@ import { useState } from 'react';
 type BlurImageProps = {
   className?: string;
   fallbackImage?: any;
+  localImage?: boolean;
 } & Omit<ImageProps, 'src'> & Partial<Pick<ImageProps, 'src'>>
 
-export default function BlurImage({ alt, className, loader, width, height, fill, src, ...props } : BlurImageProps) {
+export default function BlurImage({
+  alt,
+  className,
+  loader,
+  width,
+  height,
+  fill,
+  src,
+  localImage = false,
+  ...props
+} : BlurImageProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const blurLoader = src ? (loader || nftComCdnLoader) : undefined;
+  const blurLoader = src && !localImage ? (loader || nftComCdnLoader) : undefined;
   const layoutProps = fill ? { fill } : { width, height };
   // Support base64 encoded images
   if (src) {

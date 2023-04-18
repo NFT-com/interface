@@ -12,7 +12,7 @@ import { getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import uniqBy from 'lodash/uniqBy';
-import LeaderBoardIcon from 'public/leaderBoardIcon.svg?svgr';
+import LeaderBoardIcon from 'public/icons/leaderBoardIcon.svg?svgr';
 import React, { useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 

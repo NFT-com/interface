@@ -8,9 +8,9 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import EllipseX from 'public/ellipse-x.svg?svgr';
-import SearchIcon from 'public/search.svg?svgr';
-import SearchIconGray from 'public/searchGray.svg?svgr';
+import EllipseX from 'public/icons/ellipse-x.svg?svgr';
+import SearchIcon from 'public/icons/search.svg?svgr';
+import SearchIconGray from 'public/icons/searchGray.svg?svgr';
 import { useEffect, useRef, useState } from 'react';
 
 const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof StaticResultsDropDown>>(() => import('components/modules/Search/ResultsDropDown').then(mod => mod.ResultsDropDown));

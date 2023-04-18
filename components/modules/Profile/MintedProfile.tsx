@@ -29,8 +29,8 @@ import { ProfileScrollContextProvider } from './ProfileScrollContext';
 
 import { BigNumber } from 'ethers';
 import dynamic from 'next/dynamic';
-import cameraIcon from 'public/camera.png';
-import CameraIconEdit from 'public/camera_icon.svg?svgr';
+import cameraIcon from 'public/camera.webp';
+import CameraIconEdit from 'public/icons/camera_icon.svg?svgr';
 import { useCallback, useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';

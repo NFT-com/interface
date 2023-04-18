@@ -5,7 +5,12 @@ const BlurImage = dynamic(import('components/elements/BlurImage'));
 export default function PreloaderImage() {
   const getPreloader = () => {
     const index = generateRandomPreloader();
-    const imageProps = { alt: 'grey placeholder image', className: 'rounded-md object-cover', fill: true };
+    const imageProps = {
+      alt: 'grey placeholder image',
+      className: 'rounded-md object-cover',
+      fill: true ,
+      localImage: true
+    };
     const options = {
       0: <BlurImage src="/preloaderImg-1.svg" {...imageProps}/>,
       1: <BlurImage src="/preloaderImg-2.svg" {...imageProps}/>,

@@ -10,7 +10,7 @@ import { tw } from 'utils/tw';
 import { ProfileContext } from './ProfileContext';
 import { ProfileMenu } from './ProfileMenu';
 
-import GK from 'public/Badge_Key.svg?svgr';
+import GK from 'public/icons/Badge_Key.svg?svgr';
 import { useContext } from 'react';
 
 export interface MintedProfileInfoProps {

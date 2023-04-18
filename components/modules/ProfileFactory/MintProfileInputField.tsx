@@ -16,8 +16,8 @@ import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
-import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
-import OpenseaIcon from 'public/opensea-icon.svg?svgr';
+import LooksrareIcon from 'public/icons/looksrare-icon.svg?svgr';
+import OpenseaIcon from 'public/icons/opensea-icon.svg?svgr';
 import { MouseEvent, useCallback, useEffect, useState } from 'react';
 
 type MintProfileInputFieldProps = {
