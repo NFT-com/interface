@@ -70,8 +70,8 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
   });
 
   const renderLogoMode = () => useDarkMode ?
-    <Image width={40} height={40} src='/LogoLight.svg' alt='NFT.com Logo' className='justify-start' /> :
-    <Image width={40} height={40} src='/Logo.svg' alt='NFT.com Logo' className='justify-start' />;
+    <Image width={40} height={40} src='/icons/LogoLight.svg' alt='NFT.com Logo' className='justify-start' /> :
+    <Image width={40} height={40} src='/icons/Logo.svg' alt='NFT.com Logo' className='justify-start' />;
 
   if (homepageHeader) {
     return (
