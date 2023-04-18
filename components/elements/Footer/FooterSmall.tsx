@@ -119,9 +119,11 @@ export const FooterSmall = () => {
               <Link href='/' passHref>
                 <div className='w-[3.8rem] h-[3.8rem]'>
                   <BlurImage
+                    localImage
                     src='/icons/LogoFooterWhite.svg'
                     alt='NFT.com white footer logo' className='w-[3.8rem] h-[3.8rem] justify-start'
-                    fill
+                    width={60}
+                    height={60}
                   />
                 </div>
               </Link>
