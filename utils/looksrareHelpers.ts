@@ -2,7 +2,7 @@ import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { IExecutionStrategy, LooksRareExchange, RoyaltyFeeManager, RoyaltyFeeRegistry } from 'constants/typechain/looksrare';
 import { LooksrareProtocolData, Nft } from 'graphql/generated/types';
 import { AggregatorResponse } from 'types';
-import { getBaseUrl } from 'utils/helpers';
+import { getBaseUrl } from 'utils/isEnv';
 
 import { libraryCall, looksrareLib } from './marketplaceHelpers';
 

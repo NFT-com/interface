@@ -95,7 +95,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
             }
           </div>
           <div className='flex w-full items-center p-4 pb-0 justify-start'>
-            <div className='justify-start'>
+            <div className='justify-start w-full'>
               <Tabs
                 tabOptions={tabs}
                 customTabWidth={'w-max'}

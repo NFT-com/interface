@@ -8,8 +8,8 @@ import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCur
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
-import { processIPFSURL } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
+import { processIPFSURL } from 'utils/ipfs';
 import { getLowestPriceListing } from 'utils/listingUtils';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';

@@ -1,6 +1,7 @@
 import { isBase64 } from 'utils/format';
-import { getBaseUrl, processIPFSURL } from 'utils/helpers';
 import { decodeBase64 } from 'utils/image';
+import { processIPFSURL } from 'utils/ipfs';
+import { getBaseUrl } from 'utils/isEnv';
 
 import { ImageLoaderProps } from 'next/image';
 
