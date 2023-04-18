@@ -12,22 +12,22 @@ export interface HomePageData {
 export function HeroSection({ data }: HomePageData) {
   return(
     <div id='anim-hero-trigger' className='minlg:h-screen'>
-      <div className='bg-white relative'>
+      <div className='bg-white relative flex flex-col-reverse minlg:block'>
         {/* Intro Text */}
         <div id='anim-hero-text' className={tw(
-          'pt-[10rem] pb-[3.75rem] minlg:py-[4vh] pl-[5vw] flex flex-col justify-center items-start',
+          'pt-14 pb-9 minlg:py-[4vh] pl-[5vw] flex flex-col justify-center items-start',
           'minlg:w-[55%] minxl:w-[58.5%] minlg:h-screen'
         )}>
           <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-            'text-[2.5rem] minmd:text-[5.2rem] minlg:text-[3.3rem] minxl:text-[5.2rem] minxxl:text-[6.8rem] leading-[1.5] minmd:leading-[1.15]',
-            'text-black font-normal tracking-tight mb-11'
+            'text-[2.5rem] minmd:text-[5.2rem] minlg:text-[3.5rem] minxl:text-[6.25rem] minxxl:text-[6.8rem] leading-[1.5] minmd:leading-[1.15]',
+            'text-black font-normal tracking-tight mb-8 minlg:mb-11'
           )}>
             {data?.heroTextData?.titleDrop?.firstPhrase}
             <span className='inline-block rotate-[40deg]'>
               <BlurImage
                 className={tw(
                   'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s]',
-                  'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
+                  'drop-shadow-md inline-block w-[2.5rem] minmd:w-[4.825rem]',
                   'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl'
                 )}
                 width={120}
@@ -43,7 +43,7 @@ export function HeroSection({ data }: HomePageData) {
               <BlurImage
                 className={tw(
                   'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
-                  'drop-shadow-md inline-block w-[2.5rem] minmd:w-[3.125rem] minxxl:w-[4.5rem]',
+                  'drop-shadow-md inline-block w-[2.5rem] minmd:w-[4.825rem]',
                   'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl',
                 )}
                 width={120}
@@ -72,7 +72,7 @@ export function HeroSection({ data }: HomePageData) {
         <div id='anim-hero' data-aos="fade-up" data-aos-delay="200" className={tw(
           'minlg:max-w-[45%] minxl:max-w-[41.5%] w-full minlg:h-[calc(100vh+5px)] bg-[#F9D54C]',
           'relative minlg:absolute z-[10] minlg:right-0 minlg:top-0 overflow-hidden',
-          'before:block before:pb-[127%] minmd:before:pb-[80%] minlg:before:pb-[60%] minlg:before:hidden'
+          'before:block before:pb-[90%] minmd:before:pb-[80%] minlg:before:pb-[60%] minlg:before:hidden'
         )}>
           <div className='absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2'>
             <div id="anim-hero-player" className={tw(

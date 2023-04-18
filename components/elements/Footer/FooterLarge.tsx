@@ -152,15 +152,15 @@ export const FooterLarge = () => {
   ];
 
   return (
-    <footer id="FooterContainer" className={cl('page-footer overflow-hidden', { '-mt-[4.3rem] z-50': fixFooter?.includes(location) && location !== '/' })}>
+    <footer id="FooterContainer" className={cl('page-footer overflow-hidden bg-[#282828]', { '-mt-[4.3rem] z-50': fixFooter?.includes(location) && location !== '/' })}>
       <Toast />
       <div id='footer-content' className={tw(
         'font-noi-grotesk text-primary-txt-dk relative',
-        'bg-black'
+        'bg-black rounded-t-3xl minlg:rounded-none'
       )}>
         <div className={tw(
           'minlg:flex minlg:flex-row relative justify-between',
-          'pt-16 pb-10 px-5 minlg:pl-0 minlg:pr-32'
+          'pt-14 pb-10 px-5 minlg:pl-0 minlg:pr-32'
         )}>
           <div className={tw(
             'minlg:max-w-[50%] minlg:flex-shrink-0 minlg:basis-2/4 flex flex-col',

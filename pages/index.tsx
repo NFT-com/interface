@@ -296,41 +296,6 @@ const Index: NextPageWithLayout = ({ preview, data_v2, homePageDataV3 }: HomePag
           duration: 1,
           ease: 'circ.out',
         }, '>-0.8');
-
-      // Build Profile
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '#anim-build-profile-trigger',
-          start: '100px bottom',
-          end: '+=30px',
-          toggleActions: 'play none reverse none',
-        }
-      })
-        .to('#anim-build-profile-trigger', {
-          y: 0,
-          duration: 1.5,
-          ease: 'circ.out',
-        }, 0)
-        .to('#anim-build-profile-ttl-1', {
-          y: 0,
-          duration: 1.8,
-          ease: 'circ.out',
-        }, 0)
-        .to('#anim-build-profile-ttl-2', {
-          y: 0,
-          duration: 2.1,
-          ease: 'circ.out',
-        }, 0)
-        .to('.anim-build-profile-ttl-icon', {
-          y: 0,
-          duration: 2.2,
-          ease: 'circ.out',
-        }, 0)
-        .to('.anim-build-profile-ttl-icon-2', {
-          y: 0,
-          duration: 2.2,
-          ease: 'circ.out',
-        }, '<0.5');
     });
 
     window.requestAnimationFrame(function() {
@@ -360,6 +325,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2, homePageDataV3 }: HomePag
             heroTextData: homePageDataV3?.heroTextData,
             heroImagesCollection: homePageDataV3?.heroImagesCollection
           }}/>
+
           <WhatWeCanDo data={{
             whatWeCanDoTitle: {
               gradientTitle: homePageDataV3?.whatWeCanDoTitle?.gradientTitle
@@ -368,18 +334,25 @@ const Index: NextPageWithLayout = ({ preview, data_v2, homePageDataV3 }: HomePag
               url: homePageDataV3?.whatWeCanDoImage?.url
             }
           }}/>
+
           <DynamicLinks data={{
             sectionDynamicLinks: homePageDataV3.sectionDynamicLinks
           }} isVisible={isVisible}/>
+
           <DiscoverCollections data={homePageDataV3.collectionsSection}/>
+
           <SocialSection data={homePageDataV3?.textAndImageCollection}/>
+
           <BlogSection
             blogSectionTitle={homePageDataV3.blogSectionTitle}
             goToBlogButton={homePageDataV3.goToBlogButton}
             data={homePageDataV3.blogCollection}/>
+
           <BuildProfile data={homePageDataV3?.buildProfileSection}/>
         </main>
+
         {preview && <DynamicPreviewBanner />}
+
         <NonAuthLikeModal />
       </>
     );

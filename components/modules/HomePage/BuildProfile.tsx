@@ -11,8 +11,8 @@ export interface HomePageData {
 export function BuildProfile({ data }: HomePageData) {
   return(
     <div className={tw(
-      'bg-black relative overflow-hidden z-0',
-      'before:absolute before:left-[-3%] before:right-[-3%] before:top-0 before:bottom-2/4 before:bg-[#282828] before:-z-10'
+      'bg-[#282828] minlg:bg-black minlg:relative overflow-hidden z-0 pb-16 minlg:pb-0',
+      'minlg:before:absolute minlg:before:left-[-3%] minlg:before:right-[-3%] minlg:before:top-0 before:bottom-2/4 minlg:before:bg-[#282828] before:-z-10'
     )}>
       <div className={tw(
         'bg-gradient-to-r from-[#FAC213] to-[#FF9B37] rounded-[1.875rem]',
@@ -46,7 +46,7 @@ export function BuildProfile({ data }: HomePageData) {
           </div>
 
           <div className='minmd:w-[58%] text-right'>
-            <Image className='ml-auto h-full object-cover' width={721} height={621} src={profileImage} alt='Example profile image' />
+            <Image className='-ml-9 minmd:ml-auto max-w-[calc(100%+2.25rem)] minmd:max-w-full h-full object-cover' width={721} height={621} src={profileImage} alt='Example profile image' />
           </div>
         </div>
       </div>

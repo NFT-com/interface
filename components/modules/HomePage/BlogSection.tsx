@@ -25,11 +25,11 @@ export function BlogSection({ data, goToBlogButton, blogSectionTitle }: HomePage
   return(
     <div className='bg-[#282828]'>
       <div className={tw(
-        'relative z-0 py-[2.5rem] minlg:pt-[6.25rem] minlg:pb-[7.625rem]',
+        'relative z-0 py-16 minlg:pt-[6.25rem] minlg:pb-[7.625rem]',
       )}>
-        <div className='relative text-center text-white'>
+        <div className='relative text-center text-white pt-4 minlg:pt-0'>
           <h2 data-aos="fade-up" className='text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal mb-[.625rem]'>{blogSectionTitle?.title}</h2>
-          <p data-aos="fade-up" data-aos-delay="100" className='text-lg mb-[3.75rem]'>{blogSectionTitle?.subTitle}</p>
+          <p data-aos="fade-up" data-aos-delay="100" className='text-lg mb-8 minxl:mb-[3.8125rem]'>{blogSectionTitle?.subTitle}</p>
         </div>
 
         <div className='mb-12' data-aos="fade-left">
