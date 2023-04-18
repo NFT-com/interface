@@ -3,7 +3,7 @@ import {
   TAB_BOTTOM_BORDER_CLASSES,
   TAB_NO_BORDER_CLASSES,
   TAB_PINK_BORDER_CLASSES,
-} from 'constants/misc';
+} from 'utils/styles';
 
 import Image from 'next/image';
 import React, { ReactElement, useCallback, useState } from 'react';

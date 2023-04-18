@@ -30,15 +30,26 @@ export function SocialSection({ data }: HomePageData) {
                     })
                   }
                 </h2>
-                <p data-aos="fade-up" data-aos-delay="300" className={tw(
-                  'mb-9',
-                  'text-[1rem] minlg:text-lg minxxl:text-[2rem] leading-[1.556] minlg:!leading-[1.3]'
-                )}>{item.subTitle}</p>
-                <a href={item.buttonLink} className={tw(
-                  'bg-[#F9D54C] hover:bg-[#dcaf07] drop-shadow-lg rounded-full transition-colors',
-                  'inline-flex items-center justify-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
-                  'text-xl minxxl:text-3xl text-black font-medium uppercase w-full minmd:w-auto'
-                )}>{item.buttonText}</a>
+                <p
+                  data-aos='fade-up'
+                  data-aos-delay='300'
+                  className={tw(
+                    'mb-9',
+                    'text-[1rem] leading-[1.556] minlg:text-lg minlg:!leading-[1.3] minxxl:text-[2rem]'
+                  )}
+                >
+                  {item.subTitle}
+                </p>
+                <a
+                  href={item.buttonLink}
+                  className={tw(
+                    'rounded-full bg-[#F9D54C] drop-shadow-lg transition-colors hover:bg-[#dcaf07]',
+                    'inline-flex h-[4rem] items-center justify-center px-6 minxxl:h-[6rem] minxxl:px-9',
+                    'w-full text-xl font-medium uppercase text-black minmd:w-auto minxxl:text-3xl'
+                  )}
+                >
+                  {item.buttonText}
+                </a>
               </div>
 
               <div className={item.leftImage ? 'minmd:-order-1 minlg:-mr-20' : 'minlg:-ml-14'} data-aos="fade-up" data-aos-delay="400">
@@ -47,12 +58,12 @@ export function SocialSection({ data }: HomePageData) {
                   height={700}
                   loader={contentfulLoader}
                   src={item.image.url}
-                  alt="NFT image" />
+                  alt='NFT image'
+                />
               </div>
             </div>
           );
-        })
-      }
+        })}
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import { Maybe } from 'graphql/generated/types';
 
 import { Doppler,getEnv } from './env';
-import { getBaseUrl, getChainIdString } from './helpers';
+import { getChainIdString } from './helpers';
+import { getBaseUrl } from './isEnv';
 
 import { BigNumber, BigNumberish } from 'ethers';
 

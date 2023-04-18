@@ -13,7 +13,7 @@ import previewNft from 'public/nft-preview-image.png';
 import previewProfile from 'public/profile-preview-image.png';
 import React from 'react';
 
-export function NonAuthLikeModal(){
+export default function NonAuthLikeModal(){
   const { isOpen, likeData: { likedType, profileName }, setLikeData } = useNonProfileModal();
   const { openConnectModal } = useConnectModal();
 

@@ -8,7 +8,7 @@ export interface HomePageData {
   data?: HomePageV3BuildProfileSection;
 }
 
-export function BuildProfile({ data }: HomePageData) {
+export default function BuildProfile({ data }: HomePageData) {
   return(
     <div className={tw(
       'bg-[#282828] minlg:bg-black minlg:relative overflow-hidden z-0 pb-16 minlg:pb-0',

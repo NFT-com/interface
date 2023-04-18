@@ -8,7 +8,7 @@ import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useGenesisKeyMetadata } from 'hooks/useGenesisKeyMetadata';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useTotalGKPublicRemaining } from 'hooks/useTotalGKPublicRemaining';
-import { processIPFSURL } from 'utils/helpers';
+import { processIPFSURL } from 'utils/ipfs';
 import { tw } from 'utils/tw';
 
 import { AuctionType } from './GenesisKeyAuction';
@@ -54,7 +54,7 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
       BigNumber.from(latestGKMinted) :
       null
   );
-    
+
   const genesisKeyImage = processIPFSURL(isMobile
     ? genesisKeyMetadata?.metadata?.image
     : genesisKeyMetadata?.metadata?.animation_url);
@@ -69,7 +69,7 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
       );
     }
   }, [genesisKeyImage, genesisKeyMetadata, setKeyBackground]);
-  
+
   return (
     <div className="flex flex-col items-center text-primary-txt-dk h-[90%]">
       <KeyClaimVideo />

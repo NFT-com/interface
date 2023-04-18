@@ -2,7 +2,7 @@ import { ResultsDropDown as StaticResultsDropDown } from 'components/modules/Sea
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { isChromeBrowser } from 'utils/helpers';
+import { isChromeBrowser } from 'utils/format';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 

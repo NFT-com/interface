@@ -8,7 +8,7 @@ export interface HomePageData {
   isVisible?: boolean;
 }
 
-export function DynamicLinks({ data, isVisible }: HomePageData) {
+export default function DynamicLinks({ data, isVisible }: HomePageData) {
   return(
     <div id='anim-ticker-trigger' className='overflow-x-hidden pt-7 pb-24 minlg:pt-[4.625rem] minlg:pb-[6.525rem]'>
       <div id='anim-ticker-first' className={tw(
