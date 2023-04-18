@@ -33,7 +33,7 @@ export default function useNFTPurchaseError() {
     const listingExpiredError = nftsToBuy.some((nft) => {
       const now = moment().unix();
       const protocolData = nft.protocolData;
-      const endDate = nft.protocol === ExternalProtocol.LooksRare
+      const endDate = nft.protocol === ExternalProtocol.LooksRare || nft.protocol === ExternalProtocol.LooksRareV2
         ? Number((protocolData as LooksrareProtocolData)?.endTime) :
         nft.protocol === ExternalProtocol.Seaport
           ? Number((protocolData as SeaportProtocolData)?.parameters?.endTime) :

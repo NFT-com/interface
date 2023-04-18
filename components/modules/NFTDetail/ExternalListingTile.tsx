@@ -3,7 +3,7 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { ActivityStatus, AuctionType, LooksrareProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { ActivityStatus, AuctionType, LooksrareProtocolData, LooksrareV2ProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
@@ -280,7 +280,9 @@ function ExternalListingTile(props: ExternalListingTileProps) {
               listing?.order?.protocolData as SeaportProtocolData :
               listingProtocol === ExternalProtocol.X2Y2 ?
                 listing?.order?.protocolData as X2Y2ProtocolData :
-                listing?.order?.protocolData as LooksrareProtocolData
+                listingProtocol === ExternalProtocol.LooksRare ?
+                  listing?.order?.protocolData as LooksrareProtocolData :
+                  listing?.order?.protocolData as LooksrareV2ProtocolData
           });
           props.onClose();
           toggleCartSidebar('Buy');

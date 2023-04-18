@@ -1,5 +1,5 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-import { ActivityType, TxActivity, TxLooksrareProtocolData, TxSeaportProtocolData, TxX2Y2ProtocolData } from 'graphql/generated/types';
+import { ActivityType, TxActivity, TxLooksrareProtocolData, TxLooksrareV2ProtocolData, TxSeaportProtocolData, TxX2Y2ProtocolData } from 'graphql/generated/types';
 import { useUpdateReadByIdsMutation } from 'graphql/hooks/useUpdateReadByIdsMutation';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
@@ -61,6 +61,15 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
       const protocolData = sale?.protocolData as TxLooksrareProtocolData;
       const ethAmount = ethers.utils.formatEther(protocolData?.price);
       const currencyData = getByContractAddress(protocolData?.currencyAddress);
+      if(type === 'price'){
+        return ethAmount;
+      } else {
+        return currencyData.name;
+      }
+    } else if(sale.protocol === ExternalProtocol.LooksRareV2){
+      const protocolData = sale?.protocolData as TxLooksrareV2ProtocolData;
+      const ethAmount = ethers.utils.formatEther(protocolData?.price);
+      const currencyData = getByContractAddress(protocolData?.currency);
       if(type === 'price'){
         return ethAmount;
       } else {

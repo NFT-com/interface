@@ -1,5 +1,5 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, TxSeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, LooksrareV2ProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, TxSeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
@@ -42,6 +42,35 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
       if(type === 'transaction' || type === 'order'){
         const ethAmount = ethers.utils.formatEther(protocolData?.price);
         const currencyData = getByContractAddress(protocolData?.currencyAddress);
+        return (
+          <>
+            <td className="text-body leading-body pr-8 minmd:pr-4 w-max" >
+              {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
+            </td>
+            <td className="text-body leading-body pr-8 minmd:pr-4" >
+              {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+            </td>
+          </>
+        );
+      }
+
+      return (
+        <>
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            <p>—</p>
+          </td>
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            <p>—</p>
+          </td>
+        </>
+      );
+    }
+
+    if(item[type]?.protocol === 'LooksRareV2'){
+      const protocolData = item[type]?.protocolData as LooksrareV2ProtocolData;
+      if(type === 'transaction' || type === 'order'){
+        const ethAmount = ethers.utils.formatEther(protocolData?.price);
+        const currencyData = getByContractAddress(protocolData?.currency);
         return (
           <>
             <td className="text-body leading-body pr-8 minmd:pr-4 w-max" >

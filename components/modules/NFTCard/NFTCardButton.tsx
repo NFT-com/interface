@@ -4,7 +4,7 @@ import { NFTPurchasesContext } from 'components/modules//Checkout/NFTPurchaseCon
 import { DetailedNft } from 'components/modules/DiscoveryCards/CollectionCard';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { AuctionType, LooksrareProtocolData, LooksrareV2ProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
@@ -63,7 +63,9 @@ export function NFTCardButton(props: NFTCardButtonProps) {
                 props?.bestListing?.order?.protocolData as SeaportProtocolData :
                 props?.bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
                   props?.bestListing?.order?.protocolData as X2Y2ProtocolData:
-                  props?.bestListing?.order?.protocolData as LooksrareProtocolData
+                  props?.bestListing?.order?.protocol === ExternalProtocol.LooksRare ?
+                    props?.bestListing?.order?.protocolData as LooksrareProtocolData:
+                    props?.bestListing?.order?.protocolData as LooksrareV2ProtocolData
             });
             togglePurchaseSummaryModal();
           }}
