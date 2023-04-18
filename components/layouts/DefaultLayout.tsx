@@ -2,7 +2,7 @@ import ClientOnly from 'components/elements/ClientOnly';
 import { Footer } from 'components/elements/Footer/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';
-import { NonAuthLikeModal } from 'components/elements/nonAuthLikeModal';
+import NonAuthLikeModal from 'components/elements/nonAuthLikeModal';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { DiscoveryNavigation } from 'components/modules/DiscoveryNavigation/DiscoveryNavigation';
 import EmailCaptureModal from 'components/modules/ProfileFactory/EmailCaptureModal';

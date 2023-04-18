@@ -21,7 +21,7 @@ export interface HomePageData {
   }
 }
 
-export function BlogSection({ data, goToBlogButton, blogSectionTitle }: HomePageData) {
+export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: HomePageData) {
   return(
     <div className='bg-[#282828]'>
       <div className={tw(
