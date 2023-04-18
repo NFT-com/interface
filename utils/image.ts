@@ -56,7 +56,7 @@ export const decodeBase64 = (str: string) => {
  * @param {string} src - the source string to check
  * @returns {string} - the image data if the source is a base64 encoded image, otherwise the original source string
  */
-export const getBase64Image = (src: string) => isBase64(src) ? decodeBase64(src)?.image_data : src;
+export const getBase64Image = (src: string) => isBase64(src) ? decodeBase64(src) : src;
 
 /**
  * The default URL for the blurred image placeholder. It is a base64 encoded SVG image
