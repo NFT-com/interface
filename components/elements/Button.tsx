@@ -46,7 +46,6 @@ export function Button(props: ButtonProps) {
     primaryButtonText,
     secondaryButtonBackground,
     secondaryButtonBackgroundFocus,
-    secondaryButtonText,
     tertiaryButtonBackground,
   } = useThemeColors();
 

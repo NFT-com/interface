@@ -12,7 +12,7 @@ import { getAddress } from 'utils/httpHooks';
 import { Dialog, Transition } from '@headlessui/react';
 import { BigNumber, utils } from 'ethers';
 import { useRouter } from 'next/router';
-import ETHIcon from 'public/eth_icon.svg?svgr';
+import ETHIcon from 'public/icons/eth_icon.svg?svgr';
 import { Fragment, useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 import useSWR from 'swr';

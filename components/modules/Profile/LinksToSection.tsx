@@ -13,7 +13,7 @@ export function LinksToSection(props: LinksToSectionParams) {
   const defaultChainId = useDefaultChainId();
   const ownerlinksContents = [
     {
-      image: '/link-to-nftcom.png',
+      image: '/link-to-nftcom.webp',
       section: 'DOCUMENT',
       title: 'NFT.COM Summary',
       description: 'Learn more about NFT.com at our docs page.',
@@ -29,21 +29,21 @@ export function LinksToSection(props: LinksToSectionParams) {
     //   }
     // },
     {
-      image: '/link-to-you.png',
+      image: '/link-to-you.webp',
       section: 'KNOWLEDGE BASE',
       title: 'NFT.COM Support',
       description: 'Learn about the different ways you can obtain your own NFT.com Profile.',
       linkTo: 'https://docs.nft.com'
     },
     {
-      image: '/link-to-green-key.png',
+      image: '/link-to-green-key.webp',
       section: 'GALLERY',
       title: 'NFT.COM Gallery',
       description: 'Explore all our Genesis Keys.',
       linkTo: '/app/collection/official/nftcom-genesis-key'
     },
     {
-      image: '/link-to-nftcom-2.png',
+      image: '/link-to-nftcom-2.webp',
       section: 'MARKET PLACE',
       title: 'NFT.com',
       description: 'Start building your NFT collection by buying NFTs on the NFT.com Marketplace.',
@@ -53,28 +53,28 @@ export function LinksToSection(props: LinksToSectionParams) {
 
   const notOwnerlinksContents = [
     {
-      image: '/link-to-key.png',
+      image: '/link-to-key.webp',
       section: 'EVENTS',
       title: 'NFT.COM Beta',
       description: 'Get a Genesis Key to access the NFT.com Beta.',
       linkTo: `/app/collection/${getAddress('genesisKey', defaultChainId)}`
     },
     {
-      image: '/link-to-you.png',
+      image: '/link-to-you.webp',
       section: 'KNOWLEDGE BASE',
       title: 'NFT.COM Support',
       description: 'Learn about the different ways you can obtain your own NFT.com Profile.',
       linkTo: 'https://docs.nft.com'
     },
     {
-      image: '/link-to-green-key.png',
+      image: '/link-to-green-key.webp',
       section: 'GALLERY',
       title: 'NFT.COM Gallery',
       description: 'Explore all our Genesis Keys.',
       linkTo: '/app/collection/official/nftcom-genesis-key'
     },
     {
-      image: '/link-to-nftcom-2.png',
+      image: '/link-to-nftcom-2.webp',
       section: 'MARKET PLACE',
       title: 'NFT.com',
       description: 'Start building your NFT collection by buying NFTs on the NFT.com Marketplace.',

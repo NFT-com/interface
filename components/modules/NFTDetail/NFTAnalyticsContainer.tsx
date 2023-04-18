@@ -8,7 +8,7 @@ import { tw } from 'utils/tw';
 import { Menu, Transition } from '@headlessui/react';
 import { BigNumber } from 'ethers';
 import dynamic from 'next/dynamic';
-import ChevronUpDownIcon from 'public/ChevronUpDown.svg?svgr';
+import ChevronUpDownIcon from 'public/icons/ChevronUpDown.svg?svgr';
 import { Fragment, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import useSWR from 'swr';

@@ -17,7 +17,7 @@ import { GenesisKeyWinnerView } from './GenesisKeyWinnerView';
 import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
 import Image from 'next/image';
-import truststamps from 'public/trust_stamps.png';
+import truststamps from 'public/trust_stamps.webp';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount, useSigner } from 'wagmi';

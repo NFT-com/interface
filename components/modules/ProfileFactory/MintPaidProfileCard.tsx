@@ -20,7 +20,7 @@ import { BigNumber, utils } from 'ethers';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Info, MinusCircle, PlusCircle } from 'phosphor-react';
-import ErrorIcon from 'public/red-error-icon.svg?svgr';
+import ErrorIcon from 'public/icons/red-error-icon.svg?svgr';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';

@@ -7,10 +7,10 @@ import { Modal } from './Modal';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
 import router from 'next/router';
-import previewCollection from 'public/collection-preview-image.png';
-import likeButton from 'public/like-button.svg';
-import previewNft from 'public/nft-preview-image.png';
-import previewProfile from 'public/profile-preview-image.png';
+import previewCollection from 'public/collection-preview-image.webp';
+import likeButton from 'public/icons/like-button.svg?svgr';
+import previewNft from 'public/nft-preview-image.webp';
+import previewProfile from 'public/profile-preview-image.webp';
 import React from 'react';
 
 export default function NonAuthLikeModal(){

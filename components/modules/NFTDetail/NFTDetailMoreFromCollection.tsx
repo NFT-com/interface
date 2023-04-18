@@ -12,7 +12,7 @@ import { getChainIdString } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber, BigNumberish } from 'ethers';
-import RightSlider from 'public/right-slider.svg?svgr';
+import RightSlider from 'public/icons/right-slider.svg?svgr';
 import { useState } from 'react';
 import { Autoplay, Swiper as SwiperClass } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';

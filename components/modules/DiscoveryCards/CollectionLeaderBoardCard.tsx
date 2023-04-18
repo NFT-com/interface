@@ -5,7 +5,7 @@ import {
   convertValue,
 } from 'utils/format';
 
-import VolumeIcon from 'public/volumeIcon.svg?svgr';
+import VolumeIcon from 'public/icons/volumeIcon.svg?svgr';
 import { PartialDeep } from 'type-fest';
 
 export type DetailedNft = Nft & { hidden?: boolean };

@@ -1,6 +1,6 @@
 import { tw } from 'utils/tw';
 
-import Heart from 'public/heart.svg?svgr';
+import Heart from 'public/icons/heart.svg?svgr';
 
 export function NFTCardSkeleton() {
   return (
@@ -19,14 +19,14 @@ export function NFTCardSkeleton() {
             )}
             >
               <div className='h-full flex flex-row items-center justify-center space-x-2'>
-        
+
                 <div className='w-[18px] h-5 flex'>
                   <Heart
                     fill={'#B2B2B2'}
                   />
                 </div>
                 <div className='h-2 bg-[#B2B2B266] w-4 rounded-full'></div>
-          
+
               </div>
             </div>
           </div>

@@ -24,7 +24,7 @@ import { tw } from 'utils/tw';
 
 import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
-import LeaderBoardIcon from 'public/leaderBoardIcon.svg?svgr';
+import LeaderBoardIcon from 'public/icons/leaderBoardIcon.svg?svgr';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';

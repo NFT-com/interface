@@ -1,7 +1,7 @@
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { joinClasses } from 'utils/format';
 
-import CopySvg from 'public/copy.svg?svgr';
+import CopySvg from 'public/icons/copy.svg?svgr';
 import React from 'react';
 import { CheckCircle } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';

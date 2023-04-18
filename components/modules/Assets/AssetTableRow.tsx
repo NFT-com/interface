@@ -16,7 +16,7 @@ import { tw } from 'utils/tw';
 import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { DotsThreeVertical } from 'phosphor-react';
-import Offers from 'public/images/offers.svg?svgr';
+import Offers from 'public/icons/offers.svg?svgr';
 import { useCallback } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';

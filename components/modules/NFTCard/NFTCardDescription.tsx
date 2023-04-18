@@ -11,10 +11,10 @@ import { tw } from 'utils/tw';
 
 import { ethers } from 'ethers';
 import moment from 'moment';
-import GK from 'public/Badge_Key.svg?svgr';
-import ETH from 'public/eth.svg?svgr';
-import ETHBlack from 'public/eth-black.svg?svgr';
-import USDC from 'public/usdc.svg?svgr';
+import GK from 'public/icons/Badge_Key.svg?svgr';
+import ETH from 'public/icons/eth.svg?svgr';
+import ETHBlack from 'public/icons/eth-black.svg?svgr';
+import USDC from 'public/icons/usdc.svg?svgr';
 import { useCallback } from 'react';
 import { PartialDeep } from 'type-fest';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
@@ -66,7 +66,7 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
       </div>;
     }
   }, []);
- 
+
   return (
     <div className={tw(
       'sm:h-[auto] p-[18px] bg-white font-noi-grotesk',
@@ -167,6 +167,6 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
         </div>
       </div>
     </div>
-            
+
   );
 }

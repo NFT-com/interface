@@ -15,10 +15,10 @@ export interface ProfileLayoutEditorModalContentProps {
 
 export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalContentProps) {
   const layoutImages = {
-    'Default': '/group_8.png',
-    'Mosaic': '/group_9.png',
-    'Featured': '/group_10.png',
-    'Spotlight': '/group_11.png',
+    'Default': '/group_8.webp',
+    'Mosaic': '/group_9.webp',
+    'Featured': '/group_10.webp',
+    'Spotlight': '/group_11.webp',
   };
   const {
     draftLayoutType,

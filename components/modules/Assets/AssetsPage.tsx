@@ -14,7 +14,7 @@ import { tw } from 'utils/tw';
 
 import AssetTableRow from './AssetTableRow';
 
-import Offers from 'public/images/offers.svg?svgr';
+import Offers from 'public/icons/offers.svg?svgr';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';

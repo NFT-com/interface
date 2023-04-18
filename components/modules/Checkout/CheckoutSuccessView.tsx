@@ -8,12 +8,13 @@ import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { PartialErrorView } from './PartialErrorView';
 
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { Check } from 'phosphor-react';
-import DesktopNoProfile from 'public/images/desktop_no_profile.svg?svgr';
-import DesktopSuccessProfile from 'public/images/desktop_success_profile.svg?svgr';
-import NullProfile from 'public/images/null_profile.svg?svgr';
+import NullProfile from 'public/icons/null_profile.svg?svgr';
 import { useContext } from 'react';
+
+const BlurImage = dynamic(import('components/elements/BlurImage'));
 
 export enum SuccessType {
   Purchase = 'Purchase',
@@ -95,7 +96,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
       </div>
       <div className="relative bg-gradient-to-br from-[#FAC213] to-[#FF9B37] md:w-full h-full md:h-2/5 w-2/5 left-0">
         <div className='w-full flex items-center justify-center'>
-          <DesktopSuccessProfile className="md:h-auto md:w-2/5 h-full w-full shrink-0 object-cover" layout="fill" />
+          <BlurImage alt='desktop success profile background' src='/images/desktop_success_profile.webp' className="md:h-auto md:w-2/5 h-full w-full shrink-0 object-cover" fill />
         </div>
         <div className='hidden relative md:flex items-center justify-center'>
           <div onClick={() => router.push('/app/mint-profiles')} className='flex absolute bottom-2 hover:cursor-pointer underline text-[16px] z-50 font-medium items-center'>
@@ -150,7 +151,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
     <div className="flex flex-col items-center h-[646px] md:h-screen font-noi-grotesk">
       <div className="relative z-10 bg-gradient-to-br from-[#FAC213] to-[#FF9B37] w-full h-2/5 top-0">
         <div className='w-full flex items-center justify-center'>
-          <DesktopNoProfile className="h-full w-full shrink-0 object-cover" layout="fill" />
+          <BlurImage alt='desktop no profile background' src='/images/desktop_no_profile.webp' className='h-full w-full shrink-0 object-cover' />
         </div>
       </div>
       <div className="relative w-full h-3/5 bottom-0 z-20 bg-white">
