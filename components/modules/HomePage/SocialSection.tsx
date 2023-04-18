@@ -6,7 +6,7 @@ import { contentfulLoader } from 'lib/image/loader';
 export interface HomePageData {
   data?: HomePageV3SocialSection;
 }
-export function SocialSection({ data }: HomePageData) {
+export default function SocialSection({ data }: HomePageData) {
   return(
     <div className="pt-6 pb-16 minlg:pb-0 minmd:pt-28 minxl:pt-32 minxxl:pt-40">
       {

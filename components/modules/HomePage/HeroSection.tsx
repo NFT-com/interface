@@ -37,7 +37,7 @@ export default function HeroSection({ data }: HomePageData) {
                 width={120}
                 height={120}
                 loader={contentfulLoader}
-                src={data?.heroImagesCollection.items[0]?.url}
+                src={data?.heroImagesCollection?.items[0]?.url}
                 alt='NFT image'
               />
             </span>
@@ -53,7 +53,7 @@ export default function HeroSection({ data }: HomePageData) {
                 width={120}
                 height={120}
                 loader={contentfulLoader}
-                src={data?.heroImagesCollection.items[1]?.url}
+                src={data?.heroImagesCollection?.items[1]?.url}
                 alt='NFT image'
               />
             </span>
@@ -66,7 +66,7 @@ export default function HeroSection({ data }: HomePageData) {
             </span>
           </h2>
 
-          <p className='mb-9 text-xl'>{data?.heroTextData.subTitle}</p>
+          <p className='mb-9 text-xl'>{data?.heroTextData?.subTitle}</p>
 
           <a
             data-aos='zoom-out'

@@ -1,6 +1,5 @@
 import BlurImage from 'components/elements/BlurImage';
 import { HomePageV3WhatWeCanDo } from 'types/HomePage';
-import { getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import React from 'react';
