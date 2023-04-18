@@ -1,5 +1,6 @@
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
+import { useLooksrareProtocolContract } from 'hooks/contracts/useLooksrareProtocolContract';
 import { useNftcomExchangeContract } from 'hooks/contracts/useNftcomExchangeContract';
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
 import { useX2Y2ExchangeContract } from 'hooks/contracts/useX2Y2ExchangeContract';
@@ -9,7 +10,7 @@ import { nftcomBuyNow } from 'utils/nativeMarketplaceHelpers';
 
 import { isNullOrEmpty } from './format';
 import { getBaseUrl } from './helpers';
-import { looksrareBuyNow } from './looksrareHelpers';
+import { looksrareBuyNow, looksrareV2BuyNow } from './looksrareHelpers';
 import { seaportBuyNow } from './seaportHelpers';
 import { X2Y2BuyNow } from './X2Y2Helpers';
 
@@ -93,6 +94,7 @@ export type BuyNowInterface = {
 export function useBuyNow(signer: Signer): BuyNowInterface {
   const { address: currentAddress } = useAccount();
   const looksrareExchange = useLooksrareExchangeContract(signer);
+  const looksrareProtocol = useLooksrareProtocolContract(signer);
   const NftcomExchange = useNftcomExchangeContract(signer);
   const X2Y2Exchange = useX2Y2ExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
@@ -107,6 +109,8 @@ export function useBuyNow(signer: Signer): BuyNowInterface {
       switch(order.protocol){
       case ExternalProtocol.LooksRare:
         return await looksrareBuyNow(order, looksrareExchange, executorAddress, ethBalance);
+      case ExternalProtocol.LooksRareV2:
+        return await looksrareV2BuyNow(order, looksrareProtocol, executorAddress, ethBalance);
       case ExternalProtocol.NFTCOM:
         return await nftcomBuyNow(order, NftcomExchange, executorAddress, defaultChainId);
       case ExternalProtocol.X2Y2:
@@ -120,7 +124,7 @@ export function useBuyNow(signer: Signer): BuyNowInterface {
       console.log(`error in buyNow: ${err}`);
       return false;
     }
-  }, [NftcomExchange, X2Y2Exchange, defaultChainId, ethBalance, looksrareExchange, seaportExchange]);
+  }, [NftcomExchange, X2Y2Exchange, defaultChainId, ethBalance, looksrareExchange, looksrareProtocol, seaportExchange]);
 
   return {
     buyNow

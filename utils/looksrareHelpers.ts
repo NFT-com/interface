@@ -1,6 +1,7 @@
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { IExecutionStrategy, LooksRareExchange, RoyaltyFeeManager, RoyaltyFeeRegistry } from 'constants/typechain/looksrare';
-import { LooksrareProtocolData, Nft } from 'graphql/generated/types';
+import { LooksRareProtocol } from 'constants/typechain/looksrareV2';
+import { LooksrareProtocolData, LooksrareV2ProtocolData, Nft } from 'graphql/generated/types';
 import { AggregatorResponse } from 'types';
 import { getBaseUrl } from 'utils/helpers';
 
@@ -219,6 +220,92 @@ export const looksrareBuyNow = async (
     }
   } catch (err) {
     console.log(`error in looksrareBuyNow: ${err}`);
+    return false;
+  }
+};
+
+export const looksrareV2BuyNow = async (
+  order: StagedPurchase,
+  looksrareProtocol: LooksRareProtocol,
+  executorAddress: string,
+  ethBalance: FetchBalanceResult
+): Promise<boolean> => {
+  const hasEnoughEth = Number(ethers.utils.formatEther(ethBalance.value.sub(order?.price))) > 0;
+  try {
+    const {
+      additionalParameters,
+      amounts,
+      collection,
+      collectionType,
+      currency,
+      endTimeV2,
+      globalNonce,
+      itemIds,
+      merkleProof,
+      merkleRoot,
+      orderNonce,
+      price,
+      quoteType,
+      signature,
+      signer,
+      startTimeV2,
+      strategyId,
+      subsetNonce
+    } = order.protocolData as LooksrareV2ProtocolData & {endTimeV2: string, startTimeV2: string};
+
+    const tx = await looksrareProtocol.executeTakerBid(
+      {
+        recipient: executorAddress,
+        additionalParameters
+      },
+      {
+        quoteType,
+        globalNonce,
+        subsetNonce,
+        orderNonce,
+        strategyId,
+        collectionType,
+        collection,
+        currency,
+        signer,
+        startTime: startTimeV2,
+        endTime: endTimeV2,
+        price,
+        itemIds,
+        amounts,
+        additionalParameters
+      },
+      signature,
+      {
+        root:  merkleRoot ?? ethers.constants.HashZero,
+        proof: merkleProof as {value: string, position: number}[] ?? []
+      },
+      collection,
+      {
+        value: hasEnoughEth ? order?.price : 0
+      }
+    );
+    console.log('🚀 ~ file: looksrareHelpers.ts:289 ~ tx:', tx);
+
+    gtag('event', 'BuyNow', {
+      ethereumAddress: executorAddress,
+      protocol: order.protocol,
+      contractAddress: order?.nft?.contract,
+      tokenId: order?.nft?.tokenId,
+      txHash: tx.hash,
+      orderHash: order.orderHash,
+    });
+
+    fetch(`${getBaseUrl('https://www.nft.com/')}api/message?text=Buy Now on ${order.protocol} by ${executorAddress} for ${order.nft?.contract} ${order.nft?.tokenId}: https://etherscan.io/tx/${tx.hash}`);
+
+    if (tx) {
+      return await tx.wait(1).then(() => true).catch(() => false);
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.log('here');
+    console.log(`error in looksrareV2BuyNow: ${err}`);
     return false;
   }
 };
