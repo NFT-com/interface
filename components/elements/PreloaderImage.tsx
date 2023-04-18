@@ -12,11 +12,11 @@ export default function PreloaderImage() {
       localImage: true
     };
     const options = {
-      0: <BlurImage src="/preloaderImg-1.svg" {...imageProps}/>,
-      1: <BlurImage src="/preloaderImg-2.svg" {...imageProps}/>,
-      2: <BlurImage src="/preloaderImg-3.svg" {...imageProps}/>,
-      3: <BlurImage src="/preloaderImg-4.svg" {...imageProps}/>,
-      4: <BlurImage src="/preloaderImg-5.svg" {...imageProps}/>,
+      0: <BlurImage src="/icons/preloaderImg-1.svg" {...imageProps}/>,
+      1: <BlurImage src="/icons/preloaderImg-2.svg" {...imageProps}/>,
+      2: <BlurImage src="/icons/preloaderImg-3.svg" {...imageProps}/>,
+      3: <BlurImage src="/icons/preloaderImg-4.svg" {...imageProps}/>,
+      4: <BlurImage src="/icons/preloaderImg-5.svg" {...imageProps}/>,
     };
     return options[index] || options[0];
   };

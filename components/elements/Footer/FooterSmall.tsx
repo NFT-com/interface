@@ -3,12 +3,12 @@ import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Toast from 'components/elements/Toast';
 import { useEmailSubscribe } from 'hooks/useEmailSubscribe';
 import { filterNulls } from 'utils/format';
-import { getStaticAsset } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { X } from 'phosphor-react';
 import DiscordLogo from 'public/icons/discord.svg?svgr';
@@ -16,6 +16,8 @@ import TwitterLogo from 'public/icons/twitter.svg?svgr';
 import { Fragment } from 'react';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+
+const BlurImage = dynamic(import('components/elements/BlurImage'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -116,7 +118,11 @@ export const FooterSmall = () => {
             <div data-aos="fade-right" data-aos-delay="100" className='flex items-center mb-12'>
               <Link href='/' passHref>
                 <div className='w-[3.8rem] h-[3.8rem]'>
-                  <img src={getStaticAsset('public/LogoFooterWhite.svg')} alt='public/LogoFooterWhite.svg' className='w-[3.8rem] h-[3.8rem] justify-start' />
+                  <BlurImage
+                    src='/icons/LogoFooterWhite.svg'
+                    alt='NFT.com white footer logo' className='w-[3.8rem] h-[3.8rem] justify-start'
+                    fill
+                  />
                 </div>
               </Link>
 
