@@ -1,5 +1,5 @@
 import { Maybe } from 'graphql/generated/types';
-import { processIPFSURL } from 'utils/helpers';
+import { processIPFSURL } from 'utils/ipfs';
 
 import { useAllContracts } from './contracts/useAllContracts';
 
@@ -16,7 +16,7 @@ export function useGenesisKeyImage(tokenId: BigNumber | null): Maybe<string> {
         return null;
       }
       const tokenURI = await genesisKey.tokenURI(tokenId);
-  
+
       const tokenMetadata = await fetch(
         processIPFSURL(tokenURI) ?? tokenURI
       );

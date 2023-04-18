@@ -20,7 +20,7 @@ import {
 } from 'types/seaport';
 
 import { filterNulls } from './format';
-import { getBaseUrl } from './helpers';
+import { getBaseUrl } from './isEnv';
 import { libraryCall, seaportLib } from './marketplaceHelpers';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';

@@ -15,7 +15,7 @@ import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/format';
-import { getEtherscanLink, processIPFSURL, shortenAddress } from 'utils/helpers';
+import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ListingCheckoutNftTableRow } from './ListingCheckoutNftTableRow';
@@ -140,7 +140,7 @@ export function ListingCheckout() {
             <div className="flex w-full max-h-[600px] max-w-nftcom object-contain drop-shadow-lg aspect-square">
               <RoundedCornerMedia
                 key={toList[0]?.nft?.id}
-                src={processIPFSURL(toList[0]?.nft?.metadata?.imageURL)}
+                src={toList[0]?.nft?.metadata?.imageURL}
                 videoOverride={true}
                 variant={RoundedCornerVariant.None}
                 objectFit='contain'

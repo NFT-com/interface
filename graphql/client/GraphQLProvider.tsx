@@ -3,7 +3,7 @@ import { GraphQLClient } from 'graphql-request';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/format';
-import { getAPIURL } from 'utils/helpers';
+import { getAPIURL } from 'utils/isEnv';
 
 import moment from 'moment';
 import { createContext, PropsWithChildren, useCallback, useEffect, useState } from 'react';
