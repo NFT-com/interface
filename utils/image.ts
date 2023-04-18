@@ -45,11 +45,9 @@ export const decodeBase64 = (str: string) => {
   if (str.startsWith('data:application/json;base64,')) {
     const base64Data = str.slice(29);
     const decodedData = JSON.parse(Buffer.from(base64Data, 'base64').toString('utf-8'));
-    return decodedData;
-  } else {
-    // Normal b64 decode
-    return Buffer.from(str, 'base64').toString('utf-8');
+    return decodedData?.image_data || decodedData?.image || decodedData;
   }
+  return str;
 };
 
 /**
