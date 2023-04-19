@@ -5,17 +5,13 @@ import { useCallback } from 'react';
 import { MouseEvent } from 'react';
 import ReactLoading from 'react-loading';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-export enum WebButtonType {
-  PRIMARY = 'PRIMARY',
-  SECONDARY = 'SECONDARY'
-}
-export enum WebButtonSize {
-  DEFAULT = 'DEFAULT',
-}
+
 export enum ButtonType {
   PRIMARY = 'PRIMARY',
   SECONDARY = 'SECONDARY',
-  TERTIARY = 'TERTIARY'
+  TERTIARY = 'TERTIARY',
+  WEB_PRIMARY = 'WEB_PRIMARY',
+  WEB_SECONDARY = 'WEB_SECONDARY'
 }
 
 export enum ButtonSize {
@@ -27,8 +23,8 @@ export enum ButtonSize {
 
 export interface ButtonProps {
   /** Button type */
-  type: ButtonType | WebButtonType;
-  size: ButtonSize | WebButtonSize;
+  type: ButtonType ;
+  size?: ButtonSize;
   isWebButton?: boolean;
   /** Button label (optional only if icon is passed) */
   label?: string;
@@ -57,97 +53,97 @@ export function Button(props: ButtonProps) {
   } = useThemeColors();
 
   const sizeClasses = useCallback(() => {
-    if(props.isWebButton){
-      switch (props.size) {
-      case WebButtonSize.DEFAULT:
-        switch(props.type) {
-        case(ButtonType.PRIMARY):
-        case(ButtonType.SECONDARY):
-          return 'min-w-[201px] min-h-[64px] w-full minmd:w-auto p-5 rounded-full text-xl uppercase text-xl font-medium uppercase text-black drop-shadow-lg';
-        default:
-          return '';
-        }
-      }
-    }else {
-      switch (props.size) {
-      case ButtonSize.SMALL:
-        switch(props.type) {
-        case(ButtonType.PRIMARY):
-        case(ButtonType.SECONDARY):
-          return 'text-xs px-2 py-1 rounded';
-        case(ButtonType.TERTIARY):
-          return 'text-xs px-2 py-1 rounded-full border';
-        default:
-          return '';
-        }
-
-      case ButtonSize.MEDIUM:
-        switch(props.type) {
-        case(ButtonType.PRIMARY):
-        case(ButtonType.SECONDARY):
-          return 'text-sm px-4 py-1 rounded-lg';
-        case(ButtonType.TERTIARY):
-          return 'text-sm px-4 py-1 rounded-full border-[1.3px]';
-        default:
-          return '';
-        }
-
-      case ButtonSize.LARGE:
-        switch(props.type) {
-        case(ButtonType.PRIMARY):
-        case(ButtonType.SECONDARY):
-          return 'text-base	px-4 py-2 rounded-[10px]';
-        case(ButtonType.TERTIARY):
-          return 'text-base	px-4 py-2 rounded-full border-[1.5px]';
-        default:
-          return '';
-        }
-
-      case ButtonSize.XLARGE:
-        switch(props.type) {
-        case(ButtonType.PRIMARY):
-        case(ButtonType.SECONDARY):
-          return 'text-xl	px-6 py-3 rounded-xl';
-        case(ButtonType.TERTIARY):
-          return 'text-xl px-6 py-3 rounded-full border-[1.5px]';
-        default:
-          return '';
-        }
+    if(ButtonType.WEB_SECONDARY === props.type || ButtonType.WEB_PRIMARY === props.type){
+      return 'min-w-[201px] min-h-[64px] w-full minmd:w-auto p-5 rounded-full text-xl uppercase text-xl font-medium uppercase text-black drop-shadow-lg';
+    }
+    if(!props.size){
+      switch (props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.SECONDARY):
+        return 'text-base	px-4 py-2 rounded-[10px]';
+      case(ButtonType.TERTIARY):
+        return 'text-base	px-4 py-2 rounded-full border-[1.5px]';
       default:
         return '';
       }
     }
-  }, [props.isWebButton, props.size, props.type]);
+    switch (props.size) {
+    case ButtonSize.SMALL:
+      switch (props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.SECONDARY):
+        return 'text-xs px-2 py-1 rounded';
+      case(ButtonType.TERTIARY):
+        return 'text-xs px-2 py-1 rounded-full border';
+      default:
+        return '';
+      }
+
+    case ButtonSize.MEDIUM:
+      switch (props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.SECONDARY):
+        return 'text-sm px-4 py-1 rounded-lg';
+      case(ButtonType.TERTIARY):
+        return 'text-sm px-4 py-1 rounded-full border-[1.3px]';
+      default:
+        return '';
+      }
+
+    case ButtonSize.LARGE:
+      switch (props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.SECONDARY):
+        return 'text-base	px-4 py-2 rounded-[10px]';
+      case(ButtonType.TERTIARY):
+        return 'text-base	px-4 py-2 rounded-full border-[1.5px]';
+      default:
+        return '';
+      }
+
+    case ButtonSize.XLARGE:
+      switch (props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.SECONDARY):
+        return 'text-xl	px-6 py-3 rounded-xl';
+      case(ButtonType.TERTIARY):
+        return 'text-xl px-6 py-3 rounded-full border-[1.5px]';
+      default:
+        return '';
+      }
+    default:
+      return '';
+    }
+  }, [props.size, props.type]);
 
   const sizeClassesIconOnly = useCallback(() => {
-    if(props.isWebButton){
-      switch (props.size) {
-      case WebButtonSize.DEFAULT:
-        return 'min-w-[201px] min-h-[64px] rounded-full';
-      default:
-        return '';
-      }
-    }else {
-      switch (props.size) {
-      case ButtonSize.SMALL:
-        return 'h-6 w-6 rounded-full';
-      case ButtonSize.MEDIUM:
-        return 'h-8 w-8 rounded-full';
-      case ButtonSize.LARGE:
-        return 'h-10 w-10 rounded-full';
-      case ButtonSize.XLARGE:
-        return 'h-14 w-14 rounded-full';
-      default:
-        return '';
-      }
+    if(ButtonType.WEB_SECONDARY === props.type || ButtonType.WEB_PRIMARY === props.type){
+      return 'min-w-[201px] min-h-[64px] w-full minmd:w-auto p-5 rounded-full text-xl uppercase text-xl font-medium uppercase text-black drop-shadow-lg';
     }
-  }, [props.isWebButton, props.size]);
+    if(!props.size){
+      return 'h-10 w-10 rounded-full';
+    }
+    switch (props.size) {
+    case ButtonSize.SMALL:
+      return 'h-6 w-6 rounded-full';
+    case ButtonSize.MEDIUM:
+      return 'h-8 w-8 rounded-full';
+    case ButtonSize.LARGE:
+      return 'h-10 w-10 rounded-full';
+    case ButtonSize.XLARGE:
+      return 'h-14 w-14 rounded-full';
+    default:
+      return '';
+    }
+  }, [props.size, props.type]);
 
   const colorClasses = useCallback(() => {
     switch (props.type) {
     case ButtonType.PRIMARY:
+    case ButtonType.WEB_PRIMARY:
       return `bg-[${primaryButtonBackground}] hover:bg-[${primaryButtonBackgroundHover}] focus:bg-[${primaryButtonBackgroundFocus}] text-[${primaryButtonText}]`;
     case ButtonType.SECONDARY:
+    case ButtonType.WEB_SECONDARY:
       return `bg-[${secondaryButtonBackground}] hover:bg-button-secondary-hover focus:bg-[${secondaryButtonBackgroundFocus}] text-white`;
     case ButtonType.TERTIARY:
       return !isNullOrEmpty(props.label) ?

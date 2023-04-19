@@ -1,5 +1,5 @@
 import BlurImage from 'components/elements/BlurImage';
-import { Button, WebButtonSize, WebButtonType } from 'components/elements/Button';
+import { Button, ButtonType } from 'components/elements/Button';
 import { HomePageV3SocialSection } from 'types/HomePage';
 import { tw } from 'utils/tw';
 
@@ -54,15 +54,12 @@ export default function SocialSection({ data }: HomePageData) {
                 <Button
                   data-aos='zoom-out'
                   data-aos-delay='300'
-                  isWebButton
-                  type={WebButtonType.PRIMARY}
-                  size={WebButtonSize.DEFAULT}
+                  type={ButtonType.WEB_PRIMARY}
                   label={item.buttonText}
                   stretch
                   onClick={() => router.push(`/${item?.buttonLink}`)}
                 />
               </div>
-
               <div
                 className={tw(
                   'relative',

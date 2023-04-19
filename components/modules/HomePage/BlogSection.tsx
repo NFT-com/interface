@@ -1,5 +1,5 @@
 import BlurImage from 'components/elements/BlurImage';
-import { Button, WebButtonSize, WebButtonType } from 'components/elements/Button';
+import { Button, ButtonType } from 'components/elements/Button';
 import { HomePageV3BlogSection } from 'types/HomePage';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -162,9 +162,7 @@ export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: 
           <Button
             data-aos='zoom-out'
             data-aos-delay='300'
-            isWebButton
-            type={WebButtonType.PRIMARY}
-            size={WebButtonSize.DEFAULT}
+            type={ButtonType.WEB_PRIMARY}
             label={goToBlogButton?.title}
             stretch
             onClick={() => router.push(`/${goToBlogButton?.link}`)}

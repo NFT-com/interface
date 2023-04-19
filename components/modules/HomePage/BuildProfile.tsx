@@ -1,13 +1,18 @@
+import { Button, ButtonType } from 'components/elements/Button';
 import { HomePageV3BuildProfileSection } from 'types/HomePage';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import React from 'react';
 
 export interface HomePageData {
   data?: HomePageV3BuildProfileSection;
 }
 
 export default function BuildProfile({ data }: HomePageData) {
+  const router = useRouter();
+
   return(
     <div className={tw(
       'bg-[#282828] minlg:bg-black minlg:relative overflow-hidden z-0 pb-16 minlg:pb-0',
@@ -37,11 +42,14 @@ export default function BuildProfile({ data }: HomePageData) {
             <p className={tw(
               'text-lg leading-[1.333] mb-9'
             )}>{data?.subTitle}</p>
-            <a data-aos="zoom-out" data-aos-delay="300" href={data?.ctaLink} className={tw(
-              'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
-              'inline-flex items-center justify-center text-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
-              'text-xl minxxl:text-3xl text-white font-medium uppercase'
-            )}>{data?.ctaButton}</a>
+            <Button
+              data-aos='zoom-out'
+              data-aos-delay='300'
+              type={ButtonType.WEB_SECONDARY}
+              label={data?.ctaButton}
+              stretch
+              onClick={() => router.push(`/${data?.ctaLink}`)}
+            />
           </div>
 
           <div className='minmd:w-[58%] text-right'>
