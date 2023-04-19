@@ -25,9 +25,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { CaretDown, List, X } from 'phosphor-react';
-import BetaIcon from 'public/beta-icon.svg?svgr';
-import CartIcon from 'public/cart.svg?svgr';
-import WalletIcon from 'public/header_wallet.svg?svgr';
+import BetaIcon from 'public/icons/beta-icon.svg?svgr';
+import CartIcon from 'public/icons/cart.svg?svgr';
+import WalletIcon from 'public/icons/header_wallet.svg?svgr';
 import React, { useContext, useEffect } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -70,8 +70,8 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
   });
 
   const renderLogoMode = () => useDarkMode ?
-    <Image width={40} height={40} src='/LogoLight.svg' alt='NFT.com Logo' className='justify-start' /> :
-    <Image width={40} height={40} src='/Logo.svg' alt='NFT.com Logo' className='justify-start' />;
+    <Image width={40} height={40} src='/icons/LogoLight.svg' alt='NFT.com Logo' className='justify-start' /> :
+    <Image width={40} height={40} src='/icons/Logo.svg' alt='NFT.com Logo' className='justify-start' />;
 
   if (homepageHeader) {
     return (

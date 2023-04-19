@@ -18,11 +18,11 @@ import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
-import LooksrareIcon from 'public/LR_gray_card.svg?svgr';
-import NFTLogo from 'public/nft_logo_yellow.svg?svgr';
-import OpenseaIcon from 'public/OS_gray_card.svg?svgr';
-import ShopIcon from 'public/shop-icon.svg?svgr';
-import X2Y2Gray from 'public/x2y2_gray.svg?svgr';
+import LooksrareIcon from 'public/icons/LR_gray_card.svg?svgr';
+import NFTLogo from 'public/icons/nft_logo_yellow.svg?svgr';
+import OpenseaIcon from 'public/icons/OS_gray_card.svg?svgr';
+import ShopIcon from 'public/icons/shop-icon.svg?svgr';
+import X2Y2Gray from 'public/icons/x2y2_gray.svg?svgr';
 import { MouseEvent, useCallback, useContext } from 'react';
 import { PartialDeep } from 'type-fest';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';

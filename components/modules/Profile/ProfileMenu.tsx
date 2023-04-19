@@ -20,12 +20,12 @@ import delay from 'delay';
 import { useRouter } from 'next/router';
 import { ArrowClockwise, Check } from 'phosphor-react';
 import { ShareNetwork, TwitterLogo, X } from 'phosphor-react';
-import LinkIcon from 'public/icon_link.svg?svgr';
-import FeaturedIcon from 'public/layout_icon_featured.svg?svgr';
-import GridIcon from 'public/layout_icon_grid.svg?svgr';
-import MosaicIcon from 'public/layout_icon_mosaic.svg?svgr';
-import SpotlightIcon from 'public/layout_icon_spotlight.svg?svgr';
-import GearIcon from 'public/settings_icon.svg?svgr';
+import LinkIcon from 'public/icons/icon_link.svg?svgr';
+import FeaturedIcon from 'public/icons/layout_icon_featured.svg?svgr';
+import GridIcon from 'public/icons/layout_icon_grid.svg?svgr';
+import MosaicIcon from 'public/icons/layout_icon_mosaic.svg?svgr';
+import SpotlightIcon from 'public/icons/layout_icon_spotlight.svg?svgr';
+import GearIcon from 'public/icons/settings_icon.svg?svgr';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 

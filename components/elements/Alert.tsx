@@ -2,8 +2,8 @@ import { tw } from 'utils/tw';
 
 import Image from 'next/image';
 import { CheckCircle, X } from 'phosphor-react';
-import Error from 'public/error.svg';
-import Warning from 'public/warning.svg';
+import Error from 'public/icons/error.svg?svgr';
+import Warning from 'public/icons/warning.svg?svgr';
 import { useEffect } from 'react';
 
 export enum AlertType {

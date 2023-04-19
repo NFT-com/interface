@@ -11,7 +11,7 @@ import { getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
-import NoActivityIcon from 'public/no_activity.svg?svgr';
+import NoActivityIcon from 'public/icons/no_activity.svg?svgr';
 import React, { useEffect, useRef, useState } from 'react';
 
 function usePrevious(value) {

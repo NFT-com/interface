@@ -7,9 +7,9 @@ import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
-import DiscordIcon from 'public/discord_black_icon.svg?svgr';
+import DiscordIcon from 'public/icons/discord_black_icon.svg?svgr';
+import TwitterIcon from 'public/icons/twitter_black_icon.svg?svgr';
 import tokenHeroBg from 'public/token-hero2.jpg';
-import TwitterIcon from 'public/twitter_black_icon.svg?svgr';
 import { useRef } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -152,7 +152,7 @@ export default function RoadmapPage() {
           <div className="relative text-center text-white py-8 pb-8"
             style={{
               backgroundColor: '#020204',
-              backgroundImage: 'url("/hero-key--static.png")',
+              backgroundImage: 'url("/hero-key--static.webp")',
               backgroundPosition: 'center',
               backgroundSize: 'contain',
               backgroundRepeat: 'no-repeat',
