@@ -56,17 +56,6 @@ export function Button(props: ButtonProps) {
     if(ButtonType.WEB_SECONDARY === props.type || ButtonType.WEB_PRIMARY === props.type){
       return 'min-w-[201px] min-h-[64px] w-full minmd:w-auto p-5 rounded-full text-xl uppercase text-xl font-medium uppercase text-black drop-shadow-lg';
     }
-    if(!props.size){
-      switch (props.type) {
-      case(ButtonType.PRIMARY):
-      case(ButtonType.SECONDARY):
-        return 'text-base	px-4 py-2 rounded-[10px]';
-      case(ButtonType.TERTIARY):
-        return 'text-base	px-4 py-2 rounded-full border-[1.5px]';
-      default:
-        return '';
-      }
-    }
     switch (props.size) {
     case ButtonSize.SMALL:
       switch (props.type) {
@@ -112,16 +101,21 @@ export function Button(props: ButtonProps) {
         return '';
       }
     default:
-      return '';
+      switch (props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.SECONDARY):
+        return 'text-xl	px-6 py-3 rounded-xl';
+      case(ButtonType.TERTIARY):
+        return 'text-xl px-6 py-3 rounded-full border-[1.5px]';
+      default:
+        return '';
+      }
     }
   }, [props.size, props.type]);
 
   const sizeClassesIconOnly = useCallback(() => {
     if(ButtonType.WEB_SECONDARY === props.type || ButtonType.WEB_PRIMARY === props.type){
       return 'min-w-[201px] min-h-[64px] w-full minmd:w-auto p-5 rounded-full text-xl uppercase text-xl font-medium uppercase text-black drop-shadow-lg';
-    }
-    if(!props.size){
-      return 'h-10 w-10 rounded-full';
     }
     switch (props.size) {
     case ButtonSize.SMALL:
@@ -133,7 +127,7 @@ export function Button(props: ButtonProps) {
     case ButtonSize.XLARGE:
       return 'h-14 w-14 rounded-full';
     default:
-      return '';
+      return 'h-10 w-10 rounded-full';
     }
   }, [props.size, props.type]);
 
