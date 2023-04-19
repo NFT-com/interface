@@ -108,7 +108,7 @@ export default function DiscoverCollections({ data }: HomePageData) {
               spaceBetween={16}
               breakpoints={{
                 0: {
-                  slidesPerView: 1.15
+                  slidesPerView: 1.08
                 },
                 600: {
                   slidesPerView: 2
@@ -161,7 +161,7 @@ export default function DiscoverCollections({ data }: HomePageData) {
           </div>
         </div>
 
-        <div data-aos='zoom-in' data-aos-delay='100' className='text-center relative flex flex-col minmd:block'>
+        <div data-aos='zoom-in' data-aos-delay='100' className='text-center relative flex items-center justify-center flex-col'>
           <div>
             <Button
               type={ButtonType.PRIMARY}
