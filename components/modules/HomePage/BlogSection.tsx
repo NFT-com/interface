@@ -65,39 +65,48 @@ export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: 
       <div className={tw(
         'relative z-0 py-16 minlg:pt-[6.25rem] minlg:pb-[7.625rem]',
       )}>
-        <div className='relative text-center text-white pt-4 minlg:pt-0'>
-          <h2 data-aos="fade-up" className='text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal mb-[.625rem]'>{blogSectionTitle?.title}</h2>
+        <div className='relative text-center text-white pt-4 minlg:pt-0 px-7'>
+          <h2
+            data-aos="fade-up"
+            className={tw(
+              'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
+              'leading-[1.0854] font-normal mb-8 minlg:mb-[.625rem]'
+            )}>{blogSectionTitle?.title}</h2>
           <p data-aos="fade-up" data-aos-delay="100" className='text-lg mb-8 minxl:mb-[3.8125rem]'>{blogSectionTitle?.subTitle}</p>
         </div>
 
-        <div id='anim-blog-content' data-aos="fade-left" className='minlg:translate-x-full minlg:transform-gpu mb-12'>
+        <div id='anim-blog-content'
+          data-aos="fade-left"
+          className='minlg:translate-x-full minlg:transform-gpu mb-12'
+        >
           <Swiper
             modules={[Navigation, Scrollbar]}
             spaceBetween={14}
             breakpoints={{
               0: {
-                slidesPerView: 1.2,
+                slidesPerView: 1.2
               },
               600: {
-                slidesPerView: 2,
+                slidesPerView: 2
               },
               1200: {
-                slidesPerView: 3.3,
+                slidesPerView: 3.3
               },
               1921: {
-                slidesPerView: 4.3,
+                slidesPerView: 4.3
               }
             }}
             navigation={{
-              nextEl: '.insights-swiper__btn-next',
-              prevEl: '.insights-swiper__btn-prev',
+              nextEl: '.js-insights-swiper__btn-next',
+              prevEl: '.js-insights-swiper__btn-prev',
               disabledClass: 'swiper-button-disabled'
             }}
             autoplay={{
-              'delay': 3500,
-              'disableOnInteraction': false
+              delay: 3500,
+              disableOnInteraction: false
             }}
-            className='insights-swiper flex !pl-[4vw]'>
+            scrollbar={{ draggable: true }}
+            className='insights-swiper flex !pl-[4vw] !pb-12 minlg:!pb-0'>
             {data?.items.map((preview ) =>
               <SwiperSlide key={preview.slug} className='!h-auto'>
                 <Link key={preview.slug} href={`articles/${preview.slug}`} className={tw(
@@ -141,18 +150,22 @@ export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: 
           </Swiper>
         </div>
 
-        <div data-aos="zoom-in" data-aos-delay="100" className='text-center relative flex flex-col minmd:block'>
+        <div
+          data-aos="zoom-in"
+          data-aos-delay="100"
+          className='text-center relative flex flex-col minmd:block px-[4%] minmd:px-0'
+        >
           <a href={goToBlogButton?.link} className={tw(
             'bg-[#F9D54C] hover:bg-[#dcaf07] drop-shadow-lg rounded-full transition-colors',
             'inline-flex items-center justify-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
             'text-xl minxxl:text-3xl text-black font-medium uppercase'
           )}>{goToBlogButton?.title.toUpperCase()}</a>
 
-          <div className="insights-swiper__buttons -order-1 pb-5 minmd:pb-0">
-            <button type='button' className='insights-swiper__btn-prev'>
+          <div className="swiper__nav-buttons -order-1 pb-5 minmd:pb-0">
+            <button type='button' className='js-insights-swiper__btn-prev swiper-nav-button --prev right-[6.75rem]'>
               <ArrowNav />
             </button>
-            <button type='button' className='insights-swiper__btn-next'>
+            <button type='button' className='js-insights-swiper__btn-next swiper-nav-button --next right-[2.75rem]'>
               <ArrowNav />
             </button>
           </div>
