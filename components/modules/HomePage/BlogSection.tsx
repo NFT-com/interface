@@ -10,7 +10,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { contentfulLoader } from 'lib/image/loader';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import ArrowNav from 'public/icons/arrow-right.svg?svgr';
+import ArrowNav from 'public/icons/arrow-nav.svg?svgr';
 import React, { useEffect } from 'react';
 import { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -169,10 +169,10 @@ export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: 
           />
           <div className="swiper__nav-buttons -order-1 pb-5 minmd:pb-0">
             <button type='button' className='js-insights-swiper__btn-prev swiper-nav-button --prev right-[6.75rem]'>
-              <ArrowNav />
+              <ArrowNav className="mr-0.5"/>
             </button>
             <button type='button' className='js-insights-swiper__btn-next swiper-nav-button --next right-[2.75rem]'>
-              <ArrowNav />
+              <ArrowNav className="ml-0.5"/>
             </button>
           </div>
         </div>

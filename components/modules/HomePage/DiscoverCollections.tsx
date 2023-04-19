@@ -11,7 +11,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { useRouter } from 'next/router';
 import DecorTop from 'public/decor-discover.svg?svgr';
-import ArrowNav from 'public/icons/arrow-right.svg?svgr';
+import ArrowNav from 'public/icons/arrow-nav.svg?svgr';
 import React, { useEffect, useState } from 'react';
 import { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -175,10 +175,10 @@ export default function DiscoverCollections({ data }: HomePageData) {
 
           <div className="swiper__nav-buttons -order-1 pb-5 minmd:pb-0">
             <button type='button' className='js-discover-swiper__btn-prev swiper-nav-button --prev right-[calc(4%+3.875rem)]'>
-              <ArrowNav />
+              <ArrowNav className="mr-0.5"/>
             </button>
             <button type='button' className='js-discover-swiper__btn-next swiper-nav-button --next right-[4%]'>
-              <ArrowNav />
+              <ArrowNav className="ml-0.5"/>
             </button>
           </div>
         </div>
