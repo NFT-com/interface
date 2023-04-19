@@ -119,7 +119,7 @@ export const ResultsDropDownDisplay = ({ isHeader, searchResults, resultTitleOnC
   return (
     <div
       className={tw(
-        isHeader ? 'absolute left-0 max-w-[27rem]' : '',
+        isHeader ? 'absolute left-0 max-w-[27rem] z-[51]' : '',
         'flex flex-col w-full font-noi-grotesk',
         extraClasses)}>
       {searchResults.length > 0 && <>
