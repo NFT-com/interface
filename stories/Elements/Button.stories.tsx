@@ -1,4 +1,4 @@
-import { Button, ButtonSize, ButtonType, WebButtonSize, WebButtonType } from 'components/elements/Button';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { PlusCircle } from 'phosphor-react';
@@ -62,19 +62,15 @@ WithIcon.args = {
 
 export const WebPrimary = Template.bind({});
 WebPrimary.args = {
-  type: WebButtonType.PRIMARY,
+  type: ButtonType.WEB_PRIMARY,
   label: 'Get Profile'
 };
 export const WebSecondary = Template.bind({});
 WebSecondary.args = {
-  type: WebButtonType.SECONDARY,
+  type: ButtonType.WEB_SECONDARY,
   label: 'Get Profile'
 };
-export const Default = Template.bind({});
-Default.args = {
-  label: 'Default',
-  size: WebButtonSize.DEFAULT
-};
+
 export const Small = Template.bind({});
 Small.args = {
   label: 'Small',

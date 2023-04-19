@@ -1,4 +1,4 @@
-import { Button, WebButtonSize, WebButtonType } from 'components/elements/Button';
+import { Button, ButtonType } from 'components/elements/Button';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
 import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
@@ -166,9 +166,7 @@ export default function DiscoverCollections({ data }: HomePageData) {
             <Button
               data-aos='zoom-out'
               data-aos-delay='300'
-              isWebButton
-              type={WebButtonType.PRIMARY}
-              size={WebButtonSize.DEFAULT}
+              type={ButtonType.WEB_PRIMARY}
               label={data?.ctaButtonText}
               stretch
               onClick={() => router.push(`/${data?.ctaButtonLink}`)}
