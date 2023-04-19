@@ -171,14 +171,14 @@ export const FooterLarge = () => {
               <div data-aos="fade-right" data-aos-delay="100" className='flex items-center mb-[2.625rem] minlg:mb-0'>
                 <Link href='/' passHref>
                   <div className='w-[3.8rem] h-[3.8rem]'>
-                      <BlurImage
-                          src='/icons/LogoFooterWhite.svg'
-                          alt='NFT.com white footer logo'
-                          localImage
-                          width={60}
-                          height={60}
-                          className='w-[3.8rem] h-[3.8rem] justify-start'
-                      />
+                    <BlurImage
+                      src='/icons/LogoFooterWhite.svg'
+                      alt='NFT.com white footer logo'
+                      localImage
+                      width={60}
+                      height={60}
+                      className='w-[3.8rem] h-[3.8rem] justify-start'
+                    />
                   </div>
                 </Link>
 
@@ -327,14 +327,14 @@ export const FooterLarge = () => {
               <div data-aos="fade-right" data-aos-delay="100" className='flex items-center mb-[2.625rem] minlg:mb-0'>
                 <Link href='/' passHref>
                   <div className='w-[3.8rem] h-[3.8rem]'>
-                      <BlurImage
-                          src='/icons/LogoFooterWhite.svg'
-                          alt='NFT.com white footer logo'
-                          localImage
-                          width={60}
-                          height={60}
-                          className='w-[3.8rem] h-[3.8rem] justify-start'
-                      />
+                    <BlurImage
+                      src='/icons/LogoFooterWhite.svg'
+                      alt='NFT.com white footer logo'
+                      localImage
+                      width={60}
+                      height={60}
+                      className='w-[3.8rem] h-[3.8rem] justify-start'
+                    />
                   </div>
                 </Link>
 
