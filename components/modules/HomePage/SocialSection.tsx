@@ -1,10 +1,11 @@
 import BlurImage from 'components/elements/BlurImage';
-import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import { Button, WebButtonSize, WebButtonType } from 'components/elements/Button';
 import { HomePageV3SocialSection } from 'types/HomePage';
 import { tw } from 'utils/tw';
 
 import { contentfulLoader } from 'lib/image/loader';
 import { useRouter } from 'next/router';
+import React from 'react';
 export interface HomePageData {
   data?: HomePageV3SocialSection;
 }
@@ -45,11 +46,14 @@ export default function SocialSection({ data }: HomePageData) {
                   {item.subTitle}
                 </p>
                 <Button
-                  type={ButtonType.PRIMARY}
-                  size={ButtonSize.XXLLARGE}
+                  data-aos='zoom-out'
+                  data-aos-delay='300'
+                  isWebButton
+                  type={WebButtonType.PRIMARY}
+                  size={WebButtonSize.DEFAULT}
                   label={item.buttonText}
                   stretch
-                  onClick={() => router.push('/app/mint-profiles')}
+                  onClick={() => router.push(`/${item?.buttonLink}`)}
                 />
               </div>
 

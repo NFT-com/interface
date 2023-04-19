@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 const Player = dynamic(() =>
   import('@lottiefiles/react-lottie-player').then(mod => mod.Player)
 );
-import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import { Button, WebButtonSize,WebButtonType } from 'components/elements/Button';
 
 import { contentfulLoader } from 'lib/image/loader';
 import { useRouter } from 'next/router';
@@ -77,8 +77,9 @@ export default function HeroSection({ data }: HomePageData) {
             <Button
               data-aos='zoom-out'
               data-aos-delay='300'
-              type={ButtonType.SECONDARY}
-              size={ButtonSize.XXLLARGE}
+              isWebButton
+              type={WebButtonType.SECONDARY}
+              size={WebButtonSize.DEFAULT}
               label={data?.heroTextData?.ctaButton}
               stretch
               onClick={() => router.push(`/${data?.heroTextData?.ctaLink}`)}

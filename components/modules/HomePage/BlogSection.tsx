@@ -1,5 +1,5 @@
 import BlurImage from 'components/elements/BlurImage';
-import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import { Button, WebButtonSize, WebButtonType } from 'components/elements/Button';
 import { HomePageV3BlogSection } from 'types/HomePage';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -157,17 +157,18 @@ export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: 
         <div
           data-aos="zoom-in"
           data-aos-delay="100"
-          className='text-center relative flex flex-col minmd:block px-[4%] minmd:px-0'
+          className='text-center relative flex items-center justify-center flex-col px-[4%] minmd:px-0'
         >
           <Button
-            extraClasses={'inline-flex items-center justify-center'}
-            type={ButtonType.PRIMARY}
-            size={ButtonSize.XLARGE}
+            data-aos='zoom-out'
+            data-aos-delay='300'
+            isWebButton
+            type={WebButtonType.PRIMARY}
+            size={WebButtonSize.DEFAULT}
             label={goToBlogButton?.title}
             stretch
             onClick={() => router.push(`/${goToBlogButton?.link}`)}
           />
-
           <div className="swiper__nav-buttons -order-1 pb-5 minmd:pb-0">
             <button type='button' className='js-insights-swiper__btn-prev swiper-nav-button --prev right-[6.75rem]'>
               <ArrowNav />
