@@ -242,6 +242,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   </div>
                 )}
                 <button
+                  title='Cart'
                   className={tw(
                     'mr-1 h-12 w-12 rounded-full hover:bg-[#FFF4CA] transition-colors',
                     'flex items-center justify-center cursor-pointer'
