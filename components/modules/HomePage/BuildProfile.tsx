@@ -22,7 +22,7 @@ export default function BuildProfile({ data }: HomePageData) {
           'minmd:flex'
         )}>
           <div className={tw(
-            'minmd:w-[42%] pl-8 minxl:pl-36',
+            'minmd:w-[42%] px-8 minxl:px-36',
             'py-12 minlg:py-[9.5rem] minxxl:py-32'
           )}>
             <h2 data-aos="fade-up" data-aos-delay="100" className={tw(

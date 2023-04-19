@@ -11,8 +11,9 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { useRouter } from 'next/router';
 import DecorTop from 'public/decor-discover.svg?svgr';
+import ArrowNav from 'public/icons/arrow-right.svg?svgr';
 import React, { useEffect, useState } from 'react';
-import { Scrollbar } from 'swiper';
+import { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export interface HomePageData {
@@ -103,7 +104,7 @@ export default function DiscoverCollections({ data }: HomePageData) {
         <div className='mb-12 overflow-hidden'>
           <div id='anim-discover-content' data-aos="fade-left" className='minlg:translate-x-full minlg:transform-gpu'>
             <Swiper
-              modules={[Scrollbar]}
+              modules={[Navigation, Scrollbar]}
               spaceBetween={16}
               breakpoints={{
                 0: {
@@ -119,12 +120,17 @@ export default function DiscoverCollections({ data }: HomePageData) {
                   slidesPerView: 3.5
                 }
               }}
+              navigation={{
+                nextEl: '.js-discover-swiper__btn-next',
+                prevEl: '.js-discover-swiper__btn-prev',
+                disabledClass: 'swiper-button-disabled'
+              }}
               autoplay={{
                 delay: 3500,
                 disableOnInteraction: false
               }}
               scrollbar={{ draggable: true }}
-              className='flex !pb-12 minxl:!pb-[4.875rem]'
+              className='flex !pb-12 minxl:!pb-[4.875rem] !pl-[4%]'
             >
               {collections &&
                 collections?.length > 0 &&
@@ -155,7 +161,7 @@ export default function DiscoverCollections({ data }: HomePageData) {
           </div>
         </div>
 
-        <div data-aos='zoom-in' data-aos-delay='100' className='flex justify-center'>
+        <div data-aos='zoom-in' data-aos-delay='100' className='text-center relative flex flex-col minmd:block'>
           <div>
             <Button
               type={ButtonType.PRIMARY}
@@ -164,6 +170,15 @@ export default function DiscoverCollections({ data }: HomePageData) {
               stretch
               onClick={() => router.push(`/${data?.ctaButtonLink}`)}
             />
+          </div>
+
+          <div className="swiper__nav-buttons -order-1 pb-5 minmd:pb-0">
+            <button type='button' className='js-discover-swiper__btn-prev swiper-nav-button --prev right-[calc(4%+3.875rem)]'>
+              <ArrowNav />
+            </button>
+            <button type='button' className='js-discover-swiper__btn-next swiper-nav-button --next right-[4%]'>
+              <ArrowNav />
+            </button>
           </div>
         </div>
       </div>

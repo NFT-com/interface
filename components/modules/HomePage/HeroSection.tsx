@@ -24,7 +24,7 @@ export default function HeroSection({ data }: HomePageData) {
       <div className='bg-white relative flex flex-col-reverse minlg:block'>
         {/* Intro Text */}
         <div id='anim-hero-text' className={tw(
-          'pt-14 pb-9 minlg:py-[4vh] pl-[5vw] flex flex-col justify-center items-start',
+          'pt-14 pb-9 minlg:py-[4vh] px-[5vw] flex flex-col justify-center items-start',
           'minlg:w-[55%] minxl:w-[58.5%] minlg:h-screen'
         )}>
           <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
@@ -72,6 +72,7 @@ export default function HeroSection({ data }: HomePageData) {
           </h2>
 
           <p className='mb-9 text-xl'>{data?.heroTextData?.subTitle}</p>
+
           <div>
             <Button
               data-aos='zoom-out'

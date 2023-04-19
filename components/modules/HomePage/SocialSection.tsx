@@ -23,8 +23,8 @@ export default function SocialSection({ data }: HomePageData) {
                 'minmd:max-w-[25rem] minxxl:max-w-[29vw] minlg:pb-[9.6rem]'
               )}>
                 <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                  'text-[3rem] minmd:text-[3.75rem] minxxl:text-[5rem] leading-[1.25] minxl:leading-none font-normal',
-                  'tracking-tight mb-6 minxxl:mb-9'
+                  'text-[2.9rem] minmd:text-[3.75rem] minxxl:text-[5rem] leading-[1.25] minxl:leading-none font-normal',
+                  'tracking-tight mb-6 minxxl:mb-9 -mr-2'
                 )}>
                   {
                     item?.titleArray.map((text,i) => {
@@ -53,7 +53,11 @@ export default function SocialSection({ data }: HomePageData) {
                 />
               </div>
 
-              <div className={item.leftImage ? 'minmd:-order-1 minlg:-mr-20' : 'minlg:-ml-14'} data-aos="fade-up" data-aos-delay="400">
+              <div
+                className={item.leftImage ? 'minmd:-order-1 minlg:-mr-20' : 'minlg:-ml-14'}
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
                 <BlurImage
                   width={700}
                   height={700}
