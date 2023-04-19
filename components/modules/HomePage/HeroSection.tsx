@@ -7,13 +7,18 @@ import dynamic from 'next/dynamic';
 const Player = dynamic(() =>
   import('@lottiefiles/react-lottie-player').then(mod => mod.Player)
 );
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+
 import { contentfulLoader } from 'lib/image/loader';
+import { useRouter } from 'next/router';
 
 export interface HomePageData {
   data: HomePageV3Hero;
 }
 
 export default function HeroSection({ data }: HomePageData) {
+  const router = useRouter();
+
   return (
     <div id='anim-hero-trigger' className='minlg:h-screen'>
       <div className='bg-white relative flex flex-col-reverse minlg:block'>
@@ -67,19 +72,17 @@ export default function HeroSection({ data }: HomePageData) {
           </h2>
 
           <p className='mb-9 text-xl'>{data?.heroTextData?.subTitle}</p>
-
-          <a
-            data-aos='zoom-out'
-            data-aos-delay='300'
-            href={data?.heroTextData?.ctaLink}
-            className={tw(
-              'rounded-full bg-[#121212] drop-shadow-lg transition-colors hover:bg-[#414141]',
-              'inline-flex h-[4.1875rem] items-center justify-center px-6 text-center minxxl:h-[6rem] minxxl:px-9',
-              'text-xl font-medium uppercase text-white minxxl:text-3xl'
-            )}
-          >
-            {data?.heroTextData?.ctaButton}
-          </a>
+          <div>
+            <Button
+              data-aos='zoom-out'
+              data-aos-delay='300'
+              type={ButtonType.SECONDARY}
+              size={ButtonSize.XXLLARGE}
+              label={data?.heroTextData?.ctaButton}
+              stretch
+              onClick={() => router.push(`/${data?.heroTextData?.ctaLink}`)}
+            />
+          </div>
         </div>
 
         {/* Hero */}

@@ -1,12 +1,16 @@
 import BlurImage from 'components/elements/BlurImage';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { HomePageV3SocialSection } from 'types/HomePage';
 import { tw } from 'utils/tw';
 
 import { contentfulLoader } from 'lib/image/loader';
+import { useRouter } from 'next/router';
 export interface HomePageData {
   data?: HomePageV3SocialSection;
 }
 export default function SocialSection({ data }: HomePageData) {
+  const router = useRouter();
+
   return(
     <div className="pt-6 pb-16 minlg:pb-0 minmd:pt-28 minxl:pt-32 minxxl:pt-40">
       {
@@ -40,16 +44,13 @@ export default function SocialSection({ data }: HomePageData) {
                 >
                   {item.subTitle}
                 </p>
-                <a
-                  href={item.buttonLink}
-                  className={tw(
-                    'rounded-full bg-[#F9D54C] drop-shadow-lg transition-colors hover:bg-[#dcaf07]',
-                    'inline-flex h-[4rem] items-center justify-center px-6 minxxl:h-[6rem] minxxl:px-9',
-                    'w-full text-xl font-medium uppercase text-black minmd:w-auto minxxl:text-3xl'
-                  )}
-                >
-                  {item.buttonText}
-                </a>
+                <Button
+                  type={ButtonType.PRIMARY}
+                  size={ButtonSize.XXLLARGE}
+                  label={item.buttonText}
+                  stretch
+                  onClick={() => router.push('/app/mint-profiles')}
+                />
               </div>
 
               <div className={item.leftImage ? 'minmd:-order-1 minlg:-mr-20' : 'minlg:-ml-14'} data-aos="fade-up" data-aos-delay="400">

@@ -83,6 +83,11 @@ XLarge.args = {
   label: 'XLarge',
   size: ButtonSize.XLARGE
 };
+export const XXLLARGE = Template.bind({});
+XLarge.args = {
+  label: 'XXLLARGE',
+  size: ButtonSize.XXLLARGE
+};
 
 export const IconOnly = Template.bind({});
 IconOnly.args = {

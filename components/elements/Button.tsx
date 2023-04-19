@@ -16,7 +16,8 @@ export enum ButtonSize {
   SMALL = 'SMALL',
   MEDIUM = 'MEDIUM',
   LARGE = 'LARGE',
-  XLARGE = 'XLARGE'
+  XLARGE = 'XLARGE',
+  XXLLARGE = 'XXLLARGE'
 }
 
 export interface ButtonProps {
@@ -94,6 +95,16 @@ export function Button(props: ButtonProps) {
       default:
         return '';
       }
+    case ButtonSize.XXLLARGE:
+      switch(props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.SECONDARY):
+        return 'rounded-full h-[4rem] px-6 minxxl:h-[6rem] minxxl:px-9 text-xl font-medium uppercase text-black minmd:w-auto minxxl:text-3xl drop-shadow-lg transition-colors ';
+      case(ButtonType.TERTIARY):
+        return 'rounded-full h-[4rem] px-6 minxxl:h-[6rem] minxxl:px-9 text-xl font-medium uppercase text-black minmd:w-auto minxxl:text-3xl drop-shadow-lg transition-colors border-[1.5px]';
+      default:
+        return '';
+      }
     default:
       return '';
     }
@@ -109,6 +120,8 @@ export function Button(props: ButtonProps) {
       return 'h-10 w-10 rounded-full';
     case ButtonSize.XLARGE:
       return 'h-14 w-14 rounded-full';
+    case ButtonSize.XXLLARGE:
+      return 'h-[4rem] w-[10rem] rounded-full';
     default:
       return '';
     }
@@ -172,6 +185,16 @@ export function Button(props: ButtonProps) {
       default:
         return '';
       }
+    case ButtonSize.XXLLARGE:
+      switch(props.type) {
+      case(ButtonType.PRIMARY):
+      case(ButtonType.TERTIARY):
+        return <ReactLoading type='spin' color='#707070' height={28} width={28} /> ;
+      case(ButtonType.SECONDARY):
+        return <ReactLoading type='spin' color={primaryButtonBackground} height={28} width={28} /> ;
+      default:
+        return '';
+      }
     }
   }, [primaryButtonBackground, props.size, props.type]);
 
@@ -216,7 +239,9 @@ export function Button(props: ButtonProps) {
                     ? 'h-4 w-4 justify-center' :
                     props?.size === ButtonSize.LARGE
                       ? 'h-5 w-5 justify-center' :
-                      props?.size === ButtonSize.XLARGE && 'h-7 w-7 justify-center',
+                      props?.size === ButtonSize.XLARGE && 'h-7 w-7 justify-center'
+                        ? 'h-5 w-5 justify-center' :
+                        props?.size === ButtonSize.XXLLARGE && 'h-8 w-8 justify-center',
             )}>
               {props.icon}
             </div>

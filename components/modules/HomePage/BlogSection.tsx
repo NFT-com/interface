@@ -1,4 +1,5 @@
 import BlurImage from 'components/elements/BlurImage';
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { HomePageV3BlogSection } from 'types/HomePage';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -8,6 +9,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { contentfulLoader } from 'lib/image/loader';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import ArrowNav from 'public/icons/arrow-right.svg?svgr';
 import React, { useEffect } from 'react';
 import { Navigation, Scrollbar } from 'swiper';
@@ -28,6 +30,8 @@ export interface HomePageData {
 gsap.registerPlugin(ScrollTrigger);
 
 export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: HomePageData) {
+  const router = useRouter();
+
   useEffect(() => {
     AOS.init({
       disable: function () {
@@ -142,12 +146,14 @@ export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: 
         </div>
 
         <div data-aos="zoom-in" data-aos-delay="100" className='text-center relative flex flex-col minmd:block'>
-          <a href={goToBlogButton?.link} className={tw(
-            'bg-[#F9D54C] hover:bg-[#dcaf07] drop-shadow-lg rounded-full transition-colors',
-            'inline-flex items-center justify-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
-            'text-xl minxxl:text-3xl text-black font-medium uppercase'
-          )}>{goToBlogButton?.title.toUpperCase()}</a>
-
+          <Button
+            extraClasses={'inline-flex items-center justify-center'}
+            type={ButtonType.PRIMARY}
+            size={ButtonSize.XLARGE}
+            label={goToBlogButton?.title}
+            stretch
+            onClick={() => router.push(`/${goToBlogButton?.link}`)}
+          />
           <div className="insights-swiper__buttons -order-1 pb-5 minmd:pb-0">
             <button type='button' className='insights-swiper__btn-prev'>
               <ArrowNav />

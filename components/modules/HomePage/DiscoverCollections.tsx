@@ -1,3 +1,4 @@
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
 import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
@@ -8,6 +9,7 @@ import { tw } from 'utils/tw';
 import AOS from 'aos';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import { useRouter } from 'next/router';
 import DecorTop from 'public/decor-discover.svg?svgr';
 import React, { useEffect, useState } from 'react';
 import { Scrollbar } from 'swiper';
@@ -20,6 +22,7 @@ export interface HomePageData {
 gsap.registerPlugin(ScrollTrigger);
 
 export default function DiscoverCollections({ data }: HomePageData) {
+  const router = useRouter();
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [collections, setCollectionData] = useState(null);
   const { data: collectionLikeData } = useCollectionLikeCountQuery(
@@ -152,17 +155,16 @@ export default function DiscoverCollections({ data }: HomePageData) {
           </div>
         </div>
 
-        <div data-aos='zoom-in' data-aos-delay='100' className='text-center'>
-          <a
-            href={data?.ctaButtonLink}
-            className={tw(
-              'rounded-full bg-[#F9D54C] drop-shadow-lg transition-colors hover:bg-[#dcaf07]',
-              'inline-flex h-[4rem] items-center justify-center px-6 minxxl:h-[6rem] minxxl:px-9',
-              'text-xl font-medium uppercase text-black minxxl:text-3xl'
-            )}
-          >
-            {data?.ctaButtonText}
-          </a>
+        <div data-aos='zoom-in' data-aos-delay='100' className='flex justify-center'>
+          <div>
+            <Button
+              type={ButtonType.PRIMARY}
+              size={ButtonSize.XXLLARGE}
+              label={data?.ctaButtonText}
+              stretch
+              onClick={() => router.push(`/${data?.ctaButtonLink}`)}
+            />
+          </div>
         </div>
       </div>
     </div>
