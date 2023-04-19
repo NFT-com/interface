@@ -2,7 +2,6 @@ import { HomePageV3BuildProfileSection } from 'types/HomePage';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
-import profileImage from 'public/profile-images.webp';
 
 export interface HomePageData {
   data?: HomePageV3BuildProfileSection;
@@ -46,7 +45,7 @@ export default function BuildProfile({ data }: HomePageData) {
           </div>
 
           <div className='minmd:w-[58%] text-right'>
-            <Image className='-ml-9 minmd:ml-auto max-w-[calc(100%+2.25rem)] minmd:max-w-full h-full object-cover' width={721} height={621} src={profileImage} alt='Example profile image' />
+            <Image className='-ml-9 minmd:ml-auto max-w-[calc(100%+2.25rem)] minmd:max-w-full h-full object-cover' width={721} height={621} src='/assets/build-profile-bg.webp' alt='Example profile image' />
           </div>
         </div>
       </div>
