@@ -12,7 +12,7 @@ export default function WhatWeCanDo({ data }: HomePageData) {
     <section
       className='py-9 minlg:pt-20 minlg:pb-36 minxl:pb-40'
       style={{
-        background: 'url("/bg-profile.webp") no-repeat 50% 100%/100% auto'
+        background: `url("${data.whatWeCanDoBg.url}") no-repeat 50% 100%/100% auto`
       }}
     >
       <div className='mx-auto max-w-[89.333%] minxl:max-w-[56.5%]'>

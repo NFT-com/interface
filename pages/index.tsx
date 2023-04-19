@@ -248,6 +248,9 @@ const Index: NextPageWithLayout = ({
             },
             whatWeCanDoImage: {
               url: homePageDataV3?.whatWeCanDoImage?.url
+            },
+            whatWeCanDoBg: {
+              url: homePageDataV3?.whatWeCanDoBg?.url
             }
           }}/>
 
