@@ -150,66 +150,6 @@ const Index: NextPageWithLayout = ({
           },
           0
         );
-
-      // News
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '#anim-news-trigger',
-            start: 'top 80%',
-            end: '+=30px',
-            toggleActions: 'play none reverse none'
-          }
-        })
-        .to(
-          '#anim-news-content',
-          {
-            x: 0,
-            duration: 2,
-            ease: 'power2.out'
-          },
-          0
-        );
-
-      // Discover
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '#anim-discover-trigger',
-            start: 'top 80%',
-            end: '+=30px',
-            toggleActions: 'play none reverse none'
-          }
-        })
-        .to(
-          '#anim-discover-content',
-          {
-            x: 0,
-            duration: 2,
-            ease: 'power2.out'
-          },
-          0
-        );
-
-      // Marquees
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '#anim-ticker-trigger',
-          start: '20% bottom',
-          end: '+=30px',
-          toggleActions: 'play none reverse none',
-        }
-      })
-        .to('#anim-ticker-first', {
-          y: 0,
-          duration: 0.8,
-          ease: 'circ.out',
-        }, 0)
-        .to('#anim-ticker-second', {
-          y: 0,
-          duration: 1,
-          ease: 'circ.out',
-        }, '>-0.8');
     });
 
     window.requestAnimationFrame(function () {

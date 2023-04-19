@@ -5,6 +5,9 @@ import { HomePageV3CollectionsSection } from 'types/HomePage';
 import { isOfficialCollection } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import AOS from 'aos';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import DecorTop from 'public/decor-discover.svg?svgr';
 import React, { useEffect, useState } from 'react';
 import { Scrollbar } from 'swiper';
@@ -13,6 +16,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 export interface HomePageData {
   data?: HomePageV3CollectionsSection;
 }
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function DiscoverCollections({ data }: HomePageData) {
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
@@ -35,6 +40,36 @@ export default function DiscoverCollections({ data }: HomePageData) {
       page: 1
     }).then(results => {
       setCollectionData(results?.hits);
+    });
+
+    AOS.init({
+      disable: function () {
+        const maxWidth = 900;
+        return window.innerWidth >= maxWidth;
+      },
+      duration: 700
+    });
+
+    const matchMedia = gsap.matchMedia();
+    matchMedia.add('(min-width: 900px)', () => {
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: '#anim-discover-trigger',
+            start: 'top 40%',
+            end: '+=30px',
+            toggleActions: 'play none reverse none'
+          }
+        })
+        .to(
+          '#anim-discover-content',
+          {
+            x: 0,
+            duration: 2,
+            ease: 'power2.out'
+          },
+          0
+        );
     });
   }, [addressIds, fetchTypesenseSearch]);
 
@@ -63,7 +98,7 @@ export default function DiscoverCollections({ data }: HomePageData) {
         </div>
 
         <div className='mb-12 overflow-hidden'>
-          <div id='anim-discover-content'>
+          <div id='anim-discover-content' data-aos="fade-left" className='minlg:translate-x-full minlg:transform-gpu'>
             <Swiper
               modules={[Scrollbar]}
               spaceBetween={16}

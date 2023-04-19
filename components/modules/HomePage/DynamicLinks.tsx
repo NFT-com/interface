@@ -1,6 +1,9 @@
 import { HomePageV3SectionDynamicLinks } from 'types/HomePage';
 import { tw } from 'utils/tw';
 
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import React, { useEffect } from 'react';
 import Marquee from 'react-fast-marquee';
 
 export interface HomePageData {
@@ -8,7 +11,28 @@ export interface HomePageData {
   isVisible?: boolean;
 }
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function DynamicLinks({ data, isVisible }: HomePageData) {
+  useEffect(() => {
+    const matchMedia = gsap.matchMedia();
+    matchMedia.add('(min-width: 900px)', () => {
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '#anim-ticker-trigger',
+          start: '20% bottom',
+          end: '+=30px',
+          toggleActions: 'play none reverse none'
+        }
+      })
+        .to('#anim-ticker-first', {
+          y: 0,
+          duration: 0.8,
+          ease: 'circ.out'
+        }, 0);
+    });
+  });
+
   return(
     <div id='anim-ticker-trigger' className='overflow-x-hidden pt-7 pb-24 minlg:pt-[4.625rem] minlg:pb-[6.525rem]'>
       <div id='anim-ticker-first' className={tw(

@@ -3,9 +3,13 @@ import { HomePageV3BlogSection } from 'types/HomePage';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import AOS from 'aos';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { contentfulLoader } from 'lib/image/loader';
 import Link from 'next/link';
 import ArrowNav from 'public/icons/arrow-right.svg?svgr';
+import React, { useEffect } from 'react';
 import { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -21,9 +25,43 @@ export interface HomePageData {
   }
 }
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: HomePageData) {
+  useEffect(() => {
+    AOS.init({
+      disable: function () {
+        const maxWidth = 900;
+        return window.innerWidth >= maxWidth;
+      },
+      duration: 700
+    });
+
+    const matchMedia = gsap.matchMedia();
+    matchMedia.add('(min-width: 900px)', () => {
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: '#anim-blog-trigger',
+            start: 'top 40%',
+            end: '+=30px',
+            toggleActions: 'play none reverse none'
+          }
+        })
+        .to(
+          '#anim-blog-content',
+          {
+            x: 0,
+            duration: 2,
+            ease: 'power2.out'
+          },
+          0
+        );
+    });
+  });
+
   return(
-    <div className='bg-[#282828]'>
+    <div id='anim-blog-trigger' className='bg-[#282828]'>
       <div className={tw(
         'relative z-0 py-16 minlg:pt-[6.25rem] minlg:pb-[7.625rem]',
       )}>
@@ -32,7 +70,7 @@ export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: 
           <p data-aos="fade-up" data-aos-delay="100" className='text-lg mb-8 minxl:mb-[3.8125rem]'>{blogSectionTitle?.subTitle}</p>
         </div>
 
-        <div className='mb-12' data-aos="fade-left">
+        <div id='anim-blog-content' data-aos="fade-left" className='minlg:translate-x-full minlg:transform-gpu mb-12'>
           <Swiper
             modules={[Navigation, Scrollbar]}
             spaceBetween={14}
@@ -121,6 +159,5 @@ export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: 
         </div>
       </div>
     </div>
-
   );
 }
