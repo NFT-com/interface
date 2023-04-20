@@ -10,7 +10,7 @@ export interface NftDetailCardProps {
   valueClasses?: string;
   center?: boolean;
   onClick?: () => void;
-  copy?: boolean
+  copy?: boolean;
 }
 
 export function NftDetailCard(props: NftDetailCardProps) {
@@ -21,38 +21,40 @@ export function NftDetailCard(props: NftDetailCardProps) {
       className={tw(
         'NftDetailCard',
         'flex w-full',
-        props?.highlighted ? 'bg-[#FFF4CA] border border-[#F9D54C]' : 'bg-white ',
-        'px-3 py-4 shadow-xl rounded-[18px]',
-        'overflow-hidden cursor-pointer',
-        props.onClick &&
-       'cursor-pointer transition hover:scale-[0.97] transition-spacing duration-100 ease-in-out'
+        props?.highlighted ? 'border border-[#F9D54C] bg-[#FFF4CA]' : 'bg-white ',
+        'rounded-[18px] px-3 py-4 shadow-xl',
+        'cursor-pointer overflow-hidden',
+        props.onClick && 'transition-spacing cursor-pointer transition duration-100 ease-in-out hover:scale-[0.97]'
       )}
-      onClick={!props.onClick
-        ? () => {
-          staticCopy(props.value);
-        }
-        : () => props.onClick && props.onClick()}
+      onClick={
+        !props.onClick
+          ? () => {
+              staticCopy(props.value);
+            }
+          : () => props.onClick && props.onClick()
+      }
     >
-
-      <div className={tw(
-        'flex flex-col p-2 w-full',
-        props.center ? 'items-center' : null,
-        'overflow-hidden'
-      )}>
-        <span className={tw(
-          'font-noi-grotesk  text-[16px] capitalize font-medium mb-4 leading-5 tracking-[10%]',
-          props?.highlighted ? 'text-[#E4BA18]' : 'text-[#6A6A6A]'
-        )}>
+      <div className={tw('flex w-full flex-col p-2', props.center ? 'items-center' : null, 'overflow-hidden')}>
+        <span
+          className={tw(
+            'mb-4  font-noi-grotesk text-[16px] font-medium capitalize leading-5 tracking-[10%]',
+            props?.highlighted ? 'text-[#E4BA18]' : 'text-[#6A6A6A]'
+          )}
+        >
           {props?.type?.toLowerCase()}
         </span>
-        <span className={tw(
-          'font-noi-grotesk text-black font-medium text-[16px] leading-5',
-          'line-clamp-1 text-ellipsis capitalize',
-          props.valueClasses
-        )}>
+        <span
+          className={tw(
+            'font-noi-grotesk text-[16px] font-medium leading-5 text-black',
+            'text-ellipsis capitalize line-clamp-1',
+            props.valueClasses
+          )}
+        >
           {isCopied ? 'Copied!' : props?.value?.toLowerCase()}
         </span>
-        {!isNullOrEmpty(props.subtitle) && <span className='font-noi-grotesk font-normal text-xs leading-5 text-[#6F6F6F]'>{props.subtitle}</span>}
+        {!isNullOrEmpty(props.subtitle) && (
+          <span className='font-noi-grotesk text-xs font-normal leading-5 text-[#6F6F6F]'>{props.subtitle}</span>
+        )}
       </div>
     </div>
   );

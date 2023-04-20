@@ -1,6 +1,6 @@
-import { Doppler, getEnv } from 'utils/env';
-
 import { isMobile } from 'react-device-detect';
+
+import { Doppler, getEnv } from 'utils/env';
 
 export type GTagEvent = {
   action: string;
@@ -8,12 +8,12 @@ export type GTagEvent = {
   label: string;
   value?: number;
   eventParams?: any;
-}
+};
 
 export type OutboundLink = {
   url: string;
   hitCallback: () => void;
-}
+};
 
 export const GA_TRACKING_ID: string | undefined = getEnv(Doppler.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID);
 
@@ -23,14 +23,10 @@ export const GA_TRACKING_ID: string | undefined = getEnv(Doppler.NEXT_PUBLIC_GOO
  * @param {string} url - the url of the pageview.
  * @returns None
  */
-export const pageview = (url) => {
+export const pageview = url => {
   window.gtag('config', GA_TRACKING_ID, {
     page_path: url,
-    customBrowserType: !isMobile
-      ? 'desktop'
-      : 'web3' in window || 'ethereum' in window
-        ? 'mobileWeb3'
-        : 'mobileRegular',
+    customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'ethereum' in window ? 'mobileWeb3' : 'mobileRegular'
   });
 };
 

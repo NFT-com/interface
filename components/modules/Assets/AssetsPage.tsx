@@ -1,3 +1,7 @@
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { PartialDeep } from 'type-fest';
+import { useAccount } from 'wagmi';
+
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader/Loader';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
@@ -7,17 +11,15 @@ import { useMyAssetsQuery } from 'graphql/hooks/useMyAssetsQuery';
 import { useFetchNftCollectionAllowance } from 'hooks/balances/useFetchNftCollectionAllowance';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { usePaginator } from 'hooks/usePaginator';
-import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/format';
 import { tw } from 'utils/tw';
 
-import AssetTableRow from './AssetTableRow';
+import { ExternalProtocol } from 'types';
 
 import Offers from 'public/icons/offers.svg?svgr';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { PartialDeep } from 'type-fest';
-import { useAccount } from 'wagmi';
+
+import AssetTableRow from './AssetTableRow';
 
 const ASSET_LOAD_COUNT = 25;
 
@@ -25,12 +27,7 @@ export default function AssetsPages() {
   const { address: currentAddress } = useAccount();
   const [lastAddedPage, setLastAddedPage] = useState('');
   const [assetData, setAssetData] = useState([]);
-  const {
-    nextPage,
-    afterCursor,
-    cachedTotalCount,
-    setTotalCount
-  } = usePaginator(ASSET_LOAD_COUNT);
+  const { nextPage, afterCursor, cachedTotalCount, setTotalCount } = usePaginator(ASSET_LOAD_COUNT);
 
   const { data: loadedAssetsNextPage, loading: loadingAssets } = useMyAssetsQuery(
     ASSET_LOAD_COUNT,
@@ -48,10 +45,7 @@ export default function AssetsPages() {
       lastAddedPage !== loadedAssetsNextPage?.myNFTs?.pageInfo?.firstCursor
     ) {
       if (assetData?.length > 0 && assetData[0]?.wallet?.address === currentAddress) {
-        setAssetData([
-          ...assetData,
-          ...filterNulls(loadedAssetsNextPage?.myNFTs?.items)
-        ]);
+        setAssetData([...assetData, ...filterNulls(loadedAssetsNextPage?.myNFTs?.items)]);
       } else {
         setAssetData(filterNulls(loadedAssetsNextPage?.myNFTs?.items));
       }
@@ -60,21 +54,32 @@ export default function AssetsPages() {
     } else {
       loadedAssetsNextPage?.myNFTs?.totalItems && setTotalCount(loadedAssetsNextPage?.myNFTs?.totalItems);
     }
-  }, [lastAddedPage, setTotalCount, assetData, loadedAssetsNextPage, afterCursor, loadedAssetsNextPage?.myNFTs?.items, currentAddress]);
+  }, [
+    lastAddedPage,
+    setTotalCount,
+    assetData,
+    loadedAssetsNextPage,
+    afterCursor,
+    loadedAssetsNextPage?.myNFTs?.items,
+    currentAddress
+  ]);
 
   const { stageListings, toggleCartSidebar } = useContext(NFTListingsContext);
   const [selectedAssets, setSelectedAssets] = useState<Array<PartialDeep<Nft>>>([]);
   const [loading, setLoading] = useState(false);
   const { fetchAllowance } = useFetchNftCollectionAllowance();
 
-  const onChangeHandler = useCallback(async (asset) => {
-    const index = selectedAssets.findIndex((item) => item.id === asset.id);
-    if (index !== -1) {
-      setSelectedAssets(selectedAssets.filter((_, i) => i !== index));
-    } else {
-      setSelectedAssets([...selectedAssets, asset]);
-    }
-  }, [selectedAssets]);
+  const onChangeHandler = useCallback(
+    async asset => {
+      const index = selectedAssets.findIndex(item => item.id === asset.id);
+      if (index !== -1) {
+        setSelectedAssets(selectedAssets.filter((_, i) => i !== index));
+      } else {
+        setSelectedAssets([...selectedAssets, asset]);
+      }
+    },
+    [selectedAssets]
+  );
 
   const selectAllHandler = useCallback(async () => {
     if (selectedAssets.length === assetData.length) {
@@ -85,14 +90,14 @@ export default function AssetsPages() {
   }, [assetData, selectedAssets.length]);
 
   return (
-    <div className='flex flex-col justify-between minlg:pt-28 px-4 font-noi-grotesk'>
-      <div className='w-full max-w-nftcom mx-auto relative'>
-        <h2 className='font-bold text-black text-[40px] mb-6'>
-          <span className='text-[#F9D963] mr-1'>/</span>
+    <div className='flex flex-col justify-between px-4 font-noi-grotesk minlg:pt-28'>
+      <div className='relative mx-auto w-full max-w-nftcom'>
+        <h2 className='mb-6 text-[40px] font-bold text-black'>
+          <span className='mr-1 text-[#F9D963]'>/</span>
           My Assets
         </h2>
         <div className='flex'>
-          {selectedAssets.length ?
+          {selectedAssets.length ? (
             <div
               onClick={async () => {
                 if (loading) {
@@ -105,7 +110,7 @@ export default function AssetsPages() {
                 const X2Y2AllowedByContract = new Map<string, boolean>();
                 const X2Y2AllowedByContract1155 = new Map<string, boolean>();
                 const NFTCOMAllowedByContract = new Map<string, boolean>();
-                for (let i = 0; i < selectedAssets.length; i++) {
+                for (let i = 0; i < selectedAssets.length; i += 1) {
                   const nft = selectedAssets[i];
                   if (!openseaAllowedByContract.has(nft.contract)) {
                     const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.Opensea);
@@ -132,90 +137,116 @@ export default function AssetsPages() {
                     NFTCOMAllowedByContract.set(nft.contract, allowed);
                   }
                 }
-                stageListings(selectedAssets?.map(nft => ({
-                  nft: nft,
-                  collectionName: nft?.collection?.name,
-                  isApprovedForSeaport: openseaAllowedByContract.get(nft?.contract),
-                  isApprovedForLooksrare: looksrareAllowedByContract1155.get(nft?.contract),
-                  isApprovedForX2Y2: X2Y2AllowedByContract.get(nft?.contract),
-                  isApprovedForLooksrare1155: looksrareAllowedByContract.get(nft?.contract),
-                  isApprovedForX2Y21155: X2Y2AllowedByContract1155.get(nft?.contract),
-                  isApprovedForNFTCOM: NFTCOMAllowedByContract.get(nft?.contract),
-                  targets: [
-                    {
-                      protocol: ExternalProtocol.NFTCOM,
-                      currency: NULL_ADDRESS,
-                      listingError: false
-                    }
-                  ]
-                })));
+                stageListings(
+                  selectedAssets?.map(nft => ({
+                    nft,
+                    collectionName: nft?.collection?.name,
+                    isApprovedForSeaport: openseaAllowedByContract.get(nft?.contract),
+                    isApprovedForLooksrare: looksrareAllowedByContract1155.get(nft?.contract),
+                    isApprovedForX2Y2: X2Y2AllowedByContract.get(nft?.contract),
+                    isApprovedForLooksrare1155: looksrareAllowedByContract.get(nft?.contract),
+                    isApprovedForX2Y21155: X2Y2AllowedByContract1155.get(nft?.contract),
+                    isApprovedForNFTCOM: NFTCOMAllowedByContract.get(nft?.contract),
+                    targets: [
+                      {
+                        protocol: ExternalProtocol.NFTCOM,
+                        currency: NULL_ADDRESS,
+                        listingError: false
+                      }
+                    ]
+                  }))
+                );
                 setLoading(false);
                 toggleCartSidebar();
               }}
-              className='w-full flex items-center justify-center minlg:w-[200px] bg-[#F9D963] text-[#1F2127] font-bold p-2 rounded-[20px] text-center hover:cursor-pointer'
+              className='flex w-full items-center justify-center rounded-[20px] bg-[#F9D963] p-2 text-center font-bold text-[#1F2127] hover:cursor-pointer minlg:w-[200px]'
             >
               <p>{loading ? <Loader /> : 'List NFTs'}</p>
             </div>
-            :
-            <div className='w-full hover:cursor-not-allowed minlg:w-[200px] bg-[#F8F8F8] text-[#6F6F6F] font-bold p-2 rounded-[20px] text-center  '>
+          ) : (
+            <div className='w-full rounded-[20px] bg-[#F8F8F8] p-2 text-center font-bold text-[#6F6F6F] hover:cursor-not-allowed minlg:w-[200px]  '>
               <p>Select NFTs</p>
             </div>
-          }
-          {selectedAssets.length ?
-            <div onClick={() => { setSelectedAssets([]); }} className='hover:cursor-pointer w-full minlg:w-[200px] ml-2 bg-white text-[#1F2127] font-bold p-2 rounded-[20px] text-center border border-[#D5D5D5]'>
+          )}
+          {selectedAssets.length ? (
+            <div
+              onClick={() => {
+                setSelectedAssets([]);
+              }}
+              className='ml-2 w-full rounded-[20px] border border-[#D5D5D5] bg-white p-2 text-center font-bold text-[#1F2127] hover:cursor-pointer minlg:w-[200px]'
+            >
               <p>Cancel</p>
             </div>
-            : null
-          }
+          ) : null}
         </div>
-        <div className="my-8 rounded-md px-4 pt-4 pb-24 overflow-x-auto min-h-[370px]">
-          <table className="border-collapse table-fixed w-full">
-            <thead className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>
-              <tr className='p-4 pt-0 pb-3 text-left ...'>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[60px] text-center'>
-                  <input checked={selectedAssets.length === assetData.length} onChange={() => selectAllHandler()} className='border-2 border-[#6F6F6F] text-[#6F6F6F] form-checkbox focus:ring-[#F9D963]' type='checkbox' />
+        <div className='my-8 min-h-[370px] overflow-x-auto rounded-md px-4 pb-24 pt-4'>
+          <table className='w-full table-fixed border-collapse'>
+            <thead className='p-4 text-sm font-medium leading-6 text-[#6F6F6F]'>
+              <tr className='... p-4 pb-3 pt-0 text-left'>
+                <th className='w-[60px] pb-4 pr-8 text-center text-sm font-medium leading-6 text-[#6F6F6F] minmd:pr-4'>
+                  <input
+                    checked={selectedAssets.length === assetData.length}
+                    onChange={() => selectAllHandler()}
+                    className='form-checkbox border-2 border-[#6F6F6F] text-[#6F6F6F] focus:ring-[#F9D963]'
+                    type='checkbox'
+                  />
                 </th>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[200px]'>NFT Name</th>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[150px]'>Collection</th>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>Status</th>
-                {getEnvBool(Doppler.NEXT_PUBLIC_ASSETS_PRICE_ENABLED) &&
+                <th className='w-[200px] pb-4 pr-8 text-sm font-medium leading-6 text-[#6F6F6F] minmd:pr-4'>
+                  NFT Name
+                </th>
+                <th className='w-[150px] pb-4 pr-8 text-sm font-medium leading-6 text-[#6F6F6F] minmd:pr-4'>
+                  Collection
+                </th>
+                <th className='w-[100px] pb-4 pr-8 text-sm font-medium leading-6 text-[#6F6F6F] minmd:pr-4'>Status</th>
+                {getEnvBool(Doppler.NEXT_PUBLIC_ASSETS_PRICE_ENABLED) && (
                   <>
-                    <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[150px]'>Purchased Price</th>
-                    <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>USD Value</th>
+                    <th className='w-[150px] pb-4 pr-8 text-sm font-medium leading-6 text-[#6F6F6F] minmd:pr-4'>
+                      Purchased Price
+                    </th>
+                    <th className='w-[100px] pb-4 pr-8 text-sm font-medium leading-6 text-[#6F6F6F] minmd:pr-4'>
+                      USD Value
+                    </th>
                   </>
-                }
+                )}
 
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[140px]'>Profile</th>
-                {getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED) && <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>Offers</th>}
-                <th className='text-black cursor-pointer text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[130px]'>
-                  {getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED) ?
-                    <div onClick={() => alert('open view all offers modal')} className='flex items-center hover:underline'>
+                <th className='w-[140px] pb-4 pr-8 text-sm font-medium leading-6 text-[#6F6F6F] minmd:pr-4'>Profile</th>
+                {getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED) && (
+                  <th className='w-[100px] pb-4 pr-8 text-sm font-medium leading-6 text-[#6F6F6F] minmd:pr-4'>
+                    Offers
+                  </th>
+                )}
+                <th className='w-[130px] cursor-pointer pb-4 pr-8 text-sm font-medium leading-6 text-black minmd:pr-4'>
+                  {getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED) ? (
+                    <div
+                      onClick={() => alert('open view all offers modal')}
+                      className='flex items-center hover:underline'
+                    >
                       <Offers className='mr-2' />
                       <div>View all offers</div>
-                    </div> :
-                    null
-                  }
+                    </div>
+                  ) : null}
                 </th>
               </tr>
             </thead>
             <tbody className='p-4'>
-              {assetData?.map((item) => (
-                <AssetTableRow isChecked={selectedAssets.some((nft) => nft.tokenId === item.tokenId)} onChange={onChangeHandler} key={item.id} item={item} />
+              {assetData?.map(item => (
+                <AssetTableRow
+                  isChecked={selectedAssets.some(nft => nft.tokenId === item.tokenId)}
+                  onChange={onChangeHandler}
+                  key={item.id}
+                  item={item}
+                />
               ))}
             </tbody>
           </table>
-          {loadingAssets && !assetData.length && <p className={tw(
-            'h-20 w-full',
-            'bg-[#F8F8F8]',
-            'pl-8 flex items-center',
-          )}>Loading...</p>}
-          {!loadingAssets && !assetData.length && <p className={tw(
-            'h-20 w-full',
-            'bg-[#F8F8F8]',
-            'pl-8 flex items-center',
-          )}>No assets</p>}
-          {cachedTotalCount !== 1 && cachedTotalCount > assetData?.length &&
-            <div className='w-full flex justify-center'>
+          {loadingAssets && !assetData.length && (
+            <p className={tw('h-20 w-full', 'bg-[#F8F8F8]', 'flex items-center pl-8')}>Loading...</p>
+          )}
+          {!loadingAssets && !assetData.length && (
+            <p className={tw('h-20 w-full', 'bg-[#F8F8F8]', 'flex items-center pl-8')}>No assets</p>
+          )}
+          {cachedTotalCount !== 1 && cachedTotalCount > assetData?.length && (
+            <div className='flex w-full justify-center'>
               <Button
                 onClick={() => loadMoreAssets()}
                 label='Load More'
@@ -223,7 +254,7 @@ export default function AssetsPages() {
                 type={ButtonType.PRIMARY}
               />
             </div>
-          }
+          )}
         </div>
       </div>
     </div>

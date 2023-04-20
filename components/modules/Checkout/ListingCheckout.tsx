@@ -1,4 +1,11 @@
-import 'rc-slider/assets/index.css';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { isMobile } from 'react-device-detect';
+import router from 'next/router';
+import { ArrowLeft } from 'phosphor-react';
+import Slider from 'rc-slider';
+import useSWR from 'swr';
+import { PartialDeep } from 'type-fest';
+import { useAccount } from 'wagmi';
 
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
@@ -12,18 +19,13 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
-import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/format';
 import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { ListingCheckoutNftTableRow } from './ListingCheckoutNftTableRow';
-import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
-import { handleRender } from './TooltipSlider';
+import { ExternalProtocol } from 'types';
 
-import router from 'next/router';
-import { ArrowLeft } from 'phosphor-react';
 import LooksrareGray from 'public/icons/looksrare_gray.svg?svgr';
 import LooksrareIcon from 'public/icons/looksrare-icon.svg?svgr';
 import NFTLogo from 'public/icons/nft_logo_yellow.svg?svgr';
@@ -33,12 +35,12 @@ import OpenseaIcon from 'public/icons/opensea-icon.svg?svgr';
 import ErrorIcon from 'public/icons/red-error-icon.svg?svgr';
 import X2Y2Gray from 'public/icons/x2y2-gray.svg?svgr';
 import X2Y2Icon from 'public/icons/x2y2-icon.svg?svgr';
-import Slider from 'rc-slider';
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { isMobile } from 'react-device-detect';
-import useSWR from 'swr';
-import { PartialDeep } from 'type-fest';
-import { useAccount } from 'wagmi';
+
+import { ListingCheckoutNftTableRow } from './ListingCheckoutNftTableRow';
+import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
+import { handleRender } from './TooltipSlider';
+
+import 'rc-slider/assets/index.css';
 
 export function ListingCheckout() {
   const {
@@ -52,7 +54,7 @@ export function ListingCheckout() {
     decreasingPriceError,
     englishAuctionError,
     allListingsFail,
-    setAllListingsFail,
+    setAllListingsFail
   } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
   const { marketplace } = useAllContracts();
@@ -62,9 +64,7 @@ export function ListingCheckout() {
   const defaultChainId = useDefaultChainId();
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner);
   const { profileData } = useProfileQuery(
-    toList[0]?.nft?.wallet?.preferredProfile == null ?
-      profileTokens[0]?.tokenUri?.raw?.split('/').pop() :
-      null
+    toList[0]?.nft?.wallet?.preferredProfile == null ? profileTokens[0]?.tokenUri?.raw?.split('/').pop() : null
   );
 
   useEffect(() => {
@@ -76,68 +76,79 @@ export function ListingCheckout() {
   }, [setDuration, toList]);
 
   const { data: NFTCOMProtocolFee } = useSWR(
-    'NFTCOMProtocolFee' + currentAddress,
+    `NFTCOMProtocolFee${currentAddress}`,
     async () => {
-      return await marketplace.protocolFee();
+      return marketplace.protocolFee();
     },
     {
       refreshInterval: 0,
-      revalidateOnFocus: false,
-    });
+      revalidateOnFocus: false
+    }
+  );
 
   const { data: NFTCOMProfileFee } = useSWR(
-    'NFTCOMProfileFee' + currentAddress,
+    `NFTCOMProfileFee${currentAddress}`,
     async () => {
-      return await marketplace.profileFee();
+      return marketplace.profileFee();
     },
     {
       refreshInterval: 0,
-      revalidateOnFocus: false,
-    });
+      revalidateOnFocus: false
+    }
+  );
 
   const { data: NFTCOMGKFee } = useSWR(
-    'NFTCOMGKFee' + currentAddress,
+    `NFTCOMGKFee${currentAddress}`,
     async () => {
-      return await marketplace.gkFee();
+      return marketplace.gkFee();
     },
     {
       refreshInterval: 0,
-      revalidateOnFocus: false,
-    });
+      revalidateOnFocus: false
+    }
+  );
 
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
 
-  const openseaAtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
-    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.Seaport) != null;
-  }) != null;
-  const looksrareAtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
-    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.LooksRare) != null;
-  }) != null;
-  const X2Y2AtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
-    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.X2Y2) != null;
-  }) != null;
-  const NFTCOMAtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
-    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.NFTCOM) != null;
-  }) != null;
+  const openseaAtLeastOneEnabled =
+    !isNullOrEmpty(toList) &&
+    toList.find(nft => {
+      return nft?.targets?.find(target => target?.protocol === ExternalProtocol.Seaport) != null;
+    }) != null;
+  const looksrareAtLeastOneEnabled =
+    !isNullOrEmpty(toList) &&
+    toList.find(nft => {
+      return nft?.targets?.find(target => target?.protocol === ExternalProtocol.LooksRare) != null;
+    }) != null;
+  const X2Y2AtLeastOneEnabled =
+    !isNullOrEmpty(toList) &&
+    toList.find(nft => {
+      return nft?.targets?.find(target => target?.protocol === ExternalProtocol.X2Y2) != null;
+    }) != null;
+  const NFTCOMAtLeastOneEnabled =
+    !isNullOrEmpty(toList) &&
+    toList.find(nft => {
+      return nft?.targets?.find(target => target?.protocol === ExternalProtocol.NFTCOM) != null;
+    }) != null;
 
   const ListingOneNFT = useCallback(() => {
     return (
-      <div className='hidden minlg:flex flex-col justify-start items-center bg-gray-200 w-2/5 min-h-[100vh]'>
-        <div className='w-full ml-44 mt-20'>
+      <div className='hidden min-h-[100vh] w-2/5 flex-col items-center justify-start bg-gray-200 minlg:flex'>
+        <div className='ml-44 mt-20 w-full'>
           <h1
-            className='text-2xl font-semibold font-noi-grotesk cursor-pointer flex items-center'
+            className='flex cursor-pointer items-center font-noi-grotesk text-2xl font-semibold'
             onClick={() => {
               router.back();
             }}
           >
-            <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-3' />
+            <ArrowLeft size={24} color='black' className='ListingPageBackButton mr-3' />
             Back
           </h1>
         </div>
-        {toList[0]?.nft?.metadata?.imageURL ?
+        {toList[0]?.nft?.metadata?.imageURL ? (
           <div className='mt-20 w-1/2'>
-            <div className="flex w-full max-h-[600px] max-w-nftcom object-contain drop-shadow-lg aspect-square">
+            <div className='flex aspect-square max-h-[600px] w-full max-w-nftcom object-contain drop-shadow-lg'>
               <RoundedCornerMedia
                 key={toList[0]?.nft?.id}
                 src={toList[0]?.nft?.metadata?.imageURL}
@@ -147,278 +158,368 @@ export function ListingCheckout() {
                 containerClasses='overflow-hidden rounded-[16px]'
               />
             </div>
-            <div className='flex font-noi-grotesk mt-10 mx-4'>
-              <div className='flex flex-col justify-between w-3/5'>
-                <span className='font-semibold text-ellipsis overflow-hidden'>{toList[0]?.nft?.metadata?.name}</span>
-                <span className='text-[#6F6F6F] whitespace-nowrap text-ellipsis overflow-hidden'>{toList[0]?.collectionName || '-'}</span>
+            <div className='mx-4 mt-10 flex font-noi-grotesk'>
+              <div className='flex w-3/5 flex-col justify-between'>
+                <span className='overflow-hidden text-ellipsis font-semibold'>{toList[0]?.nft?.metadata?.name}</span>
+                <span className='overflow-hidden text-ellipsis whitespace-nowrap text-[#6F6F6F]'>
+                  {toList[0]?.collectionName || '-'}
+                </span>
               </div>
-              <div className='flex justify-start h-full w-2/5'>
-                <div className='flex flex-col w-[42px] h-[42px] aspect-square'>
-                  {profileOwnerToShow?.photoURL ?
+              <div className='flex h-full w-2/5 justify-start'>
+                <div className='flex aspect-square h-[42px] w-[42px] flex-col'>
+                  {profileOwnerToShow?.photoURL ? (
                     <RoundedCornerMedia
                       containerClasses='shadow-xl border-2 border-white aspect-square'
                       variant={RoundedCornerVariant.Full}
                       amount={RoundedCornerAmount.Medium}
                       src={profileOwnerToShow?.photoURL}
                     />
-                    :
-                    <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
+                  ) : (
+                    <div className='overflow-hidden rounded-full border-2 border-white shadow-xl'>
                       <LoggedInIdenticon customSize={36} round border />
                     </div>
-                  }
+                  )}
                 </div>
                 <div
-                  className={tw(
-                    'flex px-3 items-center',
-                    'cursor-pointer hover:underline'
-                  )}
+                  className={tw('flex items-center px-3', 'cursor-pointer hover:underline')}
                   onClick={() => {
                     if (profileOwnerToShow?.url) {
-                      router.push('/' + profileOwnerToShow?.url);
+                      router.push(`/${profileOwnerToShow?.url}`);
                     } else {
-                      window.open(getEtherscanLink(Number(defaultChainId), toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner, 'address'), '_blank');
+                      window.open(
+                        getEtherscanLink(
+                          Number(defaultChainId),
+                          toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner,
+                          'address'
+                        ),
+                        '_blank'
+                      );
                     }
                   }}
                 >
-                  <span className="text-base whitespace-nowrap text-ellipsis overflow-hidden font-medium leading-5 font-noi-grotesk">
-                    {profileOwnerToShow?.url ?
-                      profileOwnerToShow?.url :
-                      shortenAddress(toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner, isMobile ? 4 : 6) ?? 'Unknown'
-                    }
+                  <span className='overflow-hidden text-ellipsis whitespace-nowrap font-noi-grotesk text-base font-medium leading-5'>
+                    {profileOwnerToShow?.url
+                      ? profileOwnerToShow?.url
+                      : shortenAddress(toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner, isMobile ? 4 : 6) ??
+                        'Unknown'}
                   </span>
                 </div>
               </div>
             </div>
           </div>
-          :
-          <div className='mt-[30vh] w-1/2 flex flex-col justify-center items-center'>
-            <div role="status">
-              <svg aria-hidden="true" className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-[#FDCC00]" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
+        ) : (
+          <div className='mt-[30vh] flex w-1/2 flex-col items-center justify-center'>
+            <div role='status'>
+              <svg
+                aria-hidden='true'
+                className='mr-2 h-8 w-8 animate-spin fill-[#FDCC00] text-gray-200 dark:text-gray-600'
+                viewBox='0 0 100 101'
+                fill='none'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path
+                  d='M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z'
+                  fill='currentColor'
+                />
+                <path
+                  d='M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z'
+                  fill='currentFill'
+                />
               </svg>
-              <span className="sr-only">Loading...</span>
+              <span className='sr-only'>Loading...</span>
             </div>
-            <span className='text-[#6F6F6F] mt-4'>Loading NFT...</span>
+            <span className='mt-4 text-[#6F6F6F]'>Loading NFT...</span>
           </div>
-        }
+        )}
       </div>
     );
   }, [defaultChainId, profileOwnerToShow?.photoURL, profileOwnerToShow?.url, toList]);
 
   const ListingCheckoutInfo = useCallback(() => {
-    return <div className="flex flex-col items-center minlg:mx-auto minmd:w-full mt-10">
-      <div className="flex flex-col items-center w-full">
-        <div className={tw(
-          'mb-16',
-          'w-full flex flex-col items-center')}>
-          <span className='text-lg w-full font-semibold flex text-[#A6A6A6]'>Select Marketplace(s)</span>
-          <div className='flex flex-wrap minlg:flex-nowrap justify-between minlg:flex-row items-start w-full mt-2'>
-            <div className='max-h-[93px] w-[49%] minlg:w-1/4 minlg:mr-2 flex flex-col items-center'>
+    return (
+      <div className='mt-10 flex flex-col items-center minmd:w-full minlg:mx-auto'>
+        <div className='flex w-full flex-col items-center'>
+          <div className={tw('mb-16', 'flex w-full flex-col items-center')}>
+            <span className='flex w-full text-lg font-semibold text-[#A6A6A6]'>Select Marketplace(s)</span>
+            <div className='mt-2 flex w-full flex-wrap items-start justify-between minlg:flex-row minlg:flex-nowrap'>
+              <div className='flex max-h-[93px] w-[49%] flex-col items-center minlg:mr-2 minlg:w-1/4'>
+                <div
+                  onClick={() => {
+                    toggleTargetMarketplace(ExternalProtocol.NFTCOM);
+                    setShowSummary(false);
+                  }}
+                  className={tw(
+                    'max-h-[93px] w-full',
+                    'rounded-xl border-[#D5D5D5] text-lg',
+                    'mt-2 flex cursor-pointer flex-col items-center px-4 py-3',
+                    NFTCOMAtLeastOneEnabled ? 'border-2 border-primary-yellow bg-[#FFF0CB] font-bold' : 'border-2'
+                  )}
+                >
+                  {NFTCOMAtLeastOneEnabled ? (
+                    <NFTLogo
+                      className='relative -my-[4px] mb-[3px] h-[26px] shrink-0'
+                      alt='NFT.com logo'
+                      layout='fill'
+                    />
+                  ) : (
+                    <NFTLogo className='relative -my-[4px] mb-[3px] h-[26px] shrink-0' />
+                  )}
+                  <span className='text-base font-semibold'>NFT.com</span>
+                  <span className='ml-2 text-sm font-medium text-[#6F6F6F]'>
+                    (
+                    {hasGk
+                      ? Number(NFTCOMGKFee) / 100
+                      : myOwnedProfileTokens?.length
+                      ? Number(NFTCOMProfileFee) / 100
+                      : Number(NFTCOMProtocolFee) / 100}
+                    % fee)
+                  </span>
+                </div>
+                <div className='py-1 text-center text-[0.75rem]'>
+                  <span className='text-primary-yellow'>{NFTCOMGKFee / 100}%</span> fee with GK
+                </div>
+                <div className='w-4/5 border-b'></div>
+                <div className='py-1 text-center text-[0.75rem]'>
+                  <span className='text-primary-yellow'>{NFTCOMProfileFee / 100}%</span> fee with profile
+                </div>
+                <div className='w-4/5 border-b'></div>
+                <span className='py-1 text-center text-[0.75rem]'>
+                  {Number(NFTCOMProtocolFee) / 100}% fee without profile
+                </span>
+              </div>
               <div
                 onClick={() => {
-                  toggleTargetMarketplace(ExternalProtocol.NFTCOM);
+                  toggleTargetMarketplace(ExternalProtocol.Seaport);
                   setShowSummary(false);
                 }}
                 className={tw(
-                  'max-h-[93px] w-full',
-                  'border-[#D5D5D5] rounded-xl text-lg',
-                  'px-4 py-3 cursor-pointer mt-2 flex flex-col items-center',
-                  NFTCOMAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
+                  'max-h-[93px] w-[49%] minlg:w-1/4',
+                  'rounded-xl border-[#D5D5D5] text-lg',
+                  'mt-2 flex cursor-pointer flex-col items-center px-4 py-3 minlg:mr-2',
+                  openseaAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
                 )}
               >
-                {NFTCOMAtLeastOneEnabled
-                  ? <NFTLogo
-                    className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]'
-                    alt="NFT.com logo"
-                    layout="fill"
+                {openseaAtLeastOneEnabled ? (
+                  <OpenseaIcon
+                    className='relative -my-[4px] -mb-[3px] h-[1.95rem] shrink-0'
+                    alt='Opensea logo'
+                    layout='fill'
                   />
-                  : <NFTLogo className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]' />}
-                <span className='font-semibold text-base'>NFT.com</span>
-                <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>({hasGk ? Number(NFTCOMGKFee) / 100 : myOwnedProfileTokens?.length ? Number(NFTCOMProfileFee) / 100 : Number(NFTCOMProtocolFee) / 100}% fee)</span>
+                ) : (
+                  <OpenSeaGray className='relative -mt-[1px] shrink-0' />
+                )}
+                <span className='text-base font-semibold'>Opensea</span>
+                <span className='ml-2 text-sm font-medium text-[#6F6F6F]'>(2.5% fee)</span>
               </div>
-              <div className='text-[0.75rem] text-center py-1'><span className='text-primary-yellow'>{NFTCOMGKFee / 100}%</span> fee with GK</div>
-              <div className='border-b w-4/5'></div>
-              <div className='text-[0.75rem] text-center py-1'><span className='text-primary-yellow'>{NFTCOMProfileFee / 100}%</span> fee with profile</div>
-              <div className='border-b w-4/5'></div>
-              <span className='text-[0.75rem] text-center py-1'>{Number(NFTCOMProtocolFee) / 100}% fee without profile</span>
-            </div>
-            <div
-              onClick={() => {
-                toggleTargetMarketplace(ExternalProtocol.Seaport);
-                setShowSummary(false);
-              }}
-              className={tw(
-                'max-h-[93px] w-[49%] minlg:w-1/4',
-                'border-[#D5D5D5] rounded-xl text-lg',
-                'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
-                openseaAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
-              )}
-            >
-              {openseaAtLeastOneEnabled
-                ? <OpenseaIcon
-                  className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
-                  alt="Opensea logo"
-                  layout="fill"
-                />
-                : <OpenSeaGray className='relative shrink-0 -mt-[1px]' />}
-              <span className='font-semibold text-base'>Opensea</span>
-              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2.5% fee)</span>
-            </div>
-            <div
-              onClick={() => {
-                toggleTargetMarketplace(ExternalProtocol.LooksRare);
-                setShowSummary(false);
-              }}
-              className={tw(
-                'mt-[100px] max-h-[93px] w-[49%] minlg:w-1/4',
-                'border-[#D5D5D5] rounded-xl text-lg',
-                'px-4 py-3 cursor-pointer minlg:mt-2 minlg:mr-2 flex flex-col items-center',
-                looksrareAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
-              )}
-            >
-              {looksrareAtLeastOneEnabled
-                ? <LooksrareIcon
-                  className='h-[1.97rem] relative shrink-0 -my-[4px] -mb-[3px]'
-                  alt="Looksrare logo"
-                  layout="fill"
-                />
-                :
-                <LooksrareGray className='h-[1.8rem] relative shrink-0 -mb-[4px]' />}
-              <span className='font-semibold text-base'>Looksrare</span>
-              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
-            </div>
-            <div
-              onClick={() => {
-                toggleTargetMarketplace(ExternalProtocol.X2Y2);
-                setShowSummary(false);
-              }}
-              className={tw(
-                'mt-[100px] max-h-[93px] w-[49%] minlg:w-1/4',
-                'border-[#D5D5D5] rounded-xl text-lg',
-                'px-4 pt-3 py-3 cursor-pointer minlg:mt-2 flex flex-col items-center',
-                X2Y2AtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
-              )}
-            >
-              {X2Y2AtLeastOneEnabled
-                ? <X2Y2Icon className='h-[1.5rem] relative shrink-0 mb-[2px]' /> :
-                <X2Y2Gray className='h-[1.5rem] relative shrink-0 mb-[2px]' />}
-              <span className='font-semibold text-base'>X2Y2</span>
-              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
-            </div>
-          </div>
-        </div>
-        <div className='w-full flex flex-col mt-8 items-center'>
-          <div className='w-full flex justify-between'>
-            <span className={tw(
-              NFTCOMAtLeastOneEnabled && getEnvBool(Doppler.NEXT_PUBLIC_NFTCOM_NO_EXPIRATION_LISTING_ENABLED) ? '' : 'w-full',
-              'text-lg flex font-semibold')}>Set Duration</span>
-            {NFTCOMAtLeastOneEnabled && getEnvBool(Doppler.NEXT_PUBLIC_NFTCOM_NO_EXPIRATION_LISTING_ENABLED) ?
-              <div className='flex'>
-                <Switch
-                  left=""
-                  right="No Expiration on "
-                  enabled={noExpirationNFTCOM}
-                  setEnabled={() => {
-                    setNoExpirationNFTCOM(!noExpirationNFTCOM);
-                  }}
-                />
-                <NFTLogo className='h-[26px] relative shrink-0 -my-[4px] -mb-[3px] ml-2' />
-              </div>
-              : null}
-          </div>
-          <div className='mt-8 w-[93%] minlg:w-full'>
-            <Slider
-              trackStyle={[{ backgroundColor: '#F9D54C' }]}
-              handleStyle={[{ backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }, { backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }]}
-              marks={{ 1: '1 Day', 30: '|', 60: '|', 90: '|', 120: '|', 150: '|', 180: '180 Days' }}
-              min={1}
-              max={180}
-              defaultValue={30}
-              handleRender={handleRender}
-              onChange={(value) => setDuration(value as number)}
-            />
-          </div>
-        </div>
-        <div className='flex flex-col items-start w-full mb-10'>
-          <span className='text-2xl w-full flex font-bold mt-20 minlg:mt-10 mb-8'>Your Listings</span>
-          <div className="text-sm w-full">
-            {filterNulls(toList).map((listing, index) => {
-              return (
-                <ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
+              <div
+                onClick={() => {
+                  toggleTargetMarketplace(ExternalProtocol.LooksRare);
                   setShowSummary(false);
-                }} />
-              );
-            })}
+                }}
+                className={tw(
+                  'mt-[100px] max-h-[93px] w-[49%] minlg:w-1/4',
+                  'rounded-xl border-[#D5D5D5] text-lg',
+                  'flex cursor-pointer flex-col items-center px-4 py-3 minlg:mr-2 minlg:mt-2',
+                  looksrareAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
+                )}
+              >
+                {looksrareAtLeastOneEnabled ? (
+                  <LooksrareIcon
+                    className='relative -my-[4px] -mb-[3px] h-[1.97rem] shrink-0'
+                    alt='Looksrare logo'
+                    layout='fill'
+                  />
+                ) : (
+                  <LooksrareGray className='relative -mb-[4px] h-[1.8rem] shrink-0' />
+                )}
+                <span className='text-base font-semibold'>Looksrare</span>
+                <span className='ml-2 text-sm font-medium text-[#6F6F6F]'>(2% fee)</span>
+              </div>
+              <div
+                onClick={() => {
+                  toggleTargetMarketplace(ExternalProtocol.X2Y2);
+                  setShowSummary(false);
+                }}
+                className={tw(
+                  'mt-[100px] max-h-[93px] w-[49%] minlg:w-1/4',
+                  'rounded-xl border-[#D5D5D5] text-lg',
+                  'flex cursor-pointer flex-col items-center px-4 py-3 pt-3 minlg:mt-2',
+                  X2Y2AtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
+                )}
+              >
+                {X2Y2AtLeastOneEnabled ? (
+                  <X2Y2Icon className='relative mb-[2px] h-[1.5rem] shrink-0' />
+                ) : (
+                  <X2Y2Gray className='relative mb-[2px] h-[1.5rem] shrink-0' />
+                )}
+                <span className='text-base font-semibold'>X2Y2</span>
+                <span className='ml-2 text-sm font-medium text-[#6F6F6F]'>(0.5% fee)</span>
+              </div>
+            </div>
           </div>
+          <div className='mt-8 flex w-full flex-col items-center'>
+            <div className='flex w-full justify-between'>
+              <span
+                className={tw(
+                  NFTCOMAtLeastOneEnabled && getEnvBool(Doppler.NEXT_PUBLIC_NFTCOM_NO_EXPIRATION_LISTING_ENABLED)
+                    ? ''
+                    : 'w-full',
+                  'flex text-lg font-semibold'
+                )}
+              >
+                Set Duration
+              </span>
+              {NFTCOMAtLeastOneEnabled && getEnvBool(Doppler.NEXT_PUBLIC_NFTCOM_NO_EXPIRATION_LISTING_ENABLED) ? (
+                <div className='flex'>
+                  <Switch
+                    left=''
+                    right='No Expiration on '
+                    enabled={noExpirationNFTCOM}
+                    setEnabled={() => {
+                      setNoExpirationNFTCOM(!noExpirationNFTCOM);
+                    }}
+                  />
+                  <NFTLogo className='relative -my-[4px] -mb-[3px] ml-2 h-[26px] shrink-0' />
+                </div>
+              ) : null}
+            </div>
+            <div className='mt-8 w-[93%] minlg:w-full'>
+              <Slider
+                trackStyle={[{ backgroundColor: '#F9D54C' }]}
+                handleStyle={[
+                  { backgroundColor: 'black', border: 'none', width: '15px', height: '15px' },
+                  { backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }
+                ]}
+                marks={{ 1: '1 Day', 30: '|', 60: '|', 90: '|', 120: '|', 150: '|', 180: '180 Days' }}
+                min={1}
+                max={180}
+                defaultValue={30}
+                handleRender={handleRender}
+                onChange={value => setDuration(value as number)}
+              />
+            </div>
+          </div>
+          <div className='mb-10 flex w-full flex-col items-start'>
+            <span className='mb-8 mt-20 flex w-full text-2xl font-bold minlg:mt-10'>Your Listings</span>
+            <div className='w-full text-sm'>
+              {filterNulls(toList).map((listing, index) => {
+                return (
+                  <ListingCheckoutNftTableRow
+                    key={index}
+                    listing={listing}
+                    onPriceChange={() => {
+                      setShowSummary(false);
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          {(isNullOrEmpty(toList) || toList.length === 0) && (
+            <div className='mb-12 flex flex-col items-center justify-center'>
+              <NoActivityIcon className='h-[300px]' />
+              <span className='mb-2 mt-5 flex items-center justify-center font-noi-grotesk text-lg font-medium text-[#4D4D4D]'>
+                You haven’t added any listings yet
+              </span>
+            </div>
+          )}
+          {(!showSummary || allListingsFail) && toList.length > 0 && (
+            <div className='mt-[10%] w-full pb-8'>
+              <Button
+                size={ButtonSize.LARGE}
+                label={'Start Listing'}
+                disabled={!allListingsConfigured()}
+                onClick={async () => {
+                  await prepareListings();
+                  if (allListingsFail) {
+                    setAllListingsFail(false);
+                  }
+                  setShowSummary(true);
+                }}
+                type={ButtonType.PRIMARY}
+                stretch
+              />
+            </div>
+          )}
         </div>
-        {
-          (isNullOrEmpty(toList) || toList.length === 0) && <div className='flex flex-col items-center justify-center mb-12'>
-            <NoActivityIcon className='h-[300px]' />
-            <span className='text-lg font-medium font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]'>You haven’t added any listings yet</span>
-          </div>
-        }
-        {(!showSummary || allListingsFail) && toList.length > 0 && <div className='w-full pb-8 mt-[10%]'>
-          <Button
-            size={ButtonSize.LARGE}
-            label={'Start Listing'}
-            disabled={!allListingsConfigured()}
-            onClick={async () => {
-              await prepareListings();
-              if (allListingsFail) {
-                setAllListingsFail(false);
-              }
-              setShowSummary(true);
-            }}
-            type={ButtonType.PRIMARY}
-            stretch
-          /></div>}
+        {showSummary && toList.length > 0 && (
+          <NFTListingsCartSummaryModal
+            visible={showSummary && toList.length > 0 && !allListingsFail}
+            onClose={() => setShowSummary(false)}
+          />
+        )}
       </div>
-      {showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0 && !allListingsFail} onClose={() => setShowSummary(false)} />}
-    </div>;
-  }, [NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, allListingsFail, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
+    );
+  }, [
+    NFTCOMAtLeastOneEnabled,
+    NFTCOMGKFee,
+    NFTCOMProfileFee,
+    NFTCOMProtocolFee,
+    X2Y2AtLeastOneEnabled,
+    allListingsConfigured,
+    allListingsFail,
+    hasGk,
+    looksrareAtLeastOneEnabled,
+    myOwnedProfileTokens?.length,
+    noExpirationNFTCOM,
+    openseaAtLeastOneEnabled,
+    prepareListings,
+    setAllListingsFail,
+    setDuration,
+    setNoExpirationNFTCOM,
+    showSummary,
+    toList,
+    toggleTargetMarketplace
+  ]);
 
   return (
-    <div className='flex w-full justify-between h-full'>
+    <div className='flex h-full w-full justify-between'>
       {toList.length === 1 && ListingOneNFT()}
-      {(toList.length === 0 || toList.length > 1) && <div className='hidden minlg:block w-1/5 mt-20'>
-        <h1
-          className='text-xl font-semibold font-noi-grotesk cursor-pointer ml-28'
-          onClick={() => {
-            router.back();
-          }}>
-          Back
-        </h1>
-      </div>}
-      <div className={tw(
-        toList.length === 1 ? 'minlg:px-[5%]' : 'minlg:px-2 minxl:px-4',
-        'w-full flex flex-col justify-start items-center minlg:w-3/5 minxxl:px-28')}>
-        <div className='w-full minlg:mt-20 flex minlg:block justify-start items-end minlg:items-center minlg:mx-auto'>
-          <span
-            className='minlg:hidden text-lg font-semibold font-noi-grotesk cursor-pointer minlg:ml-28'
+      {(toList.length === 0 || toList.length > 1) && (
+        <div className='mt-20 hidden w-1/5 minlg:block'>
+          <h1
+            className='ml-28 cursor-pointer font-noi-grotesk text-xl font-semibold'
             onClick={() => {
               router.back();
-            }}>
+            }}
+          >
+            Back
+          </h1>
+        </div>
+      )}
+      <div
+        className={tw(
+          toList.length === 1 ? 'minlg:px-[5%]' : 'minlg:px-2 minxl:px-4',
+          'flex w-full flex-col items-center justify-start minlg:w-3/5 minxxl:px-28'
+        )}
+      >
+        <div className='flex w-full items-end justify-start minlg:mx-auto minlg:mt-20 minlg:block minlg:items-center'>
+          <span
+            className='cursor-pointer font-noi-grotesk text-lg font-semibold minlg:ml-28 minlg:hidden'
+            onClick={() => {
+              router.back();
+            }}
+          >
             Back
           </span>
-          <h1 className='text-2xl minlg:text-3xl pl-12 minlg:pl-0 font-semibold font-noi-grotesk'>Create Listings</h1>
+          <h1 className='pl-12 font-noi-grotesk text-2xl font-semibold minlg:pl-0 minlg:text-3xl'>Create Listings</h1>
         </div>
         {ListingCheckoutInfo()}
-        {NFTCOMAtLeastOneEnabled && decreasingPriceError ?
-          <div className='px-2 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4'>
-            <ErrorIcon className='relative shrink-0 mr-2' />
+        {NFTCOMAtLeastOneEnabled && decreasingPriceError ? (
+          <div className='-mt-4 mb-4 flex max-h-[5rem] min-h-[3rem] w-full items-center rounded border border-[#E43D20] bg-[#FFF8F7] px-2 font-noi-grotesk font-medium text-[#E43D20]'>
+            <ErrorIcon className='relative mr-2 shrink-0' />
             Start Price should be higher than End Price
           </div>
-          : null}
-        {NFTCOMAtLeastOneEnabled && englishAuctionError ?
-          <div className='px-2 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4'>
-            <ErrorIcon className='relative shrink-0 mr-2' />
+        ) : null}
+        {NFTCOMAtLeastOneEnabled && englishAuctionError ? (
+          <div className='-mt-4 mb-4 flex max-h-[5rem] min-h-[3rem] w-full items-center rounded border border-[#E43D20] bg-[#FFF8F7] px-2 font-noi-grotesk font-medium text-[#E43D20]'>
+            <ErrorIcon className='relative mr-2 shrink-0' />
             Reserve Price Price should be higher than Buy Now Price
           </div>
-          : null}
-        {allListingsFail &&
-          <div className='px-2 py-2.5 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4'>
-            <ErrorIcon className='relative shrink-0 mr-2' />
+        ) : null}
+        {allListingsFail && (
+          <div className='-mt-4 mb-4 flex max-h-[5rem] min-h-[3rem] w-full items-center rounded border border-[#E43D20] bg-[#FFF8F7] px-2 py-2.5 font-noi-grotesk font-medium text-[#E43D20]'>
+            <ErrorIcon className='relative mr-2 shrink-0' />
             <div className='flex flex-col'>
               <p>There was an error while creating your listing{toList.length > 1 && 's'}.</p>
               <p
@@ -427,15 +528,15 @@ export function ListingCheckout() {
                   setAllListingsFail(false);
                   setShowSummary(true);
                 }}
-                className='underline hover:cursor-pointer w-max'
+                className='w-max underline hover:cursor-pointer'
               >
                 Please try again
               </p>
             </div>
           </div>
-        }
+        )}
       </div>
-      {(toList.length === 0 || toList.length > 1) && <div className='hidden minlg:block w-1/5 mt-20'></div>}
+      {(toList.length === 0 || toList.length > 1) && <div className='mt-20 hidden w-1/5 minlg:block'></div>}
     </div>
   );
 }

@@ -1,3 +1,8 @@
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import dynamic from 'next/dynamic';
+import { CheckCircle, Warning } from 'phosphor-react';
+
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { ResultsDropDownDisplay } from 'components/modules/Search/ResultsDropDownDisplay';
@@ -9,25 +14,26 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { isNullOrEmpty } from 'utils/format';
 import { cl } from 'utils/tw';
 
-import dynamic from 'next/dynamic';
-import { CheckCircle, Warning } from 'phosphor-react';
-import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-
-const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof ResultsDropDownDisplay>>(() => import('components/modules/Search/ResultsDropDownDisplay').then(mod => mod.ResultsDropDownDisplay));
+const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof ResultsDropDownDisplay>>(() =>
+  import('components/modules/Search/ResultsDropDownDisplay').then(mod => mod.ResultsDropDownDisplay)
+);
 
 type AssociatedProfileSelectProps = {
   profileId: string;
   associatedContract?: string;
   onAssociatedContract: () => void;
 };
-export default function AssociatedProfileSelect({ profileId, associatedContract, onAssociatedContract }: AssociatedProfileSelectProps) {
+export default function AssociatedProfileSelect({
+  profileId,
+  associatedContract,
+  onAssociatedContract
+}: AssociatedProfileSelectProps) {
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const { updateProfile } = useUpdateProfileMutation();
   const defaultChainId = useDefaultChainId();
   const { data: collectionQueryData } = useCollectionQuery({
     chainId: defaultChainId,
-    contract: associatedContract,
+    contract: associatedContract
   });
 
   // formState and searchState are separate to allow click to set formState without triggering another search
@@ -40,7 +46,7 @@ export default function AssociatedProfileSelect({ profileId, associatedContract,
   const debouncedSearch = useDebounce(searchState.associatedCollectionSearch, 250);
 
   const [searchResults, setSearchResults] = useState({} as any);
-  const [selectedResult, setSelectedResult] = useState<{id: string, contractAddr: string, logoUrl: string}>();
+  const [selectedResult, setSelectedResult] = useState<{ id: string; contractAddr: string; logoUrl: string }>();
   const [error, setError] = useState<boolean | undefined>();
 
   useEffect(() => {
@@ -65,34 +71,43 @@ export default function AssociatedProfileSelect({ profileId, associatedContract,
         query_by: 'contractAddr,contractName',
         filter_by: 'isOfficial:true',
         per_page: 5,
-        page: 1,
-      })
-        .then((results) => {
-          setSearchResults(results);
-        });
+        page: 1
+      }).then(results => {
+        setSearchResults(results);
+      });
     } else {
       setSearchResults({});
     }
   }, [fetchTypesenseSearch, debouncedSearch]);
 
   const validationHelpContent = useCallback(() => {
-    if(isNullOrEmpty(searchState.associatedCollectionSearch)){
+    if (isNullOrEmpty(searchState.associatedCollectionSearch)) {
       return null;
     }
 
-    if(error){
+    if (error) {
       return (
         <>
-          <p className='text-[#DD0F70] mt-1 text-xs font-noi-grotesk'>Please select a collection from the dropdown</p>
-          <Warning size={25} className='mr-3 rounded-full absolute box-border top-[4.7rem] right-0' weight="fill" color='#DD0F70' />
+          <p className='mt-1 font-noi-grotesk text-xs text-[#DD0F70]'>Please select a collection from the dropdown</p>
+          <Warning
+            size={25}
+            className='absolute right-0 top-[4.7rem] mr-3 box-border rounded-full'
+            weight='fill'
+            color='#DD0F70'
+          />
         </>
       );
     }
 
     return (
       <>
-        <p className='text-[#0E8344] mt-1 text-xs font-noi-grotesk'>Valid collection</p>
-        <CheckCircle size={25} className='mr-3 rounded-full absolute box-border top-[4.7rem] right-0' color='green' weight="fill" />
+        <p className='mt-1 font-noi-grotesk text-xs text-[#0E8344]'>Valid collection</p>
+        <CheckCircle
+          size={25}
+          className='absolute right-0 top-[4.7rem] mr-3 box-border rounded-full'
+          color='green'
+          weight='fill'
+        />
       </>
     );
   }, [error, searchState]);
@@ -118,7 +133,7 @@ export default function AssociatedProfileSelect({ profileId, associatedContract,
     e.preventDefault();
   };
 
-  const onItemListClickHandler = (searchDoc) => {
+  const onItemListClickHandler = searchDoc => {
     setFormState({
       associatedCollectionSearch: searchDoc.contractName
     });
@@ -141,7 +156,7 @@ export default function AssociatedProfileSelect({ profileId, associatedContract,
       onAssociatedContract();
       updateProfile({
         id: profileId,
-        associatedContract: selectedResult.contractAddr,
+        associatedContract: selectedResult.contractAddr
       });
     }
     resetState();
@@ -150,40 +165,48 @@ export default function AssociatedProfileSelect({ profileId, associatedContract,
   return (
     <div className='w-full'>
       <div className='relative mb-3'>
-        <h3 className='text-blog-text-reskin text-base font-semibold tracking-wide mb-1'>
-          Select NFT Collection
-        </h3>
+        <h3 className='mb-1 text-base font-semibold tracking-wide text-blog-text-reskin'>Select NFT Collection</h3>
         <form onSubmit={onSubmitHandler}>
-          <label htmlFor='associatedCollectionSearch' className='text-blog-text-reskin mb-4 inline-block'>Enter Collection address or name</label>
+          <label htmlFor='associatedCollectionSearch' className='mb-4 inline-block text-blog-text-reskin'>
+            Enter Collection address or name
+          </label>
           <input
             id='associatedCollectionSearch'
-            name ='associatedCollectionSearch'
+            name='associatedCollectionSearch'
             type='text'
-            className={cl('box-border shadow appearance-none border border-[#D5D5D5] rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline  placeholder:font-mono placeholder:text-sm pr-10',
+            className={cl(
+              'focus:shadow-outline box-border w-full appearance-none rounded-[10px] border border-[#D5D5D5] px-3 py-2 pr-10 leading-tight text-gray-700 shadow  placeholder:font-mono placeholder:text-sm focus:outline-none',
               {
                 'indent-7': selectedResult,
-                'border-[#DD0F70] focus:ring-[#DD0F70] focus:ring-1 focus:border-[#DD0F70]': hasFormBeenChanged && error,
-                'border-[#0E8344] focus:ring-[#0E8344] focus:ring-1 focus:border-[#0E8344]': hasFormBeenChanged() && !error
+                'border-[#DD0F70] focus:border-[#DD0F70] focus:ring-1 focus:ring-[#DD0F70]':
+                  hasFormBeenChanged && error,
+                'border-[#0E8344] focus:border-[#0E8344] focus:ring-1 focus:ring-[#0E8344]':
+                  hasFormBeenChanged() && !error
               }
             )}
             onChange={onChangeHandler}
-            value={formState.associatedCollectionSearch} />
-          {selectedResult && <div className="absolute min-w-[34px] w-[34px] h-[34x] rounded-[16px] top-[4.36rem] left-[.2rem] overflow-hidden">
-            <RoundedCornerMedia
-              variant={RoundedCornerVariant.None}
-              width={600}
-              height={600}
-              containerClasses='w-[100%] h-[100%]'
-              src={selectedResult.logoUrl}
-            />
-          </div>}
+            value={formState.associatedCollectionSearch}
+          />
+          {selectedResult && (
+            <div className='absolute left-[.2rem] top-[4.36rem] h-[34x] w-[34px] min-w-[34px] overflow-hidden rounded-[16px]'>
+              <RoundedCornerMedia
+                variant={RoundedCornerVariant.None}
+                width={600}
+                height={600}
+                containerClasses='w-[100%] h-[100%]'
+                src={selectedResult.logoUrl}
+              />
+            </div>
+          )}
           {validationHelpContent()}
         </form>
-        {!!searchResults?.found && <DynamicResultsDropDown
-          isHeader={false}
-          searchResults={[searchResults]}
-          itemListOnClick={onItemListClickHandler}
-        />}
+        {!!searchResults?.found && (
+          <DynamicResultsDropDown
+            isHeader={false}
+            searchResults={[searchResults]}
+            itemListOnClick={onItemListClickHandler}
+          />
+        )}
       </div>
       <Button
         type={ButtonType.PRIMARY}

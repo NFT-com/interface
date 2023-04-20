@@ -1,11 +1,11 @@
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+import useSWRImmutable from 'swr/immutable';
+
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/format';
-
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import useSWRImmutable from 'swr/immutable';
 
 export default function ConfirmEmailPage() {
   const router = useRouter();
@@ -19,11 +19,13 @@ export default function ConfirmEmailPage() {
     }
 
     try {
-      const result = await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/verify/${email}/${token}`);
-      if (Number(result.status) == 200) {
+      const result = await fetch(
+        `${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/verify/${email}/${token}`
+      );
+      if (Number(result.status) === 200) {
         toast.success('Success! Your email is successfully verified!');
 
-        setTimeout(function() {
+        setTimeout(function () {
           // 2 second delay
           router.push('/app/discover');
         }, 2000);
@@ -41,20 +43,19 @@ export default function ConfirmEmailPage() {
 
   const success = data;
 
-  return <div className="flex flex-col h-full w-full items-center md:justify-start justify-center">
-    {success ?
-      <div>Success! Your email is successfully verified! Redirecting to NFT.com...</div> :
-      loading ?
-        <div>Loading...</div> :
+  return (
+    <div className='flex h-full w-full flex-col items-center justify-center md:justify-start'>
+      {success ? (
+        <div>Success! Your email is successfully verified! Redirecting to NFT.com...</div>
+      ) : loading ? (
+        <div>Loading...</div>
+      ) : (
         <div>Error: {message}</div>
-    }
-  </div>;
+      )}
+    </div>
+  );
 }
 
 ConfirmEmailPage.getLayout = function getLayout(page) {
-  return (
-    <DefaultLayout>
-      { page }
-    </DefaultLayout>
-  );
+  return <DefaultLayout>{page}</DefaultLayout>;
 };

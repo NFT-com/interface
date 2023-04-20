@@ -1,3 +1,7 @@
+import { useCallback, useContext } from 'react';
+import useSWR from 'swr';
+import { useProvider } from 'wagmi';
+
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useHasGk } from 'hooks/useHasGk';
@@ -7,30 +11,24 @@ import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltie
 
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 
-import { useCallback, useContext } from 'react';
-import useSWR from 'swr';
-import { useProvider } from 'wagmi';
-
 export function PurchaseSummary() {
-  const {
-    toBuy,
-    togglePurchaseSummaryModal,
-  } = useContext(NFTPurchasesContext);
+  const { toBuy, togglePurchaseSummaryModal } = useContext(NFTPurchasesContext);
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { data: nftComRoyalties } = useNftComRoyalties(toBuy, true);
   const { getByContractAddress } = useSupportedCurrencies();
   const hasGk = useHasGk();
-  
+
   const { data: looksrareProtocolFeeBps } = useSWR(
-    'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
+    `LooksrareProtocolFeeBps${String(looksrareStrategy == null)}`,
     async () => {
-      return await looksrareStrategy.viewProtocolFee();
+      return looksrareStrategy.viewProtocolFee();
     },
     {
       refreshInterval: 0,
-      revalidateOnFocus: false,
-    });
+      revalidateOnFocus: false
+    }
+  );
 
   const getTotalPriceUSD = useCallback(() => {
     return getTotalFormattedPriceUSD(toBuy, getByContractAddress);
@@ -47,37 +45,61 @@ export function PurchaseSummary() {
   const getSummaryContent = useCallback(() => {
     // Cost Summary, Default view
     return (
-      <div className="flex flex-col w-full mx-2">
-        <div className="flex items-center justify-between text-sm mb-4">
-          <div className="flex flex-col">
+      <div className='mx-2 flex w-full flex-col'>
+        <div className='mb-4 flex items-center justify-between text-sm'>
+          <div className='flex flex-col'>
             <span className='font-normal'>Subtotal</span>
           </div>
-          <div className="flex flex-col align-end">
-            <span className='font-normal'>{'$' + (Number(getTotalPriceUSD()) - Number(getTotalRoyalties()) - Number(getTotalMarketplaceFees()))?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
+          <div className='align-end flex flex-col'>
+            <span className='font-normal'>
+              {`$${(
+                Number(getTotalPriceUSD()) -
+                Number(getTotalRoyalties()) -
+                Number(getTotalMarketplaceFees())
+              )?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}`}
+            </span>
           </div>
         </div>
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex flex-col">
-            <span className='font-normal text-[#6F6F6F] text-sm'>Marketplace Fees</span>
+        <div className='flex items-center justify-between text-xs'>
+          <div className='flex flex-col'>
+            <span className='text-sm font-normal text-[#6F6F6F]'>Marketplace Fees</span>
           </div>
-          <div className="flex flex-col align-end">
-            <span className='font-normal text-[#6F6F6F]'>+ {'$' + getTotalMarketplaceFees()?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
-          </div>
-        </div>
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex flex-col">
-            <span className='font-normal text-[#6F6F6F] text-sm'>Creator Royalties</span>
-          </div>
-          <div className="flex flex-col align-end">
-            <span className='font-normal text-[#6F6F6F]'>+ {'$' + getTotalRoyalties()?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
+          <div className='align-end flex flex-col'>
+            <span className='font-normal text-[#6F6F6F]'>
+              +{' '}
+              {`$${getTotalMarketplaceFees()?.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4
+              })}`}
+            </span>
           </div>
         </div>
-        <div className="flex items-center justify-between mt-6">
-          <div className="flex flex-col">
-            <span className='font-medium text-sm'>Total Price</span>
+        <div className='flex items-center justify-between text-xs'>
+          <div className='flex flex-col'>
+            <span className='text-sm font-normal text-[#6F6F6F]'>Creator Royalties</span>
           </div>
-          <div className="flex flex-col align-end text-lg">
-            <span className='font-bold'>${(Number(getTotalPriceUSD()))?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
+          <div className='align-end flex flex-col'>
+            <span className='font-normal text-[#6F6F6F]'>
+              +{' '}
+              {`$${getTotalRoyalties()?.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4
+              })}`}
+            </span>
+          </div>
+        </div>
+        <div className='mt-6 flex items-center justify-between'>
+          <div className='flex flex-col'>
+            <span className='text-sm font-medium'>Total Price</span>
+          </div>
+          <div className='align-end flex flex-col text-lg'>
+            <span className='font-bold'>
+              $
+              {Number(getTotalPriceUSD())?.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4
+              })}
+            </span>
           </div>
         </div>
       </div>
@@ -85,9 +107,9 @@ export function PurchaseSummary() {
   }, [getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties]);
 
   return (
-    <div className='flex flex-col items-center mx-7 my-7'>
+    <div className='m-7 flex flex-col items-center'>
       {getSummaryContent()}
-      <span className='font-medium font-noi-grotesk self-center text-sm my-7 mx-1'>
+      <span className='mx-1 my-7 self-center font-noi-grotesk text-sm font-medium'>
         Once the transaction is confirmed, the NFT will be sent to your wallet instantly.
       </span>
       <Button

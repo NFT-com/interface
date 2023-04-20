@@ -1,44 +1,45 @@
-import { useSearchModal } from 'hooks/state/useSearchModal';
-import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
-
-import { Button,ButtonSize,ButtonType } from 'components/elements/Button';
-import useWindowDimensions from 'hooks/useWindowDimensions';
-
-import { X } from 'phosphor-react';
 import { useState } from 'react';
+import { X } from 'phosphor-react';
+
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
+import { useSearchModal } from 'hooks/state/useSearchModal';
+import useWindowDimensions from 'hooks/useWindowDimensions';
+import { tw } from 'utils/tw';
+
+('utils/typeSenseAdapters');
 
 const IdFilter = (props: {
-  setId: (id: string) => void,
-  clearedFilters: boolean,
-  setClearedFilters: (boolean) => void,
-  id_nftName: string,
-  screenWidth: number,
-  setInputValue: (string) => void,
+  setId: (id: string) => void;
+  clearedFilters: boolean;
+  setClearedFilters: (boolean) => void;
+  id_nftName: string;
+  screenWidth: number;
+  setInputValue: (string) => void;
 }) => {
   const { setId, clearedFilters, setClearedFilters, id_nftName, screenWidth, setInputValue } = props;
   const [value, setValue] = useState(id_nftName);
   return (
-    <div className={tw(
-      'relative flex items-center rounded-xl p-3 w-full text-black bg-gray-100')}>
-      <div className="w-full">
+    <div className={tw('relative flex w-full items-center rounded-xl bg-gray-100 p-3 text-black')}>
+      <div className='w-full'>
         <input
-          type="search"
-          placeholder="Search by name or ID"
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
+          type='search'
+          placeholder='Search by name or ID'
+          autoComplete='off'
+          autoCorrect='off'
+          autoCapitalize='off'
+          spellCheck='false'
           autoFocus
           value={clearedFilters ? '' : screenWidth >= 900 ? id_nftName : value}
-          required maxLength={512}
-          className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-          onChange={(event) => {
+          required
+          maxLength={512}
+          className='w-full border-none bg-inherit p-0 focus:border-transparent focus:ring-0'
+          onChange={event => {
             screenWidth >= 900 ? setId(event.target.value) : setValue(event.target.value);
             setClearedFilters(false);
             setInputValue(event.target.value);
           }}
-          onKeyUp={(event) => {
-            if (event.keyCode === 13){
+          onKeyUp={event => {
+            if (event.keyCode === 13) {
               setId(value);
               setClearedFilters(false);
             }
@@ -56,54 +57,57 @@ export const CollectionsFiltersContent = () => {
   const [inputValue, setInputValue] = useState('');
 
   const setId = (id_nftName: string) => {
-    setCollectionPageAppliedFilters('',id_nftName, false);
+    setCollectionPageAppliedFilters('', id_nftName, false);
   };
 
   return (
     <>
-      <div className="flex flex-col w-full">
+      <div className='flex w-full flex-col'>
         <div
-          className="flex w-full minlg:hidden p-5 justify-end cursor-pointer"
+          className='flex w-full cursor-pointer justify-end p-5 minlg:hidden'
           onClick={() => {
             setSearchModalOpen(false, 'collectionFilters');
-          }}>
-          <X
-            className='hover:cursor-pointer' size={32} color="black" weight="bold" />
+          }}
+        >
+          <X className='hover:cursor-pointer' size={32} color='black' weight='bold' />
         </div>
-        <div className="block minlg:hidden font-noi-grotesk font-black text-4xl self-start px-4">Filter</div>
-        <div className="px-4 flex flex-col my-7">
-          <div className="self-start font-black text-xl font-noi-grotesk mb-4">Search for NFTs</div>
+        <div className='block self-start px-4 font-noi-grotesk text-4xl font-black minlg:hidden'>Filter</div>
+        <div className='my-7 flex flex-col px-4'>
+          <div className='mb-4 self-start font-noi-grotesk text-xl font-black'>Search for NFTs</div>
           <IdFilter
             setId={setId}
             clearedFilters={clearedFilters}
             setClearedFilters={setClearedFilters}
             id_nftName={id_nftName}
             screenWidth={screenWidth}
-            setInputValue={setInputValue}/>
+            setInputValue={setInputValue}
+          />
         </div>
         <div
-          onClick={() =>{
+          onClick={() => {
             setInputValue('');
             setClearedFilters(true);
             setSearchModalOpen(false, 'collectionFilters');
-            setCollectionPageAppliedFilters('','', false);
+            setCollectionPageAppliedFilters('', '', false);
           }}
-          className="px-4 self-start font-black text-xl font-noi-grotesk cursor-pointer text-blog-text-reskin">
+          className='cursor-pointer self-start px-4 font-noi-grotesk text-xl font-black text-blog-text-reskin'
+        >
           Clear filter
         </div>
-        <span className="minlg:hidden px-5 mt-10 text-xs text-gray-400">Press enter for results</span>
-        <div className="minlg:hidden px-4 mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
+        <span className='mt-10 px-5 text-xs text-gray-400 minlg:hidden'>Press enter for results</span>
+        <div className='mx-auto mt-9 flex w-full justify-center px-4 font-medium minlg:hidden minxl:w-1/4'>
           <Button
             size={ButtonSize.LARGE}
             scaleOnHover
             stretch={true}
             label={'Filter'}
             onClick={() => {
-              setCollectionPageAppliedFilters('',inputValue, false);
+              setCollectionPageAppliedFilters('', inputValue, false);
             }}
             type={ButtonType.PRIMARY}
           />
         </div>
       </div>
-    </>);
+    </>
+  );
 };

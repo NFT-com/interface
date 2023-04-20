@@ -1,8 +1,8 @@
-import { ProfileContext } from 'components/modules/Profile/ProfileContext';
-
 import React, { PropsWithChildren, ReactElement, useContext, useRef } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useDrag, useDrop } from 'react-dnd';
+
+import { ProfileContext } from 'components/modules/Profile/ProfileContext';
 
 export type GridDragObject = {
   id: string; // NFT ID
@@ -11,9 +11,9 @@ export type GridDragObject = {
 };
 
 type DraggableGridItemProps = {
-  item: GridDragObject,
-  onMoveItem: (fromId: string, toId: string) => void,
-}
+  item: GridDragObject;
+  onMoveItem: (fromId: string, toId: string) => void;
+};
 
 const DraggableGridItem = (props: PropsWithChildren<DraggableGridItemProps>) => {
   const ref = useRef(null);
@@ -21,7 +21,7 @@ const DraggableGridItem = (props: PropsWithChildren<DraggableGridItemProps>) => 
 
   const { editMode } = useContext(ProfileContext);
 
-  const [{ isDragging }, connectDrag] = useDrag<GridDragObject, unknown, {isDragging : boolean}>(() => ({
+  const [{ isDragging }, connectDrag] = useDrag<GridDragObject, unknown, { isDragging: boolean }>(() => ({
     type: 'gridItem',
     item: props.item,
     canDrag: editMode && !isMobile && !props.item.hidden && props.item.draggable,
@@ -39,9 +39,9 @@ const DraggableGridItem = (props: PropsWithChildren<DraggableGridItemProps>) => 
         props.onMoveItem(item.id, props.item.id);
       }
     },
-    collect: (monitor) => ({
+    collect: monitor => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
+      canDrop: monitor.canDrop()
     })
   }));
 
@@ -58,17 +58,19 @@ const DraggableGridItem = (props: PropsWithChildren<DraggableGridItemProps>) => 
   const containerStyle = {
     opacity,
     border,
-    borderRadius: '12px',
+    borderRadius: '12px'
   };
 
-  return <>
-    {React.Children.map(props.children as ReactElement<any>, child =>
-      React.cloneElement(child, {
-        ref,
-        style: containerStyle
-      })
-    )}
-  </>;
+  return (
+    <>
+      {React.Children.map(props.children as ReactElement<any>, child =>
+        React.cloneElement(child, {
+          ref,
+          style: containerStyle
+        })
+      )}
+    </>
+  );
 };
 
 export default React.memo(DraggableGridItem);

@@ -1,3 +1,7 @@
+import { useContext, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useAccount } from 'wagmi';
+
 import { Modal } from 'components/elements/Modal';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { createNftOwnerMap } from 'utils/createNftOwnerMap';
@@ -8,25 +12,17 @@ import { NftGallery } from './NftGallery';
 import { ProfileContext } from './ProfileContext';
 import { ProfileLayoutEditorModalContent } from './ProfileLayoutEditorModalContent';
 
-import dynamic from 'next/dynamic';
-import { useContext, useState } from 'react';
-import { useAccount } from 'wagmi';
-
 export interface MintedProfileGalleryProps {
   profileURI: string;
   ownedGKTokens?: number[];
 }
 
-const DynamicGalleryToggleAllButtons = dynamic<React.ComponentProps<typeof StaticGalleryToggleAllButtons>>(() => import('./GalleryToggleAllButtons').then(mod => mod.GalleryToggleAllButtons));
+const DynamicGalleryToggleAllButtons = dynamic<React.ComponentProps<typeof StaticGalleryToggleAllButtons>>(() =>
+  import('./GalleryToggleAllButtons').then(mod => mod.GalleryToggleAllButtons)
+);
 
 export function MintedProfileGallery(props: MintedProfileGalleryProps) {
-  const {
-    editMode,
-    publiclyVisibleNftCount,
-    showNftIds,
-    hideNftIds,
-    allOwnerNfts
-  } = useContext(ProfileContext);
+  const { editMode, publiclyVisibleNftCount, showNftIds, hideNftIds, allOwnerNfts } = useContext(ProfileContext);
 
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
   const { address: currentAddress } = useAccount();
@@ -34,10 +30,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const { profileData } = useProfileQuery(props.profileURI);
 
   return (
-    <div className={tw(
-      'flex flex-col align-items',
-      'minlg:px-16',
-    )}>
+    <div className={tw('align-items flex flex-col', 'minlg:px-16')}>
       <Modal
         fullModal
         bgColor='transparent'
@@ -57,12 +50,15 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
         />
       </Modal>
 
-      {editMode &&
-        <div className='flex w-full justify-end mb-3 pr-1'>
+      {editMode && (
+        <div className='mb-3 flex w-full justify-end pr-1'>
           <DynamicGalleryToggleAllButtons
             publicNFTCount={publiclyVisibleNftCount}
             onShowAll={() => {
-              showNftIds(allOwnerNfts?.map(nft => nft.id), true);
+              showNftIds(
+                allOwnerNfts?.map(nft => nft.id),
+                true
+              );
               gtag('event', 'Show All NFTs', {
                 ethereumAddress: currentAddress,
                 profile: props.profileURI,
@@ -70,7 +66,10 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
               });
             }}
             onHideAll={() => {
-              hideNftIds(allOwnerNfts?.map(nft => nft.id), true);
+              hideNftIds(
+                allOwnerNfts?.map(nft => nft.id),
+                true
+              );
               gtag('event', 'Hide All NFTs', {
                 ethereumAddress: currentAddress,
                 profile: props.profileURI,
@@ -79,7 +78,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
             }}
           />
         </div>
-      }
+      )}
       <NftGallery profileURI={props.profileURI} />
     </div>
   );

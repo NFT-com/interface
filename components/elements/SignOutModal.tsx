@@ -12,17 +12,15 @@ export function SignOutModal(props: SignOutModalProps) {
     <Modal
       visible={props.visible}
       loading={false}
-      title={{ topLine:'DISCONNECT', bottomLine:'YOUR WALLET' }}
+      title={{ topLine: 'DISCONNECT', bottomLine: 'YOUR WALLET' }}
       onClose={props.onClose}
     >
-      <div className='w-full flex flex-col items-center pb-4 font-noi-grotesk'>
-        <div className={tw(
-          'text-center max-w-md text-primary-txt w-full text-base font-noi-grotesk',
-          'my-6'
-        )}>
-          We{'\''}ve signed you out of NFT.com. However, to completely detach your wallet information from our site, you must disconnect your wallet.
+      <div className='flex w-full flex-col items-center pb-4 font-noi-grotesk'>
+        <div className={tw('w-full max-w-md text-center font-noi-grotesk text-base text-primary-txt', 'my-6')}>
+          We{"'"}ve signed you out of NFT.com. However, to completely detach your wallet information from our site, you
+          must disconnect your wallet.
         </div>
-        <div className="font-noi-grotesk mx-0 minlg:mx-[20%] mb-0 minlg:mb-5 flex w-full">
+        <div className='mx-0 mb-0 flex w-full font-noi-grotesk minlg:mx-[20%] minlg:mb-5'>
           <div className='mx-2 flex grow'>
             <Button
               type={ButtonType.PRIMARY}

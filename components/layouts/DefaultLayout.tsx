@@ -1,3 +1,7 @@
+import React, { useContext } from 'react';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import dynamic from 'next/dynamic';
+
 import ClientOnly from 'components/elements/ClientOnly';
 import { Footer } from 'components/elements/Footer/Footer';
 import { Header } from 'components/elements/Header';
@@ -18,10 +22,6 @@ import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
 import { tw } from 'utils/tw';
 
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import dynamic from 'next/dynamic';
-import React, { useContext } from 'react';
-
 type DefaultLayoutProps = {
   children: React.ReactNode;
   hideFooter?: boolean;
@@ -30,10 +30,20 @@ type DefaultLayoutProps = {
   showDNavigation?: boolean;
 };
 
-const DynamicProfileSelectModal = dynamic<React.ComponentProps<typeof ProfileSelectModal>>(() => import('components/modules/ProfileFactory/ProfileSelectModal').then(mod => mod.default));
-const DynamicEmailCaptureModal = dynamic<React.ComponentProps<typeof EmailCaptureModal>>(() => import('components/modules/ProfileFactory/EmailCaptureModal').then(mod => mod.default));
+const DynamicProfileSelectModal = dynamic<React.ComponentProps<typeof ProfileSelectModal>>(() =>
+  import('components/modules/ProfileFactory/ProfileSelectModal').then(mod => mod.default)
+);
+const DynamicEmailCaptureModal = dynamic<React.ComponentProps<typeof EmailCaptureModal>>(() =>
+  import('components/modules/ProfileFactory/EmailCaptureModal').then(mod => mod.default)
+);
 
-export default function DefaultLayout({ children, hideFooter, hideHeader, hideSearch, showDNavigation }: DefaultLayoutProps) {
+export default function DefaultLayout({
+  children,
+  hideFooter,
+  hideHeader,
+  hideSearch,
+  showDNavigation
+}: DefaultLayoutProps) {
   const { setCurrentProfileUrl } = useUser();
   const { openConnectModal } = useConnectModal();
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
@@ -44,24 +54,20 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
   const { searchModalOpen } = useSearchModal();
 
   return (
-    <div className={tw('flex flex-col',
-      'h-screen',
-    )}>
-      <div
-        className='flex-1 w-full h-full'
-      >
-        {!hideHeader &&
+    <div className={tw('flex flex-col', 'h-screen')}>
+      <div className='h-full w-full flex-1'>
+        {!hideHeader && (
           <ClientOnly>
             <Header />
             <MobileSidebar />
             {searchModalOpen && <SearchModal />}
           </ClientOnly>
-        }
-        {!hideSearch &&
-          <div className='mt-24 mb-8 block minlg:hidden'>
+        )}
+        {!hideSearch && (
+          <div className='mb-8 mt-24 block minlg:hidden'>
             <SearchContent isHeader mobileSearch mobileSidebar={false} />
           </div>
-        }
+        )}
         {showDNavigation && <DiscoveryNavigation />}
 
         {children}
@@ -69,7 +75,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
         {profileSelectModal && signed && <DynamicProfileSelectModal />}
 
         {emailCaptureModal && <DynamicEmailCaptureModal />}
-        {signOutDialogOpen &&
+        {signOutDialogOpen && (
           <SignOutModal
             visible={signOutDialogOpen}
             onClose={() => {
@@ -80,7 +86,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
               setCurrentProfileUrl('');
             }}
           />
-        }
+        )}
 
         {!hideFooter && <Footer />}
       </div>

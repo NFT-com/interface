@@ -1,26 +1,33 @@
+import { PropsWithChildren } from 'react';
+
 import BlurImage from 'components/elements/BlurImage';
 import Loader from 'components/elements/Loader/Loader';
+import { nftComCdnLoader } from 'lib/image/loader';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
-
-import { nftComCdnLoader } from 'lib/image/loader';
-import { PropsWithChildren } from 'react';
 
 export interface BannerWrapperProps {
   alt: string;
   imageOverride?: string;
   draft?: boolean;
   loading?: boolean;
-  onMouseEnter?: () => void,
-  onMouseLeave?: () => void,
-  isCollection?: boolean
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  isCollection?: boolean;
 }
 
-const defaultBanner = getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
-  'https://cdn.nft.com/collectionBanner_default.png'
+const defaultBanner = getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
+  ? 'https://cdn.nft.com/collectionBanner_default.png'
   : 'https://cdn.nft.com/profile-banner-default-logo-key.png';
 
-export function BannerWrapper({ alt = 'banner image', children, imageOverride, loading, onMouseEnter, onMouseLeave }: PropsWithChildren<BannerWrapperProps>) {
+export function BannerWrapper({
+  alt = 'banner image',
+  children,
+  imageOverride,
+  loading,
+  onMouseEnter,
+  onMouseLeave
+}: PropsWithChildren<BannerWrapperProps>) {
   const imageUrl = imageOverride || defaultBanner;
 
   return (
@@ -30,32 +37,32 @@ export function BannerWrapper({ alt = 'banner image', children, imageOverride, l
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
         'bg-cover bg-center',
-        'h-[120px] minlg:h-[320px]',
+        'h-[120px] minlg:h-[320px]'
       )}
     >
-      {imageUrl &&
-      <BlurImage
-        alt={alt}
-        src={imageUrl}
-        width={3000}
-        loader={nftComCdnLoader}
-        sizes="100vw"
-        className="object-cover"
-        fill
-        priority
-        quality="100"
-      />}
-      {loading && <div
-        style={{ zIndex: 102 }}
-        className={tw(
-          'absolute flex bg-white/10',
-          'items-center justify-center w-full h-full'
-        )}
-      >
-        <Loader />
-      </div>}
+      {imageUrl && (
+        <BlurImage
+          alt={alt}
+          src={imageUrl}
+          width={3000}
+          loader={nftComCdnLoader}
+          sizes='100vw'
+          className='object-cover'
+          fill
+          priority
+          quality='100'
+        />
+      )}
+      {loading && (
+        <div
+          style={{ zIndex: 102 }}
+          className={tw('absolute flex bg-white/10', 'h-full w-full items-center justify-center')}
+        >
+          <Loader />
+        </div>
+      )}
       <div
-        className="flex justify-start items-end h-full"
+        className='flex h-full items-end justify-start'
         style={{
           minWidth: '100%',
           maxWidth: '100%'

@@ -1,6 +1,7 @@
-import { contentfulLoader } from 'lib/image/loader';
-import Image, { ImageLoaderProps } from 'next/image';
 import Zoom from 'react-medium-image-zoom';
+import Image, { ImageLoaderProps } from 'next/image';
+
+import { contentfulLoader } from 'lib/image/loader';
 
 type ImageWithZoomProps = {
   src: string;
@@ -19,14 +20,15 @@ export default function ImageWithZoom({ src, alt, loader = contentfulLoader }: I
   const srcUrl = `https:${src}`;
   return (
     <Zoom
-      wrapElement="span"
+      wrapElement='span'
       zoomImg={{
         src: srcUrl,
         width: 750,
-        height: 300,
-      }}>
+        height: 300
+      }}
+    >
       <Image
-        className="block h-max max-h-96 w-auto relative justify-center items-center mx-auto mb-4 hover:cursor-pointer object-contain"
+        className='relative mx-auto mb-4 block h-max max-h-96 w-auto items-center justify-center object-contain hover:cursor-pointer'
         src={srcUrl}
         alt={alt}
         loader={loader}

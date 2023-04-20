@@ -1,3 +1,8 @@
+import { useCallback, useEffect, useState } from 'react';
+import { SwitchHorizontalIcon } from '@heroicons/react/solid';
+import { useRouter } from 'next/router';
+import { useAccount } from 'wagmi';
+
 import { BidStatusIcon } from 'components/elements/BidStatusIcon';
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
@@ -19,11 +24,7 @@ import { isNullOrEmpty } from 'utils/format';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
-import { SwitchHorizontalIcon } from '@heroicons/react/solid';
-import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-import { useAccount } from 'wagmi';
 
 export function ProfilePreferencesSearch() {
   const defaultChainId = useDefaultChainId();
@@ -37,11 +38,7 @@ export function ProfilePreferencesSearch() {
   const { isSupported } = useSupportedNetwork();
   const { address: currentAddress } = useAccount();
   const { inputBorder, alwaysBlack, link } = useThemeColors();
-  const {
-    profileTokenId,
-    mutate: mutateTokenId,
-    loading: loadingTokenId
-  } = useProfileTokenQuery(currentURI);
+  const { profileTokenId, mutate: mutateTokenId, loading: loadingTokenId } = useProfileTokenQuery(currentURI);
   const { profileTokens, mutate: mutateMyProfileTokens } = useMyNftProfileTokens();
   const {
     claimable,
@@ -60,9 +57,8 @@ export function ProfilePreferencesSearch() {
       .filter(maybeClaimable => maybeClaimable?.claimable > 0)
       .map(maybeClaimable => maybeClaimable.tokenId)
       .sort();
-    const nextClaimableToken = claimableIndex < allClaimableIds?.length ?
-      allClaimableIds[claimableIndex] :
-      allClaimableIds[0];
+    const nextClaimableToken =
+      claimableIndex < allClaimableIds?.length ? allClaimableIds[claimableIndex] : allClaimableIds[0];
     setNextTokenIdWithClaimable(nextClaimableToken);
     if (claimableIndex >= allClaimableIds?.length) {
       setClaimableIndex(0);
@@ -72,11 +68,7 @@ export function ProfilePreferencesSearch() {
   const [firstLoaded, setFirstLoaded] = useState(false);
   useEffect(() => {
     if (!firstLoaded) {
-      setFirstLoaded(
-        !loadingTokenId &&
-        !loadingClaimable &&
-        claimable != null
-      );
+      setFirstLoaded(!loadingTokenId && !loadingClaimable && claimable != null);
     }
   }, [firstLoaded, claimable, loadingClaimable, loadingTokenId]);
 
@@ -101,57 +93,55 @@ export function ProfilePreferencesSearch() {
   const allDoneText = useCallback(() => {
     return (
       <>
-        <div className='flex flex-col text-center text-primary-txt-dk text-xl my-4 max-w-xl'>
-          <span>
-            Looking to get a NFT Profile?
-          </span>
-          <span>
-            Purchase a Genesis Key and mint four (4) NFT Profiles
-          </span>
+        <div className='my-4 flex max-w-xl flex-col text-center text-xl text-primary-txt-dk'>
+          <span>Looking to get a NFT Profile?</span>
+          <span>Purchase a Genesis Key and mint four (4) NFT Profiles</span>
 
-          {totalRemaining?.gt(0) &&
-            <div className={tw('deprecated_sm:w-screen flex justify-center pb-8 mt-4',
-              'uppercase font-hero-heading1 font-extrabold tracking-wide')}>
+          {totalRemaining?.gt(0) && (
+            <div
+              className={tw(
+                'mt-4 flex justify-center pb-8 deprecated_sm:w-screen',
+                'font-hero-heading1 font-extrabold uppercase tracking-wide'
+              )}
+            >
               <Button
                 type={ButtonType.PRIMARY}
                 size={ButtonSize.LARGE}
-                label="Purchase Genesis Key"
+                label='Purchase Genesis Key'
                 onClick={() => {
                   router.push(`/app/collection/${getAddress('genesisKey', defaultChainId)}`);
                 }}
               />
             </div>
-          }
+          )}
 
           <span>
-            If you have a Genesis Key, head to the <span className='font-bold'>#collab-land</span> channel on{' '}
-            our <span
+            If you have a Genesis Key, head to the <span className='font-bold'>#collab-land</span> channel on our{' '}
+            <span
               style={{ color: link }}
               className='cursor-pointer hover:underline'
               onClick={() => {
-                window.open(
-                  'https://nft.com/discord',
-                  '_blank'
-                );
-              }}>
+                window.open('https://nft.com/discord', '_blank');
+              }}
+            >
               Discord
             </span>{' '}
-            and verify your wallet with{' '}
-            the <span className='font-bold'>Collab.land</span> bot to receive access to{' '}
+            and verify your wallet with the <span className='font-bold'>Collab.land</span> bot to receive access to{' '}
             exclusive channels.
           </span>
         </div>
-        <div className={tw('deprecated_sm:w-screen flex justify-center pb-8',
-          'uppercase font-hero-heading1 font-extrabold tracking-wide')}>
+        <div
+          className={tw(
+            'flex justify-center pb-8 deprecated_sm:w-screen',
+            'font-hero-heading1 font-extrabold uppercase tracking-wide'
+          )}
+        >
           <Button
             type={ButtonType.PRIMARY}
             size={ButtonSize.LARGE}
-            label="GO TO DISCORD"
+            label='GO TO DISCORD'
             onClick={() => {
-              window.open(
-                'https://nft.com/discord',
-                '_blank'
-              );
+              window.open('https://nft.com/discord', '_blank');
             }}
           />
         </div>
@@ -161,100 +151,106 @@ export function ProfilePreferencesSearch() {
 
   const getNonSearchView = useCallback(() => {
     if (currentAddress && !isSupported) {
-      return <div className='mb-12'>
-        <NetworkErrorTile />
-      </div>;
+      return (
+        <div className='mb-12'>
+          <NetworkErrorTile />
+        </div>
+      );
     }
     if (!isNullOrEmpty(currentURI)) {
-      return <>
-        <div className="mb-4">
-          <HeroTitle color='white' items={['WELCOME']} />
-        </div>
-        <span className="text-4xl mb-16 text-center text-primary-txt-dk">
-          {currentURI}
-        </span>
-        <span className="text-xl mb-2 text-center" style={{ color: 'white' }}>
-          You officially own:
-        </span>
-        <span className="text-2xl deprecated_md:text-lg mb-16" style={{ color: 'white' }}>
-          NFT.com/{currentURI}
-        </span>
-        {totalClaimable > 0 ?
-          <>
-            <span className='text-white mb-4 text-lg text-center max-w-2xl'>
-              It looks like you{'\''}ve got another profile to mint. Feel free to mint now or
-              anytime you connect your wallet to NFT.com
-            </span>
-            <div className={tw('deprecated_sm:w-screen flex justify-center pb-16',
-              'uppercase font-hero-heading1 font-extrabold tracking-wide')}>
-              <Button
-                type={ButtonType.PRIMARY}
-                size={ButtonSize.LARGE}
-                label="MINT ANOTHER PROFILE"
-                onClick={() => {
-                  setCurrentURI('');
-                  setMintSuccess(false);
-                }}
-              />
-            </div>
-          </> :
-          allDoneText()
-        }
-      </>;
+      return (
+        <>
+          <div className='mb-4'>
+            <HeroTitle color='white' items={['WELCOME']} />
+          </div>
+          <span className='mb-16 text-center text-4xl text-primary-txt-dk'>{currentURI}</span>
+          <span className='mb-2 text-center text-xl' style={{ color: 'white' }}>
+            You officially own:
+          </span>
+          <span className='mb-16 text-2xl deprecated_md:text-lg' style={{ color: 'white' }}>
+            NFT.com/{currentURI}
+          </span>
+          {totalClaimable > 0 ? (
+            <>
+              <span className='mb-4 max-w-2xl text-center text-lg text-white'>
+                It looks like you{"'"}ve got another profile to mint. Feel free to mint now or anytime you connect your
+                wallet to NFT.com
+              </span>
+              <div
+                className={tw(
+                  'flex justify-center pb-16 deprecated_sm:w-screen',
+                  'font-hero-heading1 font-extrabold uppercase tracking-wide'
+                )}
+              >
+                <Button
+                  type={ButtonType.PRIMARY}
+                  size={ButtonSize.LARGE}
+                  label='MINT ANOTHER PROFILE'
+                  onClick={() => {
+                    setCurrentURI('');
+                    setMintSuccess(false);
+                  }}
+                />
+              </div>
+            </>
+          ) : (
+            allDoneText()
+          )}
+        </>
+      );
     }
     if (totalClaimable === 0) {
-      return <>
-        {allDoneText()}
-      </>;
+      return <>{allDoneText()}</>;
     }
   }, [currentAddress, allDoneText, isSupported, currentURI, totalClaimable]);
 
   return (
     <LoadedContainer loaded={firstLoaded}>
-      <div className="flex flex-col items-center h-full deprecated_sm:w-full" >
-        <span className={tw(
-          'text-2xl deprecated_md:text-lg deprecated_sm:text-base my-8 text-center text-primary-txt-dk deprecated_sm:mt-32'
-        )}>
-          {totalClaimable}&nbsp;
-          Profile{totalClaimable !== 1 ? 's' : ''} Available to mint
+      <div className='flex h-full flex-col items-center deprecated_sm:w-full'>
+        <span
+          className={tw(
+            'my-8 text-center text-2xl text-primary-txt-dk deprecated_md:text-lg deprecated_sm:mt-32 deprecated_sm:text-base'
+          )}
+        >
+          {totalClaimable}&nbsp; Profile{totalClaimable !== 1 ? 's' : ''} Available to mint
         </span>
-        {mintSuccess || totalClaimable === 0 ?
+        {mintSuccess || totalClaimable === 0 ? (
           getNonSearchView()
-          :
+        ) : (
           <>
-            <div className='mt-16 mb-8'>
+            <div className='mb-8 mt-16'>
               <HeroTitle color='white' items={['CHOOSE YOUR']} />
               <HeroTitle color='white' items={['NFT.COM PROFILE']} />
             </div>
-            <div className={tw(
-              'w-full mb-4 flex items-center justify-center',
-            )}>
-              <span className={tw(
-                'text-lg font-medium text-primary-txt-dk font-rubik normal-case text-center'
-              )}>
+            <div className={tw('mb-4 flex w-full items-center justify-center')}>
+              <span className={tw('font-rubik text-center text-lg font-medium normal-case text-primary-txt-dk')}>
                 Use Key: {nextTokenIdWithClaimable}
               </span>
-              {claimable?.length > 1 && <SwitchHorizontalIcon
-                color="white"
-                className="cursor-pointer ml-2 h-5"
-                onClick={() => {
-                  setClaimableIndex(claimableIndex + 1);
-                }}
-              />}
+              {claimable?.length > 1 && (
+                <SwitchHorizontalIcon
+                  color='white'
+                  className='ml-2 h-5 cursor-pointer'
+                  onClick={() => {
+                    setClaimableIndex(claimableIndex + 1);
+                  }}
+                />
+              )}
             </div>
-            <div className="relative w-full flex items-center deprecated_sm:px-8">
-              <div className={tw(
-                'left-0 pl-4 flex deprecated_sm:right-8 font-bold text-black',
-                'rounded-l-lg bg-white py-3 text-lg'
-              )}>
+            <div className='relative flex w-full items-center deprecated_sm:px-8'>
+              <div
+                className={tw(
+                  'left-0 flex pl-4 font-bold text-black deprecated_sm:right-8',
+                  'rounded-l-lg bg-white py-3 text-lg'
+                )}
+              >
                 NFT.com/
               </div>
               <input
                 className={tw(
-                  'text-lg min-w-0 ProfileNameInput',
-                  'text-left px-3 py-3 w-full rounded-r-lg font-medium'
+                  'ProfileNameInput min-w-0 text-lg',
+                  'w-full rounded-r-lg px-3 py-3 text-left font-medium'
                 )}
-                placeholder="What should we call you?"
+                placeholder='What should we call you?'
                 autoFocus={true}
                 value={currentURI ?? ''}
                 spellCheck={false}
@@ -275,24 +271,28 @@ export function ProfilePreferencesSearch() {
                 }}
                 style={{
                   borderColor: inputBorder,
-                  color: alwaysBlack,
+                  color: alwaysBlack
                 }}
               />
-              <div className='absolute right-0 flex pointer-events-none pr-4 deprecated_sm:right-8'>
-                {loadingTokenId
-                  ? <Loader />
-                  : <BidStatusIcon
+              <div className='pointer-events-none absolute right-0 flex pr-4 deprecated_sm:right-8'>
+                {loadingTokenId ? (
+                  <Loader />
+                ) : (
+                  <BidStatusIcon
                     whiteBackgroundOverride
                     status={getProfileStatus()}
                     isOwner={profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(currentURI)}
-                  />}
+                  />
+                )}
               </div>
             </div>
-            <div className={tw(
-              'my-8 uppercase font-hero-heading1 font-extrabold tracking-wide',
-              'flex items-center flex-col',
-              minting ? 'opacity-50' : ''
-            )}>
+            <div
+              className={tw(
+                'font-hero-heading1 my-8 font-extrabold uppercase tracking-wide',
+                'flex flex-col items-center',
+                minting ? 'opacity-50' : ''
+              )}
+            >
               <Button
                 type={ButtonType.PRIMARY}
                 size={ButtonSize.LARGE}
@@ -300,25 +300,22 @@ export function ProfilePreferencesSearch() {
                 loading={minting}
                 label={'Mint Your Profile'}
                 onClick={async () => {
-                  if (
-                    minting ||
-                    isProfileUnavailable() ||
-                    isNullOrEmpty(currentURI) ||
-                    loadingTokenId
-                  ) {
+                  if (minting || isProfileUnavailable() || isNullOrEmpty(currentURI) || loadingTokenId) {
                     return;
                   }
                   if (nextTokenIdWithClaimable == null || isNullOrEmpty(currentURI)) {
                     return;
                   }
                   try {
-                    const tx = await profileAuctionSigner.genesisKeyBatchClaimProfile([{
-                      profileUrl: currentURI,
-                      tokenId: nextTokenIdWithClaimable,
-                      recipient: currentAddress,
-                      hash: profileClaimHash?.hash,
-                      signature: profileClaimHash?.signature
-                    }]);
+                    const tx = await profileAuctionSigner.genesisKeyBatchClaimProfile([
+                      {
+                        profileUrl: currentURI,
+                        tokenId: nextTokenIdWithClaimable,
+                        recipient: currentAddress,
+                        hash: profileClaimHash?.hash,
+                        signature: profileClaimHash?.signature
+                      }
+                    ]);
                     setMinting(true);
 
                     if (tx) {
@@ -335,24 +332,20 @@ export function ProfilePreferencesSearch() {
                   }
                 }}
               />
-              <span className={tw(
-                'text-base text-primary-txt-dk font-rubik normal-case mt-8 text-center max-w-lg'
-              )}>
-                By clicking Mint Your Profile, I have read, understood, and agree to the {' '}
+              <span className={tw('font-rubik mt-8 max-w-lg text-center text-base normal-case text-primary-txt-dk')}>
+                By clicking Mint Your Profile, I have read, understood, and agree to the{' '}
                 <span
                   onClick={() => {
-                    window.open(
-                      'https://cdn.nft.com/nft_com_terms_of_service.pdf',
-                      '_open'
-                    );
+                    window.open('https://cdn.nft.com/nft_com_terms_of_service.pdf', '_open');
                   }}
-                  className='cursor-pointer hover:underline hover:text-link'
+                  className='cursor-pointer hover:text-link hover:underline'
                 >
                   Terms of Service.
                 </span>
               </span>
             </div>
-          </>}
+          </>
+        )}
       </div>
     </LoadedContainer>
   );

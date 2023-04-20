@@ -17,20 +17,26 @@ const TimePeriods = [
   }
 ];
 export interface TimePeriodProps {
-  activePeriod: string,
+  activePeriod: string;
   onChange: (val: string) => void;
 }
 export default function TimePeriodToggle(props: TimePeriodProps) {
   return (
     <>
-      <ul className="flex flex-row border border-[#ECECEC] rounded-[16px] font-noi-grotesk overflow-hidden max-h-[46px] items-center">
-        {
-          TimePeriods.map((item, i) => {
-            return (
-              <li onClick={() => props.onChange(item.key)} key={i} className={`${props.activePeriod === item.key ? 'bg-[#F9D54C] text-[#000]' : 'bg-transparent'} w-[41px] h-[46px] flex items-center justify-center text-[#B2B2B2] list-none text-base m-0 cursor-pointer transition-all`}>{item.value}</li>
-            );
-          })
-        }
+      <ul className='flex max-h-[46px] flex-row items-center overflow-hidden rounded-[16px] border border-[#ECECEC] font-noi-grotesk'>
+        {TimePeriods.map((item, i) => {
+          return (
+            <li
+              onClick={() => props.onChange(item.key)}
+              key={i}
+              className={`${
+                props.activePeriod === item.key ? 'bg-[#F9D54C] text-[#000]' : 'bg-transparent'
+              } m-0 flex h-[46px] w-[41px] cursor-pointer list-none items-center justify-center text-base text-[#B2B2B2] transition-all`}
+            >
+              {item.value}
+            </li>
+          );
+        })}
       </ul>
     </>
   );

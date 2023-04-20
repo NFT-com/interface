@@ -1,17 +1,18 @@
-import { CollectionResponse } from 'graphql/hooks/useCollectionQuery';
-import { gql, request } from 'graphql-request';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
-
 import { utils } from 'ethers';
 import { ParsedUrlQuery } from 'querystring';
 import { unstable_serialize } from 'swr';
+
+import { gql, request } from 'graphql-request';
+
+import { CollectionResponse } from 'graphql/hooks/useCollectionQuery';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 
 export const getCollectionPage = async (params: ParsedUrlQuery) => {
   const chainId = getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
   const { contractAddr: contract, slug } = params;
   const baseInput = {
     chainId,
-    network: 'ethereum',
+    network: 'ethereum'
   };
   const input = contract ? { input: { ...baseInput, contract } } : { input: { ...baseInput, slug } };
   const caseInsensitiveAddr = contract?.toString().toLowerCase();
@@ -22,49 +23,47 @@ export const getCollectionPage = async (params: ParsedUrlQuery) => {
         fallback: {
           [unstable_serialize(['CollectionQuery', slug, chainId, undefined])]: {}
         }
-      },
+      }
     };
   }
 
   const query = gql`
-  query Collection($input: CollectionInput!) {
-  collection(input: $input) {
-    collection {
-      id
-      contract
-      name
-      chainId
-      deployer
-      bannerUrl
-      logoUrl
-      description
-      isCurated
-      isSpam
-      likeCount
-      isLikedByUser
+    query Collection($input: CollectionInput!) {
+      collection(input: $input) {
+        collection {
+          id
+          contract
+          name
+          chainId
+          deployer
+          bannerUrl
+          logoUrl
+          description
+          isCurated
+          isSpam
+          likeCount
+          isLikedByUser
+        }
+        nftPortResults {
+          name
+          symbol
+          bannerUrl
+          logoUrl
+          description
+        }
+      }
     }
-    nftPortResults {
-      name
-      symbol
-      bannerUrl
-      logoUrl
-      description
-    }
-  }
-  }
   `;
 
-  const data: CollectionResponse = await request(
-    getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL),
-    query,
-    input
-  ).then(data => data.collection ?? {});
+  const data: CollectionResponse = await request(getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL), query, input).then(
+    data => data.collection ?? {}
+  );
 
   return {
     props: {
       fallback: {
         [unstable_serialize(['CollectionQuery', slug, chainId, undefined])]: data
       }
-    },
+    }
   };
 };

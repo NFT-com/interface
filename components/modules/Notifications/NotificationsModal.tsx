@@ -1,20 +1,18 @@
+import { useContext } from 'react';
+import { X } from 'phosphor-react';
+
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { Notifications } from 'components/modules/Notifications/Notifications';
 
-import { X } from 'phosphor-react';
-import { useContext } from 'react';
-
 type NotificationsModalProps = {
   visible: boolean;
-  setVisible: (input:boolean) => void;
+  setVisible: (input: boolean) => void;
 };
 
 export default function NotificationsModal({ visible, setVisible }: NotificationsModalProps) {
-  const {
-    count,
-  } = useContext(NotificationContext);
+  const { count } = useContext(NotificationContext);
 
   return (
     <Modal
@@ -29,26 +27,30 @@ export default function NotificationsModal({ visible, setVisible }: Notification
       fullModal
       pure
     >
-      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto max-h-screen overflow-auto'>
-        <div className='py-5 font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative px-3'>
-          <X onClick={() => setVisible(false)} className='absolute top-5 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
+      <div className='maxlg:h-max h-screen max-h-screen max-w-full overflow-auto rounded-none bg-white px-4 text-left minlg:m-auto minlg:mt-24 minlg:h-max minlg:max-w-[458px] minlg:rounded-[10px]'>
+        <div className='m-auto max-w-lg px-3 py-5 font-noi-grotesk minlg:relative lg:max-w-md'>
+          <X
+            onClick={() => setVisible(false)}
+            className='absolute right-3 top-5 hover:cursor-pointer minlg:right-0'
+            size={32}
+            color='black'
+            weight='fill'
+          />
           <Notifications setVisible={setVisible} />
           {/* only show when notifications exist for better UI */}
-          {count ?
+          {count ? (
             <div className='mt-4'>
               <Button
                 size={ButtonSize.LARGE}
                 type={ButtonType.PRIMARY}
                 stretch
                 label='Close'
-                onClick={() => setVisible(false)} />
+                onClick={() => setVisible(false)}
+              />
             </div>
-            :
-            null
-          }
+          ) : null}
         </div>
       </div>
     </Modal>
   );
 }
-    

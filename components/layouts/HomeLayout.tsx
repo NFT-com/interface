@@ -1,3 +1,7 @@
+import { useContext } from 'react';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import dynamic from 'next/dynamic';
+
 import ClientOnly from 'components/elements/ClientOnly';
 import { Footer } from 'components/elements/Footer/Footer';
 import { Header } from 'components/elements/Header';
@@ -11,10 +15,6 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
 import { tw } from 'utils/tw';
-
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import dynamic from 'next/dynamic';
-import { useContext } from 'react';
 
 type HomeLayoutProps = {
   children: React.ReactNode;
@@ -34,25 +34,20 @@ export default function HomeLayout({ children, hideFooter, hideHeader }: HomeLay
   const { searchModalOpen } = useSearchModal();
 
   return (
-    <div className={tw('flex flex-col',
-      'w-full min-w-screen min-h-screen overflow-hidden',
-    )}>
-      <div
-        className='flex-1 w-full'
-        style={{ minHeight: '100vh' }}
-      >
-        {!hideHeader &&
-        <ClientOnly>
-          <Header homepageHeader />
-          <MobileSidebar/>
-          {searchModalOpen && <SearchModal />}
-        </ClientOnly>
-        }
+    <div className={tw('flex flex-col', 'min-w-screen min-h-screen w-full overflow-hidden')}>
+      <div className='w-full flex-1' style={{ minHeight: '100vh' }}>
+        {!hideHeader && (
+          <ClientOnly>
+            <Header homepageHeader />
+            <MobileSidebar />
+            {searchModalOpen && <SearchModal />}
+          </ClientOnly>
+        )}
 
         {children}
 
         {profileSelectModal && signed && <DynamicProfileSelectModal />}
-        {signOutDialogOpen &&
+        {signOutDialogOpen && (
           <SignOutModal
             visible={signOutDialogOpen}
             onClose={() => {
@@ -63,7 +58,7 @@ export default function HomeLayout({ children, hideFooter, hideHeader }: HomeLay
               setCurrentProfileUrl('');
             }}
           />
-        }
+        )}
         {!hideFooter && <Footer isLarge />}
       </div>
     </div>

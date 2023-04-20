@@ -1,3 +1,12 @@
+import { useEffect, useState } from 'react';
+import { isMobile } from 'react-device-detect';
+import validator from 'email-validator';
+import { ethers } from 'ethers';
+import { useRouter } from 'next/router';
+import PropTypes from 'prop-types';
+import qs from 'qs';
+import { useAccount, useNetwork } from 'wagmi';
+
 import EmailStatusIcon from 'components/elements/EmailStatusIcon';
 import Loader from 'components/elements/Loader/Loader';
 import { ModalButton } from 'components/elements/ModalButton';
@@ -11,17 +20,9 @@ import { useBidModal } from 'hooks/state/useBidModal';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty, joinClasses } from 'utils/format';
 
-import ClientOnly from './ClientOnly';
-
-import validator from 'email-validator';
-import { ethers } from 'ethers';
-import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
-import qs from 'qs';
-import { useEffect, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-import { useAccount, useNetwork } from 'wagmi';
+
+import ClientOnly from './ClientOnly';
 
 export function EmailVerification(props) {
   const router = useRouter();
@@ -63,7 +64,7 @@ export function EmailVerification(props) {
   const {
     creating,
     createUser,
-    error: signUpError,
+    error: signUpError
   } = useCreateUserMutation({
     onCreateSuccess: () => {
       mutateMeInfo();
@@ -71,7 +72,7 @@ export function EmailVerification(props) {
     },
     onCreateFailure: () => {
       setCodeSent(false);
-    },
+    }
   });
 
   const { confirmEmail, error: verifyError } = useConfirmEmailMutation();
@@ -98,37 +99,42 @@ export function EmailVerification(props) {
   };
 
   const optionalSkip = () => {
-    return !hideOptional && !codeSent && <div className="mt-11 mb-5">
-      <ClientOnly>
-        <ModalButton
-          text="Skip for now"
-          onClick={() => {
-            createUser({
-              avatarURL: null,
-              referredBy: referral,
-              email: currentEmail !== '' ? currentEmail : null,
-              username: `ethereum-${ethers.utils.getAddress(currentAddress)}`,
-              wallet: {
-                address: currentAddress,
-                chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-                network: 'ethereum',
-              },
-            });
-          }}
-          loading={false}
-        />
-      </ClientOnly>
-    </div>;
+    return (
+      !hideOptional &&
+      !codeSent && (
+        <div className='mb-5 mt-11'>
+          <ClientOnly>
+            <ModalButton
+              text='Skip for now'
+              onClick={() => {
+                createUser({
+                  avatarURL: null,
+                  referredBy: referral,
+                  email: currentEmail !== '' ? currentEmail : null,
+                  username: `ethereum-${ethers.utils.getAddress(currentAddress)}`,
+                  wallet: {
+                    address: currentAddress,
+                    chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+                    network: 'ethereum'
+                  }
+                });
+              }}
+              loading={false}
+            />
+          </ClientOnly>
+        </div>
+      )
+    );
   };
 
   const getFooter = () => {
     if (codeSent) {
       return (
-        <div className={joinClasses('flex flex-col mt-4 mb-5', primaryTextClass)}>
-          {'Using Address: ' + (userEmailFound ?? currentEmail)}
-          <div className="flex flex-row mt-2 justify-between w-full">
+        <div className={joinClasses('mb-5 mt-4 flex flex-col', primaryTextClass)}>
+          {`Using Address: ${userEmailFound ?? currentEmail}`}
+          <div className='mt-2 flex w-full flex-row justify-between'>
             <ModalButton
-              text="Change Email"
+              text='Change Email'
               onClick={() => {
                 setCodeSent(false);
                 setChangeEmail(true);
@@ -136,7 +142,7 @@ export function EmailVerification(props) {
               loading={false}
             />
             <ModalButton
-              text="Resend Code"
+              text='Resend Code'
               onClick={() => {
                 resendEmail();
               }}
@@ -145,15 +151,14 @@ export function EmailVerification(props) {
           </div>
         </div>
       );
-    } else if (validator?.validate(currentEmail)) {
+    }
+    if (validator?.validate(currentEmail)) {
       return (
-        <div className="flex flex-col">
-          <div className="p-3 text-red-600 h-11">
-            {signUpError}
-          </div>
+        <div className='flex flex-col'>
+          <div className='h-11 p-3 text-red-600'>{signUpError}</div>
           <ClientOnly>
             <ModalButton
-              text="Login"
+              text='Login'
               onClick={async () => {
                 if (changeEmail || (!isNullOrEmpty(userEmailFound) && userEmailVerified)) {
                   const result = await updateMe({ email: currentEmail });
@@ -162,23 +167,21 @@ export function EmailVerification(props) {
                     setCodeSent(true);
                     setChangeEmail(false);
                   }
+                } else if (hideOptional && email) {
+                  updateEmail({ email: currentEmail });
+                  setChangeEmail(false);
                 } else {
-                  if (hideOptional && email) {
-                    updateEmail({ email: currentEmail });
-                    setChangeEmail(false);
-                  } else {
-                    createUser({
-                      avatarURL: null,
-                      referredBy: referral,
-                      email: currentEmail !== '' ? currentEmail : null,
-                      username: null, // null to force user to authenticate code, instead of allowing skip
-                      wallet: {
-                        address: currentAddress,
-                        chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-                        network: 'ethereum',
-                      },
-                    });
-                  }
+                  createUser({
+                    avatarURL: null,
+                    referredBy: referral,
+                    email: currentEmail !== '' ? currentEmail : null,
+                    username: null, // null to force user to authenticate code, instead of allowing skip
+                    wallet: {
+                      address: currentAddress,
+                      chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+                      network: 'ethereum'
+                    }
+                  });
                 }
               }}
               loading={creating || loadingUpdate}
@@ -186,15 +189,14 @@ export function EmailVerification(props) {
           </ClientOnly>
         </div>
       );
-    } else {
-      return null;
     }
+    return null;
   };
 
   return (
     <div>
       <div
-        className={['flex flex-col items-center justify-center mb-4', primaryTextClass].join(' ')}
+        className={['mb-4 flex flex-col items-center justify-center', primaryTextClass].join(' ')}
         style={{ height: isMobile ? '100%' : '100%' }}
       >
         <div>
@@ -204,9 +206,9 @@ export function EmailVerification(props) {
         </div>
         <div>{codeSent ? '(Step 2 / 2)' : '(Step 1 / 2)'}</div>
       </div>
-      <div className="w-full">
-        <div className="flex justify-between items-center w-full">
-          <div className="w-full relative">
+      <div className='w-full'>
+        <div className='flex w-full items-center justify-between'>
+          <div className='relative w-full'>
             <input
               placeholder={codeSent ? 'enter 6 digit code' : 'enter email...'}
               autoFocus={true}
@@ -228,35 +230,33 @@ export function EmailVerification(props) {
                 }
               }}
               className={joinClasses(
-                'py-3.5 h-15 w-full font-medium text-lg flex-1 min-w-0 block',
-                'text-left w-full px-3 py-2 rounded-md focus:ring-indigo-500',
-                'focus:border-indigo-500 deprecated_sm:text-sm border-gray-300'
+                'h-15 block w-full min-w-0 flex-1 py-3.5 text-lg font-medium',
+                'w-full rounded-md px-3 py-2 text-left focus:ring-indigo-500',
+                'border-gray-300 focus:border-indigo-500 deprecated_sm:text-sm'
               )}
               style={{
                 color: primaryText,
                 backgroundColor: inputBackground,
                 borderColor: inputBorder,
-                borderWidth: '1px',
+                borderWidth: '1px'
               }}
             />
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              {loadingEmail
-                ? (
-                  <Loader />
-                )
-                : (
-                  <EmailStatusIcon
-                    email={currentEmail}
-                    codeSent={codeSent}
-                    verified={successVerify}
-                    errorMessage={errorMessage}
-                  />
-                )}
+            <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3'>
+              {loadingEmail ? (
+                <Loader />
+              ) : (
+                <EmailStatusIcon
+                  email={currentEmail}
+                  codeSent={codeSent}
+                  verified={successVerify}
+                  errorMessage={errorMessage}
+                />
+              )}
             </div>
           </div>
         </div>
       </div>
-      <div className="grid grid-flow-col auto-cols-2 gap-12">
+      <div className='auto-cols-2 grid grid-flow-col gap-12'>
         {optionalSkip()}
         {getFooter()}
       </div>
@@ -266,5 +266,5 @@ export function EmailVerification(props) {
 
 EmailVerification.propTypes = {
   email: PropTypes.string,
-  hideOptional: PropTypes.bool,
+  hideOptional: PropTypes.bool
 };

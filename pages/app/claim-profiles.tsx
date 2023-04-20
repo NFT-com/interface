@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { useAccount } from 'wagmi';
+
 import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { SignedOutView } from 'components/modules/GenesisKeyAuction/SignedOutView';
@@ -9,10 +13,6 @@ import { useMintedReservedProfileCount } from 'hooks/useMintedReservedProfileCou
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
-
 const keySplash = 'https://cdn.nft.com/key_splash2.png';
 
 export default function ProfilePreferencesPage() {
@@ -21,7 +21,8 @@ export default function ProfilePreferencesPage() {
   const { data: ownedGKs, loading: loadingOwnedGKs } = useOwnedGenesisKeyTokens(currentAddress ?? null);
   const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(currentAddress);
   const { mintedReservedProfileCount, loading: loadingReservedCount } = useMintedReservedProfileCount();
-  const showInsiderReservedProfiles = insiderMerkleData != null &&
+  const showInsiderReservedProfiles =
+    insiderMerkleData != null &&
     ownedGKs?.length >= 1 &&
     (mintedReservedProfileCount ?? 2) < (reservedProfiles?.length || 2);
 
@@ -31,51 +32,36 @@ export default function ProfilePreferencesPage() {
     if (!firstLoaded) {
       if (insiderMerkleData != null) {
         setFirstLoaded(
-          (!loadingOwnedGKs) &&
-          (!loadingReservedCount) &&
-          mintedReservedProfileCount != null &&
-          ownedGKs != null
+          !loadingOwnedGKs && !loadingReservedCount && mintedReservedProfileCount != null && ownedGKs != null
         );
       } else {
         setFirstLoaded(true);
       }
     }
-  }, [
-    firstLoaded,
-    insiderMerkleData,
-    loadingOwnedGKs,
-    loadingReservedCount,
-    ownedGKs,
-    mintedReservedProfileCount
-  ]);
+  }, [firstLoaded, insiderMerkleData, loadingOwnedGKs, loadingReservedCount, ownedGKs, mintedReservedProfileCount]);
 
   return (
     <div
       className={tw(
-        'flex flex-col relative w-screen h-screen items-center',
+        'relative flex h-screen w-screen flex-col items-center',
         'justify-center overflow-y-auto overflow-x-hidden'
       )}
     >
-      <Image
-        src={keySplash}
-        className="h-full"
-        alt="key Splash"
-        layout="fill"
-        objectFit="contain"
-      />
+      <Image src={keySplash} className='h-full' alt='key Splash' layout='fill' objectFit='contain' />
       <div
         className={tw(
-          'z-20 absolute h-full w-full flex flex-col justify-center items-center',
-          'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-black bg-opacity-80'
-        )}>
+          'absolute z-20 flex h-full w-full flex-col items-center justify-center',
+          'bg-black bg-opacity-80 backdrop-blur-sm backdrop-saturate-150 backdrop-filter'
+        )}
+      >
         <LoadedContainer loaded={firstLoaded}>
-          {
-            !currentAddress ?
-              <SignedOutView /> :
-              showInsiderReservedProfiles ?
-                <InsiderProfileClaim /> :
-                <ProfilePreferencesSearch />
-          }
+          {!currentAddress ? (
+            <SignedOutView />
+          ) : showInsiderReservedProfiles ? (
+            <InsiderProfileClaim />
+          ) : (
+            <ProfilePreferencesSearch />
+          )}
         </LoadedContainer>
       </div>
     </div>
@@ -83,9 +69,5 @@ export default function ProfilePreferencesPage() {
 }
 
 ProfilePreferencesPage.getLayout = function getLayout(page) {
-  return (
-    <DefaultLayout>
-      {page}
-    </DefaultLayout>
-  );
+  return <DefaultLayout>{page}</DefaultLayout>;
 };

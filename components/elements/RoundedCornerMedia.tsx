@@ -1,12 +1,11 @@
-import { useIsomorphicLayoutEffect } from 'hooks/utils';
-import { isBase64, isNullOrEmpty } from 'utils/format';
-import { cl } from 'utils/tw';
-
-import { generateSrcSet } from 'lib/image/loader';
-import { nftComCdnLoader } from 'lib/image/loader';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ImageLoader } from 'next/image';
-import React, { useState } from 'react';
+
+import { useIsomorphicLayoutEffect } from 'hooks/utils';
+import { generateSrcSet, nftComCdnLoader } from 'lib/image/loader';
+import { isBase64, isNullOrEmpty } from 'utils/format';
+import { cl } from 'utils/tw';
 
 const BlurImage = dynamic(import('components/elements/BlurImage'));
 const DynamicRoundedCornerMediaImage = dynamic(import('components/elements/RoundedCornerMediaImage'));
@@ -23,7 +22,7 @@ export enum RoundedCornerVariant {
   Full = 'full',
   Asset = 'asset',
   Success = 'success',
-  None = 'none',
+  None = 'none'
 }
 
 export enum RoundedCornerAmount {
@@ -72,17 +71,10 @@ export const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCo
   return classOptions[variant] || classOptions[RoundedCornerVariant.None];
 };
 
-export type RoundedCornerMediaLoaderProps = { classes?: string; }
+export type RoundedCornerMediaLoaderProps = { classes?: string };
 export const RoundedCornerMediaLoader: React.FC<RoundedCornerMediaLoaderProps> = ({ classes }) => (
-  <div
-    className={classes}
-  >
-    <div className={cl(
-      'animate-pulse bg-gray-300',
-      'rounded-md',
-      'object-contain'
-
-    )} />
+  <div className={classes}>
+    <div className={cl('animate-pulse bg-gray-300', 'rounded-md', 'object-contain')} />
   </div>
 );
 
@@ -110,14 +102,12 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia({
 
   // Fire once before component is rendered
   useIsomorphicLayoutEffect(() => {
-    if(isPresetWidth){
+    if (isPresetWidth) {
       setImageSrc(src);
+    } else if (ext === 'svg') {
+      setImageSrc(url);
     } else {
-      if(ext === 'svg') {
-        setImageSrc(url);
-      } else {
-        setImageSrc(src);
-      }
+      setImageSrc(src);
     }
   }, [src, ext, url]);
 
@@ -127,70 +117,62 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia({
   const baseClasses = cl(
     'absolute w-full h-full justify-center object-cover',
     {
-      'minmd:object-contain': isContained,
+      'minmd:object-contain': isContained
     },
     roundedClasses,
     extraClasses
   );
 
-  const rawImageBool = (imageUrl?.indexOf('cdn.nft.com') >= 0 && imageUrl?.indexOf('.svg') >= 0) ||
-  imageUrl?.indexOf('ens.domains') >= 0 ||
-  (imageUrl?.indexOf('storage.googleapis.com') >= 0 && imageUrl?.indexOf('.svg') >= 0);
-  const isVideo = (videoOverride || imageUrl?.indexOf('data:') >= 0);
+  const rawImageBool =
+    (imageUrl?.indexOf('cdn.nft.com') >= 0 && imageUrl?.indexOf('.svg') >= 0) ||
+    imageUrl?.indexOf('ens.domains') >= 0 ||
+    (imageUrl?.indexOf('storage.googleapis.com') >= 0 && imageUrl?.indexOf('.svg') >= 0);
+  const isVideo = videoOverride || imageUrl?.indexOf('data:') >= 0;
   const videoSrcs = videoOverride || isVideo ? generateSrcSet(src) : null;
   const isBase64Image = videoSrcs ? isBase64(src) : false;
 
   const renderRawImage = (imageSrc?: string) => (
-    <BlurImage
-      alt='NFT Image'
-      key={src}
-      src={imageSrc || imageUrl}
-      fill
-      loader={loader}
-      className={baseClasses}
-    />);
+    <BlurImage alt='NFT Image' key={src} src={imageSrc || imageUrl} fill loader={loader} className={baseClasses} />
+  );
 
   return (
-    <div className={cl(
-      'relative object-cover aspect-square overflow-hidden',
-      roundedClasses,
-      containerClasses
-    )}
-    onClick={onClick}
+    <div
+      className={cl('relative aspect-square overflow-hidden object-cover', roundedClasses, containerClasses)}
+      onClick={onClick}
     >
-      { isVideo ?
+      {isVideo ? (
         <>
-          {loading &&
-            <RoundedCornerMediaLoader classes={cl(baseClasses, 'items-center !aspect-square')} />
-          }
-          {isBase64Image
-            ? (
-              <BlurImage
-                alt='NFT Image'
-                placeholder='empty'
-                src={videoSrcs.src}
-                fill
-                className={cl(baseClasses, 'aspect-square')}
-              />)
-            : (
-              <video
-                autoPlay
-                muted={!videoOverride}
-                loop
-                key={src}
-                poster={videoSrcs?.src}
-                onLoadedData={() => setLoading(false)}
-                className={cl(baseClasses, 'aspect-square')}
-              />)}
+          {loading && <RoundedCornerMediaLoader classes={cl(baseClasses, 'items-center !aspect-square')} />}
+          {isBase64Image ? (
+            <BlurImage
+              alt='NFT Image'
+              placeholder='empty'
+              src={videoSrcs.src}
+              fill
+              className={cl(baseClasses, 'aspect-square')}
+            />
+          ) : (
+            <video
+              autoPlay
+              muted={!videoOverride}
+              loop
+              key={src}
+              poster={videoSrcs?.src}
+              onLoadedData={() => setLoading(false)}
+              className={cl(baseClasses, 'aspect-square')}
+            />
+          )}
           {/* { // TODO: Support adding media/file types if we add video/audio support
               videoSrcs?.srcs.map(src => (<source src={src} key={src} />))
             }
           </video> */}
         </>
-        : rawImageBool
-          ? renderRawImage()
-          :
-          (imageUrl != 'null?width=600') && <DynamicRoundedCornerMediaImage
+      ) : rawImageBool ? (
+        renderRawImage()
+      ) : (
+        // eslint-disable-next-line eqeqeq
+        imageUrl != 'null?width=600' && (
+          <DynamicRoundedCornerMediaImage
             priority={priority}
             src={imageUrl}
             width={300}
@@ -200,7 +182,8 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia({
             }}
             className={baseClasses}
           />
-      }
+        )
+      )}
     </div>
   );
 });

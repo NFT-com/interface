@@ -1,13 +1,15 @@
-import BlurImage from 'components/elements/BlurImage';
-import { HomePageV2 } from 'types/HomePage';
-import { getBaseUrl } from 'utils/helpers';
-import { tw } from 'utils/tw';
-
-import ArrowNav from '*.svg?svgr';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+
+import BlurImage from 'components/elements/BlurImage';
+import { getBaseUrl } from 'utils/helpers';
+import { tw } from 'utils/tw';
+
+import { HomePageV2 } from 'types/HomePage';
+
+import ArrowNav from '*.svg?svgr';
 
 export interface HomePageData {
   data?: HomePageV2;
@@ -16,11 +18,7 @@ export interface HomePageData {
 export default function ProfileSection({ data }: HomePageData) {
   return (
     <div className='bg-[#282828]'>
-      <div
-        className={tw(
-          'relative z-0 py-[2.5rem] minlg:pb-[7.625rem] minlg:pt-[6.25rem]'
-        )}
-      >
+      <div className={tw('relative z-0 py-[2.5rem] minlg:pb-[7.625rem] minlg:pt-[6.25rem]')}>
         <div className='relative text-center text-white'>
           <h2
             data-aos='fade-up'
@@ -28,11 +26,7 @@ export default function ProfileSection({ data }: HomePageData) {
           >
             Insights
           </h2>
-          <p
-            data-aos='fade-up'
-            data-aos-delay='100'
-            className='mb-[3.75rem] text-lg'
-          >
+          <p data-aos='fade-up' data-aos-delay='100' className='mb-[3.75rem] text-lg'>
             Learn about the latest trends and updates in the world of NFTs.
           </p>
         </div>
@@ -80,16 +74,14 @@ export default function ProfileSection({ data }: HomePageData) {
                     <BlurImage
                       fill
                       className='rounded-t-lg object-cover'
-                      src={`${getBaseUrl(
-                        'https://www.nft.com/'
-                      )}api/imageFetcher?gcp=false&url=${encodeURIComponent(
+                      src={`${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=false&url=${encodeURIComponent(
                         preview?.heroImage?.url
                       )}`}
                       alt={preview.title}
                     />
                   </div>
 
-                  <div className='flex flex-grow flex-col items-start px-4 py-5 minxxl:px-7 minxxl:py-8'>
+                  <div className='flex grow flex-col items-start px-4 py-5 minxxl:px-7 minxxl:py-8'>
                     <h3
                       className={tw(
                         'text-[1.125rem] leading-[1.09375] minlg:text-[2rem] minxxl:text-[2.75rem] ',
@@ -121,11 +113,7 @@ export default function ProfileSection({ data }: HomePageData) {
           </Swiper>
         </div>
 
-        <div
-          data-aos='zoom-in'
-          data-aos-delay='100'
-          className='relative flex flex-col text-center minmd:block'
-        >
+        <div data-aos='zoom-in' data-aos-delay='100' className='relative flex flex-col text-center minmd:block'>
           <a
             href={data?.newsCta?.link}
             className={tw(

@@ -1,13 +1,12 @@
-import BlurImage from 'components/elements/BlurImage';
-import { HomePageV3Hero } from 'types/HomePage';
-import { tw } from 'utils/tw';
-
 import dynamic from 'next/dynamic';
 
-const Player = dynamic(() =>
-  import('@lottiefiles/react-lottie-player').then(mod => mod.Player)
-);
+import BlurImage from 'components/elements/BlurImage';
 import { contentfulLoader } from 'lib/image/loader';
+import { tw } from 'utils/tw';
+
+import { HomePageV3Hero } from 'types/HomePage';
+
+const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then(mod => mod.Player));
 
 export interface HomePageData {
   data: HomePageV3Hero;
@@ -121,12 +120,7 @@ export default function HeroSection({ data }: HomePageData) {
             </div>
           </div>
 
-          <div
-            className={tw(
-              'absolute inset-0 px-4',
-              'flex items-center justify-center'
-            )}
-          >
+          <div className={tw('absolute inset-0 px-4', 'flex items-center justify-center')}>
             <div
               id='anim-hero-caption'
               className={tw(
@@ -142,19 +136,13 @@ export default function HeroSection({ data }: HomePageData) {
                 NFT.COM
                 <div
                   role='presentation'
-                  className={tw(
-                    'mx-2 minlg:mx-4 minxxl:mx-8',
-                    'h-[.68em] w-[.1081em] basis-[.1081em]'
-                  )}
+                  className={tw('mx-2 minlg:mx-4 minxxl:mx-8', 'h-[.68em] w-[.1081em] basis-[.1081em]')}
                 ></div>
                 PLANTS
               </div>
 
               <div
-                className={tw(
-                  'absolute inset-x-4 bottom-0 top-0 minlg:inset-x-7 minxxl:inset-x-10',
-                  'flex text-white'
-                )}
+                className={tw('absolute inset-x-4 bottom-0 top-0 minlg:inset-x-7 minxxl:inset-x-10', 'flex text-white')}
               >
                 {data?.dynamicUrls?.map(word => (
                   <a

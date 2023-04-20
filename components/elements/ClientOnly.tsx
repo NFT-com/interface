@@ -1,8 +1,9 @@
 'use client';
-import { ReactNode, useEffect,useState } from 'react';
+
+import { ReactNode, useEffect, useState } from 'react';
 
 interface ClientOnlyProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 /**
@@ -11,7 +12,7 @@ interface ClientOnlyProps {
  * @param {ReactNode} children - the children to render if the page has mounted.
  * @returns None
  */
-const ClientOnly:React.FC<ClientOnlyProps> = ({ children, ...delegated }) => {
+const ClientOnly: React.FC<ClientOnlyProps> = ({ children, ...delegated }) => {
   // State / Props
   const [hasMounted, setHasMounted] = useState(false);
 
@@ -23,11 +24,7 @@ const ClientOnly:React.FC<ClientOnlyProps> = ({ children, ...delegated }) => {
   // Render
   if (!hasMounted) return null;
 
-  return (
-    <div {...delegated}>
-      {children}
-    </div>
-  );
+  return <div {...delegated}>{children}</div>;
 };
 
 export default ClientOnly;

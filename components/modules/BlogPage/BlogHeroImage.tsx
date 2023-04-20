@@ -1,5 +1,6 @@
-import { contentfulLoader } from 'lib/image/loader';
 import Image from 'next/image';
+
+import { contentfulLoader } from 'lib/image/loader';
 
 type HeroProps = {
   src: string;
@@ -8,14 +9,8 @@ type HeroProps = {
 
 export default function BlogHeroImage({ src, alt }: HeroProps) {
   return (
-    <div className="aspect-video minxl:h-blogHero-xl minlg:h-blogHero-lg w-full relative overflow-hidden pb-4 rounded-md border border-gray-100/50 drop-shadow-md">
-      <Image
-        src={src}
-        alt={alt}
-        className="object-cover"
-        loader={contentfulLoader}
-        fill
-      />
+    <div className='relative aspect-video w-full overflow-hidden rounded-md border border-gray-100/50 pb-4 drop-shadow-md minlg:h-blogHero-lg minxl:h-blogHero-xl'>
+      <Image src={src} alt={alt} className='object-cover' loader={contentfulLoader} fill />
     </div>
   );
 }

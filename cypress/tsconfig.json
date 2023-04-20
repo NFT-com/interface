@@ -2,10 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "jsx": "preserve",
-    "lib": [
-      "es5",
-      "dom"
-    ],
+    "lib": ["es5", "dom"],
     "types": [
       "cypress",
       "@testing-library/cypress",
@@ -14,13 +11,7 @@
       "@4tw/cypress-drag-drop",
       "node"
     ],
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "../../**/*.ts",
-    "../../component/**/*.tsx",
-    "../../component/**/*.ts",
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "../../**/*.ts", "../../component/**/*.tsx", "../../component/**/*.ts"]
 }

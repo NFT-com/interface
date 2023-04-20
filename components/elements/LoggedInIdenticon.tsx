@@ -1,12 +1,13 @@
+import { useEffect, useRef } from 'react';
+import Identicon1 from 'react-identicons';
+import Jazzicon from '@metamask/jazzicon';
+import Image from 'next/image';
+import { useAccount } from 'wagmi';
+
 import { useMyPhotoQuery } from 'graphql/hooks/useMyPhotoQuery';
 import { joinClasses } from 'utils/format';
 
-import Jazzicon from '@metamask/jazzicon';
-import Image from 'next/image';
-import { useEffect, useRef } from 'react';
-import Identicon1 from 'react-identicons';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-import { useAccount } from 'wagmi';
 
 export interface LoggedInIdenticonProps {
   large?: boolean;

@@ -1,3 +1,8 @@
+import { useState } from 'react';
+import { BigNumber } from 'ethers';
+import { ArrowsClockwise, GasPump, XCircle } from 'phosphor-react';
+import { useAccount } from 'wagmi';
+
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
@@ -7,14 +12,9 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 
 import SettingsForm from './SettingsForm';
 
-import { BigNumber } from 'ethers';
-import { ArrowsClockwise, GasPump, XCircle } from 'phosphor-react';
-import { useState } from 'react';
-import { useAccount } from 'wagmi';
-
 type TransferProfileProps = {
-  selectedProfile: string
-}
+  selectedProfile: string;
+};
 
 export default function TransferProfile({ selectedProfile }: TransferProfileProps) {
   const { setCurrentProfileUrl, setHiddenProfileWithExpiry } = useUser();
@@ -64,15 +64,18 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
   };
 
   return (
-    <div id="transfer" className='mt-10 bg-[#FFF1F1] p-4 rounded-[10px]'>
-      <h2 className='font-noi-grotesk tracking-wide font-bold text-black text-2xl mb-1'>
-        Transfer Profile
-      </h2>
-      <p className='text-blog-text-reskin mb-4'>
+    <div id='transfer' className='mt-10 rounded-[10px] bg-[#FFF1F1] p-4'>
+      <h2 className='mb-1 font-noi-grotesk text-2xl font-bold tracking-wide text-black'>Transfer Profile</h2>
+      <p className='mb-4 text-blog-text-reskin'>
         Send this profile to another wallet. You will lose access to this profile.
       </p>
 
-      <SettingsForm buttonText='Transfer Profile' changeHandler={setInputVal} submitHandler={setModalOpen} {...{ inputVal }} />
+      <SettingsForm
+        buttonText='Transfer Profile'
+        changeHandler={setInputVal}
+        submitHandler={setModalOpen}
+        {...{ inputVal }}
+      />
 
       <Modal
         visible={visible}
@@ -86,75 +89,78 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
         fullModal
         pure
       >
-        <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
-          <div className='pt-28 font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
-            <XCircle onClick={() => closeModal()} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
-            {
-              transactionPending ?
-                <>
-                  <div className='flex mb-10 items-center'>
-                    <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2 animate-spin-slow' />
-                    <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
-                  </div>
+        <div className='maxlg:h-max h-screen max-w-full rounded-none bg-white px-4 pb-10 text-left minlg:m-auto minlg:mt-24 minlg:h-max minlg:max-w-[458px] minlg:rounded-[10px]'>
+          <div className='m-auto max-w-lg pt-28 font-noi-grotesk minlg:relative lg:max-w-md'>
+            <div className='absolute right-4 top-4 h-6 w-6 rounded-full bg-[#F9D963] hover:cursor-pointer minlg:right-1'></div>
+            <XCircle
+              onClick={() => closeModal()}
+              className='absolute right-3 top-3 hover:cursor-pointer minlg:right-0'
+              size={32}
+              color='black'
+              weight='fill'
+            />
+            {transactionPending ? (
+              <>
+                <div className='mb-10 flex items-center'>
+                  <ArrowsClockwise size={32} color='#6f6f6f' weight='fill' className='mr-2 animate-spin-slow' />
+                  <h2 className='text-4xl font-bold tracking-wide'>One second...</h2>
+                </div>
 
-                  <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
-                </>
-                :
-                success
-                  ?
-                  (
-                    <>
-                      <h2 className='text-4xl tracking-wide font-bold mb-10'>Transfer In Progress</h2>
+                <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
+              </>
+            ) : success ? (
+              <>
+                <h2 className='mb-10 text-4xl font-bold tracking-wide'>Transfer In Progress</h2>
 
-                      <p className='text-[#6F6F6F] mb-6'>
-                        You can confirm this transaction on{' '}
-                        <a
-                          target="_blank"
-                          rel="noreferrer" href={`https://goerli.etherscan.io/tx/${transaction}`} className='font-bold underline tracking-wide text-black'>Etherscan.
-                        </a>
-                        You can safely navigate away from this screen and return to NFT.com
-                      </p>
-                      <Button
-                        type={ButtonType.PRIMARY}
-                        size={ButtonSize.LARGE}
-                        label='Return to NFT.com'
-                        onClick={() => { closeModal(); }}
-                        stretch
-                      />
-                    </>
-                  )
-                  :
-                  (
-                    <>
-                      <h2 className='text-4xl tracking-wide font-bold mb-10'>Confirm Transfer</h2>
-                      <p className='text-[#6F6F6F]'>You’re about to transfer{' '}
-                        <span className='font-bold text-black tracking-wide'>
-                          {selectedProfile}
-                        </span>
-                        {' '}to{' '}
-                        <span className='font-mono text-black text-xl break-words mt-2'>
-                          {inputVal}
-                        </span>
-                      </p>
+                <p className='mb-6 text-[#6F6F6F]'>
+                  You can confirm this transaction on{' '}
+                  <a
+                    target='_blank'
+                    rel='noreferrer'
+                    href={`https://goerli.etherscan.io/tx/${transaction}`}
+                    className='font-bold tracking-wide text-black underline'
+                  >
+                    Etherscan.
+                  </a>
+                  You can safely navigate away from this screen and return to NFT.com
+                </p>
+                <Button
+                  type={ButtonType.PRIMARY}
+                  size={ButtonSize.LARGE}
+                  label='Return to NFT.com'
+                  onClick={() => {
+                    closeModal();
+                  }}
+                  stretch
+                />
+              </>
+            ) : (
+              <>
+                <h2 className='mb-10 text-4xl font-bold tracking-wide'>Confirm Transfer</h2>
+                <p className='text-[#6F6F6F]'>
+                  You’re about to transfer <span className='font-bold tracking-wide text-black'>{selectedProfile}</span>{' '}
+                  to <span className='mt-2 break-words font-mono text-xl text-black'>{inputVal}</span>
+                </p>
 
-                      <p className='my-6 text-[#6F6F6F]'>
-                        Please confirm this address is correct. Once the transfer process begins, you will lose access to this profile.
-                      </p>
-                      <Button
-                        type={ButtonType.PRIMARY}
-                        size={ButtonSize.LARGE}
-                        label='Transfer Profile'
-                        onClick={() => submitHandler()}
-                        stretch
-                      />
-                      <div className='flex items-center font-noi-grotesk text-blog-text-reskin justify-center mt-2 text-sm'>
-                        <GasPump size={20} weight="fill" />
-                        <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
-                      </div>
-                    </>
-                  )
-            }
+                <p className='my-6 text-[#6F6F6F]'>
+                  Please confirm this address is correct. Once the transfer process begins, you will lose access to this
+                  profile.
+                </p>
+                <Button
+                  type={ButtonType.PRIMARY}
+                  size={ButtonSize.LARGE}
+                  label='Transfer Profile'
+                  onClick={() => submitHandler()}
+                  stretch
+                />
+                <div className='mt-2 flex items-center justify-center font-noi-grotesk text-sm text-blog-text-reskin'>
+                  <GasPump size={20} weight='fill' />
+                  <p className='ml-1'>
+                    This action will require a <span className='border-b	border-dashed border-[#6F6F6F]'>gas fee.</span>
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </Modal>

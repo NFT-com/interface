@@ -1,8 +1,9 @@
+import React from 'react';
+
 import BlurImage from 'components/elements/BlurImage';
-import { HomePageV3WhatWeCanDo } from 'types/HomePage';
 import { tw } from 'utils/tw';
 
-import React from 'react';
+import { HomePageV3WhatWeCanDo } from 'types/HomePage';
 
 export interface HomePageData {
   data: HomePageV3WhatWeCanDo;
@@ -10,7 +11,7 @@ export interface HomePageData {
 export default function WhatWeCanDo({ data }: HomePageData) {
   return (
     <section
-      className='pb-20 pt-20 minlg:pb-36 minxl:pb-44'
+      className='py-20 minlg:pb-36 minxl:pb-44'
       style={{
         background: 'url("/bg-profile.webp") no-repeat 50% 100%/100% auto'
       }}
@@ -24,11 +25,7 @@ export default function WhatWeCanDo({ data }: HomePageData) {
           )}
         >
           {data?.whatWeCanDoTitle.gradientTitle?.blackWord}
-          <span
-            className={tw(
-              'ml-1 bg-gradient-to-r from-[#FCC315] to-[#FF9C38] bg-clip-text text-transparent'
-            )}
-          >
+          <span className={tw('ml-1 bg-gradient-to-r from-[#FCC315] to-[#FF9C38] bg-clip-text text-transparent')}>
             {data?.whatWeCanDoTitle.gradientTitle?.orangeWord}
           </span>
         </h2>

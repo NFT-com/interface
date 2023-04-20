@@ -1,10 +1,11 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+
 import { OfficialCollectionNfTsOutput } from 'graphql/generated/types';
-import { SitemapQueryVariables } from 'types';
+import { client, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
 import chunkArray from 'utils/chunkArray';
 import timeout from 'utils/timeout';
 
-import { client, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { SitemapQueryVariables } from 'types';
 
 /**
  * Serverless API route for querying server sitemap index.
@@ -29,75 +30,77 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     client.setHeader('teamKey', teamKey);
 
-    sitemapUrls.push(
-      `${sitemapHostUrl}/collection-sitemap.xml`,
-      `${sitemapHostUrl}/article-sitemap.xml`
-    );
-    const officialCollections = await client.request(
-      gqlQueries.officialCollections,
-      {
+    sitemapUrls.push(`${sitemapHostUrl}/collection-sitemap.xml`, `${sitemapHostUrl}/article-sitemap.xml`);
+    const officialCollections = await client
+      .request(gqlQueries.officialCollections, {
         input: {
           offsetPageInput: {
             page: 1
           }
         }
-      }).then(data => data.officialCollections);
+      })
+      .then(data => data.officialCollections);
 
-    officialCollections && officialCollections.items.forEach((officialCollection) => {
-      const { chainId, contract, slug } = officialCollection;
-      const collectionNftInput = {
-        input: {
+    officialCollections &&
+      officialCollections.items.forEach(officialCollection => {
+        const { chainId, contract, slug } = officialCollection;
+        const collectionNftInput = {
+          input: {
+            chainId,
+            collectionAddress: contract,
+            offsetPageInput: { page: 1 }
+          }
+        };
+
+        sitemapUrls.push(`${sitemapHostUrl}/collection/official/${slug}/chain/${chainId}/page/${1}.xml`);
+
+        collectionNftFirstPagePromises.push({
           chainId,
-          collectionAddress: contract,
-          offsetPageInput: { page: 1 }
-        }
-      };
-
-      sitemapUrls.push(`${sitemapHostUrl}/collection/official/${slug}/chain/${chainId}/page/${1}.xml`);
-
-      collectionNftFirstPagePromises.push({
-        chainId,
-        contract,
-        slug,
-        document: gqlQueries.collectionNfts,
-        variables: collectionNftInput
+          contract,
+          slug,
+          document: gqlQueries.collectionNfts,
+          variables: collectionNftInput
+        });
       });
-    });
 
     const batchedRequests = chunkArray(collectionNftFirstPagePromises, 200);
-    const results = await Promise.all(batchedRequests.map(async (batchedRequest, i) => {
-      // Add delay to get around unknown rate limit from either gql, aws waf, or cloudflare
-      const round = `batch-${i + 1}`;
-      console.log(`⏰ Start ${round}`);
-      console.time(`${round}`);
-      if (i > 0) await timeout((i + 1) * 10000);
-      console.log(`⏳ Delay ${round}`);
-      console.timeLog(`${round}`);
-      return client.batchRequests<{ data: { officialCollectionNFTs: OfficialCollectionNfTsOutput } }[]>(batchedRequest).then(
-        data => {
-          console.timeEnd(`${round}`);
-          console.log(`✅ End ${round}`);
-          return data.map((pageResult, index) => ({
-            ...pageResult?.data.officialCollectionNFTs,
-            chainId: batchedRequest[index].chainId,
-            contract: batchedRequest[index].contract,
-            slug: batchedRequest[index].slug,
-          }));
-        }
-      );
-    }
-    ));
+    const results = await Promise.all(
+      batchedRequests.map(async (batchedRequest, i) => {
+        // Add delay to get around unknown rate limit from either gql, aws waf, or cloudflare
+        const round = `batch-${i + 1}`;
+        console.log(`⏰ Start ${round}`);
+        console.time(`${round}`);
+        if (i > 0) await timeout((i + 1) * 10000);
+        console.log(`⏳ Delay ${round}`);
+        console.timeLog(`${round}`);
+        return client
+          .batchRequests<{ data: { officialCollectionNFTs: OfficialCollectionNfTsOutput } }[]>(batchedRequest)
+          .then(data => {
+            console.timeEnd(`${round}`);
+            console.log(`✅ End ${round}`);
+            return data.map((pageResult, index) => ({
+              ...pageResult?.data.officialCollectionNFTs,
+              chainId: batchedRequest[index].chainId,
+              contract: batchedRequest[index].contract,
+              slug: batchedRequest[index].slug
+            }));
+          });
+      })
+    );
 
-    results && results.flat(2).forEach((result) => {
-      if (result) {
-        const { chainId, slug, pageCount } = result;
-        if (pageCount > 1) {
-          for (let pgIndex = 0; pgIndex < pageCount - 1; pgIndex += 1) {
-            sitemapUrls.push(`${sitemapHostUrl}/collection/official/${slug}/chain/${chainId}/page/${pgIndex + 2}.xml`);
+    results &&
+      results.flat(2).forEach(result => {
+        if (result) {
+          const { chainId, slug, pageCount } = result;
+          if (pageCount > 1) {
+            for (let pgIndex = 0; pgIndex < pageCount - 1; pgIndex += 1) {
+              sitemapUrls.push(
+                `${sitemapHostUrl}/collection/official/${slug}/chain/${chainId}/page/${pgIndex + 2}.xml`
+              );
+            }
           }
         }
-      }
-    });
+      });
 
     // Cache API response for 24hrs
     res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');

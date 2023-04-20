@@ -1,23 +1,24 @@
+import React, { useEffect, useRef, useState } from 'react';
+
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw';
 
 import ArrowDown from 'public/icons/arrow-down-black.svg?svgr';
-import React, { useEffect, useRef,useState } from 'react';
 
 interface FilterInputOptionProps {
-  fieldName?: string,
-  currency?: string,
-  isOpen?: boolean,
-  max?: string | number,
-  min?: string | number,
-  setMinMaxValues: (value: Array<number | string>) => void,
-  toggleSelect?: (value: boolean) => void,
-  changeCurrency?: (value: string) => void,
+  fieldName?: string;
+  currency?: string;
+  isOpen?: boolean;
+  max?: string | number;
+  min?: string | number;
+  setMinMaxValues: (value: Array<number | string>) => void;
+  toggleSelect?: (value: boolean) => void;
+  changeCurrency?: (value: string) => void;
 }
 function useOutsideCLick(ref, props) {
   useEffect(() => {
-    if(!props.isOpen) return;
+    if (!props.isOpen) return;
     function handleClickOutside(event) {
       if (ref.current && !ref.current.contains(event.target)) {
         props.toggleSelect(props.isOpen);
@@ -39,13 +40,13 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
   const [isError, setError] = useState(false);
   useOutsideCLick(wrapperRef, props);
   useEffect(() => {
-    if(!maxVal){
+    if (!maxVal) {
       setError(false);
     }
-    if(Number(maxVal) && Number(maxVal) > 0){
-      if(Number(minVal) > Number(maxVal)){
+    if (Number(maxVal) && Number(maxVal) > 0) {
+      if (Number(minVal) > Number(maxVal)) {
         setError(true);
-      }else {
+      } else {
         setError(false);
       }
     }
@@ -53,38 +54,66 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
 
   return (
     <div ref={wrapperRef}>
-      <div className="flex justify-between items-center mb-2.5 mt-4">
-        <div className="w-[50%]">
-          <input lang="en_EN"
+      <div className='mb-2.5 mt-4 flex items-center justify-between'>
+        <div className='w-[50%]'>
+          <input
+            lang='en_EN'
             value={minVal}
-            onChange={(val) => setValueMin(val.target.value)}
+            onChange={val => setValueMin(val.target.value)}
             placeholder='Min'
             className={tw(
-              'h-[46px] focus:outline-none focus:ring-0 w-full border-none bg-[#F2F2F2] outline-none rounded-[8px]',
+              'h-[46px] w-full rounded-[8px] border-none bg-[#F2F2F2] outline-none focus:outline-none focus:ring-0',
               isError ? 'bg-[#ff5d5d]' : ''
             )}
-            type="number"/>
-          {/*${isError ? 'bg-red' : ''*/}
+            type='number'
+          />
+          {/* ${isError ? 'bg-red' : '' */}
         </div>
-        <div className="px-2">to</div>
-        <div className="w-[50%]">
-          <input lang="en_EN" value={maxVal} onChange={(val) => setValueMax(val.target.value)} placeholder='Max' className="h-[46px] focus:outline-none focus:ring-0 w-full border-none bg-[#F2F2F2] outline-none rounded-[8px]" type="number"/>
+        <div className='px-2'>to</div>
+        <div className='w-[50%]'>
+          <input
+            lang='en_EN'
+            value={maxVal}
+            onChange={val => setValueMax(val.target.value)}
+            placeholder='Max'
+            className='h-[46px] w-full rounded-[8px] border-none bg-[#F2F2F2] outline-none focus:outline-none focus:ring-0'
+            type='number'
+          />
         </div>
       </div>
-      <div className='mb-2.5 relative'>
-        <div onClick={() => props.toggleSelect(props.isOpen)} className={`${props.isOpen ? 'rounded-b-[0]' : ''} text-black w-full border-none bg-[#F2F2F2] h-[46px] flex items-center justify-between pl-2 pr-4 rounded-[8px]`}>
+      <div className='relative mb-2.5'>
+        <div
+          onClick={() => props.toggleSelect(props.isOpen)}
+          className={`${
+            props.isOpen ? 'rounded-b-[0]' : ''
+          } flex h-[46px] w-full items-center justify-between rounded-[8px] border-none bg-[#F2F2F2] pl-2 pr-4 text-black`}
+        >
           {props.currency ? props.currency : 'ETH'}
-          {!isDiscoverCollections ? <ArrowDown/> : null}
+          {!isDiscoverCollections ? <ArrowDown /> : null}
         </div>
-        <ul className={`${props.isOpen ? 'h-[96px]' : 'h-0'} bg-[#F2F2F2] transition-all relative w-full p-0 h-0 overflow-hidden rounded-b-[8px]`}>
-          <li onClick={() => {
-            props.changeCurrency('ETH');
-            props.toggleSelect(props.isOpen);
-          }} className='cursor-pointer hover:bg-[#F9D54C] flex items-center text-black h-[46px] px-2 list-none m-0'>ETH</li>
-          <li onClick={() => {
-            props.changeCurrency('WETH');
-            props.toggleSelect(props.isOpen);
-          }} className='cursor-pointer hover:bg-[#F9D54C] flex items-center text-black h-[46px] px-2 list-none m-0'>WETH</li>
+        <ul
+          className={`${
+            props.isOpen ? 'h-[96px]' : 'h-0'
+          } relative h-0 w-full overflow-hidden rounded-b-[8px] bg-[#F2F2F2] p-0 transition-all`}
+        >
+          <li
+            onClick={() => {
+              props.changeCurrency('ETH');
+              props.toggleSelect(props.isOpen);
+            }}
+            className='m-0 flex h-[46px] cursor-pointer list-none items-center px-2 text-black hover:bg-[#F9D54C]'
+          >
+            ETH
+          </li>
+          <li
+            onClick={() => {
+              props.changeCurrency('WETH');
+              props.toggleSelect(props.isOpen);
+            }}
+            className='m-0 flex h-[46px] cursor-pointer list-none items-center px-2 text-black hover:bg-[#F9D54C]'
+          >
+            WETH
+          </li>
         </ul>
       </div>
       <Button
@@ -94,8 +123,9 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
         label={'Apply'}
         type={ButtonType.PRIMARY}
         onClick={() => {
-          props.setMinMaxValues([minVal,maxVal]);
-        }}/>
+          props.setMinMaxValues([minVal, maxVal]);
+        }}
+      />
     </div>
   );
 };

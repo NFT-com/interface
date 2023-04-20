@@ -12,15 +12,7 @@ export interface RoundedCornerMediaImageProps extends Omit<ImageProps, 'alt'> {
 }
 
 const RoundedCornerMediaImage = (props: RoundedCornerMediaImageProps) => {
-  return (
-    <BlurImage
-      alt='NFT Image'
-      key={props.src}
-      quality='50'
-      fill
-      {...props}
-    />
-  );
+  return <BlurImage alt='NFT Image' key={props.src} quality='50' fill {...props} />;
 };
 
 export default RoundedCornerMediaImage;

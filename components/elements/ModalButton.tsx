@@ -12,17 +12,17 @@ export interface ModalButtonProps {
 
 export function ModalButton(props: ModalButtonProps) {
   return (
-    <div className="flex items-center justify-center">
+    <div className='flex items-center justify-center'>
       <div
         style={{
           backgroundColor: props.loading ? '#6B7280' : props?.bgColor ?? '#05C0FC',
           color: props?.textColor ?? '#FFFFFF',
-          outline: props?.outline ?? 'none',
+          outline: props?.outline ?? 'none'
         }}
         onClick={props.onClick}
         className={joinClasses(
-          'cursor-pointer font-bold flex items-center',
-          'justify-center w-full rounded-xl h-10 text-lg px-4'
+          'flex cursor-pointer items-center font-bold',
+          'h-10 w-full justify-center rounded-xl px-4 text-lg'
         )}
       >
         {props.loading ? <Loader /> : props.text}

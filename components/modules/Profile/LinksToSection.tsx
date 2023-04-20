@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from 'next/link';
+
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getAddress } from 'utils/httpHooks';
-
-import Link from 'next/link';
 
 export interface LinksToSectionParams {
   isAddressOwner: boolean;
@@ -83,32 +83,21 @@ export function LinksToSection(props: LinksToSectionParams) {
   ];
 
   return (
-    <div className="flex flex-col minxl:flex-row space-y-4 minxl:space-y-0 space-x-0 minxl:space-x-4 w-auto minxl:w-full">
-      {
-        (isAddressOwner ? ownerlinksContents : notOwnerlinksContents)
-          .map((item) =>
-            (
-              <Link href={item.linkTo}
-                key={item.section}
-                legacyBehavior
-              >
-                <a
-                  target='_blank'
-                  key={item.section}
-                  className="bg-footer-bg rounded-xl lg:w-full w-52 grow cursor-pointer">
-                  <div className="text-sm minxl:text-lg p-2 minlg:p-4">{item.section}</div>
-                  <div className="w-full">
-                    <img src={item.image} className="object-center object-cover w-full" alt="link to section" />
-                  </div>
-                  <div className="p-3 minlg:p-4">
-                    <div className="mb-1 text-base minxl:text-xl">{item.title}</div>
-                    <div className="text-xs minxl:text-base">{item.description}</div>
-                  </div>
-                </a>
-              </Link>
-            )
-          )
-      }
+    <div className='flex w-auto flex-col space-x-0 space-y-4 minxl:w-full minxl:flex-row minxl:space-x-4 minxl:space-y-0'>
+      {(isAddressOwner ? ownerlinksContents : notOwnerlinksContents).map(item => (
+        <Link href={item.linkTo} key={item.section} legacyBehavior>
+          <a target='_blank' key={item.section} className='w-52 grow cursor-pointer rounded-xl bg-footer-bg lg:w-full'>
+            <div className='p-2 text-sm minlg:p-4 minxl:text-lg'>{item.section}</div>
+            <div className='w-full'>
+              <img src={item.image} className='w-full object-cover object-center' alt='link to section' />
+            </div>
+            <div className='p-3 minlg:p-4'>
+              <div className='mb-1 text-base minxl:text-xl'>{item.title}</div>
+              <div className='text-xs minxl:text-base'>{item.description}</div>
+            </div>
+          </a>
+        </Link>
+      ))}
     </div>
   );
 }

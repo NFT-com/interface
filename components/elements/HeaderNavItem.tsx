@@ -1,12 +1,12 @@
+import React, { ReactElement, useCallback, useState } from 'react';
+import Image from 'next/image';
+
 import {
   TAB_BASE_CLASSES,
   TAB_BOTTOM_BORDER_CLASSES,
   TAB_NO_BORDER_CLASSES,
-  TAB_PINK_BORDER_CLASSES,
+  TAB_PINK_BORDER_CLASSES
 } from 'utils/styles';
-
-import Image from 'next/image';
-import React, { ReactElement, useCallback, useState } from 'react';
 
 export interface HeaderNavItemProps {
   active: boolean;
@@ -44,7 +44,7 @@ export function HeaderNavItem(props: HeaderNavItemProps) {
           onClick={onClick}
           onMouseEnter={() => setHovering(true)}
           onMouseLeave={() => setHovering(false)}
-          draggable="false"
+          draggable='false'
           src={src}
           className={[...styleClasses, ...getTabClasses()].join(' ')}
         />
@@ -56,31 +56,29 @@ export function HeaderNavItem(props: HeaderNavItemProps) {
   const getActiveView = useCallback(() => {
     if (typeof logoActive === 'string') {
       return getImageView(logoActive);
-    } else {
-      return React.cloneElement(logoActive, {
-        className: [...styleClasses, ...getTabClasses()].join(' '),
-        onClick: onClick,
-        alt: alt,
-        onMouseEnter: () => setHovering(true),
-        onMouseLeave: () => setHovering(false),
-        draggable: 'false',
-      });
     }
+    return React.cloneElement(logoActive, {
+      className: [...styleClasses, ...getTabClasses()].join(' '),
+      onClick,
+      alt,
+      onMouseEnter: () => setHovering(true),
+      onMouseLeave: () => setHovering(false),
+      draggable: 'false'
+    });
   }, [logoActive, getImageView, styleClasses, getTabClasses, onClick, alt]);
 
   const getInactiveView = useCallback(() => {
     if (typeof logoInactive === 'string') {
       return getImageView(logoInactive);
-    } else {
-      return React.cloneElement(logoInactive, {
-        className: [...styleClasses, ...getTabClasses()].join(' '),
-        onClick: onClick,
-        alt: alt,
-        onMouseEnter: () => setHovering(true),
-        onMouseLeave: () => setHovering(false),
-        draggable: 'false',
-      });
     }
+    return React.cloneElement(logoInactive, {
+      className: [...styleClasses, ...getTabClasses()].join(' '),
+      onClick,
+      alt,
+      onMouseEnter: () => setHovering(true),
+      onMouseLeave: () => setHovering(false),
+      draggable: 'false'
+    });
   }, [logoInactive, getImageView, styleClasses, getTabClasses, onClick, alt]);
 
   return active || hovering ? getActiveView() : getInactiveView();

@@ -1,10 +1,11 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ChevronDown, ChevronUp } from 'react-feather';
+import Image from 'next/image';
+
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import KeyIcon from 'public/icons/mint-key.svg?svgr';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown, ChevronUp } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
 export interface PickerOption {
@@ -14,7 +15,7 @@ export interface PickerOption {
   icon?: string;
   imageSize?: number;
   customIconClass?: string;
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 export interface DropdownPickerProps {
@@ -46,8 +47,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
   const [optionHoverIndex, setOptionHoverIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [selected, setSelected] = useState(props.options[props.selectedIndex]);
-  const { primaryIcon, secondaryText } =
-    useThemeColors();
+  const { primaryIcon, secondaryText } = useThemeColors();
   const [selectedIndex, setSelectedIndex] = useState(props.selectedIndex);
   const wrapperRef = useRef(null);
   const activeRowRef = useRef(null);
@@ -56,60 +56,67 @@ export function DropdownPicker(props: DropdownPickerProps) {
   });
 
   const onChangeHandler = useCallback(
-    () => props.onChange ? props.onChange(selected?.label || props.options[selectedIndex]?.label) : null
-    ,
-    [selected, props, selectedIndex],
+    () => (props.onChange ? props.onChange(selected?.label || props.options[selectedIndex]?.label) : null),
+    [selected, props, selectedIndex]
   );
 
   useEffect(() => {
-    setSelectedIndex(props.options.findIndex((i) => i.label === selected?.label) >= 0 ? props.options.findIndex((i) => i.label === selected?.label) : selectedIndex);
+    setSelectedIndex(
+      props.options.findIndex(i => i.label === selected?.label) >= 0
+        ? props.options.findIndex(i => i.label === selected?.label)
+        : selectedIndex
+    );
     onChangeHandler();
   }, [selected, props, onChangeHandler, selectedIndex]);
 
-  const getOptionRow = useCallback((item: PickerOption, index: number) => {
-    return (
-      item && <div
-        key={item.label}
-        style={{ height: activeRowRef.current.clientHeight }}
-        className={`flex flex-row w-full pl-2.5 py-3 items-center
+  const getOptionRow = useCallback(
+    (item: PickerOption, index: number) => {
+      return (
+        item && (
+          <div
+            key={item.label}
+            style={{ height: activeRowRef.current.clientHeight }}
+            className={`flex w-full flex-row items-center py-3 pl-2.5
         ${props.centeredText && 'justify-center'}
-        ${ index === optionHoverIndex ? 'text-primary-txt hover:bg-[#FFF4CA] font-medium' : 'text-secondary-txt'}`}
-        onMouseLeave={() => setOptionHoverIndex(null)}
-        onMouseEnter={() => setOptionHoverIndex(index)}
-        onClick={() => {
-          item.onSelect && item.onSelect();
-          setSelected(item);
-        }}
-      >
-        {item.icon && <Image
-          width={20}
-          height={20}
-          className='object-contain relative mr-1'
-          src={item.icon}
-          alt={item.label} />}
-        {item.label}
-      </div>
-    );
-  }, [optionHoverIndex, props.centeredText]);
+        ${index === optionHoverIndex ? 'font-medium text-primary-txt hover:bg-[#FFF4CA]' : 'text-secondary-txt'}`}
+            onMouseLeave={() => setOptionHoverIndex(null)}
+            onMouseEnter={() => setOptionHoverIndex(index)}
+            onClick={() => {
+              item.onSelect && item.onSelect();
+              setSelected(item);
+            }}
+          >
+            {item.icon && (
+              <Image width={20} height={20} className='relative mr-1 object-contain' src={item.icon} alt={item.label} />
+            )}
+            {item.label}
+          </div>
+        )
+      );
+    },
+    [optionHoverIndex, props.centeredText]
+  );
 
-  const expandedIcon = useMemo(() => props.above ?
-    <ChevronDown size={24} color={primaryIcon} /> :
-    <ChevronUp size={24} color={primaryIcon} />, [primaryIcon, props.above]);
+  const expandedIcon = useMemo(
+    () => (props.above ? <ChevronDown size={24} color={primaryIcon} /> : <ChevronUp size={24} color={primaryIcon} />),
+    [primaryIcon, props.above]
+  );
 
-  const collapsedIcon = useMemo(() => props.above ?
-    <ChevronUp size={24} color={primaryIcon} /> :
-    <ChevronDown size={24} color={primaryIcon} />, [primaryIcon, props.above]);
+  const collapsedIcon = useMemo(
+    () => (props.above ? <ChevronUp size={24} color={primaryIcon} /> : <ChevronDown size={24} color={primaryIcon} />),
+    [primaryIcon, props.above]
+  );
 
   return (
     <div
       ref={wrapperRef}
       className={tw(
         props.v2 ? 'rounded-md' : 'rounded-xl',
-        'cursor-pointer flex flex-col items-center',
+        'flex cursor-pointer flex-col items-center',
         'text-sm',
-        props.constrain ? '' : 'w-full h-full shrink-0',
+        props.constrain ? '' : 'h-full w-full shrink-0',
         'text-primary-txt',
-        'whitespace-nowrap justify-between'
+        'justify-between whitespace-nowrap'
       )}
       onClick={() => {
         setExpanded(!expanded);
@@ -117,68 +124,70 @@ export function DropdownPicker(props: DropdownPickerProps) {
     >
       <div
         ref={activeRowRef}
-        className={tw('flex flex-row items-center px-2.5',
-          'py-2 h-full',
+        className={tw(
+          'flex flex-row items-center px-2.5',
+          'h-full py-2',
           'bg-white',
-          props.v2 ? 'rounded-md border-2 border-gray-300' : 'rounded-xl shadow-lg border-0 ',
-          'justify-between w-full')}
+          props.v2 ? 'rounded-md border-2 border-gray-300' : 'rounded-xl border-0 shadow-lg ',
+          'w-full justify-between'
+        )}
         key={props?.options[selectedIndex]?.label}
       >
-        {props.showKeyIcon &&
-        <div className='w-6'>
-          <KeyIcon className='inline mr-1' stroke="black" />
-        </div>
-        }
-        <div className='flex items-center w-full'>
-          {props?.options[selectedIndex]?.icon &&
-            <div className={`mr-1 relative w-[${props?.options[selectedIndex]?.imageSize || 26}px] h-[${props?.options[selectedIndex]?.imageSize || 26}px] flex items-center justify-center ${props?.options[selectedIndex]?.customIconClass || ''}`}>
+        {props.showKeyIcon && (
+          <div className='w-6'>
+            <KeyIcon className='mr-1 inline' stroke='black' />
+          </div>
+        )}
+        <div className='flex w-full items-center'>
+          {props?.options[selectedIndex]?.icon && (
+            <div
+              className={`w-[ relative mr-1${props?.options[selectedIndex]?.imageSize || 26}px] h-[${
+                props?.options[selectedIndex]?.imageSize || 26
+              }px] flex items-center justify-center ${props?.options[selectedIndex]?.customIconClass || ''}`}
+            >
               <Image
                 fill
                 style={{ objectFit: 'contain' }}
                 src={props?.options[selectedIndex]?.icon}
-                alt={props?.options[selectedIndex]?.label} />
+                alt={props?.options[selectedIndex]?.label}
+              />
             </div>
-          }
+          )}
           <div className='mr-2'>
-            {(props.placeholder && !selected) ?
+            {props.placeholder && !selected ? (
               <span style={{ color: secondaryText }}>{props.placeholder}</span>
-              : props.options[selectedIndex]?.label
-            }
+            ) : (
+              props.options[selectedIndex]?.label
+            )}
           </div>
         </div>
-        {expanded
-          ? (
-            expandedIcon
-          )
-          : (
-            collapsedIcon
-          )}
+        {expanded ? expandedIcon : collapsedIcon}
       </div>
 
-      {expanded &&
+      {expanded && (
         <div
           style={{
             maxWidth: wrapperRef.current.clientWidth,
-            marginTop: props.above ?
-              (props.options?.length - 1) * -1 * activeRowRef.current.clientHeight - 12 :
-              activeRowRef.current.clientHeight + 12
+            marginTop:
+              props.above && props.options
+                ? (props.options.length - 1) * -1 * activeRowRef.current.clientHeight - 12
+                : activeRowRef.current.clientHeight + 12
           }}
           className={tw(
             props.v2 ? 'rounded-md' : 'rounded-xl',
             'border border-select-brdr',
             'divide-y',
             'bg-white',
-            'w-full absolute z-[51]',
+            'absolute z-[51] w-full',
             'shadow-lg',
             'max-h-[200px] overflow-auto'
           )}
         >
-
           {props.options?.map((item, index) => {
             return getOptionRow(item, index);
           })}
         </div>
-      }
+      )}
     </div>
   );
 }

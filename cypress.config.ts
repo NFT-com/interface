@@ -6,18 +6,18 @@ export default defineConfig({
   component: {
     devServer: {
       framework: 'next',
-      bundler: 'webpack',
+      bundler: 'webpack'
     },
     setupNodeEvents(on, config) {
       codeCoverageTask(on, config);
       return config;
-    },
+    }
   },
 
   e2e: {
     baseUrl: 'http://localhost:3000',
     env: {
-      url: '/api/__coverage__',
+      url: '/api/__coverage__'
     },
     setupNodeEvents(on, config) {
       codeCoverageTask(on, config);
@@ -25,5 +25,5 @@ export default defineConfig({
       return config;
     },
     retries: 1
-  },
+  }
 });

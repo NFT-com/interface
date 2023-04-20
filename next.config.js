@@ -6,10 +6,10 @@ const withTM = require('next-transpile-modules')([
   'dnd-core',
   '@react-dnd/invariant',
   '@react-dnd/asap',
-  '@react-dnd/shallowequal',
+  '@react-dnd/shallowequal'
 ]);
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
+  enabled: process.env.ANALYZE === 'true'
 });
 const { manifestHeaders, securityHeaders } = require('./config/headers');
 
@@ -24,7 +24,7 @@ Object.entries(v8.getHeapStatistics()).forEach(([key, value]) => {
 });
 
 const sentryWebpackPluginOptions = {
-  silent: true,
+  silent: true
 };
 
 /** @type {import('next').NextConfig} */
@@ -34,10 +34,10 @@ const nextConfig = {
   swcMinify: true, // Enables SWC rust compiler for minification
   experimental: {
     forceSwcTransforms: true,
-    nextScriptWorkers: true,
+    nextScriptWorkers: true
   },
   httpAgentOptions: {
-    keepAlive: true,
+    keepAlive: true
   },
   sentry: { hideSourceMaps: true },
   poweredByHeader: false, // Stops broadcasting stack in header req/resp
@@ -65,13 +65,17 @@ const nextConfig = {
         headers: manifestHeaders
       },
       {
-      // matching all API routes
+        // matching all API routes
         source: '/api/:path*',
         headers: [
           { key: 'Access-Control-Allow-Credentials', value: 'true' },
           { key: 'Access-Control-Allow-Origin', value: '*' },
           { key: 'Access-Control-Allow-Methods', value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT' },
-          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version' },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value:
+              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+          }
         ]
       },
       {
@@ -80,16 +84,26 @@ const nextConfig = {
           { key: 'Access-Control-Allow-Credentials', value: 'true' },
           { key: 'Access-Control-Allow-Origin', value: '*' },
           { key: 'Access-Control-Allow-Methods', value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT' },
-          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version' },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value:
+              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+          }
         ]
       },
-      { source: '/sitemaps/:path*',
+      {
+        source: '/sitemaps/:path*',
         headers: [
           { key: 'Access-Control-Allow-Credentials', value: 'true' },
           { key: 'Access-Control-Allow-Origin', value: '*' },
           { key: 'Access-Control-Allow-Methods', value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT' },
-          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version' },
-        ] }
+          {
+            key: 'Access-Control-Allow-Headers',
+            value:
+              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+          }
+        ]
+      }
     ];
   },
   async redirects() {
@@ -97,23 +111,23 @@ const nextConfig = {
       {
         source: '/app/auctions',
         destination: '/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414',
-        permanent: true,
+        permanent: true
       },
       {
         source: '/app/sale',
         destination: '/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414',
-        permanent: true,
+        permanent: true
       },
       {
         source: '/app/gallery',
         destination: '/app/collection/official/nftcom-genesis-key',
-        permanent: true,
+        permanent: true
       },
       {
         source: '/app/discover',
         destination: '/app/discover/collections',
-        permanent: true,
-      },
+        permanent: true
+      }
     ];
   },
   webpack(config, { dev: isDev, isServer }) {
@@ -121,7 +135,7 @@ const nextConfig = {
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
       resourceQuery: /svgr/, // only use svgr to load svg if path ends with *.svg?svgr
-      use: ['@svgr/webpack'],
+      use: ['@svgr/webpack']
     });
 
     // Re-add default nextjs loader for svg
@@ -131,7 +145,7 @@ const nextConfig = {
       issuer: { not: /\.(css|scss|sass)$/ },
       dependency: { not: ['url'] },
       resourceQuery: { not: [/svgr/] }, // Ignore this rule if the path ends with *.svg?svgr
-      options: { isServer, isDev, basePath: '', assetPrefix: '' },
+      options: { isServer, isDev, basePath: '', assetPrefix: '' }
     });
 
     [
@@ -147,11 +161,7 @@ const nextConfig = {
       'react-is',
       'tslib',
       'typesense'
-    ].map(i => config.resolve.alias[i] = path.resolve(
-      __dirname,
-      'node_modules',
-      i
-    ));
+    ].map(i => (config.resolve.alias[i] = path.resolve(__dirname, 'node_modules', i)));
 
     return config;
   },
@@ -173,8 +183,8 @@ const nextConfig = {
       '5hi24d3w2gny6zrfhekqk6mv4e0cfois.lambda-url.us-east-1.on.aws', // image proxy layer 2
       'nftcom-dev-assets.s3.amazonaws.com',
       'img.cryptokitties.co'
-    ],
-  },
+    ]
+  }
 };
 
 const moduleExports = withTM(nextConfig);

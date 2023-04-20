@@ -14,6 +14,7 @@
       }
     ]
   },
+  "plugins": ["prettier"],
   "overrides": [
     {
       "parser": "@typescript-eslint/parser",
@@ -42,32 +43,28 @@
       "rules": {
         "@typescript-eslint/comma-dangle": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/naming-convention": "warn",
         "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-shadow": "warn",
+        "@typescript-eslint/no-unused-expressions": "off",
+        "@typescript-eslint/no-use-before-define": "off",
         "@typescript-eslint/no-var-requires": "off",
         "array-bracket-spacing": "warn",
-        "array-element-newline": [
-          "error",
-          {
-            "ArrayExpression": "consistent",
-            "ArrayPattern": {
-              "minItems": 3
-            }
-          }
-        ],
+        "array-callback-return": "warn",
+        "consistent-return": "off",
+        "default-case": "off",
         "function-call-argument-newline": ["warn", "consistent"],
         "import/no-anonymous-default-export": "off",
-        "import/prefer-default-export": "off",
+        "import/no-cycle": "off",
+        "import/no-extraneous-dependencies": "off",
         "import/no-unresolved": [
           "error",
           {
             "ignore": ["\\.css$", "\\.svg", "\\.svg?url"]
           }
         ],
-        // "multiline-ternary": [
-        //   "error",
-        //   "always-multiline"
-        // ],
-        // "no-multi-spaces": "warn",
+        "import/prefer-default-export": "off",
+        "no-await-in-loop": "off",
         "no-multiple-empty-lines": [
           "warn",
           {
@@ -81,12 +78,17 @@
             "allowDeclarations": true
           }
         ],
+        "no-nested-ternary": "off",
+        "no-param-reassign": "off",
         "no-restricted-imports": [
           "error",
           {
             "patterns": ["..*"]
           }
         ],
+        "no-restricted-syntax": ["off", "ForOfStatement"],
+        "no-return-assign": "off",
+        "no-sequences": "off",
         "no-trailing-spaces": [
           "warn",
           {
@@ -94,6 +96,8 @@
             "skipBlankLines": true
           }
         ],
+        "no-underscore-dangle": "off",
+        "no-unused-expressions": "off",
         "object-curly-spacing": ["warn", "always"],
         "object-property-newline": [
           "warn",
@@ -108,6 +112,7 @@
             "singleQuote": true
           }
         ],
+        "radix": ["error", "as-needed"],
         "react-hooks/exhaustive-deps": "error",
         "simple-import-sort/exports": "error",
         "simple-import-sort/imports": [
@@ -131,7 +136,7 @@
               ],
               // Internal packages.
               ["^(|pages|components|config|constants|context|graphql|hooks|layouts|lib|state|utils)(/.*|$)"],
-              ["^(~|types)(/.*|$)"],
+              ["^(|types)(/.*|$)"],
               ["^(|public|styles)(/.*|$)"],
               // Parent imports. Put `..` last.
               ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
@@ -142,19 +147,19 @@
             ]
           }
         ],
+        "tailwindcss/no-custom-classname": "off",
         "unused-imports/no-unused-imports": "error",
-        "unused-imports/no-unused-vars": [
-          "error",
-          {
-            "argsIgnorePattern": "^_"
-          }
-        ]
+        "unused-imports/no-unused-vars": "off"
+      }
+    },
+    {
+      "files": ["*.config.js"],
+      "rules": {
+        "global-require": "off",
+        "import/no-extraneous-dependencies": "off",
+        "no-param-reassign": "off",
+        "no-return-assign": "off"
       }
     }
-  ],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  }
+  ]
 }

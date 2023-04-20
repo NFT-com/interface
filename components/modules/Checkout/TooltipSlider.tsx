@@ -1,10 +1,10 @@
-import 'rc-tooltip/assets/bootstrap.css';
-
+import * as React from 'react';
 import type { SliderProps } from 'rc-slider';
 import Slider from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import raf from 'rc-util/lib/raf';
-import * as React from 'react';
+
+import 'rc-tooltip/assets/bootstrap.css';
 
 const HandleTooltip = (props: {
   value: number | string;
@@ -12,7 +12,13 @@ const HandleTooltip = (props: {
   visible: boolean;
   tipFormatter?: (value: number | string) => React.ReactNode;
 }) => {
-  const { value, children, visible, tipFormatter = (val) => `${val} ${val === 1 ? 'Day' : 'Days'}`, ...restProps } = props;
+  const {
+    value,
+    children,
+    visible,
+    tipFormatter = val => `${val} ${val === 1 ? 'Day' : 'Days'}`,
+    ...restProps
+  } = props;
 
   const tooltipRef = React.useRef<any>();
   const rafRef = React.useRef<number | null>(null);
@@ -40,7 +46,7 @@ const HandleTooltip = (props: {
 
   return (
     <Tooltip
-      placement="top"
+      placement='top'
       overlay={tipFormatter(value)}
       overlayInnerStyle={{ minHeight: 'auto' }}
       ref={tooltipRef}
@@ -53,9 +59,10 @@ const HandleTooltip = (props: {
 };
 
 export const handleRender: SliderProps['handleRender'] = (node, props) => {
-  return (<HandleTooltip value={props.value} visible={true/* props.dragging */}>
-    {node}
-  </HandleTooltip>
+  return (
+    <HandleTooltip value={props.value} visible={true /* props.dragging */}>
+      {node}
+    </HandleTooltip>
   );
 };
 
@@ -66,12 +73,7 @@ const TooltipSlider = ({
 }: SliderProps & { tipFormatter?: (value: number) => React.ReactNode; tipProps: any }) => {
   const tipHandleRender: SliderProps['handleRender'] = (node, handleProps) => {
     return (
-      <HandleTooltip
-        value={handleProps.value}
-        visible={handleProps.dragging}
-        tipFormatter={tipFormatter}
-        {...tipProps}
-      >
+      <HandleTooltip value={handleProps.value} visible={handleProps.dragging} tipFormatter={tipFormatter} {...tipProps}>
         {node}
       </HandleTooltip>
     );

@@ -1,7 +1,8 @@
 import { gql, GraphQLClient } from 'graphql-request';
 
-export { siteUrl } from 'next-sitemap.config';
 import { DeploymentEnv, isNotEnv } from 'utils/isEnv';
+
+export { siteUrl } from 'next-sitemap.config';
 
 /**
  * Returns the URL of the sitemap for the given host and path.
@@ -10,10 +11,8 @@ import { DeploymentEnv, isNotEnv } from 'utils/isEnv';
  * @param {string} [options.path] - The path of the sitemap.
  * @returns {string} The URL of the sitemap.
  */
-export const getSitemapUrl = ({ host, path }: {
-  host: string,
-  path?: string
-}) => `${isNotEnv(DeploymentEnv.DEBUG) ? 'https://' : 'http://'}${host}${path.startsWith('/') ? path : `/${path}`}`;
+export const getSitemapUrl = ({ host, path }: { host: string; path?: string }) =>
+  `${isNotEnv(DeploymentEnv.DEBUG) ? 'https://' : 'http://'}${host}${path.startsWith('/') ? path : `/${path}`}`;
 
 /**
  * Creates a new sitemap GraphQL client with the given URL and headers.
@@ -26,7 +25,7 @@ export const getSitemapUrl = ({ host, path }: {
 export const client = new GraphQLClient(process.env.NEXT_PUBLIC_GRAPHQL_URL, {
   cache: 'default',
   headers: {
-    'Connection': 'keep-alive',
+    Connection: 'keep-alive',
     'Keep-Alive': 'timeout=120'
   }
 });

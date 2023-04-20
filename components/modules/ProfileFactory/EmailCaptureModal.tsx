@@ -1,13 +1,13 @@
+import { Fragment, useState } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import { X } from 'phosphor-react';
+
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useMeQuery } from 'graphql/hooks/useMeQuery';
 import { useUpdateMeMutation } from 'graphql/hooks/useUpdateMeMutation';
 import { useEmailCaptureModal } from 'hooks/state/useEmailCaptureModal';
 import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
-
-import { Dialog, Transition } from '@headlessui/react';
-import { X } from 'phosphor-react';
-import { Fragment, useState } from 'react';
 
 export default function EmailCaptureModal() {
   const { updateMe } = useUpdateMeMutation();
@@ -21,7 +21,7 @@ export default function EmailCaptureModal() {
     setEmailCaptureModalOpen(false);
   };
 
-  const submitHandler = async (e) => {
+  const submitHandler = async e => {
     e.preventDefault();
     const result = await updateMe({ email: emailValue });
 
@@ -33,70 +33,80 @@ export default function EmailCaptureModal() {
 
   return (
     <Transition appear show={emailCaptureModal} as={Fragment}>
-      <Dialog as="div" className="relative z-[105]" onClose={() => closeModal()}>
+      <Dialog as='div' className='relative z-[105]' onClose={() => closeModal()}>
         <Transition.Child
           as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+          enter='ease-out duration-300'
+          enterFrom='opacity-0'
+          enterTo='opacity-100'
+          leave='ease-in duration-200'
+          leaveFrom='opacity-100'
+          leaveTo='opacity-0'
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div className='bg-opacity/25 fixed inset-0 bg-black' />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
+        <div className='fixed inset-0 overflow-y-auto'>
+          <div className='flex min-h-full items-center justify-center p-4 text-center'>
             <Transition.Child
               as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
+              enter='ease-out duration-300'
+              enterFrom='opacity-0 scale-95'
+              enterTo='opacity-100 scale-100'
+              leave='ease-in duration-200'
+              leaveFrom='opacity-100 scale-100'
+              leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className={tw(
-                'w-full relative max-w-[424px] transform overflow-hidden rounded-[20px] bg-white text-left align-middle shadow-xl transition-all',
-                'px-4 minmd:px-12 pt-8 pb-7'
-              )}>
+              <Dialog.Panel
+                className={tw(
+                  'relative w-full max-w-[424px] transform overflow-hidden rounded-[20px] bg-white text-left align-middle shadow-xl transition-all',
+                  'px-4 pb-7 pt-8 minmd:px-12'
+                )}
+              >
                 <X
                   onClick={() => closeModal()}
-                  className='z-10 absolute top-5 right-5 hover:cursor-pointer'
+                  className='absolute right-5 top-5 z-10 hover:cursor-pointer'
                   size={20}
-                  color="#8C939A"
-                  weight="fill"
+                  color='#8C939A'
+                  weight='fill'
                 />
 
                 <div className='text-center font-noi-grotesk'>
-                  <h3 className='text-[32px] mb-5 font-medium'>Stay tuned!</h3>
+                  <h3 className='mb-5 text-[32px] font-medium'>Stay tuned!</h3>
 
-                  <p className='px-4 mb-7'>Enter your email address to receive updates & notifications</p>
-                  <form onSubmit={(e) => submitHandler(e)}>
+                  <p className='mb-7 px-4'>Enter your email address to receive updates & notifications</p>
+                  <form onSubmit={e => submitHandler(e)}>
                     <input
                       className={tw(
-                        'text-lg max-w-[328px] mb-5',
-                        'text-left px-3 py-3 w-full rounded-lg',
-                        'bg-[#F8F8F8] border-0',
+                        'mb-5 max-w-[328px] text-lg',
+                        'w-full rounded-lg px-3 py-3 text-left',
+                        'border-0 bg-[#F8F8F8]',
                         'focus:ring-2 focus:ring-[#F9D54C]'
                       )}
-                      placeholder="Enter your email"
+                      placeholder='Enter your email'
                       autoFocus={true}
                       spellCheck={false}
                       type='email'
                       value={emailValue}
-                      onChange={(e) => setEmailValue(e.target.value)}
+                      onChange={e => setEmailValue(e.target.value)}
                     />
                     <div className='flex'>
                       <input
                         checked={isChecked}
                         onClick={() => setIsChecked(!isChecked)}
                         type='checkbox'
-                        className='mr-2 mt-1 max-w-[328px] text-black rounded-[4px] focus:ring-1 focus:ring-[#F9D54C]'
+                        className='mr-2 mt-1 max-w-[328px] rounded-[4px] text-black focus:ring-1 focus:ring-[#F9D54C]'
                       />
-                      <p className='text-left mb-8 text-[#8F8F8F]'>
-                        I have read and accept the <a target="_blank" href="https://cdn.nft.com/nft_com_terms_of_service.pdf" rel="noopener noreferrer" className='text-[#4B4B4B] font-semibold'>Terms & Conditions</a>
+                      <p className='mb-8 text-left text-[#8F8F8F]'>
+                        I have read and accept the{' '}
+                        <a
+                          target='_blank'
+                          href='https://cdn.nft.com/nft_com_terms_of_service.pdf'
+                          rel='noopener noreferrer'
+                          className='font-semibold text-[#4B4B4B]'
+                        >
+                          Terms & Conditions
+                        </a>
                       </p>
                     </div>
 
@@ -110,7 +120,9 @@ export default function EmailCaptureModal() {
                     />
                   </form>
 
-                  <p onClick={() => closeModal()} className='mt-5 text-[#6A6A6A] hover:cursor-pointer'>Skip</p>
+                  <p onClick={() => closeModal()} className='mt-5 text-[#6A6A6A] hover:cursor-pointer'>
+                    Skip
+                  </p>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

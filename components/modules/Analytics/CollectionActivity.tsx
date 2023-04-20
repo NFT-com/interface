@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react';
 
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { useGetTxByContractQuery } from 'graphql/hooks/useGetTxByContractQuery';
@@ -7,86 +8,80 @@ import { filterNulls, isNullOrEmpty } from 'utils/format';
 
 import DetailPageTableRow from './DetailPageTableRow';
 
-import { useCallback, useEffect, useState } from 'react';
-
 export type CollectionActivityProps = {
   contract: string;
-}
+};
 export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
   const defaultChainId = useDefaultChainId();
   const [collectionData, setCollectionData] = useState([]);
   const [lastAddedPage, setLastAddedPage] = useState('');
-  const {
-    nextPage,
-    afterCursor,
-    setTotalCount,
-    cachedTotalCount
-  } = usePaginator(25);
+  const { nextPage, afterCursor, setTotalCount, cachedTotalCount } = usePaginator(25);
 
-  const txs = useGetTxByContractQuery(
-    contract,
-    {
-      first: 25,
-      afterCursor
-    }
-  );
+  const txs = useGetTxByContractQuery(contract, {
+    first: 25,
+    afterCursor
+  });
 
   const loadMoreActivities = useCallback(() => {
     nextPage(txs?.data?.pageInfo?.lastCursor);
   }, [nextPage, txs?.data?.pageInfo?.lastCursor]);
 
   useEffect(() => {
-    if (
-      txs?.data?.items?.length > 0 &&
-      lastAddedPage !== txs?.data?.pageInfo?.firstCursor
-    ) {
-      setCollectionData([
-        ...collectionData,
-        ...filterNulls(txs?.data?.items)
-      ]);
+    if (txs?.data?.items?.length > 0 && lastAddedPage !== txs?.data?.pageInfo?.firstCursor) {
+      setCollectionData([...collectionData, ...filterNulls(txs?.data?.items)]);
       setLastAddedPage(txs?.data?.pageInfo?.firstCursor);
       setTotalCount(txs?.data?.totalItems);
     } else {
       setTotalCount(txs?.data?.totalItems || 0);
     }
-  }, [lastAddedPage, setTotalCount, afterCursor, txs?.data?.items, txs?.data?.pageInfo?.firstCursor, txs?.data?.totalItems, collectionData]);
+  }, [
+    lastAddedPage,
+    setTotalCount,
+    afterCursor,
+    txs?.data?.items,
+    txs?.data?.pageInfo?.firstCursor,
+    txs?.data?.totalItems,
+    collectionData
+  ]);
 
   useEffect(() => {
-    if(defaultChainId !== '1' || !txs) {
-      return;
-    } else {
-      if(!collectionData && txs) {
-        setCollectionData(txs?.data?.items);
-      }
-    }}, [defaultChainId, collectionData, txs, setTotalCount]);
+    if (!collectionData && txs) {
+      setCollectionData(txs?.data?.items);
+    }
+  }, [defaultChainId, collectionData, txs, setTotalCount]);
 
   return (
-    <div className="overflow-x-auto my-8 font-noi-grotesk rounded-md p-4">
-      {isNullOrEmpty(collectionData) ?
-        <p className='text-[#6F6F6F] flex items-center justify-center border h-[200px] rounded-[10px]'>No activity available</p> :
-        <table className="border-collapse table-auto w-full">
-          <thead className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>
-            <tr className='p-4 pt-0 pb-3 text-left ...'>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Type</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Token ID</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>From</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>To</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Marketplace</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Price</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>USD Value</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Timestamp</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Transaction Hash</th>
-            </tr>
-          </thead>
-          <tbody className='p-4'>
-            {collectionData?.map((tx , index) => (
-              <DetailPageTableRow key={tx?.id} tx={tx} index={index} />
-            ))}
-          </tbody>
-        </table>
-      }
-      {cachedTotalCount > collectionData?.length && !isNullOrEmpty(collectionData) &&
-        <div className='w-full flex justify-center items-center'>
+    <div className='my-8 overflow-x-auto rounded-md p-4 font-noi-grotesk'>
+      {isNullOrEmpty(collectionData) && (
+        <>
+          <p className='flex h-[200px] items-center justify-center rounded-[10px] border text-[#6F6F6F]'>
+            No activity available
+          </p>{' '}
+          &#58;
+          <table className='w-full table-auto border-collapse'>
+            <thead className='p-4 text-sm font-medium leading-6 text-[#6F6F6F]'>
+              <tr className='... p-4 pb-3 pt-0 text-left'>
+                <th className='p-4 text-sm font-medium leading-6 text-[#6F6F6F]'>Type</th>
+                <th className='whitespace-nowrap p-4 text-sm font-medium leading-6 text-[#6F6F6F]'>Token ID</th>
+                <th className='p-4 text-sm font-medium leading-6 text-[#6F6F6F]'>From</th>
+                <th className='p-4 text-sm font-medium leading-6 text-[#6F6F6F]'>To</th>
+                <th className='p-4 text-sm font-medium leading-6 text-[#6F6F6F]'>Marketplace</th>
+                <th className='p-4 text-sm font-medium leading-6 text-[#6F6F6F]'>Price</th>
+                <th className='whitespace-nowrap p-4 text-sm font-medium leading-6 text-[#6F6F6F]'>USD Value</th>
+                <th className='whitespace-nowrap p-4 text-sm font-medium leading-6 text-[#6F6F6F]'>Timestamp</th>
+                <th className='whitespace-nowrap p-4 text-sm font-medium leading-6 text-[#6F6F6F]'>Transaction Hash</th>
+              </tr>
+            </thead>
+            <tbody className='p-4'>
+              {collectionData?.map((tx, index) => (
+                <DetailPageTableRow key={tx?.id} tx={tx} index={index} />
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+      {cachedTotalCount > collectionData?.length && !isNullOrEmpty(collectionData) && (
+        <div className='flex w-full items-center justify-center'>
           <Button
             type={ButtonType.PRIMARY}
             size={ButtonSize.LARGE}
@@ -94,7 +89,7 @@ export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
             label='Load More'
           />
         </div>
-      }
+      )}
     </div>
   );
 };

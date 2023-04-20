@@ -1,13 +1,14 @@
+import { ExternalLink as LinkIcon } from 'react-feather';
+import { useAccount, useNetwork } from 'wagmi';
+
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { Maybe } from 'graphql/generated/types';
 import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 
-import ClientOnly from './ClientOnly';
-
-import { ExternalLink as LinkIcon } from 'react-feather';
 import { ExternalLink } from 'styles/theme';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-import { useAccount, useNetwork } from 'wagmi';
+
+import ClientOnly from './ClientOnly';
 
 export interface ConnectedAddressProps {
   ensName: Maybe<string>;
@@ -21,31 +22,30 @@ export function ConnectedAddress(props: ConnectedAddressProps) {
   const { chain } = useNetwork();
 
   return (
-    <div className="flex items-center w-full">
-      <div className="mr-4 flex flex-shrink-0">
+    <div className='flex w-full items-center'>
+      <div className='mr-4 flex shrink-0'>
         <LoggedInIdenticon round />
       </div>
-      <div className="flex w-full items-center justify-between">
+      <div className='flex w-full items-center justify-between'>
         <div
-          className="text-lg"
+          className='text-lg'
           style={{
-            color: secondaryText,
+            color: secondaryText
           }}
         >
           <ClientOnly>
-            <ExternalLink
-              href={getEtherscanLink(chain?.id, ensName ?? currentAddress, 'address')}
-            >
-              {currentAddress &&
-            <div
-              className='flex justify-between font-dm-mono'
-              style={{
-                color: props.color === 'pink' ? pink : link
-              }}
-            >
-              {ensName ?? shortenAddress(currentAddress)}
-              <LinkIcon size={20} className='ml-2'/>
-            </div>}
+            <ExternalLink href={getEtherscanLink(chain?.id, ensName ?? currentAddress, 'address')}>
+              {currentAddress && (
+                <div
+                  className='flex justify-between font-dm-mono'
+                  style={{
+                    color: props.color === 'pink' ? pink : link
+                  }}
+                >
+                  {ensName ?? shortenAddress(currentAddress)}
+                  <LinkIcon size={20} className='ml-2' />
+                </div>
+              )}
             </ExternalLink>
           </ClientOnly>
         </div>

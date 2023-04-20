@@ -3,10 +3,5 @@ interface OptionGridProps {
 }
 
 export const OptionGrid = ({ children }: OptionGridProps) => {
-  return (
-    <div
-      className="grid gap-2.5 deprecated_md:grid-cols-1 deprecated_md:gap-2.5">
-      {children}
-    </div>
-  );
+  return <div className='grid gap-2.5 deprecated_md:grid-cols-1 deprecated_md:gap-2.5'>{children}</div>;
 };

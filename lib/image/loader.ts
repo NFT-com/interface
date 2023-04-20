@@ -1,9 +1,9 @@
+import { ImageLoaderProps } from 'next/image';
+
 import { isBase64 } from 'utils/format';
 import { decodeBase64 } from 'utils/image';
 import { processIPFSURL } from 'utils/ipfs';
 import { getBaseUrl } from 'utils/isEnv';
-
-import { ImageLoaderProps } from 'next/image';
 
 /**
  * Generates a srcset for the given image URL using a set of predefined widths.
@@ -16,7 +16,7 @@ export function generateSrcSet(url: string) {
     ? url
     : `${getBaseUrl()}api/imageFetcher?url=${encodeURIComponent(processIPFSURL(url))}`;
 
-  const srcs = widths.map((width) => {
+  const srcs = widths.map(width => {
     return isBase64(url) ? encodedUrl : `${encodedUrl} ${width}w`;
   });
   const srcset = srcs.join(', ');
@@ -28,7 +28,7 @@ export function generateSrcSet(url: string) {
  * @returns {number} - A random number between 0 and 3.
  */
 export const generateRandomPreloader = () => {
-  const index = Math.floor(Math.random() * (4));
+  const index = Math.floor(Math.random() * 4);
   return index;
 };
 
@@ -56,8 +56,9 @@ export function contentfulLoader({ src, quality, width }: ImageLoaderProps) {
  */
 export function nftComCdnLoader({ src, width }: ImageLoaderProps) {
   const base64 = isBase64(src) ? decodeBase64(src) : false;
-  return base64 ||
-    `${getBaseUrl()}api/imageFetcher?url=${encodeURIComponent(processIPFSURL(src))}&width=${width || 300}`;
+  return (
+    base64 || `${getBaseUrl()}api/imageFetcher?url=${encodeURIComponent(processIPFSURL(src))}&width=${width || 300}`
+  );
 }
 
 /**

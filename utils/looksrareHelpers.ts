@@ -1,15 +1,21 @@
-import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
-import { IExecutionStrategy, LooksRareExchange, RoyaltyFeeManager, RoyaltyFeeRegistry } from 'constants/typechain/looksrare';
-import { LooksrareProtocolData, Nft } from 'graphql/generated/types';
-import { AggregatorResponse } from 'types';
-import { getBaseUrl } from 'utils/isEnv';
-
-import { libraryCall, looksrareLib } from './marketplaceHelpers';
-
 import { Addresses, addressesByNetwork, MakerOrder } from '@looksrare/sdk';
 import { FetchBalanceResult } from '@wagmi/core';
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
+
+import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
+import {
+  IExecutionStrategy,
+  LooksRareExchange,
+  RoyaltyFeeManager,
+  RoyaltyFeeRegistry
+} from 'constants/typechain/looksrare';
+import { LooksrareProtocolData, Nft } from 'graphql/generated/types';
+import { getBaseUrl } from 'utils/isEnv';
+
+import { AggregatorResponse } from 'types';
+
+import { libraryCall, looksrareLib } from './marketplaceHelpers';
 
 export async function createLooksrareParametersForNFTListing(
   offerer: string,
@@ -29,10 +35,17 @@ export async function createLooksrareParametersForNFTListing(
   const protocolFees = await looksrareStrategy.viewProtocolFee();
   // Get rebate
   const [
-    , // receiver
+    ,
+    // receiver
     royaltyAmount
-  ]: [string, BigNumber] = await looksrareRoyaltyFeeManager.calculateRoyaltyFeeAndGetRecipient(nft.contract, nft.tokenId, price);
-  const netPriceRatio = BigNumber.from(10000).sub(protocolFees.add(royaltyAmount && Number(royaltyAmount) > 0 ? 50 : 0)).toNumber();
+  ]: [string, BigNumber] = await looksrareRoyaltyFeeManager.calculateRoyaltyFeeAndGetRecipient(
+    nft.contract,
+    nft.tokenId,
+    price
+  );
+  const netPriceRatio = BigNumber.from(10000)
+    .sub(protocolFees.add(royaltyAmount && Number(royaltyAmount) > 0 ? 50 : 0))
+    .toNumber();
   // This variable is used to enforce a max slippage of 25% on all orders, if a collection change the fees to be >25%, the order will become invalid
   const minNetPriceRatio = 7500;
   return {
@@ -40,7 +53,7 @@ export async function createLooksrareParametersForNFTListing(
     tokenId: BigNumber.from(nft.tokenId).toString(),
     collection: nft.contract,
     strategy: addresses?.STRATEGY_STANDARD_SALE,
-    currency: currency,
+    currency,
     signer: offerer,
     isOrderAsk: true,
     amount: '1',
@@ -59,16 +72,22 @@ export async function cancelLooksrareListing(
   if (orderNonce == null || looksrareExchange == null) {
     return;
   }
-  return looksrareExchange.cancelMultipleMakerOrders([orderNonce]).then(tx => {
-    return tx.wait(1).then(() => true).catch(() => false);
-  }).catch(() => false);
+  return looksrareExchange
+    .cancelMultipleMakerOrders([orderNonce])
+    .then(tx => {
+      return tx
+        .wait(1)
+        .then(() => true)
+        .catch(() => false);
+    })
+    .catch(() => false);
 }
 
 export const getLooksrareHex = (
   executorAddress: string,
   protocolData: LooksrareProtocolData,
   looksrareExchange: LooksRareExchange,
-  ethValue: string,
+  ethValue: string
 ): AggregatorResponse => {
   try {
     const {
@@ -87,7 +106,7 @@ export const getLooksrareHex = (
       params,
       v,
       r,
-      s,
+      s
       // hash,
       // status,
       // signature,
@@ -100,7 +119,7 @@ export const getLooksrareHex = (
         price,
         tokenId,
         minPercentageToAsk,
-        params: params || '0x',
+        params: params || '0x'
       },
       {
         isOrderAsk,
@@ -118,8 +137,8 @@ export const getLooksrareHex = (
         params: params || '0x',
         v,
         r,
-        s,
-      },
+        s
+      }
     ]);
 
     const wholeHex = looksrareLib.encodeFunctionData('_tradeHelper', [
@@ -127,7 +146,7 @@ export const getLooksrareHex = (
       hexParam,
       collectionAddress,
       tokenId,
-      true, // failIfRevert
+      true // failIfRevert
     ]);
 
     const genHex = libraryCall('_tradeHelper(uint256,bytes,address,uint256,bool)', wholeHex.slice(10));
@@ -135,10 +154,10 @@ export const getLooksrareHex = (
     return {
       tradeData: genHex,
       value: ethers.BigNumber.from(ethValue),
-      marketId: '0',
+      marketId: '0'
     };
   } catch (err) {
-    throw `error in getLooksrareHex: ${err}`;
+    throw new Error(`error in getLooksrareHex: ${err}`);
   }
 };
 
@@ -166,7 +185,7 @@ export const looksrareBuyNow = async (
       params,
       v,
       r,
-      s,
+      s
     } = order.protocolData as LooksrareProtocolData;
 
     const tx = await looksrareExchange.matchAskWithTakerBidUsingETHAndWETH(
@@ -176,7 +195,7 @@ export const looksrareBuyNow = async (
         price,
         tokenId,
         minPercentageToAsk,
-        params: params || '0x',
+        params: params || '0x'
       },
       {
         isOrderAsk,
@@ -194,7 +213,7 @@ export const looksrareBuyNow = async (
         params: params || '0x',
         v,
         r,
-        s,
+        s
       },
       {
         value: hasEnoughEth ? order?.price : 0
@@ -207,16 +226,22 @@ export const looksrareBuyNow = async (
       contractAddress: order?.nft?.contract,
       tokenId: order?.nft?.tokenId,
       txHash: tx.hash,
-      orderHash: order.orderHash,
+      orderHash: order.orderHash
     });
 
-    fetch(`${getBaseUrl('https://www.nft.com/')}api/message?text=Buy Now on ${order.protocol} by ${executorAddress} for ${order.nft?.contract} ${order.nft?.tokenId}: https://etherscan.io/tx/${tx.hash}`);
+    fetch(
+      `${getBaseUrl('https://www.nft.com/')}api/message?text=Buy Now on ${order.protocol} by ${executorAddress} for ${
+        order.nft?.contract
+      } ${order.nft?.tokenId}: https://etherscan.io/tx/${tx.hash}`
+    );
 
     if (tx) {
-      return await tx.wait(1).then(() => true).catch(() => false);
-    } else {
-      return false;
+      return await tx
+        .wait(1)
+        .then(() => true)
+        .catch(() => false);
     }
+    return false;
   } catch (err) {
     console.log(`error in looksrareBuyNow: ${err}`);
     return false;

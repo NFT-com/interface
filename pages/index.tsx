@@ -1,56 +1,42 @@
-import 'aos/dist/aos.css';
-import 'swiper/css';
-import 'swiper/css/scrollbar';
-
-import DefaultSEO from 'config/next-seo.config';
-import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
-import contentfulBackupData from 'constants/contentful_backup_data.json';
-import { HomePageV2, HomePageV3 } from 'types/HomePage';
-import { Doppler, getEnvBool } from 'utils/env';
-
-import { NextPageWithLayout } from './_app';
-
+import React, { useEffect } from 'react';
+import { usePageVisibility } from 'react-page-visibility';
 import AOS from 'aos';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import { getCollection } from 'lib/contentful/api';
-import {
-  HOME_PAGE_FIELDS_V2,
-  HOME_PAGE_FIELDS_V3
-} from 'lib/contentful/schemas';
 import dynamic from 'next/dynamic';
 import { NextSeo } from 'next-seo';
-import React, { useEffect } from 'react';
-import { usePageVisibility } from 'react-page-visibility';
 
-const NonAuthLikeModal = dynamic(
-  import('components/elements/nonAuthLikeModal')
-);
+import 'swiper/css/scrollbar';
+
+import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
+import DefaultSEO from 'config/next-seo.config';
+import contentfulBackupData from 'constants/contentful_backup_data.json';
+import { getCollection } from 'lib/contentful/api';
+import { HOME_PAGE_FIELDS_V2, HOME_PAGE_FIELDS_V3 } from 'lib/contentful/schemas';
+import { Doppler, getEnvBool } from 'utils/env';
+
+import { HomePageV2, HomePageV3 } from 'types/HomePage';
+
+import { NextPageWithLayout } from './_app';
+
+import 'aos/dist/aos.css';
+import 'swiper/css';
+
+const NonAuthLikeModal = dynamic(import('components/elements/nonAuthLikeModal'));
 const BlogSection = dynamic(import('components/modules/HomePage/BlogSection'));
-const BuildProfile = dynamic(
-  import('components/modules/HomePage/BuildProfile')
-);
-const DiscoverCollections = dynamic(
-  import('components/modules/HomePage/DiscoverCollections')
-);
-const DynamicLinks = dynamic(
-  import('components/modules/HomePage/DynamicLinks')
-);
+const BuildProfile = dynamic(import('components/modules/HomePage/BuildProfile'));
+const DiscoverCollections = dynamic(import('components/modules/HomePage/DiscoverCollections'));
+const DynamicLinks = dynamic(import('components/modules/HomePage/DynamicLinks'));
 const HeroSection = dynamic(import('components/modules/HomePage/HeroSection'));
-const SocialSection = dynamic(
-  import('components/modules/HomePage/SocialSection')
-);
+const SocialSection = dynamic(import('components/modules/HomePage/SocialSection'));
 const WhatWeCanDo = dynamic(import('components/modules/HomePage/WhatWeCanDo'));
-const HomePageV2Layout = dynamic(
-  import('components/modules/HomePageV2/HomePageV2'),
-  { loading: () => <LoaderPageFallback /> }
-);
+const HomePageV2Layout = dynamic(import('components/modules/HomePageV2/HomePageV2'), {
+  loading: () => <LoaderPageFallback />
+});
 const HomeLayout = dynamic(import('components/layouts/HomeLayout'), {
   loading: () => <LoaderPageFallback />
 });
-const DynamicPreviewBanner = dynamic(
-  import('components/elements/PreviewBanner')
-);
+const DynamicPreviewBanner = dynamic(import('components/elements/PreviewBanner'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -60,16 +46,12 @@ type HomePageProps = {
   homePageDataV3?: HomePageV3;
 };
 
-const Index: NextPageWithLayout = ({
-  preview,
-  data_v2,
-  homePageDataV3
-}: HomePageProps) => {
+const Index: NextPageWithLayout = ({ preview, data_v2, homePageDataV3 }: HomePageProps) => {
   const isVisible = usePageVisibility();
 
   useEffect(() => {
     AOS.init({
-      disable: function () {
+      disable() {
         const maxWidth = 900;
         return window.innerWidth >= maxWidth;
       },
@@ -87,7 +69,7 @@ const Index: NextPageWithLayout = ({
             pin: '#anim-hero-trigger',
             start: '5px top',
             end: '+=100px',
-            //invalidateOnRefresh: true,
+            // invalidateOnRefresh: true,
             toggleActions: 'play none reverse none'
           }
         })
@@ -240,7 +222,7 @@ const Index: NextPageWithLayout = ({
         .timeline({
           scrollTrigger: {
             trigger: '#anim-discover-trigger',
-            //start: 'top 90%',
+            // start: 'top 90%',
             start: '10% bottom',
             end: '+=50px',
             toggleActions: 'play none reverse none'
@@ -297,7 +279,7 @@ const Index: NextPageWithLayout = ({
         .timeline({
           scrollTrigger: {
             trigger: '#anim-hiw-trigger',
-            //start: 'top 80%',
+            // start: 'top 80%',
             start: 'top bottom',
             end: '+=50px',
             toggleActions: 'play none reverse none'
@@ -496,8 +478,7 @@ const Index: NextPageWithLayout = ({
     });
 
     window.requestAnimationFrame(function () {
-      const HeroTtlIcons =
-        document.querySelectorAll<HTMLElement>('.anim-profile-icon');
+      const HeroTtlIcons = document.querySelectorAll<HTMLElement>('.anim-profile-icon');
       [...HeroTtlIcons].forEach(item => {
         item.style.transform = 'translateY(0)';
       });
@@ -513,15 +494,11 @@ const Index: NextPageWithLayout = ({
           openGraph={{
             url: 'https://www.nft.com',
             title: 'NFT.com | The Social NFT Marketplace',
-            description:
-              'Join NFT.com to display, trade, and engage with your NFTs.',
+            description: 'Join NFT.com to display, trade, and engage with your NFTs.',
             site_name: 'NFT.com'
           }}
         />
-        <main
-          id='anim-main-trigger'
-          className='HomePageContainer font-noi-grotesk not-italic'
-        >
+        <main id='anim-main-trigger' className='HomePageContainer font-noi-grotesk not-italic'>
           <HeroSection
             data={{
               dynamicUrls: homePageDataV3?.dynamicUrls,
@@ -558,9 +535,8 @@ const Index: NextPageWithLayout = ({
         <NonAuthLikeModal />
       </>
     );
-  } else {
-    return <HomePageV2Layout preview={preview} data_v2={data_v2} />;
   }
+  return <HomePageV2Layout preview={preview} data_v2={data_v2} />;
 };
 
 Index.getLayout = function getLayout(page) {
@@ -568,18 +544,8 @@ Index.getLayout = function getLayout(page) {
 };
 
 export async function getStaticProps({ preview = false }) {
-  const homeDataV2 = await getCollection(
-    false,
-    10,
-    'homepageV2Collection',
-    HOME_PAGE_FIELDS_V2
-  );
-  const homeDataV3 = await getCollection(
-    false,
-    10,
-    'homepageV3TestCollection',
-    HOME_PAGE_FIELDS_V3
-  );
+  const homeDataV2 = await getCollection(false, 10, 'homepageV2Collection', HOME_PAGE_FIELDS_V2);
+  const homeDataV3 = await getCollection(false, 10, 'homepageV3TestCollection', HOME_PAGE_FIELDS_V3);
   return {
     props: {
       preview,

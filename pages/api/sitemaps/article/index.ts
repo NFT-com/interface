@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { SitemapField } from 'types';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 import { getAllPostSlugs } from 'lib/contentful/api';
 import { getSitemapUrl, teamAuthToken } from 'lib/sitemap';
-import { NextApiRequest, NextApiResponse } from 'next';
+
+import { SitemapField } from 'types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { teamKey } = req.query;
@@ -26,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (articles) {
-      articles.forEach((article) => {
+      articles.forEach(article => {
         sitemapFields.push({
           loc: `${siteUrlHost}/${article?.slug}`,
           lastmod: article?.publishDate,

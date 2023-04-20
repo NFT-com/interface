@@ -1,8 +1,9 @@
 import BlurImage from 'components/elements/BlurImage';
-import { HomePageV3SocialSection } from 'types/HomePage';
+import { contentfulLoader } from 'lib/image/loader';
 import { tw } from 'utils/tw';
 
-import { contentfulLoader } from 'lib/image/loader';
+import { HomePageV3SocialSection } from 'types/HomePage';
+
 export interface HomePageData {
   data?: HomePageV3SocialSection;
 }
@@ -64,13 +65,7 @@ export default function SocialSection({ data }: HomePageData) {
                 data-aos='fade-up'
                 data-aos-delay='400'
               >
-                <BlurImage
-                  width={700}
-                  height={700}
-                  loader={contentfulLoader}
-                  src={item.image.url}
-                  alt='NFT image'
-                />
+                <BlurImage width={700} height={700} loader={contentfulLoader} src={item.image.url} alt='NFT image' />
               </div>
             </div>
           );

@@ -1,13 +1,14 @@
 /* eslint-disable import/no-unresolved */
 // Import Swiper styles
-import 'swiper/css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
 import 'swiper/css/navigation';
 
 import { ProfileCard } from 'components/modules/Profile/ProfileCard';
 import { ProfileQuery } from 'graphql/generated/types';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 
 interface ProfileFeedProps {
   profiles: ProfileQuery[];
@@ -23,13 +24,17 @@ export const ProfileFeed = ({ profiles }: ProfileFeedProps) => {
       centeredSlides={false}
       loop={true}
       autoplay={{
-        'delay': 3000,
-        'disableOnInteraction': false
+        delay: 3000,
+        disableOnInteraction: false
       }}
-      className="flex drop-shadow-2xl"
+      className='flex drop-shadow-2xl'
     >
       {profiles.map((profile, index) => (
-        <SwiperSlide key={profile?.profile?.id ?? index} virtualIndex={index} className='flex-none cursor-pointer ml-12'>
+        <SwiperSlide
+          key={profile?.profile?.id ?? index}
+          virtualIndex={index}
+          className='ml-12 flex-none cursor-pointer'
+        >
           <ProfileCard priority={true} profile={profile?.profile} />
         </SwiperSlide>
       ))}

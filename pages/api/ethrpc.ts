@@ -1,20 +1,20 @@
+import { withSentry } from '@sentry/nextjs';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/format';
 
 import { ALCHEMY_KEYS, ALCHEMY_PREFIXES } from './alchemynft';
 
-import { withSentry } from '@sentry/nextjs';
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 const ethRpcHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  let chainId = req.query['chainId'];
+  let { chainId } = req.query;
   if (isNullOrEmpty(chainId) || Number.isNaN(Number(chainId))) {
     chainId = process.env.NEXT_PUBLIC_CHAIN_ID;
   }
 
   const INFURA_PREFIXES = {
     '1': 'mainnet',
-    '5': 'goerli',
+    '5': 'goerli'
   };
 
   // infura keys
@@ -34,23 +34,23 @@ const ethRpcHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     '7bbeea51b4404b07a42baa389399fea3',
     '5c8f2ca5a2164b6da4bf2727b8f7b172',
     '190689f3d18e429f9034156e608f333d',
-    'aced7c4b23f64cd28b7cb964f9033af0',
+    'aced7c4b23f64cd28b7cb964f9033af0'
   ];
 
   const infuraAPIKey = keys[Math.floor(Math.random() * keys.length)];
   const alchemyAPIKey = ALCHEMY_KEYS[chainId as string];
 
-  const apiUrl = getEnvBool(Doppler.NEXT_PUBLIC_INFURA_ENABLED) ?
-    `https://${INFURA_PREFIXES[chainId as string]}.infura.io/v3/${infuraAPIKey}` :
-    `https://eth-${ALCHEMY_PREFIXES[chainId as string]}.alchemyapi.io/v2/${alchemyAPIKey}`;
+  const apiUrl = getEnvBool(Doppler.NEXT_PUBLIC_INFURA_ENABLED)
+    ? `https://${INFURA_PREFIXES[chainId as string]}.infura.io/v3/${infuraAPIKey}`
+    : `https://eth-${ALCHEMY_PREFIXES[chainId as string]}.alchemyapi.io/v2/${alchemyAPIKey}`;
 
   try {
     const result = await fetch(apiUrl, {
       method: 'POST',
       redirect: 'follow',
-      body: JSON.stringify(req.body),
+      body: JSON.stringify(req.body)
     }).then(res => res.json());
-    res.status(200).json( result );
+    res.status(200).json(result);
   } catch (e) {
     res.status(500).json({ message: 'ETH RPC: error' });
   }
@@ -60,6 +60,6 @@ export default withSentry(ethRpcHandler);
 
 export const config = {
   api: {
-    externalResolver: true,
-  },
+    externalResolver: true
+  }
 };

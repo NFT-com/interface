@@ -1,7 +1,7 @@
+import useSWR, { mutate } from 'swr';
+
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { isNullOrEmpty } from 'utils/format';
-
-import useSWR, { mutate } from 'swr';
 
 export interface ProfileBlocklistResult {
   blocked: boolean;
@@ -13,7 +13,7 @@ export interface ProfileBlocklistResult {
 export function useProfileBlocked(inputURL: string, blockReserved: boolean): ProfileBlocklistResult {
   const sdk = useGraphQLSDK();
 
-  const keyString = 'ProfileBlocklist' + inputURL + blockReserved;
+  const keyString = `ProfileBlocklist${inputURL}${blockReserved}`;
 
   const { data, error } = useSWR(keyString, async () => {
     if (isNullOrEmpty(inputURL)) {
@@ -31,9 +31,9 @@ export function useProfileBlocked(inputURL: string, blockReserved: boolean): Pro
   return {
     blocked: data ?? false,
     loading: data == null,
-    error: error,
+    error,
     mutate: () => {
       mutate(keyString);
-    },
+    }
   };
 }

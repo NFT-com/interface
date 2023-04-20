@@ -1,12 +1,12 @@
-import 'react-toastify/dist/ReactToastify.css';
-
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 
-export default function Toast(){
+import 'react-toastify/dist/ReactToastify.css';
+
+export default function Toast() {
   return (
     <ToastContainer
-      position="top-right"
+      position='top-right'
       autoClose={2000}
       hideProgressBar={false}
       newestOnTop={false}

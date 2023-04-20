@@ -9,26 +9,33 @@ type ProfileScrollContextType = {
 
 export const ProfileScrollContext = createContext<ProfileScrollContextType>({
   scroll: () => null,
-  current: null,
+  current: null
 });
 
 export function ProfileScrollContextProvider(props: PropsWithChildren) {
   const ref = useRef<HTMLDivElement>(null);
-  
-  const scroll = useCallback((direction: ScrollDirection) => {
-    if (direction === 'down') {
-      ref.current.scrollTop += 15;
-    } else {
-      ref.current.scrollTop -= 15;
-    }
-  }, [ref]);
 
-  return <ProfileScrollContext.Provider value={{
-    scroll,
-    current: ref.current,
-  }}>
-    <div ref={ref} className="w-full flex flex-col minlg:mt-20 overflow-y-auto overflow-x-hidden pb-20">
-      {props.children}
-    </div>
-  </ProfileScrollContext.Provider>;
+  const scroll = useCallback(
+    (direction: ScrollDirection) => {
+      if (direction === 'down') {
+        ref.current.scrollTop += 15;
+      } else {
+        ref.current.scrollTop -= 15;
+      }
+    },
+    [ref]
+  );
+
+  return (
+    <ProfileScrollContext.Provider
+      value={{
+        scroll,
+        current: ref.current
+      }}
+    >
+      <div ref={ref} className='flex w-full flex-col overflow-y-auto overflow-x-hidden pb-20 minlg:mt-20'>
+        {props.children}
+      </div>
+    </ProfileScrollContext.Provider>
+  );
 }

@@ -1,16 +1,16 @@
-import { Doppler, getEnv } from 'utils/env';
-
+import { ReactElement } from 'react';
 import { captureException, flush } from '@sentry/nextjs';
 import { NextPageContext } from 'next';
 import NextErrorComponent, { ErrorProps as NextErrorProps } from 'next/error';
-import { ReactElement } from 'react';
+
+import { Doppler, getEnv } from 'utils/env';
 
 type ErrorPageProps = {
   err: Error;
   statusCode: number;
   hasGetInitialPropsRun: boolean;
   children?: ReactElement;
-}
+};
 
 type ErrorProps = {
   hasGetInitialPropsRun: boolean;
@@ -26,7 +26,7 @@ function ErrorPage({ statusCode, hasGetInitialPropsRun, err }: ErrorPageProps) {
 ErrorPage.getInitialProps = async ({ res, err, asPath }: NextPageContext) => {
   const errorInitialProps = (await NextErrorComponent.getInitialProps({
     res,
-    err,
+    err
   } as NextPageContext)) as ErrorProps;
 
   errorInitialProps.hasGetInitialPropsRun = true;
@@ -34,7 +34,7 @@ ErrorPage.getInitialProps = async ({ res, err, asPath }: NextPageContext) => {
   if (res?.statusCode === 404) {
     return errorInitialProps;
   }
-  
+
   if (err && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'DEBUG') {
     captureException(err);
     await flush(2000);

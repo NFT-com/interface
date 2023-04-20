@@ -1,8 +1,8 @@
 {
-    "mainnet": {
-        "profileUrl": "chris"
-    },
-    "testnet": {
-        "profileUrl": "just_toby"
-    }
+  "mainnet": {
+    "profileUrl": "chris"
+  },
+  "testnet": {
+    "profileUrl": "just_toby"
+  }
 }

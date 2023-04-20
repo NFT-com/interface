@@ -26,12 +26,13 @@ const securityHeaders = [
   },
   {
     key: 'Permissions-Policy',
-    value: 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()'
+    value:
+      'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()'
   },
   {
     key: 'Strict-Transport-Security',
     value: 'max-age=31536000; includeSubDomains'
-  },
+  }
 ];
 
 const manifestHeaders = [

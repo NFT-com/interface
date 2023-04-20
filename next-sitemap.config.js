@@ -9,22 +9,13 @@ module.exports = {
   changefreq: 'daily', // Default
   exclude: ['/server-sitemap-index.xml'],
   robotsTxtOptions: {
-    additionalSitemaps: [
-      `${siteUrl}server-sitemap-index.xml`,
-    ],
+    additionalSitemaps: [`${siteUrl}server-sitemap-index.xml`],
     policies: [
       {
         userAgent: '*',
         disallow: ['/*'],
-        allow: [
-          '/$',
-          '/app/discover',
-          '/app/discover/*',
-          '/articles',
-          '/articles/*',
-          '/*.xml',
-        ],
+        allow: ['/$', '/app/discover', '/app/discover/*', '/articles', '/articles/*', '/*.xml']
       }
     ]
-  },
+  }
 };

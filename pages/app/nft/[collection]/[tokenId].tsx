@@ -1,22 +1,24 @@
-import DefaultSEO from 'config/next-seo.config';
-import ClientOnly from 'components/elements/ClientOnly';
-import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
-import DefaultLayout from 'components/layouts/DefaultLayout';
-import { NftResponse } from 'graphql/hooks/useNFTQuery';
-import NotFoundPage from 'pages/404';
-import { isNullOrEmpty } from 'utils/format';
-import { isValidContractSimple } from 'utils/helpers';
-
 import { BigNumber } from 'ethers';
-import { getNftPage } from 'lib/graphql-ssr/nft';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { SWRConfig } from 'swr';
 
-const NFTDetailPage =
-  dynamic(() => import('components/modules/NFTDetail/NFTDetailPage').then(mod => mod.NFTDetailPage), { loading: () => <LoaderPageFallback /> });
+import ClientOnly from 'components/elements/ClientOnly';
+import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
+import DefaultLayout from 'components/layouts/DefaultLayout';
+import DefaultSEO from 'config/next-seo.config';
+import { NftResponse } from 'graphql/hooks/useNFTQuery';
+import { getNftPage } from 'lib/graphql-ssr/nft';
+import NotFoundPage from 'pages/404';
+import { isNullOrEmpty } from 'utils/format';
+import { isValidContractSimple } from 'utils/helpers';
+
+const NFTDetailPage = dynamic(
+  () => import('components/modules/NFTDetail/NFTDetailPage').then(mod => mod.NFTDetailPage),
+  { loading: () => <LoaderPageFallback /> }
+);
 
 export default function NftPage({ fallback }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
@@ -35,10 +37,10 @@ export default function NftPage({ fallback }: InferGetServerSidePropsType<typeof
       images: [
         {
           url: nft?.metadata?.imageURL,
-          alt: `${nft?.metadata?.name} - NFT`,
-        },
+          alt: `${nft?.metadata?.name} - NFT`
+        }
       ],
-      site_name: 'NFT.com',
+      site_name: 'NFT.com'
     }
   };
 
@@ -47,40 +49,29 @@ export default function NftPage({ fallback }: InferGetServerSidePropsType<typeof
   }
 
   if (
-    [
-      isNullOrEmpty(collection),
-      isNullOrEmpty(tokenId),
-      !isValidContractSimple(collection as string)
-    ].includes(true)
+    [isNullOrEmpty(collection), isNullOrEmpty(tokenId), !isValidContractSimple(collection as string)].includes(true)
   ) {
     return <NotFoundPage />;
   }
 
-  return <SWRConfig value={fallback}>
-    <NextSeo
-      {...seoConfig}
-    />
-    <ClientOnly>
-      <NFTDetailPage
-        collection={collection as string}
-        tokenId={BigNumber.from(tokenId).toHexString()}
-      />
-    </ClientOnly>
-  </SWRConfig>;
+  return (
+    <SWRConfig value={fallback}>
+      <NextSeo {...seoConfig} />
+      <ClientOnly>
+        <NFTDetailPage collection={collection as string} tokenId={BigNumber.from(tokenId).toHexString()} />
+      </ClientOnly>
+    </SWRConfig>
+  );
 }
 
 NftPage.getLayout = function getLayout(page) {
-  return (
-    <DefaultLayout>
-      {page}
-    </DefaultLayout>
-  );
+  return <DefaultLayout>{page}</DefaultLayout>;
 };
 
 export const getServerSideProps: GetServerSideProps<{
   fallback: {
-    [x: string]: NftResponse,
-  }
+    [x: string]: NftResponse;
+  };
 }> = async ({ params }) => {
-  return await getNftPage(params);
+  return getNftPage(params);
 };

@@ -1,3 +1,7 @@
+import { useCallback, useEffect, useState } from 'react';
+import { BigNumber } from 'ethers';
+import { PartialDeep } from 'type-fest';
+
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 import { Nft } from 'graphql/generated/types';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
@@ -7,23 +11,14 @@ import { filterNulls, isNullOrEmpty } from 'utils/format';
 
 import DetailPageTableRow from './DetailPageTableRow';
 
-import { BigNumber } from 'ethers';
-import { useCallback, useEffect, useState } from 'react';
-import { PartialDeep } from 'type-fest';
-
 export type TxHistoryProps = {
   data: PartialDeep<Nft>;
-}
+};
 export const NFTActivity = ({ data }: TxHistoryProps) => {
   const defaultChainId = useDefaultChainId();
   const [nftData, setNftdata] = useState([]);
   const [lastAddedPage, setLastAddedPage] = useState('');
-  const {
-    nextPage,
-    afterCursor,
-    setTotalCount,
-    cachedTotalCount
-  } = usePaginator(25);
+  const { nextPage, afterCursor, setTotalCount, cachedTotalCount } = usePaginator(25);
 
   const nftTransactionHistory = useGetTxByNFTQuery(
     data?.contract,
@@ -44,36 +39,37 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
       nftTransactionHistory?.data?.items?.length > 0 &&
       lastAddedPage !== nftTransactionHistory?.data?.pageInfo?.firstCursor
     ) {
-      setNftdata([
-        ...nftData,
-        ...filterNulls(nftTransactionHistory?.data?.items)
-      ]);
+      setNftdata([...nftData, ...filterNulls(nftTransactionHistory?.data?.items)]);
       setLastAddedPage(nftTransactionHistory?.data?.pageInfo?.firstCursor);
       setTotalCount(nftTransactionHistory?.data?.totalItems);
     } else {
       setTotalCount(nftTransactionHistory?.data?.totalItems || 0);
     }
-  }, [lastAddedPage, setTotalCount, afterCursor, nftTransactionHistory?.data?.items, nftTransactionHistory?.data?.pageInfo?.firstCursor, nftTransactionHistory?.data?.totalItems, nftData]);
+  }, [
+    lastAddedPage,
+    setTotalCount,
+    afterCursor,
+    nftTransactionHistory?.data?.items,
+    nftTransactionHistory?.data?.pageInfo?.firstCursor,
+    nftTransactionHistory?.data?.totalItems,
+    nftData
+  ]);
 
   useEffect(() => {
-    if(defaultChainId !== '1' || !nftTransactionHistory) {
-      return;
-    } else {
-      if(!nftData && nftTransactionHistory) {
-        setNftdata(nftTransactionHistory?.data?.items);
-      }
+    if (!nftData && nftTransactionHistory) {
+      setNftdata(nftTransactionHistory?.data?.items);
     }
   }, [defaultChainId, nftData, nftTransactionHistory]);
 
   return (
-    <div className="font-noi-grotesk p-4 max-h-80 md:mb-0 overflow-x-auto sales-scrollbar whitespace-nowrap">
-      {isNullOrEmpty(nftData) ?
-        <span className='bg-white flex justify-center px-auto mx-auto w-full whitespace-nowrap font-normal text-base leading-6 text-[#1F2127] text-center items-center min-h-[280px]'>
+    <div className='sales-scrollbar max-h-80 overflow-x-auto whitespace-nowrap p-4 font-noi-grotesk md:mb-0'>
+      {isNullOrEmpty(nftData) ? (
+        <span className='px-auto mx-auto flex min-h-[280px] w-full items-center justify-center whitespace-nowrap bg-white text-center text-base font-normal leading-6 text-[#1F2127]'>
           No Activity for this NFT yet
         </span>
-        :
-        <table className="border-collapse table-auto w-full h-max overflow-x-auto">
-          <thead className='text-[#939393] text-[16px] leading-6'>
+      ) : (
+        <table className='h-max w-full table-auto border-collapse overflow-x-auto'>
+          <thead className='text-[16px] leading-6 text-[#939393]'>
             <tr className='px-4 pb-3 text-left'>
               <th className='p-4 font-medium'>Event</th>
               <th className='p-4 font-medium'>From</th>
@@ -91,9 +87,9 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
             ))}
           </tbody>
         </table>
-      }
-      {cachedTotalCount > nftData?.length && !isNullOrEmpty(nftData) &&
-        <div className='w-full flex justify-center items-center'>
+      )}
+      {cachedTotalCount > nftData?.length && !isNullOrEmpty(nftData) && (
+        <div className='flex w-full items-center justify-center'>
           <Button
             onClick={() => loadMoreActivities()}
             type={ButtonType.PRIMARY}
@@ -101,7 +97,7 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
             label='Load More'
           />
         </div>
-      }
+      )}
     </div>
   );
 };

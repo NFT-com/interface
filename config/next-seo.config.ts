@@ -5,13 +5,13 @@ const config: DefaultSeoProps = {
     type: 'website',
     locale: 'en',
     url: 'https://nft.com/',
-    siteName: 'NFT.com',
+    siteName: 'NFT.com'
   },
   twitter: {
     handle: '@NFTcomofficial',
     site: '@NFTcomofficial',
-    cardType: 'summary_large_image',
-  },
+    cardType: 'summary_large_image'
+  }
 };
 
 export default config;

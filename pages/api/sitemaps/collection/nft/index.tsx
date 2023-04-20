@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { SitemapField } from 'types';
-
 import { BigNumber } from 'ethers';
-import { client, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
 import { NextApiRequest, NextApiResponse } from 'next';
+
+import { client, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
+
+import { SitemapField } from 'types';
 
 /**
  * Serverless API route for querying collection nfts sitemap data,
@@ -30,26 +31,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     client.setHeader('teamKey', teamKey);
 
     // Add collection name lookup
-    const officialCollection = await client.request(gqlQueries.collectionBySlug, {
-      input: {
-        network: 'ethereum', // Update once we expand networks
-        slug: collection
-      }
-    }).then(data => data?.collection?.collection);
+    const officialCollection = await client
+      .request(gqlQueries.collectionBySlug, {
+        input: {
+          network: 'ethereum', // Update once we expand networks
+          slug: collection
+        }
+      })
+      .then(data => data?.collection?.collection);
 
     if (!officialCollection && !officialCollection.contract) {
       throw new Error('Collection Not Found');
     }
 
-    const officialCollectionNfts = await client.request(
-      gqlQueries.collectionNfts,
-      {
+    const officialCollectionNfts = await client
+      .request(gqlQueries.collectionNfts, {
         input: {
           chainId,
           collectionAddress: officialCollection?.contract,
           offsetPageInput: { page }
         }
-      }).then(data => data.officialCollectionNFTs);
+      })
+      .then(data => data.officialCollectionNFTs);
 
     if (officialCollectionNfts && officialCollectionNfts?.items) {
       officialCollectionNfts.items.forEach(({ tokenId, updatedAt }) => {
@@ -70,7 +73,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error(err?.message);
     return res.status(500).json({
       error: {
-        message: `An error occurred fetching the following sitemap collection page of nfts, ${JSON.stringify({ chainId, collection, page: pageCtx, message: err?.message }, null, 2)}`
+        message: `An error occurred fetching the following sitemap collection page of nfts, ${JSON.stringify(
+          { chainId, collection, page: pageCtx, message: err?.message },
+          null,
+          2
+        )}`
       }
     });
   }

@@ -1,22 +1,22 @@
 import { POST_GRAPHQL_FIELDS, POST_LIST_GRAPHQL_FIELDS } from './schemas';
 
 async function fetchGraphQL(query, preview = false) {
-  return fetch(
-    `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${preview
-          ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
-          : process.env.CONTENTFUL_ACCESS_TOKEN
-        }`,
-      },
-      body: JSON.stringify({ query }),
-    }
-  ).then((response) => {
-    return response.json();
-  }).catch(() => { return {}; });
+  return fetch(`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${
+        preview ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN : process.env.CONTENTFUL_ACCESS_TOKEN
+      }`
+    },
+    body: JSON.stringify({ query })
+  })
+    .then(response => {
+      return response.json();
+    })
+    .catch(() => {
+      return {};
+    });
 }
 
 function extractPost(fetchResponse) {
@@ -85,9 +85,7 @@ export async function getAllPosts(preview) {
 export async function getPost(slug, preview) {
   const entry = await fetchGraphQL(
     `query {
-      blogPostCollection(where: { slug: "${slug}" }, preview: ${
-  preview ? 'true' : 'false'
-}, limit: 1) {
+      blogPostCollection(where: { slug: "${slug}" }, preview: ${preview ? 'true' : 'false'}, limit: 1) {
         items {
           ${POST_GRAPHQL_FIELDS}
         }
@@ -96,7 +94,7 @@ export async function getPost(slug, preview) {
     preview
   );
   return {
-    post: extractPost(entry),
+    post: extractPost(entry)
   };
 }
 

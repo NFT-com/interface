@@ -1,3 +1,7 @@
+import { useCallback, useEffect, useState } from 'react';
+import { isMobile } from 'react-device-detect';
+import { useAccount } from 'wagmi';
+
 import { LoadedContainer } from 'components/elements/Loader/LoadedContainer';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { AuctionType } from 'components/modules/GenesisKeyAuction/GenesisKeyAuction';
@@ -11,27 +15,22 @@ import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { isNullOrEmpty } from 'utils/format';
 import { tw } from 'utils/tw';
 
-import { useCallback, useEffect, useState } from 'react';
-import { isMobile } from 'react-device-detect';
-import { useAccount } from 'wagmi';
-
 export default function ClaimGenesisKeyPage() {
   const [firstLoaded, setFirstLoaded] = useState(false);
 
   const { img: keyImg } = useKeyBackground();
   const { address: currentAddress } = useAccount();
   const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(currentAddress);
-  const {
-    data: ownedGenesisKeyTokens,
-    loading: loadingOwnedGenesisKeys
-  } = useOwnedGenesisKeyTokens(currentAddress);
+  const { data: ownedGenesisKeyTokens, loading: loadingOwnedGenesisKeys } = useOwnedGenesisKeyTokens(currentAddress);
   const { data: insiderReservedIDs, loading: loadingInsiderReservedGKs } = useInsiderGenesisKeyIDs();
 
   useEffect(() => {
     if (!firstLoaded) {
       setFirstLoaded(
-        !loadingOwnedGenesisKeys && ownedGenesisKeyTokens != null &&
-        !loadingInsiderReservedGKs && insiderReservedIDs != null
+        !loadingOwnedGenesisKeys &&
+          ownedGenesisKeyTokens != null &&
+          !loadingInsiderReservedGKs &&
+          insiderReservedIDs != null
       );
     }
   }, [firstLoaded, insiderReservedIDs, loadingInsiderReservedGKs, loadingOwnedGenesisKeys, ownedGenesisKeyTokens]);
@@ -44,65 +43,52 @@ export default function ClaimGenesisKeyPage() {
 
   const getContent = useCallback(() => {
     if (!currentAddress) {
-      return (<SignedOutView />);
+      return <SignedOutView />;
     }
     return (
       <>
-        {
-          shouldShowClaim()
-            ? <GenesisKeyWinnerView
-              liveAuction={AuctionType.Blind}
-              ownedTokenID={null}
-              claimData={null}
-              insiderClaimData={insiderMerkleData}
-            />
-            : <GenesisKeyLoserView
-              liveAuction={AuctionType.Blind}
-            />
-        }
+        {shouldShowClaim() ? (
+          <GenesisKeyWinnerView
+            liveAuction={AuctionType.Blind}
+            ownedTokenID={null}
+            claimData={null}
+            insiderClaimData={insiderMerkleData}
+          />
+        ) : (
+          <GenesisKeyLoserView liveAuction={AuctionType.Blind} />
+        )}
       </>
     );
   }, [insiderMerkleData, shouldShowClaim, currentAddress]);
 
   return (
     <>
-      {!isMobile &&
+      {!isMobile && (
         <div
           className={tw(
-            'absolute items-center w-full h-full justify-center drop-shadow-md',
-            'overflow-auto z-20 flex justify-center',
+            'absolute h-full w-full items-center justify-center drop-shadow-md',
+            'z-20 flex justify-center overflow-auto',
             isNullOrEmpty(keyImg)
               ? '' // fall through to splash key behind this component.
-              // otherwise, fill in the background behind the minted key.
-              : 'bg-[#C0C0C0]'
+              : // otherwise, fill in the background behind the minted key.
+                'bg-[#C0C0C0]'
           )}
         >
-          <video
-            className="h-full"
-            id='keyVideo'
-            src={keyImg}
-            autoPlay
-            muted
-            loop
-          />
+          <video className='h-full' id='keyVideo' src={keyImg} autoPlay muted loop />
         </div>
-      }
-      <div className={tw(
-        'relative flex flex-col overflow-y-auto items-center mt-32',
-        'overflow-x-hidden bg-white w-screen h-screen z-50',
-      )}>
-        <LoadedContainer loaded={firstLoaded}>
-          {getContent()}
-        </LoadedContainer>
+      )}
+      <div
+        className={tw(
+          'relative mt-32 flex flex-col items-center overflow-y-auto',
+          'z-50 h-screen w-screen overflow-x-hidden bg-white'
+        )}
+      >
+        <LoadedContainer loaded={firstLoaded}>{getContent()}</LoadedContainer>
       </div>
     </>
   );
 }
 
 ClaimGenesisKeyPage.getLayout = function getLayout(page) {
-  return (
-    <DefaultLayout>
-      {page}
-    </DefaultLayout>
-  );
+  return <DefaultLayout>{page}</DefaultLayout>;
 };

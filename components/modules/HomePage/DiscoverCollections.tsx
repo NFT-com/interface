@@ -1,13 +1,14 @@
-import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
-import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
-import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
-import { HomePageV3CollectionsSection } from 'types/HomePage';
-import { isOfficialCollection } from 'utils/helpers';
-import { tw } from 'utils/tw';
-
 import React, { useEffect, useState } from 'react';
 import { Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+
+import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
+import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
+import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
+import { isOfficialCollection } from 'utils/helpers';
+import { tw } from 'utils/tw';
+
+import { HomePageV3CollectionsSection } from 'types/HomePage';
 
 export interface HomePageData {
   data?: HomePageV3CollectionsSection;
@@ -16,9 +17,7 @@ export interface HomePageData {
 export default function DiscoverCollections({ data }: HomePageData) {
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [collections, setCollectionData] = useState(null);
-  const { data: collectionLikeData } = useCollectionLikeCountQuery(
-    collections?.map(c => c?.document?.contractAddr)
-  );
+  const { data: collectionLikeData } = useCollectionLikeCountQuery(collections?.map(c => c?.document?.contractAddr));
   const addressIds = data?.collectionsAddressIds;
   useEffect(() => {
     fetchTypesenseSearch({
@@ -46,12 +45,7 @@ export default function DiscoverCollections({ data }: HomePageData) {
         'after:skew-x-[-20deg] after:bg-white minlg:after:absolute minlg:after:left-[11.5rem] minlg:after:top-0 minlg:after:h-[5.5rem] minlg:after:w-[8.9rem]'
       )}
     >
-      <div
-        className={tw(
-          'pl-5 minmd:pl-0',
-          'relative z-0 py-[2.5rem] minlg:pb-12 minlg:pt-[6.25rem]'
-        )}
-      >
+      <div className={tw('pl-5 minmd:pl-0', 'relative z-0 py-[2.5rem] minlg:pb-12 minlg:pt-[6.25rem]')}>
         <div className='relative minlg:text-center'>
           <h2
             data-aos='fade-up'
@@ -108,9 +102,7 @@ export default function DiscoverCollections({ data }: HomePageData) {
                         contractName={collection.document.contractName}
                         isOfficial={collection.document.isOfficial}
                         images={[collection.document.bannerUrl]}
-                        likeInfo={
-                          collectionLikeData && collectionLikeData[index]
-                        }
+                        likeInfo={collectionLikeData && collectionLikeData[index]}
                       />
                     </SwiperSlide>
                   );

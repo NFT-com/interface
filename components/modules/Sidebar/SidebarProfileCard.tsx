@@ -1,42 +1,51 @@
+import { SetStateAction } from 'react';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { Wallet } from 'phosphor-react';
+import { useAccount } from 'wagmi';
+
 import ClientOnly from 'components/elements/ClientOnly';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
-import { Wallet } from 'phosphor-react';
-import { SetStateAction } from 'react';
-import { useAccount } from 'wagmi';
-
 type SidebarProfileCardProps = {
   profile: {
     metadata: {
-      header: string
-      image: string
-    }
-    title: string
-  }
-  onClick?: (value?: string | SetStateAction<boolean> | SetStateAction<string> ) => void
-  opensModal?: boolean
-  message?: string
-  showSwitch?: boolean
-  isSelected?: boolean
-  isSidebar?: boolean
+      header: string;
+      image: string;
+    };
+    title: string;
+  };
+  onClick?: (value?: string | SetStateAction<boolean> | SetStateAction<string>) => void;
+  opensModal?: boolean;
+  message?: string;
+  showSwitch?: boolean;
+  isSelected?: boolean;
+  isSidebar?: boolean;
 };
 
-export function SidebarProfileCard({ profile, onClick, message, showSwitch, opensModal, isSelected, isSidebar }: SidebarProfileCardProps) {
+export function SidebarProfileCard({
+  profile,
+  onClick,
+  message,
+  showSwitch,
+  opensModal,
+  isSelected,
+  isSidebar
+}: SidebarProfileCardProps) {
   const { address: currentAddress } = useAccount();
   const router = useRouter();
   const { setSidebarOpen } = useSidebar();
   return (
-    <motion.div className={tw(
-      'rounded-[10px] box-border',
-      isSelected && 'outline-[#F9D963] outline-offset-[-2px] outline-3 outline'
-    )}>
-      {isSidebar
-        ?
+    <motion.div
+      className={tw(
+        'box-border rounded-[10px]',
+        isSelected && 'outline-3 outline outline-offset-[-2px] outline-[#F9D963]'
+      )}
+    >
+      {isSidebar ? (
         <motion.div
           style={{
             backgroundImage: `url("${profile?.metadata?.header}")`,
@@ -44,49 +53,61 @@ export function SidebarProfileCard({ profile, onClick, message, showSwitch, open
             backgroundSize: 'cover',
             boxShadow: 'inset 0 0 0 1000px rgba(0,0,0,.8)'
           }}
-          className={tw(
-            'rounded-t-[10px] hover:cursor-pointer w-full bg-cover bg-center box-border h-20',
-          )}
+          className={tw('box-border h-20 w-full rounded-t-[10px] bg-cover bg-center hover:cursor-pointer')}
         >
-          <div className='flex items-center 4 px-4 rounded-[10px] h-full' >
-            {profile?.metadata?.image &&
-            <Image
-              onClick={() => {
-                router.push(`/${profile?.title}`);
-                setSidebarOpen(false);
-              }} className='rounded-full'
-              width={50}
-              height={50}
-              alt={`profile for ${profile?.title}`}
-              src={profile?.metadata?.image}
-            />}
-            <div className='flex justify-between w-full h-full'>
-              <div
-                className='flex items-center w-full'
+          <div className='4 flex h-full items-center rounded-[10px] px-4'>
+            {profile?.metadata?.image && (
+              <Image
                 onClick={() => {
                   router.push(`/${profile?.title}`);
                   setSidebarOpen(false);
-                }}>
-                {message &&
-                <p className='font-noi-grotesk text-xs text-[#F9D963] leading-6 font-bold -mb-1 ml-3 tracking-wider uppercase'>{message}</p>
-                }
+                }}
+                className='rounded-full'
+                width={50}
+                height={50}
+                alt={`profile for ${profile?.title}`}
+                src={profile?.metadata?.image}
+              />
+            )}
+            <div className='flex h-full w-full justify-between'>
+              <div
+                className='flex w-full items-center'
+                onClick={() => {
+                  router.push(`/${profile?.title}`);
+                  setSidebarOpen(false);
+                }}
+              >
+                {message && (
+                  <p className='-mb-1 ml-3 font-noi-grotesk text-xs font-bold uppercase leading-6 tracking-wider text-[#F9D963]'>
+                    {message}
+                  </p>
+                )}
                 <div>
-                  <p className='font-noi-grotesk text-base text-white leading-6 font-medium ml-3 tracking-wide w-full'>{profile?.title}</p>
-                  <div className='flex ml-3'>
-                    <Wallet size={23} color="#D5D5D5" weight="fill" className='mr-1' />
+                  <p className='ml-3 w-full font-noi-grotesk text-base font-medium leading-6 tracking-wide text-white'>
+                    {profile?.title}
+                  </p>
+                  <div className='ml-3 flex'>
+                    <Wallet size={23} color='#D5D5D5' weight='fill' className='mr-1' />
                     <ClientOnly>
-                      <p className='font-mono text-base text-[#D5D5D5] leading-6 font-medium tracking-wide w-full'>{shortenAddress(currentAddress, 4)}</p>
+                      <p className='w-full font-mono text-base font-medium leading-6 tracking-wide text-[#D5D5D5]'>
+                        {shortenAddress(currentAddress, 4)}
+                      </p>
                     </ClientOnly>
                   </div>
                 </div>
               </div>
-              <div className='h-full flex items-center' onClick={onClick ? !opensModal ? () => onClick(profile?.title) : () => onClick(true) : null}>
-                <p data-cy='profileCardSwitchSidebar' className='text-[#F9D963]'>Switch</p>
+              <div
+                className='flex h-full items-center'
+                onClick={onClick ? (!opensModal ? () => onClick(profile?.title) : () => onClick(true)) : null}
+              >
+                <p data-cy='profileCardSwitchSidebar' className='text-[#F9D963]'>
+                  Switch
+                </p>
               </div>
             </div>
           </div>
         </motion.div>
-        :
+      ) : (
         <motion.div
           style={{
             backgroundImage: `url("${profile?.metadata?.header}")`,
@@ -94,25 +115,39 @@ export function SidebarProfileCard({ profile, onClick, message, showSwitch, open
             backgroundSize: 'cover',
             boxShadow: 'inset 0 0 0 1000px rgba(0,0,0,.8)'
           }}
-          className={tw(
-            'rounded-[10px] hover:cursor-pointer w-full bg-cover bg-center box-border h-20',
-          )}
-          onClick={onClick ? !opensModal ? () => onClick(profile?.title) : () => onClick(true) : null}
+          className={tw('box-border h-20 w-full rounded-[10px] bg-cover bg-center hover:cursor-pointer')}
+          onClick={onClick ? (!opensModal ? () => onClick(profile?.title) : () => onClick(true)) : null}
         >
-          <div className='flex items-center py-4 px-4 rounded-[10px] h-full' >
-            {profile?.metadata?.image && <Image className='rounded-full' width={50} height={50} alt={`profile for ${profile?.title}`} src={profile?.metadata?.image} />}
-            <div className='flex justify-between w-full'>
+          <div className='flex h-full items-center rounded-[10px] p-4'>
+            {profile?.metadata?.image && (
+              <Image
+                className='rounded-full'
+                width={50}
+                height={50}
+                alt={`profile for ${profile?.title}`}
+                src={profile?.metadata?.image}
+              />
+            )}
+            <div className='flex w-full justify-between'>
               <div>
-                {message &&
-                <p className='font-noi-grotesk text-xs text-[#F9D963] leading-6 font-bold -mb-1 ml-3 tracking-wider uppercase'>{message}</p>
-                }
-                <p className='font-noi-grotesk text-base text-white leading-6 font-medium ml-3 tracking-wide'>{profile?.title}</p>
+                {message && (
+                  <p className='-mb-1 ml-3 font-noi-grotesk text-xs font-bold uppercase leading-6 tracking-wider text-[#F9D963]'>
+                    {message}
+                  </p>
+                )}
+                <p className='ml-3 font-noi-grotesk text-base font-medium leading-6 tracking-wide text-white'>
+                  {profile?.title}
+                </p>
               </div>
-              {showSwitch && <p data-cy='profileCardSwitch' className='text-[#F9D963]'>Switch</p>}
+              {showSwitch && (
+                <p data-cy='profileCardSwitch' className='text-[#F9D963]'>
+                  Switch
+                </p>
+              )}
             </div>
           </div>
         </motion.div>
-      }
+      )}
     </motion.div>
   );
 }

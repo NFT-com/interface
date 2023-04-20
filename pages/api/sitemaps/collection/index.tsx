@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { SitemapField } from 'types';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 import { client, getSitemapUrl, gqlQueries, teamAuthToken } from 'lib/sitemap';
-import { NextApiRequest, NextApiResponse } from 'next';
+
+import { SitemapField } from 'types';
 
 /**
  * Serverless API route for querying collections sitemap data.
@@ -27,15 +28,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     client.setHeader('teamKey', teamKey);
 
-    const officialCollections = await client.request(
-      gqlQueries.officialCollections,
-      {
+    const officialCollections = await client
+      .request(gqlQueries.officialCollections, {
         input: {
           offsetPageInput: {
             page: 1
           }
         }
-      }).then(data => data.officialCollections);
+      })
+      .then(data => data.officialCollections);
 
     if (officialCollections && officialCollections?.items) {
       officialCollections.items.forEach(({ slug, updatedAt }) => {

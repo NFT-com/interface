@@ -1,9 +1,9 @@
-import { Maybe, Nft } from 'graphql/generated/types';
-import { useUpdateNftMemoMutation } from 'graphql/hooks/useUpdateNftMemoMutation';
-
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { PartialDeep } from 'type-fest';
+
+import { Maybe, Nft } from 'graphql/generated/types';
+import { useUpdateNftMemoMutation } from 'graphql/hooks/useUpdateNftMemoMutation';
 
 export interface NFTDetailContextType {
   userIsOwner: boolean;
@@ -24,22 +24,20 @@ export const NFTDetailContext = React.createContext<NFTDetailContextType>({
   saveMemo: () => null,
   setEditMemo: () => null,
   clearDraft: () => null,
-  saving: false,
+  saving: false
 });
 
 export interface NFTDetailContextProviderProps {
   nft: PartialDeep<Nft>;
 }
 
-export function NFTDetailContextProvider(
-  props: PropsWithChildren<NFTDetailContextProviderProps>
-) {
+export function NFTDetailContextProvider(props: PropsWithChildren<NFTDetailContextProviderProps>) {
   const [editMemo, setEditMemo] = useState(false);
   const [saving, setSaving] = useState(false);
   const [draftMemo, setDraftMemo] = useState<string>(props?.nft?.memo);
 
   useEffect(() => {
-    if(draftMemo == null) {
+    if (draftMemo == null) {
       setDraftMemo(props?.nft?.memo);
     }
   }, [draftMemo, props]);
@@ -69,21 +67,24 @@ export function NFTDetailContextProvider(
     }
   }, [clearDraft, draftMemo, props?.nft?.id, updateNftmemo]);
 
-  return <NFTDetailContext.Provider value={{
-    userIsOwner: props?.nft?.isOwnedByMe,
-    editMemo,
-    setEditMemo: (enabled: boolean) => {
-      setEditMemo(enabled);
-    },
-    draftMemo,
-    setDraftMemo: (bio: string) => {
-      setDraftMemo(bio);
-    },
-    saveMemo,
-    saving,
-    clearDraft,
-  }}>
-    {props.children}
-  </NFTDetailContext.Provider>;
+  return (
+    <NFTDetailContext.Provider
+      value={{
+        userIsOwner: props?.nft?.isOwnedByMe,
+        editMemo,
+        setEditMemo: (enabled: boolean) => {
+          setEditMemo(enabled);
+        },
+        draftMemo,
+        setDraftMemo: (bio: string) => {
+          setDraftMemo(bio);
+        },
+        saveMemo,
+        saving,
+        clearDraft
+      }}
+    >
+      {props.children}
+    </NFTDetailContext.Provider>
+  );
 }
-
