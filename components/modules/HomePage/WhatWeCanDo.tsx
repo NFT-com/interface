@@ -13,7 +13,7 @@ export default function WhatWeCanDo({ data }: HomePageData) {
     <section
       className='py-9 minlg:pt-20 minlg:pb-36 minxl:pb-40'
       style={{
-        background: `url("${data.whatWeCanDoBg.url}") no-repeat 50% 100%/100% auto`
+        background: `url("${data?.whatWeCanDoBg?.url}") no-repeat 50% 100%/100% auto`
       }}
     >
       <div className='mx-auto max-w-[89.333%] minxl:max-w-[56.5%]'>
@@ -22,13 +22,13 @@ export default function WhatWeCanDo({ data }: HomePageData) {
           'leading-snug minxl:leading-none font-normal text-black tracking-tight',
           'mb-14 minxl:mb-9 minxl:-mr-16 minlg:pl-3'
         )}>
-          {data?.whatWeCanDoTitle.gradientTitle?.blackWord}
+          {data?.whatWeCanDoTitle?.gradientTitle?.blackWord}
           <span
             className={tw(
               'ml-1 bg-gradient-to-r from-[#FCC315] to-[#FF9C38] bg-clip-text text-transparent'
             )}
           >
-            {data?.whatWeCanDoTitle.gradientTitle?.orangeWord}
+            {data?.whatWeCanDoTitle?.gradientTitle?.orangeWord}
           </span>
         </h2>
 
@@ -40,7 +40,7 @@ export default function WhatWeCanDo({ data }: HomePageData) {
           }}
         >
           <BlurImage loader={contentfulLoader}
-            width={955} height={520} src={data?.whatWeCanDoImage.url} className='rounded-2xl w-full h-auto' alt="Browser Screen" />
+            width={955} height={520} src={data?.whatWeCanDoImage?.url} className='rounded-2xl w-full h-auto' alt="Browser Screen" />
         </div>
       </div>
     </section>

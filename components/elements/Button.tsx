@@ -25,7 +25,6 @@ export interface ButtonProps {
   /** Button type */
   type: ButtonType ;
   size?: ButtonSize;
-  isWebButton?: boolean;
   /** Button label (optional only if icon is passed) */
   label?: string;
   /** Button action */
