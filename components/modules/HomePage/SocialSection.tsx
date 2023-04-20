@@ -77,6 +77,7 @@ export default function SocialSection({ data }: HomePageData) {
                 <BlurImage
                   width={700}
                   height={700}
+                  className='drop-shadow-xl'
                   loader={contentfulLoader}
                   src={item.image.url}
                   alt='NFT image'
