@@ -46,7 +46,7 @@ export default function DynamicLinks({ data, isVisible }: HomePageData) {
             ><div role='presentation' className={tw(
                 'mr-2 minxxl:mr-3 skew-x-[-20deg]',
                 'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                'h-[.3125em] w-[.25rem] basis-[.25rem] minlg:h-[.55em] minlg:w-[.3125rem] minlg:basis-[.3125rem]',
+                'h-[.6em] w-[.25rem] basis-[.25rem] minlg:h-[.55em] minlg:w-[.3125rem] minlg:basis-[.3125rem]',
                 'minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
                 'bg-[#B2B2B2] rounded-[3px]'
               )}></div>
