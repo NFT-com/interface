@@ -26,11 +26,11 @@ export default function BuildProfile({ data }: HomePageData) {
           'minmd:flex'
         )}>
           <div className={tw(
-            'minmd:w-[42%] px-8 minxl:px-36',
+            'minmd:min-w-[26rem] minxl:w-[46%] px-8 minxl:pl-36 minxl:pr-0',
             'py-12 minlg:py-[9.5rem] minxxl:py-32'
           )}>
             <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-              'text-[calc(48px+54*(100vw-375px)/1545)]',
+              'text-[calc(48px+62*(100vw-375px)/1545)]',
               'text-black font-normal leading-[1.1] relative',
               'mb-4 minlg:mb-2 tracking-[-3px]'
             )}>
@@ -52,7 +52,7 @@ export default function BuildProfile({ data }: HomePageData) {
             />
           </div>
 
-          <div className='minmd:w-[58%] text-right'>
+          <div className='flex-grow text-right'>
             <Image className='-ml-9 minmd:ml-auto max-w-[calc(100%+2.25rem)] minmd:max-w-full h-full object-cover' width={721} height={621} src='/assets/build-profile-bg.webp' alt='Example profile image' />
           </div>
         </div>

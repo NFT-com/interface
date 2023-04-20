@@ -32,13 +32,7 @@ export default function WhatWeCanDo({ data }: HomePageData) {
           </span>
         </h2>
 
-        <div
-          className='rounded-2xl'
-          style={{
-            filter:
-              'drop-shadow(0px 95.2772px 76.2218px rgba(0, 0, 0, 0.07)) drop-shadow(0px 39.8045px 31.8436px rgba(0, 0, 0, 0.0503198)) drop-shadow(0px 21.2814px 17.0251px rgba(0, 0, 0, 0.0417275)) drop-shadow(0px 11.9302px 9.54415px rgba(0, 0, 0, 0.035)) drop-shadow(0px 6.33603px 5.06883px rgba(0, 0, 0, 0.0282725)) drop-shadow(0px 2.63656px 2.10925px rgba(0, 0, 0, 0.0196802))'
-          }}
-        >
+        <div className='-mx-[9%]'>
           <BlurImage loader={contentfulLoader}
             width={955} height={520} src={data?.whatWeCanDoImage?.url} className='rounded-2xl w-full h-auto' alt="Browser Screen" />
         </div>

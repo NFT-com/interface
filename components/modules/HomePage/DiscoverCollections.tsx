@@ -102,22 +102,26 @@ export default function DiscoverCollections({ data }: HomePageData) {
         </div>
 
         <div className='mb-12 overflow-hidden'>
-          <div id='anim-discover-content' data-aos="fade-left" className='minlg:translate-x-full minlg:transform-gpu'>
+          <div
+            id='anim-discover-content'
+            data-aos="fade-left"
+            className='md:!translate-x-0 minlg:translate-x-full minlg:transform-gpu'
+          >
             <Swiper
               modules={[Navigation, Scrollbar]}
               spaceBetween={16}
               breakpoints={{
                 0: {
-                  slidesPerView: 1.08
-                },
-                600: {
-                  slidesPerView: 2
+                  slidesPerView: 'auto'
                 },
                 1200: {
-                  slidesPerView: 2.5
+                  slidesPerView: 2.55
                 },
                 1600: {
                   slidesPerView: 3.5
+                },
+                1800: {
+                  slidesPerView: 4.2
                 }
               }}
               navigation={{
@@ -136,7 +140,7 @@ export default function DiscoverCollections({ data }: HomePageData) {
                 collections?.length > 0 &&
                 collections?.map((collection, index) => {
                   return (
-                    <SwiperSlide key={index} className='!h-auto'>
+                    <SwiperSlide key={index} className='!h-auto lg:!max-w-xs lg:!w-auto'>
                       <CollectionCard
                         key={index}
                         redirectTo={`/app/collection/${isOfficialCollection({

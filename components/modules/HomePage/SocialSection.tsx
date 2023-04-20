@@ -25,9 +25,9 @@ export default function SocialSection({ data }: HomePageData) {
               relative z-${i}`}
             >
               <div className={tw(
-                'my-14 minlg:my-0 px-5 minmd:px-0 minmd:ml-[5vw] minlg:ml-[11.25%]',
-                'minmd:max-w-[25rem] minlg:pb-[9.6rem] minmd:pt-6 minlg:pt-40',
-                item.leftImage ? 'minmd:ml-[10vw]' : ''
+                'my-14 minlg:my-0 px-5 minmd:px-0 minmd:ml-14 minlg:ml-[13vw] minxxl:ml-[11.25%]',
+                'minmd:max-w-[24vw] minlg:pb-[9.6rem] minmd:pt-6 minlg:pt-40',
+                item.leftImage ? 'minlg:ml-[10vw]' : ''
               )}>
                 <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
                   'text-[2.9rem] minmd:text-[3.5rem] minxxl:text-[5rem] leading-[1.25] minmd:leading-none font-normal',
@@ -77,6 +77,7 @@ export default function SocialSection({ data }: HomePageData) {
                 <BlurImage
                   width={700}
                   height={700}
+                  className='drop-shadow-xl'
                   loader={contentfulLoader}
                   src={item.image.url}
                   alt='NFT image'

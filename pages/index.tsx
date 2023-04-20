@@ -206,6 +206,7 @@ const Index: NextPageWithLayout = ({
             blogSectionTitle={homePageDataV3.blogSectionTitle}
             goToBlogButton={homePageDataV3.goToBlogButton}
             data={homePageDataV3.blogCollection}/>
+
           <BuildProfile data={homePageDataV3?.buildProfileSection}/>
         </main>
 

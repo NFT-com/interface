@@ -60,7 +60,7 @@ export function CollectionCard(props: CollectionCardProps) {
     return convertedValue.slice(1);
   };
   return (
-    <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden">
+    <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden bg-white">
       <div className="h-44 relative ">
         <div className='absolute top-4 right-4 z-50'>
           <LikeCount
