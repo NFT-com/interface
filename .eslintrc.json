@@ -6,6 +6,7 @@
   "extends": ["airbnb-base", "next/core-web-vitals", "plugin:prettier/recommended"],
   "ignorePatterns": ["**/generated/**", "**/*.d.ts"],
   "rules": {
+    "multiline-ternary": ["error", "always-multiline"],
     "prettier/prettier": [
       "error",
       {
@@ -14,6 +15,7 @@
       }
     ]
   },
+  "plugins": ["prettier"],
   "overrides": [
     {
       "parser": "@typescript-eslint/parser",
@@ -43,8 +45,12 @@
         "@typescript-eslint/comma-dangle": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-shadow": "warn",
+        "@typescript-eslint/no-unused-expressions": "off",
+        "@typescript-eslint/no-use-before-define": "warn",
         "@typescript-eslint/no-var-requires": "off",
         "array-bracket-spacing": "warn",
+        "array-callback-return": "warn",
         "array-element-newline": [
           "error",
           {
@@ -54,19 +60,19 @@
             }
           }
         ],
+        "consistent-return": "warn",
         "function-call-argument-newline": ["warn", "consistent"],
         "import/no-anonymous-default-export": "off",
-        "import/prefer-default-export": "off",
+        "import/no-cycle": "off",
+        "import/no-extraneous-dependencies": "off",
         "import/no-unresolved": [
           "error",
           {
             "ignore": ["\\.css$", "\\.svg", "\\.svg?url"]
           }
         ],
-        // "multiline-ternary": [
-        //   "error",
-        //   "always-multiline"
-        // ],
+        "import/prefer-default-export": "off",
+        // "multiline-ternary": [ "error", "always-multiline" ],
         // "no-multi-spaces": "warn",
         "no-multiple-empty-lines": [
           "warn",
@@ -81,6 +87,8 @@
             "allowDeclarations": true
           }
         ],
+        "no-nested-ternary": "warn",
+        "no-param-reassign": "off",
         "no-restricted-imports": [
           "error",
           {
@@ -94,6 +102,8 @@
             "skipBlankLines": true
           }
         ],
+        "no-underscore-dangle": "off",
+        "no-unused-expressions": "off",
         "object-curly-spacing": ["warn", "always"],
         "object-property-newline": [
           "warn",
@@ -108,6 +118,7 @@
             "singleQuote": true
           }
         ],
+        "radix": ["error", "as-needed"],
         "react-hooks/exhaustive-deps": "error",
         "simple-import-sort/exports": "error",
         "simple-import-sort/imports": [
