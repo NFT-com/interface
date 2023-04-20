@@ -12,11 +12,11 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
 import { ArrowCircleLeft } from 'phosphor-react';
-import NFTLogo from 'public/nft_logo.svg?svgr';
-import NFTLogoSmall from 'public/nft_logo_small.svg?svgr';
-import ProfileClickIcon from 'public/profile-click-icon.svg?svgr';
-import ProfileIcon from 'public/profile-icon.svg?svgr';
-import ProfileKeyIcon from 'public/profile-key-icon.svg?svgr';
+import NFTLogo from 'public/icons/nft_logo.svg?svgr';
+import NFTLogoSmall from 'public/icons/nft_logo_small.svg?svgr';
+import ProfileClickIcon from 'public/icons/profile-click-icon.svg?svgr';
+import ProfileIcon from 'public/icons/profile-icon.svg?svgr';
+import ProfileKeyIcon from 'public/icons/profile-key-icon.svg?svgr';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 

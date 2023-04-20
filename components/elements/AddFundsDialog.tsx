@@ -5,7 +5,6 @@ import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { shorten } from 'utils/format';
 import { tw } from 'utils/tw';
 
-import { staticNftComCdnLoader } from 'lib/image/loader';
 import dynamic from 'next/dynamic';
 import QRCode from 'qrcode.react';
 import { useState } from 'react';
@@ -94,9 +93,9 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
       <Button
         icon={!showWyreDisclaimer ?
           <BlurImage
-            src={'public/fiat.svg'}
+            src={'/fiat.svg'}
+            localImage
             alt='fiat'
-            loader={staticNftComCdnLoader}
             width={64}
             height={64}
           /> :

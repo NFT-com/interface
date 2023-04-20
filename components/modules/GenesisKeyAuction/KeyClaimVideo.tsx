@@ -4,7 +4,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { tw } from 'utils/tw';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import videoPlaceholder from 'public/reverse_layers_placeholder.png';
+import videoPlaceholder from 'public/reverse_layers_placeholder.webp';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 

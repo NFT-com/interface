@@ -15,7 +15,7 @@ import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/format';
-import { getEtherscanLink, processIPFSURL, shortenAddress } from 'utils/helpers';
+import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ListingCheckoutNftTableRow } from './ListingCheckoutNftTableRow';
@@ -24,15 +24,15 @@ import { handleRender } from './TooltipSlider';
 
 import router from 'next/router';
 import { ArrowLeft } from 'phosphor-react';
-import LooksrareGray from 'public/looksrare_gray.svg?svgr';
-import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
-import NFTLogo from 'public/nft_logo_yellow.svg?svgr';
-import NoActivityIcon from 'public/no_activity.svg?svgr';
-import OpenSeaGray from 'public/opensea_gray.svg?svgr';
-import OpenseaIcon from 'public/opensea-icon.svg?svgr';
-import ErrorIcon from 'public/red-error-icon.svg?svgr';
-import X2Y2Gray from 'public/x2y2-gray.svg?svgr';
-import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
+import LooksrareGray from 'public/icons/looksrare_gray.svg?svgr';
+import LooksrareIcon from 'public/icons/looksrare-icon.svg?svgr';
+import NFTLogo from 'public/icons/nft_logo_yellow.svg?svgr';
+import NoActivityIcon from 'public/icons/no_activity.svg?svgr';
+import OpenSeaGray from 'public/icons/opensea_gray.svg?svgr';
+import OpenseaIcon from 'public/icons/opensea-icon.svg?svgr';
+import ErrorIcon from 'public/icons/red-error-icon.svg?svgr';
+import X2Y2Gray from 'public/icons/x2y2-gray.svg?svgr';
+import X2Y2Icon from 'public/icons/x2y2-icon.svg?svgr';
 import Slider from 'rc-slider';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
@@ -140,7 +140,7 @@ export function ListingCheckout() {
             <div className="flex w-full max-h-[600px] max-w-nftcom object-contain drop-shadow-lg aspect-square">
               <RoundedCornerMedia
                 key={toList[0]?.nft?.id}
-                src={processIPFSURL(toList[0]?.nft?.metadata?.imageURL)}
+                src={toList[0]?.nft?.metadata?.imageURL}
                 videoOverride={true}
                 variant={RoundedCornerVariant.None}
                 objectFit='contain'

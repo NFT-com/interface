@@ -2,7 +2,7 @@ import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
-import KeyIcon from 'public/mint-key.svg?svgr';
+import KeyIcon from 'public/icons/mint-key.svg?svgr';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';

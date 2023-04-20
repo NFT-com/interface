@@ -2,8 +2,8 @@ import { DropdownPickerModal, DropdownPickerModalProps } from 'components/elemen
 
 import { Meta } from '@storybook/react';
 import { Layout, Link, TwitterLogo } from 'phosphor-react';
-import LayoutIcon1 from 'public/layout-icon-1.svg?svgr';
-import LayoutIcon3 from 'public/layout-icon-3.svg?svgr';
+import LayoutIcon1 from 'public/icons/layout-icon-1.svg?svgr';
+import LayoutIcon3 from 'public/icons/layout-icon-3.svg?svgr';
 import React, { PropsWithChildren } from 'react';
 
 export default {

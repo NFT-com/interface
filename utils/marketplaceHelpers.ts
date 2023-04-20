@@ -8,7 +8,7 @@ import { ExternalProtocol } from 'types';
 import { nftcomBuyNow } from 'utils/nativeMarketplaceHelpers';
 
 import { isNullOrEmpty } from './format';
-import { getBaseUrl } from './helpers';
+import { getBaseUrl } from './isEnv';
 import { looksrareBuyNow } from './looksrareHelpers';
 import { seaportBuyNow } from './seaportHelpers';
 import { X2Y2BuyNow } from './X2Y2Helpers';

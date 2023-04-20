@@ -1,4 +1,4 @@
-import { getBaseUrl } from './helpers';
+import { getBaseUrl } from './isEnv';
 
 export async function getPaginatedPosts(
   skip: number,
@@ -19,4 +19,3 @@ export async function getPaginatedPosts(
     });
   return result;
 }
-

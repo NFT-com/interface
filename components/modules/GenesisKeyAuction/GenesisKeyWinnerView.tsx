@@ -8,7 +8,7 @@ import { useKeyBackground } from 'hooks/state/useKeyBackground';
 import { useKeyVideo } from 'hooks/state/useKeyVideo';
 import { useGenesisKeyMetadata } from 'hooks/useGenesisKeyMetadata';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { processIPFSURL } from 'utils/helpers';
+import { processIPFSURL } from 'utils/ipfs';
 import { tw } from 'utils/tw';
 
 import { AuctionType } from './GenesisKeyAuction';

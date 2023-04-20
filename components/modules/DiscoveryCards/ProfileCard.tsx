@@ -7,9 +7,9 @@ import { useProfileVisibleNFTCount } from 'graphql/hooks/useProfileVisibleNFTCou
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
 import { nftComCdnLoader } from 'lib/image/loader';
-import GK from 'public/Badge_Key.svg?svgr';
-import BannerPreview from 'public/banner_1@2x.png';
-import ProfilePreview from 'public/profilePreview.png';
+import BannerPreview from 'public/banner_1@2x.webp';
+import GK from 'public/icons/Badge_Key.svg?svgr';
+import ProfilePreview from 'public/profilePreview.webp';
 import { PartialDeep } from 'type-fest';
 
 export interface ProfileCardProps {

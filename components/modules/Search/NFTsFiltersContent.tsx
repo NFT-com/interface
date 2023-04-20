@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
-import SearchIcon from 'public/search.svg?svgr';
+import SearchIcon from 'public/icons/search.svg?svgr';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { X } from 'react-feather';
 interface FilterOptionProps {

@@ -4,7 +4,7 @@ import { useUser } from 'hooks/state/useUser';
 import { tw } from 'utils/tw';
 
 import { Player } from '@lottiefiles/react-lottie-player';
-import Heart from 'public/heart.svg?svgr';
+import Heart from 'public/icons/heart.svg?svgr';
 import { useEffect, useState } from 'react';
 
 type LikeData = {

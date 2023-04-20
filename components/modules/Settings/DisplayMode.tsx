@@ -1,3 +1,4 @@
+import { ProfileViewType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUpdateProfileViewMutation } from 'graphql/hooks/useUpdateProfileViewMutation';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -26,12 +27,22 @@ export default function DisplayMode({ selectedProfile }: DisplayModeProps) {
   }, [profileData?.profile?.profileView, selectedProfile]);
 
   const handleChange = event => {
-    toast.success('Saved!');
     setSelected(event.target.value);
-    updateProfileView({ profileViewType: event.target.value, url: selectedProfile }).catch(() => toast.error('Error'));
+    if (event.target.value !== ProfileViewType.Collection) {
+      toast.success('Saved!');
+      updateProfileView({ profileViewType: event.target.value, url: selectedProfile }).catch(() => toast.error('Error'));
+      gtag('event', 'Profile View Updated', {
+        profile: selectedProfile,
+        profileViewType: event.target.value
+      });
+    }
+  };
+
+  const handleAssociatedContract = () => {
+    updateProfileView({ profileViewType: selected as ProfileViewType, url: selectedProfile }).catch(() => toast.error('Error'));
     gtag('event', 'Profile View Updated', {
       profile: selectedProfile,
-      profileViewType: event.target.value
+      profileViewType: selected
     });
   };
 
@@ -61,7 +72,7 @@ export default function DisplayMode({ selectedProfile }: DisplayModeProps) {
       {
         selected === 'Collection' && (
           getEnvBool(Doppler.NEXT_PUBLIC_OFFCHAIN_ASSOCIATION_ENABLED)
-            ? <AssociatedProfileSelect {...{ profileId: profileData.profile.id, associatedContract: profileData.profile.associatedContract }} />
+            ? <AssociatedProfileSelect {...{ profileId: profileData.profile.id, associatedContract: profileData.profile.associatedContract, onAssociatedContract: handleAssociatedContract }} />
             : <ConnectedCollections {...{ selectedProfile }} />
         )
       }

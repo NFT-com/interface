@@ -5,10 +5,10 @@ import { tw } from 'utils/tw';
 import { StagedListing } from './NFTListingsContext';
 import { PartialErrorItem } from './PartialErrorItem';
 
-import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
-import NFTLogo from 'public/nft_logo_yellow.svg?svgr';
-import OpenseaIcon from 'public/opensea-icon.svg?svgr';
-import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
+import LooksrareIcon from 'public/icons/looksrare-icon.svg?svgr';
+import NFTLogo from 'public/icons/nft_logo_yellow.svg?svgr';
+import OpenseaIcon from 'public/icons/opensea-icon.svg?svgr';
+import X2Y2Icon from 'public/icons/x2y2-icon.svg?svgr';
 
 export interface PartialErrorViewProps {
   listing: StagedListing

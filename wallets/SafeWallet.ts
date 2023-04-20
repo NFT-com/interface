@@ -8,7 +8,7 @@ export interface SafeWalletOptions {
 export const safeWallet = ({ chains }: SafeWalletOptions): Wallet => ({
   id: 'safe',
   name: 'Safe (Gnosis)',
-  iconUrl: async () => (await import('/public/images/safe-logo.svg')).default,
+  iconUrl: async () => (await import('/public/icons/safe-logo.svg')).default,
   iconBackground: '#000',
   createConnector: () => ({
     connector: new SafeConnector({ chains }),

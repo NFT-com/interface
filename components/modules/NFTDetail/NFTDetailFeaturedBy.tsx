@@ -8,8 +8,8 @@ import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
 import { isNullOrEmpty } from 'utils/format';
 
 import Link from 'next/link';
-import GK from 'public/Badge_Key.svg?svgr';
-import NoActivityIcon from 'public/no_activity.svg?svgr';
+import GK from 'public/icons/Badge_Key.svg?svgr';
+import NoActivityIcon from 'public/icons/no_activity.svg?svgr';
 export interface NFTDetailFeaturedByProps {
   contract: string,
   tokenId: string

@@ -29,8 +29,8 @@ import { ProfileScrollContextProvider } from './ProfileScrollContext';
 
 import { BigNumber } from 'ethers';
 import dynamic from 'next/dynamic';
-import cameraIcon from 'public/camera.png';
-import CameraIconEdit from 'public/camera_icon.svg?svgr';
+import cameraIcon from 'public/camera.webp';
+import CameraIconEdit from 'public/icons/camera_icon.svg?svgr';
 import { useCallback, useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
@@ -126,7 +126,7 @@ export function MintedProfile(props: MintedProfileProps) {
     }
   };
   if (
-    associatedContract != null &&
+    associatedContract?.chainAddr?.length &&
     (Doppler.NEXT_PUBLIC_OFFCHAIN_ASSOCIATION_ENABLED ||
     (associatedAddresses?.find(addr => sameAddress(addr?.chainAddr, associatedCollectionWithDeployer?.deployer)) || sameAddress(profileData?.profile?.owner?.address, associatedCollectionWithDeployer?.deployer)))
   ) {
