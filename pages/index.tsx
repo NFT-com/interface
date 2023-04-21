@@ -234,7 +234,7 @@ export async function getStaticProps({ preview = false }) {
   const homeDataV3 = await getCollection(
     false,
     10,
-    'homepageV3TestCollection',
+    'homePageV3ProdCollection',
     HOME_PAGE_FIELDS_V3
   );
   return {
