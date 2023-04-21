@@ -19,6 +19,7 @@ export default function BlurImage({
   height,
   fill,
   src,
+  sizes,
   localImage = false,
   ...props
 } : BlurImageProps) {
@@ -27,7 +28,7 @@ export default function BlurImage({
   const layoutProps = fill ?
     {
       fill,
-      sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+      sizes: sizes ?? '100vw',
     }
     : {
       width,
@@ -50,7 +51,7 @@ export default function BlurImage({
         'duration-500 ease-in-out',
         isLoading
           ? 'blur scale-110 animate-pulse'
-          : 'blur-0 scale-100'
+          : 'blur-none scale-100'
       )}
       onLoadingComplete={() => setIsLoading(false)}
       {...props}

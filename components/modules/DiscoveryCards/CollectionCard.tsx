@@ -77,6 +77,7 @@ export function CollectionCard(props: CollectionCardProps) {
           variant={RoundedCornerVariant.None}
           width={600}
           height={600}
+          sizes="(max-width: 768px) 300px, 500px"
           containerClasses='w-[100%] object-cover h-[100%]'
           src={processedImageURLs[0]}
           extraClasses="hover:scale-105 transition"
