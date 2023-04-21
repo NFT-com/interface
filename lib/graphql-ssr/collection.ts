@@ -16,7 +16,7 @@ export const getCollectionPage = async (params: ParsedUrlQuery) => {
   const input = contract ? { input: { ...baseInput, contract } } : { input: { ...baseInput, slug } };
   const caseInsensitiveAddr = contract?.toString().toLowerCase();
 
-  if (!utils.isAddress(caseInsensitiveAddr) || !getEnvBool(Doppler.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED)) {
+  if (!slug && (!utils.isAddress(caseInsensitiveAddr) || !getEnvBool(Doppler.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED))) {
     return {
       props: {
         fallback: {
@@ -54,11 +54,14 @@ export const getCollectionPage = async (params: ParsedUrlQuery) => {
   }
   `;
 
-  const data: CollectionResponse = await request(
+  const data: Pick<CollectionResponse, 'collection'> = await request(
     getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL),
     query,
     input
-  ).then(data => data.collection ?? {});
+  ).then(data => data.collection ?? {}).catch(err => {
+    console.error('getCollectionPage Server Req  Failed: ', err);
+    return {};
+  });
 
   return {
     props: {
