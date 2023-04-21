@@ -66,7 +66,7 @@ export function CollectionCard(props: CollectionCardProps) {
   return (
     <a
       href={props.redirectTo}
-      className='block min-h-[100%] cursor-pointer overflow-hidden rounded-[16px] shadow-lg transition-all sm:mb-4'
+      className='block min-h-[100%] cursor-pointer overflow-hidden rounded-[16px] bg-white shadow-lg transition-all sm:mb-4'
     >
       <div className='relative h-44 '>
         <div className='absolute right-4 top-4 z-50'>
@@ -84,12 +84,13 @@ export function CollectionCard(props: CollectionCardProps) {
           variant={RoundedCornerVariant.None}
           width={600}
           height={600}
+          sizes='(max-width: 768px) 300px, 500px'
           containerClasses='w-[100%] object-cover h-[100%]'
           src={processedImageURLs[0]}
           extraClasses='hover:scale-105 transition'
         />
       </div>
-      <div className='min-h-51rem bg-white pb-5 pl-[30px] pr-[20px] pt-4'>
+      <div className='min-h-51rem min-h-[143px] bg-white pb-5 pl-[30px] pr-[20px] pt-4'>
         <div className='mb-[16px] border-b-[1px] border-[#F2F2F2] pb-[11px]'>
           <div className='flex items-start justify-between'>
             <span className='pr-[20px] text-xl font-[600] leading-7 text-[#000000]'>

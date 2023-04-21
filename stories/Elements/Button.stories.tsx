@@ -1,8 +1,8 @@
-import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
-
+import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { PlusCircle } from 'phosphor-react';
-import React from 'react';
+
+import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 
 const icons = {
   PlusCircle: <PlusCircle />
@@ -24,33 +24,33 @@ export default {
       control: {
         type: 'select',
         labels: {
-          PlusCircle: 'Plus Circle',
-        },
-      },
+          PlusCircle: 'Plus Circle'
+        }
+      }
     }
-  },
+  }
 } as ComponentMeta<typeof Button>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
+const Template: ComponentStory<typeof Button> = args => <Button {...args} />;
 
 export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
   type: ButtonType.PRIMARY,
-  label: 'Button',
+  label: 'Button'
 };
 
 export const Secondary = Template.bind({});
 Secondary.args = {
   type: ButtonType.SECONDARY,
-  label: 'Button',
+  label: 'Button'
 };
 
 export const Tertiary = Template.bind({});
 Tertiary.args = {
   type: ButtonType.TERTIARY,
-  label: 'Button',
+  label: 'Button'
 };
 
 export const WithIcon = Template.bind({});
@@ -58,6 +58,17 @@ WithIcon.args = {
   type: ButtonType.PRIMARY,
   label: 'Button',
   icon: <PlusCircle size={32} />
+};
+
+export const WebPrimary = Template.bind({});
+WebPrimary.args = {
+  type: ButtonType.WEB_PRIMARY,
+  label: 'Get Profile'
+};
+export const WebSecondary = Template.bind({});
+WebSecondary.args = {
+  type: ButtonType.WEB_SECONDARY,
+  label: 'Get Profile'
 };
 
 export const Small = Template.bind({});
@@ -92,12 +103,12 @@ IconOnly.args = {
 
 export const Loading = Template.bind({});
 Loading.args = {
-  loading:'true',
+  loading: 'true',
   loadingText: 'Loading...'
 };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
   disabled: true,
-  label: 'Button',
+  label: 'Button'
 };

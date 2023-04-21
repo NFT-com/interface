@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -8,11 +7,11 @@ import { SWRConfig } from 'swr';
 import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import DefaultSEO from 'config/next-seo.config';
-import { CollectionResponse, useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
-import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { CollectionResponse } from 'graphql/hooks/useCollectionQuery';
 import { getCollectionPage } from 'lib/graphql-ssr/collection';
 import NotFoundPage from 'pages/404';
 import { Doppler, getEnvBool } from 'utils/env';
+import { isObjEmpty } from 'utils/format';
 
 const Collection = dynamic(() => import('components/modules/Collection/Collection').then(mod => mod.Collection), {
   loading: () => <LoaderPageFallback />
@@ -40,7 +39,6 @@ export default function OfficialCollectionSlugPage({
   const router = useRouter();
   const { slug: slugQuery } = router.query;
   const slug = slugQuery && slugQuery.toString();
-  const defaultChainId = useDefaultChainId();
 
   const seoTitle = `NFT Collection: ${preCollection?.name}`;
   const seoConfig = {
@@ -61,34 +59,17 @@ export default function OfficialCollectionSlugPage({
     }
   };
 
-  const {
-    data: collectionData,
-    loading,
-    error
-  } = useCollectionQuery({
-    chainId: defaultChainId,
-    slug
-  });
-
   const isPageDisabled = !getEnvBool(Doppler.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED);
 
-  const pageNotFound = useMemo(
-    () => [!loading && Boolean(error), isPageDisabled].includes(true),
-    [loading, error, isPageDisabled]
-  );
-  const pageLoading = useMemo(() => loading || !slug, [loading, slug]);
-
-  if (pageLoading) {
-    return <LoaderPageFallback />;
-  }
+  const pageNotFound = [!slug, isObjEmpty(preCollection), isPageDisabled].includes(true);
 
   if (pageNotFound) return <NotFoundPage />;
 
-  if (!loading && collectionData?.collection?.contract) {
+  if (preCollection?.contract) {
     return (
       <SWRConfig value={{ fallback }}>
         <NextSeo {...seoConfig} />
-        <Collection slug={slug} contract={collectionData.collection.contract}>
+        <Collection slug={slug} contract={preCollection.contract}>
           <CollectionBanner />
           <CollectionHeader>
             <CollectionDescription />
@@ -99,6 +80,8 @@ export default function OfficialCollectionSlugPage({
       </SWRConfig>
     );
   }
+
+  return <LoaderPageFallback />;
 }
 
 OfficialCollectionSlugPage.getLayout = function getLayout(page) {

@@ -1,6 +1,8 @@
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 
 import BlurImage from 'components/elements/BlurImage';
+import { Button, ButtonType } from 'components/elements/Button';
 import { contentfulLoader } from 'lib/image/loader';
 import { tw } from 'utils/tw';
 
@@ -13,14 +15,16 @@ export interface HomePageData {
 }
 
 export default function HeroSection({ data }: HomePageData) {
+  const router = useRouter();
+
   return (
     <div id='anim-hero-trigger' className='minlg:h-screen'>
-      <div className='relative bg-white'>
+      <div className='relative flex flex-col-reverse bg-white minlg:block'>
         {/* Intro Text */}
         <div
           id='anim-hero-text'
           className={tw(
-            'flex flex-col items-start justify-center pb-[3.75rem] pl-[5vw] pt-[10rem] minlg:py-[4vh]',
+            'flex flex-col items-start justify-center px-[5vw] pb-9 pt-14 minlg:py-[4vh]',
             'minlg:h-screen minlg:w-[55%] minxl:w-[58.5%]'
           )}
         >
@@ -28,8 +32,8 @@ export default function HeroSection({ data }: HomePageData) {
             data-aos='fade-up'
             data-aos-delay='100'
             className={tw(
-              'text-[2.5rem] leading-[1.5] minmd:text-[5.2rem] minmd:leading-[1.15] minlg:text-[3.3rem] minxl:text-[5.2rem] minxxl:text-[6.8rem]',
-              'mb-11 font-normal tracking-tight text-black'
+              'text-[2.5rem] leading-[1.5] minmd:text-[5.2rem] minmd:leading-[1.15] minlg:text-[3.5rem] minxl:text-[6.25rem] minxxl:text-[6.8rem]',
+              'mb-8 font-normal tracking-tight text-black minlg:mb-11'
             )}
           >
             {data?.heroTextData?.titleDrop?.firstPhrase}
@@ -37,13 +41,13 @@ export default function HeroSection({ data }: HomePageData) {
               <BlurImage
                 className={tw(
                   'anim-profile-icon -translate-y-[120vw] transform transition duration-[2s]',
-                  'inline-block w-[2.5rem] drop-shadow-md minmd:w-[3.125rem] minxxl:w-[4.5rem]',
+                  'inline-block w-[2.5rem] drop-shadow-md minmd:w-[4.825rem]',
                   '-my-[.5rem] mx-[1.8rem] rounded-xl minxxl:mx-[2.2rem]'
                 )}
                 width={120}
                 height={120}
                 loader={contentfulLoader}
-                src={data?.heroImagesCollection.items[0]?.url}
+                src={data?.heroImagesCollection?.items[0]?.url}
                 alt='NFT image'
               />
             </span>
@@ -53,13 +57,13 @@ export default function HeroSection({ data }: HomePageData) {
               <BlurImage
                 className={tw(
                   'anim-profile-icon -translate-y-[120vw] transform transition delay-200 duration-[2s]',
-                  'inline-block w-[2.5rem] drop-shadow-md minmd:w-[3.125rem] minxxl:w-[4.5rem]',
+                  'inline-block w-[2.5rem] drop-shadow-md minmd:w-[4.825rem]',
                   '-my-[.5rem] mx-[1.8rem] rounded-xl minxxl:mx-[2.2rem]'
                 )}
                 width={120}
                 height={120}
                 loader={contentfulLoader}
-                src={data?.heroImagesCollection.items[1]?.url}
+                src={data?.heroImagesCollection?.items[1]?.url}
                 alt='NFT image'
               />
             </span>
@@ -72,20 +76,18 @@ export default function HeroSection({ data }: HomePageData) {
             </span>
           </h2>
 
-          <p className='mb-9 text-xl'>{data?.heroTextData.subTitle}</p>
+          <p className='mb-9 text-xl'>{data?.heroTextData?.subTitle}</p>
 
-          <a
-            data-aos='zoom-out'
-            data-aos-delay='300'
-            href={data?.heroTextData?.ctaLink}
-            className={tw(
-              'rounded-full bg-[#121212] drop-shadow-lg transition-colors hover:bg-[#414141]',
-              'inline-flex h-[4.1875rem] items-center justify-center px-6 text-center minxxl:h-[6rem] minxxl:px-9',
-              'text-xl font-medium uppercase text-white minxxl:text-3xl'
-            )}
-          >
-            {data?.heroTextData?.ctaButton}
-          </a>
+          <div>
+            <Button
+              data-aos='zoom-out'
+              data-aos-delay='300'
+              type={ButtonType.WEB_SECONDARY}
+              label={data?.heroTextData?.ctaButton}
+              stretch
+              onClick={() => router.push(`/${data?.heroTextData?.ctaLink}`)}
+            />
+          </div>
         </div>
 
         {/* Hero */}
@@ -96,7 +98,7 @@ export default function HeroSection({ data }: HomePageData) {
           className={tw(
             'w-full bg-[#F9D54C] minlg:h-[calc(100vh+5px)] minlg:max-w-[45%] minxl:max-w-[41.5%]',
             'relative z-[10] overflow-hidden minlg:absolute minlg:right-0 minlg:top-0',
-            'before:block before:pb-[127%] minmd:before:pb-[80%] minlg:before:hidden minlg:before:pb-[60%]'
+            'before:block before:pb-[90%] minmd:before:pb-[80%] minlg:before:hidden minlg:before:pb-[60%]'
           )}
         >
           <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'>

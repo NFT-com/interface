@@ -1,5 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import AOS from 'aos';
 import { gsap } from 'gsap';
@@ -13,6 +12,7 @@ import Toast from 'components/elements/Toast';
 import { useEmailSubscribe } from 'hooks/useEmailSubscribe';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/format';
 import { cl, tw } from 'utils/tw';
 
@@ -150,15 +150,232 @@ export const FooterLarge = () => {
 
   const fixFooter = ['/app/mint-profiles'];
 
+  if (getEnvBool(Doppler.NEXT_PUBLIC_HP_V3_ENABLED)) {
+    return (
+      <footer
+        id='FooterContainer'
+        className={cl('page-footer overflow-hidden bg-[#282828]', {
+          'z-50 -mt-[4.3rem]': fixFooter?.includes(location) && location !== '/'
+        })}
+      >
+        <Toast />
+        <div
+          id='footer-content'
+          className={tw('relative font-noi-grotesk text-primary-txt-dk', 'rounded-t-3xl bg-black minlg:rounded-none')}
+        >
+          <div
+            className={tw(
+              'relative justify-between minlg:flex minlg:flex-row',
+              'px-5 pb-10 pt-14 minlg:pl-0 minlg:pr-32'
+            )}
+          >
+            <div
+              className={tw(
+                'flex flex-col minlg:max-w-[50%] minlg:flex-shrink-0 minlg:basis-2/4',
+                'items-start justify-between text-base minlg:pl-14 minlg:pt-[2.35rem]'
+              )}
+            >
+              {/* Logo */}
+              <div data-aos='fade-right' data-aos-delay='100' className='mb-[2.625rem] flex items-center minlg:mb-0'>
+                <Link href='/' passHref>
+                  <div className='h-[3.8rem] w-[3.8rem]'>
+                    <BlurImage
+                      src='/icons/LogoFooterWhite.svg'
+                      alt='NFT.com white footer logo'
+                      localImage
+                      width={60}
+                      height={60}
+                      className='h-[3.8rem] w-[3.8rem] justify-start'
+                    />
+                  </div>
+                </Link>
+
+                <svg
+                  className='ml-3'
+                  width='87'
+                  height='23'
+                  viewBox='0 0 63 18'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <path
+                    d='M16.3704 0.875H19.9551V17.1235H16.3704L3.51321 5.26179L3.58454 7.83843V17.1235H-6.10352e-05V0.875H3.58454L16.4418 12.7603L16.3704 10.1601V0.875Z'
+                    fill='white'
+                  />
+                  <path
+                    d='M26.3558 10.393V17.125H22.7712V0.875H40.9113V4.12529H26.3574V7.14268H39.4787V10.393H26.3558Z'
+                    fill='white'
+                  />
+                  <path
+                    d='M54.6126 4.12529V17.125H51.028V4.12529H43.1409V0.875H62.4996V4.12529H54.6126Z'
+                    fill='white'
+                  />
+                </svg>
+              </div>
+
+              {/* Socials */}
+              <div className='flex gap-4'>
+                <a
+                  data-aos='fade-left'
+                  data-aos-delay='200'
+                  className={tw('text-white transition-colors hover:text-[#F9D54C]')}
+                  target='_blank'
+                  href='https://twitter.com/NFTcomofficial'
+                  rel='noopener noreferrer'
+                >
+                  <TwitterLogo
+                    className={tw('h-7 w-7 minxxl:h-9 minxxl:w-9')}
+                    viewBox='0 0 38 32'
+                    fill='currentColor'
+                  />
+                </a>
+                <a
+                  data-aos='fade-left'
+                  data-aos-delay='300'
+                  className={tw('text-white transition-colors hover:text-[#F9D54C]')}
+                  target='_blank'
+                  href='https://discord.com/invite/nftdotcom'
+                  rel='noopener noreferrer'
+                >
+                  <DiscordLogo
+                    className={tw('h-7 w-7 minxxl:h-9 minxxl:w-9')}
+                    viewBox='0 0 39 38'
+                    fill='currentColor'
+                  />
+                </a>
+              </div>
+            </div>
+
+            {/* Nav */}
+            <div
+              data-aos='fade-up'
+              data-aos-delay='100'
+              className='grid w-full grid-cols-2 minmd:grid-cols-3 minmd:pb-14 minlg:w-1/2'
+            >
+              {filterNulls(footerData)
+                .slice(0, 3)
+                .map((item, index) => {
+                  return (
+                    <div
+                      className={tw(
+                        'mt-12 text-base minmd:pl-[35%] minlg:mt-0 minlg:pl-0 minxxl:text-xl',
+                        index === 3 && 'col-start-2 minlg:col-auto minlg:row-auto'
+                      )}
+                      key={index}
+                    >
+                      <span className='text-[0.9375rem] font-medium minxxl:text-[1.5rem]'>{item.title}</span>
+                      <div className='flex flex-col'>
+                        {item.links?.map((item, index) => {
+                          return (
+                            <Link href={item.link} key={index} legacyBehavior>
+                              {item.newTab ? (
+                                <a
+                                  target='_blank'
+                                  rel='noreferrer noopener'
+                                  className='mt-4 cursor-pointer text-[#8B8B8B] hover:text-white'
+                                >
+                                  {item.name}
+                                </a>
+                              ) : (
+                                <a className='mt-4 cursor-pointer text-[#8B8B8B] hover:text-white'>{item.name}</a>
+                              )}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+
+          <div className={tw('flex flex-col justify-between minlg:flex-row', 'relative px-5 minlg:pl-0 minlg:pr-32')}>
+            <div
+              data-aos='fade-right'
+              data-aos-delay='200'
+              className={tw('w-full text-sm text-[#8B8B8B] minlg:pl-14 minxxl:text-lg', 'order-1 minlg:-order-1')}
+            >
+              <p className='mb-6 minlg:mb-[6.8rem]'>
+                © {new Date().getFullYear()} NFT.com. <br className='minlg:hidden' /> All rights reserved
+              </p>
+              <span
+                className={tw(
+                  'block h-[110px] w-[115px] -skew-x-[20deg] bg-[#F9D54C]',
+                  'ml-auto mr-5 minlg:ml-24 minlg:mr-0'
+                )}
+              ></span>
+            </div>
+
+            <div
+              data-aos='fade-up'
+              data-aos-delay='100'
+              className='w-full shrink-0 basis-2/4 minlg:max-w-[50%] minlg:pt-[4.5rem]'
+            >
+              <h4 className='mb-4 text-[#8B8B8B] minlg:text-[.9375rem] minxxl:text-[1.5rem]'>
+                Subscribe to our notifications
+              </h4>
+
+              <div className='flex border-b border-b-[#2A2A2A] pb-4'>
+                <input
+                  type='email'
+                  placeholder='Enter your email'
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className={tw(
+                    'minxxl:text-xl',
+                    'text-key-gray placeholder:text-key-gray/80',
+                    'focus:border-transparent focus:ring-0 focus:placeholder:text-key-gray/80',
+                    'w-full border-none bg-transparent px-0',
+                    'shadow-none focus:border-transparent focus:ring-0'
+                  )}
+                />
+                <button
+                  disabled={!email.match(isValidEmail)}
+                  type='submit'
+                  onClick={async () => {
+                    await subscribe(email)
+                      .then(() => {
+                        setEmail('');
+                        toast.success('Success! Please check your email to verify ownership.');
+                      })
+                      .catch(() => toast.error('Error while submitting email'));
+                  }}
+                  className={tw(
+                    'text-sm minxxl:text-lg',
+                    'rounded-full border-2 border-white',
+                    'ml-6 h-9 px-4 minxxl:h-11 minxxl:px-6',
+                    'transition-colors hover:bg-white hover:text-black'
+                  )}
+                >
+                  Subscribe
+                </button>
+              </div>
+              <span className='mb-[3.75rem] block pt-3 text-[.875rem] text-key-gray/50 minlg:mb-0 minlg:text-xs minxxl:text-sm'>
+                Subscribe to our notifications
+              </span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    );
+  }
   return (
     <footer
       id='FooterContainer'
-      className={cl('page-footer overflow-hidden', {
-        'z-50 -mt-[4.3rem]': fixFooter?.includes(location) && location !== '/'
-      })}
+      className={`page-footer overflow-hidden ${
+        location === '/' ? '-mt-9 minlg:-mt-[20.8rem]' : fixFooter?.includes(location) ? 'z-50 -mt-[4.3rem]' : ''
+      }`}
     >
       <Toast />
-      <div id='footer-content' className={tw('relative font-noi-grotesk text-primary-txt-dk', 'bg-black')}>
+      <div
+        id='footer-content'
+        className={tw(
+          'relative font-noi-grotesk text-primary-txt-dk',
+          'rounded-t-[40px] bg-black minlg:rounded-t-[75px]',
+          'transform-gpu',
+          location === '/' && 'minlg:translate-y-1/3 minxl:translate-y-1/2'
+        )}
+      >
         <div
           className={tw(
             'relative justify-between minlg:flex minlg:flex-row',

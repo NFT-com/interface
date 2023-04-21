@@ -156,8 +156,9 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
           <div className='ml-2 w-14 overflow-hidden rounded-[16px]'>
             <RoundedCornerMedia
               variant={RoundedCornerVariant.None}
-              width={600}
-              height={600}
+              width={80}
+              height={80}
+              sizes='80px'
               containerClasses='w-[100%] object-cover h-[100%]'
               src={props?.logoUrl}
               extraClasses='hover:scale-105 transition'
@@ -226,8 +227,9 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
             <div className='w-20  overflow-hidden rounded-[16px]'>
               <RoundedCornerMedia
                 variant={RoundedCornerVariant.None}
-                width={600}
-                height={600}
+                width={80}
+                height={80}
+                sizes='80px'
                 containerClasses='w-[100%] object-cover h-[100%]'
                 src={props?.logoUrl}
                 extraClasses='hover:scale-105 transition'

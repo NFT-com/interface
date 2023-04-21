@@ -63,7 +63,7 @@ export default function UnofficialCollectionPage({ fallback }: InferGetServerSid
 
   return (
     <SWRConfig value={fallback}>
-      <NextSeo {...{ ...seoConfig }} />
+      <NextSeo {...seoConfig} />
       <Collection contract={contractAddr as string}>
         <CollectionBanner />
         <CollectionHeader>

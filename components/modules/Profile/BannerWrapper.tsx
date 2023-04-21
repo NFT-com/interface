@@ -1,8 +1,7 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 
 import BlurImage from 'components/elements/BlurImage';
 import Loader from 'components/elements/Loader/Loader';
-import { nftComCdnLoader } from 'lib/image/loader';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
@@ -23,12 +22,13 @@ const defaultBanner = getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
 export function BannerWrapper({
   alt = 'banner image',
   children,
+  draft,
   imageOverride,
   loading,
   onMouseEnter,
   onMouseLeave
 }: PropsWithChildren<BannerWrapperProps>) {
-  const imageUrl = imageOverride || defaultBanner;
+  const imageUrl = useMemo(() => (imageOverride && !loading ? imageOverride : defaultBanner), [imageOverride, loading]);
 
   return (
     <div
@@ -44,8 +44,7 @@ export function BannerWrapper({
         <BlurImage
           alt={alt}
           src={imageUrl}
-          width={3000}
-          loader={nftComCdnLoader}
+          localImage={draft}
           sizes='100vw'
           className='object-cover'
           fill

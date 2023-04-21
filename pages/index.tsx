@@ -132,349 +132,6 @@ const Index: NextPageWithLayout = ({ preview, data_v2, homePageDataV3 }: HomePag
           },
           0
         );
-
-      // Profile
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '#anim-profile-trigger',
-            start: 'top 90%',
-            end: '+=10px',
-            toggleActions: 'play none reverse none'
-          }
-        })
-        .to(
-          '#anim-profile',
-          {
-            y: -200,
-            duration: 0.8,
-            ease: 'power1.out'
-          },
-          0
-        )
-        .to(
-          '#anim-profile-head',
-          {
-            y: 0,
-            duration: 1,
-            ease: 'power2.out'
-          },
-          0
-        )
-        .to(
-          '#anim-profile-content',
-          {
-            y: 0,
-            duration: 1.2,
-            ease: 'power2.out'
-          },
-          0
-        )
-        .to(
-          '#anim-profile-shadow-dark',
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: 'power1.out'
-          },
-          0
-        )
-        .to(
-          '#anim-profile-bg',
-          {
-            scaleY: 1,
-            duration: 0.8,
-            ease: 'power1.out'
-          },
-          0
-        )
-        .to(
-          '#anim-profile-first-item',
-          {
-            y: 0,
-            duration: 0.8,
-            ease: 'power1.out'
-          },
-          0
-        )
-        .to(
-          '#anim-profile-second-item',
-          {
-            y: 0,
-            duration: 1,
-            ease: 'power1.out'
-          },
-          0
-        )
-        .to(
-          '#anim-profile-ttl-icon',
-          {
-            y: 0,
-            duration: 2.2,
-            ease: 'power2.out'
-          },
-          0
-        );
-
-      // Discover
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '#anim-discover-trigger',
-            // start: 'top 90%',
-            start: '10% bottom',
-            end: '+=50px',
-            toggleActions: 'play none reverse none'
-          }
-        })
-        .to(
-          '#anim-discover-img',
-          {
-            y: 0,
-            duration: 1.2,
-            ease: 'power2.out'
-          },
-          0
-        )
-        .to(
-          '#anim-discover-ttl-line-1',
-          {
-            y: 0,
-            duration: 1.3,
-            ease: 'power2.out'
-          },
-          0
-        )
-        .to(
-          '#anim-discover-ttl-line-2',
-          {
-            y: 0,
-            duration: 1.5,
-            ease: 'power2.out'
-          },
-          0
-        )
-        .to(
-          '#anim-discover-txt',
-          {
-            y: 0,
-            duration: 1.5,
-            ease: 'power2.out'
-          },
-          0
-        )
-        .to(
-          '#anim-discover-ttl-icon',
-          {
-            y: 0,
-            duration: 2.2,
-            ease: 'power2.out'
-          },
-          0
-        );
-
-      /* Hiw it works */
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '#anim-hiw-trigger',
-            // start: 'top 80%',
-            start: 'top bottom',
-            end: '+=50px',
-            toggleActions: 'play none reverse none'
-          }
-        })
-        .to('#anim-hiw-content', {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: 'power2.out'
-        })
-        .to(
-          '.anim-hiw-item:nth-child(1)',
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1.2,
-            ease: 'power2.out'
-          },
-          '>-0.7'
-        )
-        .to(
-          '.anim-hiw-item:nth-child(2)',
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1.2,
-            ease: 'power2.out'
-          },
-          '>-0.75'
-        )
-        .to(
-          '.anim-hiw-item:nth-child(3)',
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1.2,
-            ease: 'power2.out'
-          },
-          '>-0.8'
-        );
-
-      // Leaderboard
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '#anim-leaderboard',
-            start: 'top 50%',
-            end: '+=30px',
-            toggleActions: 'play none reverse none'
-          }
-        })
-        .to(
-          '.anim-leaderboard-row',
-          {
-            y: 0,
-            duration: 1.2,
-            ease: 'circ.out'
-          },
-          0
-        );
-
-      gsap.to('#anim-leaderboard-decor', {
-        scrollTrigger: {
-          trigger: '#anim-leaderboard-trigger',
-          start: 'top top',
-          end: '+=400',
-          pin: '#anim-leaderboard-trigger'
-        }
-      });
-
-      // News
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '#anim-news-trigger',
-            start: 'top 80%',
-            end: '+=30px',
-            toggleActions: 'play none reverse none'
-          }
-        })
-        .to(
-          '#anim-news-content',
-          {
-            x: 0,
-            duration: 2,
-            ease: 'power2.out'
-          },
-          0
-        );
-
-      // Discover
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '#anim-discover-trigger',
-            start: 'top 80%',
-            end: '+=30px',
-            toggleActions: 'play none reverse none'
-          }
-        })
-        .to(
-          '#anim-discover-content',
-          {
-            x: 0,
-            duration: 2,
-            ease: 'power2.out'
-          },
-          0
-        );
-
-      // Marquees
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '#anim-ticker-trigger',
-            start: '20% bottom',
-            end: '+=30px',
-            toggleActions: 'play none reverse none'
-          }
-        })
-        .to(
-          '#anim-ticker-first',
-          {
-            y: 0,
-            duration: 0.8,
-            ease: 'circ.out'
-          },
-          0
-        )
-        .to(
-          '#anim-ticker-second',
-          {
-            y: 0,
-            duration: 1,
-            ease: 'circ.out'
-          },
-          '>-0.8'
-        );
-
-      // Build Profile
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '#anim-build-profile-trigger',
-            start: '100px bottom',
-            end: '+=30px',
-            toggleActions: 'play none reverse none'
-          }
-        })
-        .to(
-          '#anim-build-profile-trigger',
-          {
-            y: 0,
-            duration: 1.5,
-            ease: 'circ.out'
-          },
-          0
-        )
-        .to(
-          '#anim-build-profile-ttl-1',
-          {
-            y: 0,
-            duration: 1.8,
-            ease: 'circ.out'
-          },
-          0
-        )
-        .to(
-          '#anim-build-profile-ttl-2',
-          {
-            y: 0,
-            duration: 2.1,
-            ease: 'circ.out'
-          },
-          0
-        )
-        .to(
-          '.anim-build-profile-ttl-icon',
-          {
-            y: 0,
-            duration: 2.2,
-            ease: 'circ.out'
-          },
-          0
-        )
-        .to(
-          '.anim-build-profile-ttl-icon-2',
-          {
-            y: 0,
-            duration: 2.2,
-            ease: 'circ.out'
-          },
-          '<0.5'
-        );
     });
 
     window.requestAnimationFrame(function () {
@@ -506,6 +163,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2, homePageDataV3 }: HomePag
               heroImagesCollection: homePageDataV3?.heroImagesCollection
             }}
           />
+
           <WhatWeCanDo
             data={{
               whatWeCanDoTitle: {
@@ -513,25 +171,35 @@ const Index: NextPageWithLayout = ({ preview, data_v2, homePageDataV3 }: HomePag
               },
               whatWeCanDoImage: {
                 url: homePageDataV3?.whatWeCanDoImage?.url
+              },
+              whatWeCanDoBg: {
+                url: homePageDataV3?.whatWeCanDoBg?.url
               }
             }}
           />
+
           <DynamicLinks
             data={{
               sectionDynamicLinks: homePageDataV3.sectionDynamicLinks
             }}
             isVisible={isVisible}
           />
+
           <DiscoverCollections data={homePageDataV3.collectionsSection} />
+
           <SocialSection data={homePageDataV3?.textAndImageCollection} />
+
           <BlogSection
             blogSectionTitle={homePageDataV3.blogSectionTitle}
             goToBlogButton={homePageDataV3.goToBlogButton}
             data={homePageDataV3.blogCollection}
           />
+
           <BuildProfile data={homePageDataV3?.buildProfileSection} />
         </main>
+
         {preview && <DynamicPreviewBanner />}
+
         <NonAuthLikeModal />
       </>
     );

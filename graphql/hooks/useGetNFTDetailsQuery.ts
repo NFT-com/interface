@@ -1,10 +1,10 @@
+import useSWRImmutable, { mutate } from 'swr';
+import { useNetwork } from 'wagmi';
+
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { NftDetail } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/format';
-
-import useSWRImmutable, { mutate } from 'swr';
-import { useNetwork } from 'wagmi';
 
 export interface NFTDetailsData {
   data: NftDetail;
@@ -22,29 +22,23 @@ export interface NFTDetailsData {
 export function useGetNFTDetailsQuery(contractAddress: string, tokenId: string): NFTDetailsData {
   const sdk = useGraphQLSDK();
   const { chain } = useNetwork();
-  const publicId = getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
-  const isEthMainNet = chain?.id === 1 && publicId === '1';
-  const hasMissingArgs = isNullOrEmpty(contractAddress) || isNullOrEmpty(tokenId);
-  const shouldFetch = !hasMissingArgs && !isEthMainNet;
+  const chainId = chain?.id ? String(chain?.id) : getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
+  const shouldFetch = !(isNullOrEmpty(contractAddress) || isNullOrEmpty(tokenId));
+
   const args = {
-    chainId: String(chain?.id || publicId),
+    chainId,
     contractAddress,
     tokenId
   };
-  const keyString = () => shouldFetch ? { query: 'GetNFTDetailsQuery ', args } : null;
+  const keyString = () => (shouldFetch ? { query: 'GetNFTDetailsQuery ', args } : null);
 
-  const { data, isLoading, error } = useSWRImmutable(keyString, async (
-    {
-      args: {
+  const { data, isLoading, error } = useSWRImmutable(keyString, async ({ args: { contractAddress, tokenId } }) =>
+    sdk.GetNFTDetails({
+      input: {
         contractAddress,
         tokenId
       }
-    }) => await sdk.GetNFTDetails({
-    input: {
-      contractAddress,
-      tokenId
-    }
-  })
+    })
   );
 
   return {
@@ -53,6 +47,6 @@ export function useGetNFTDetailsQuery(contractAddress: string, tokenId: string):
     loading: isLoading,
     mutate: () => {
       mutate(keyString);
-    },
+    }
   };
 }

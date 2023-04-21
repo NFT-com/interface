@@ -32,6 +32,7 @@ export enum RoundedCornerAmount {
 
 export interface RoundedCornerMediaProps {
   src: string;
+  sizes?: string;
   priority?: boolean;
   fallbackImage?: string;
   loader?: ImageLoader;
@@ -87,6 +88,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia({
   objectFit,
   onClick,
   priority,
+  sizes,
   src,
   variant,
   videoOverride
@@ -175,6 +177,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia({
           <DynamicRoundedCornerMediaImage
             priority={priority}
             src={imageUrl}
+            sizes={sizes}
             width={300}
             loader={defaultImgloader}
             onError={() => {

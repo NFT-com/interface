@@ -124,6 +124,7 @@ export function NFTCardImage(props: NFTCardImageProps) {
     >
       <div className='transition hover:scale-105 group-hover/ntfCard:scale-110'>
         <RoundedCornerMedia
+          sizes='380px'
           variant={RoundedCornerVariant.None}
           width={600}
           height={600}

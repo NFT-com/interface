@@ -103,7 +103,7 @@ export function Collection(props: CollectionProps) {
   // Data Fetching
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const collectionSalesHistory = useGetContractSalesStatisticsQuery(collectionContract);
-  const collectionNFTInfo = useGetNFTDetailsQuery(collectionContract, collectionNfts[0]?.document?.tokenId);
+  const collectionNFTInfo = useGetNFTDetailsQuery(collectionContract, collectionNfts[0]?.document?.tokenId ?? '1'); // set fallback to 1st token in collection
   const { data: collectionData, mutate: mutateCollectionData } = useCollectionQuery(
     propsGuard.type === 'contract' && !slug
       ? {
@@ -257,16 +257,25 @@ export const CollectionBanner: React.FC = () => {
   const { collectionNFTInfo, collectionData } = useCollectionContext();
 
   // ! NOTE: Added fallback banner from collectionData, but image might be low res/quality.
-  const imageOverride = !collectionNFTInfo?.error
-    ? collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace('?w=500', '?w=3000') ||
-      collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url
-    : collectionData?.collection?.bannerUrl;
+  const imageOverride = useMemo(
+    () =>
+      !collectionNFTInfo?.error
+        ? collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace('?w=500', '?w=3000') ||
+          collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url
+        : collectionData?.collection?.bannerUrl,
+    [
+      collectionNFTInfo?.error,
+      collectionNFTInfo?.data?.contract?.metadata?.banner_url,
+      collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url,
+      collectionData?.collection?.bannerUrl
+    ]
+  );
 
   return (
     <div className='mt-20'>
       <BannerWrapper
         alt={`${collectionData?.collection?.name} Banner Image`}
-        loading={Boolean(collectionNFTInfo.loading)}
+        loading={Boolean(collectionNFTInfo?.loading)}
         imageOverride={imageOverride}
         isCollection
       />
@@ -316,6 +325,7 @@ export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) 
                   alt='test'
                   className='mr-2 rounded-[10px] object-cover'
                   fill
+                  sizes='40px'
                 />
               </div>
             )}

@@ -1,21 +1,23 @@
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
+import { Button, ButtonType } from 'components/elements/Button';
 import { tw } from 'utils/tw';
 
 import { HomePageV3BuildProfileSection } from 'types/HomePage';
-
-import profileImage from 'public/profile-images.webp';
 
 export interface HomePageData {
   data?: HomePageV3BuildProfileSection;
 }
 
 export default function BuildProfile({ data }: HomePageData) {
+  const router = useRouter();
+
   return (
     <div
       className={tw(
-        'relative z-0 overflow-hidden bg-black',
-        'before:absolute before:bottom-2/4 before:left-[-3%] before:right-[-3%] before:top-0 before:-z-10 before:bg-[#282828]'
+        'z-0 overflow-hidden bg-[#282828] pb-16 minlg:relative minlg:bg-black minlg:pb-0',
+        'before:bottom-2/4 before:-z-10 minlg:before:absolute minlg:before:left-[-3%] minlg:before:right-[-3%] minlg:before:top-0 minlg:before:bg-[#282828]'
       )}
     >
       <div
@@ -25,12 +27,17 @@ export default function BuildProfile({ data }: HomePageData) {
         )}
       >
         <div className={tw('minmd:flex')}>
-          <div className={tw('pl-8 minmd:w-[42%] minxl:pl-36', 'py-12 minlg:py-[9.5rem] minxxl:py-32')}>
+          <div
+            className={tw(
+              'px-8 minmd:min-w-[26rem] minxl:w-[46%] minxl:pl-36 minxl:pr-0',
+              'py-12 minlg:py-[9.5rem] minxxl:py-32'
+            )}
+          >
             <h2
               data-aos='fade-up'
               data-aos-delay='100'
               className={tw(
-                'text-[calc(48px+54*(100vw-375px)/1545)]',
+                'text-[calc(48px+62*(100vw-375px)/1545)]',
                 'relative font-normal leading-[1.1] text-black',
                 'mb-4 tracking-[-3px] minlg:mb-2'
               )}
@@ -39,26 +46,22 @@ export default function BuildProfile({ data }: HomePageData) {
             </h2>
 
             <p className={tw('mb-9 text-lg leading-[1.333]')}>{data?.subTitle}</p>
-            <a
+            <Button
               data-aos='zoom-out'
               data-aos-delay='300'
-              href={data?.ctaLink}
-              className={tw(
-                'rounded-full bg-[#121212] drop-shadow-lg transition-colors hover:bg-[#414141]',
-                'inline-flex h-[4rem] items-center justify-center px-6 text-center minxxl:h-[6rem] minxxl:px-9',
-                'text-xl font-medium uppercase text-white minxxl:text-3xl'
-              )}
-            >
-              {data?.ctaButton}
-            </a>
+              type={ButtonType.WEB_SECONDARY}
+              label={data?.ctaButton}
+              stretch
+              onClick={() => router.push(`/${data?.ctaLink}`)}
+            />
           </div>
 
-          <div className='text-right minmd:w-[58%]'>
+          <div className='grow text-right'>
             <Image
-              className='ml-auto h-full object-cover'
+              className='-ml-9 h-full max-w-[calc(100%+2.25rem)] object-cover minmd:ml-auto minmd:max-w-full'
               width={721}
               height={621}
-              src={profileImage}
+              src='/assets/build-profile-bg.webp'
               alt='Example profile image'
             />
           </div>

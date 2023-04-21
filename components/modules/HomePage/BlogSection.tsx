@@ -1,15 +1,21 @@
+import React, { useEffect } from 'react';
+import AOS from 'aos';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import BlurImage from 'components/elements/BlurImage';
+import { Button, ButtonType } from 'components/elements/Button';
 import { contentfulLoader } from 'lib/image/loader';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { HomePageV3BlogSection } from 'types/HomePage';
 
-import ArrowNav from 'public/icons/arrow-right.svg?svgr';
+import ArrowNav from 'public/icons/arrow-nav.svg?svgr';
 
 export interface HomePageData {
   data?: HomePageV3BlogSection;
@@ -23,23 +29,62 @@ export interface HomePageData {
   };
 }
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: HomePageData) {
+  const router = useRouter();
+
+  useEffect(() => {
+    AOS.init({
+      disable() {
+        const maxWidth = 900;
+        return window.innerWidth >= maxWidth;
+      },
+      duration: 700
+    });
+
+    const matchMedia = gsap.matchMedia();
+    matchMedia.add('(min-width: 900px)', () => {
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: '#anim-blog-trigger',
+            start: 'top 40%',
+            end: '+=30px',
+            toggleActions: 'play none reverse none'
+          }
+        })
+        .to(
+          '#anim-blog-content',
+          {
+            x: 0,
+            duration: 2,
+            ease: 'power2.out'
+          },
+          0
+        );
+    });
+  });
+
   return (
-    <div className='bg-[#282828]'>
-      <div className={tw('relative z-0 py-[2.5rem] minlg:pb-[7.625rem] minlg:pt-[6.25rem]')}>
-        <div className='relative text-center text-white'>
+    <div id='anim-blog-trigger' className='bg-[#282828]'>
+      <div className={tw('relative z-0 py-16 minlg:pb-[7.625rem] minlg:pt-[6.25rem]')}>
+        <div className='relative px-7 pt-4 text-center text-white minlg:pt-0'>
           <h2
             data-aos='fade-up'
-            className='mb-[.625rem] text-[3rem] font-normal leading-[1.0854] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]'
+            className={tw(
+              'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
+              'mb-8 font-normal leading-[1.0854] minlg:mb-[.625rem]'
+            )}
           >
             {blogSectionTitle?.title}
           </h2>
-          <p data-aos='fade-up' data-aos-delay='100' className='mb-[3.75rem] text-lg'>
+          <p data-aos='fade-up' data-aos-delay='100' className='mb-8 text-lg minxl:mb-[3.8125rem]'>
             {blogSectionTitle?.subTitle}
           </p>
         </div>
 
-        <div className='mb-12' data-aos='fade-left'>
+        <div id='anim-blog-content' data-aos='fade-left' className='mb-12 minlg:translate-x-full minlg:transform-gpu'>
           <Swiper
             modules={[Navigation, Scrollbar]}
             spaceBetween={14}
@@ -58,15 +103,16 @@ export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: 
               }
             }}
             navigation={{
-              nextEl: '.insights-swiper__btn-next',
-              prevEl: '.insights-swiper__btn-prev',
+              nextEl: '.js-insights-swiper__btn-next',
+              prevEl: '.js-insights-swiper__btn-prev',
               disabledClass: 'swiper-button-disabled'
             }}
             autoplay={{
               delay: 3500,
               disableOnInteraction: false
             }}
-            className='insights-swiper flex !pl-[4vw]'
+            scrollbar={{ draggable: true }}
+            className='insights-swiper flex !pb-12 !pl-[4vw] minlg:!pb-0'
           >
             {data?.items.map(preview => (
               <SwiperSlide key={preview.slug} className='!h-auto'>
@@ -125,24 +171,25 @@ export default function BlogSection({ data, goToBlogButton, blogSectionTitle }: 
           </Swiper>
         </div>
 
-        <div data-aos='zoom-in' data-aos-delay='100' className='relative flex flex-col text-center minmd:block'>
-          <a
-            href={goToBlogButton?.link}
-            className={tw(
-              'rounded-full bg-[#F9D54C] drop-shadow-lg transition-colors hover:bg-[#dcaf07]',
-              'inline-flex h-[4rem] items-center justify-center px-6 minxxl:h-[6rem] minxxl:px-9',
-              'text-xl font-medium uppercase text-black minxxl:text-3xl'
-            )}
-          >
-            {goToBlogButton?.title.toUpperCase()}
-          </a>
-
-          <div className='insights-swiper__buttons -order-1 pb-5 minmd:pb-0'>
-            <button type='button' className='insights-swiper__btn-prev'>
-              <ArrowNav />
+        <div
+          data-aos='zoom-in'
+          data-aos-delay='100'
+          className='relative flex flex-col items-center justify-center px-[4%] text-center minmd:px-0'
+        >
+          <Button
+            data-aos='zoom-out'
+            data-aos-delay='300'
+            type={ButtonType.WEB_PRIMARY}
+            label={goToBlogButton?.title}
+            stretch
+            onClick={() => router.push(`/${goToBlogButton?.link}`)}
+          />
+          <div className='swiper__nav-buttons -order-1 pb-5 minmd:pb-0'>
+            <button type='button' className='js-insights-swiper__btn-prev swiper-nav-button --prev right-[6.75rem]'>
+              <ArrowNav className='mr-0.5' />
             </button>
-            <button type='button' className='insights-swiper__btn-next'>
-              <ArrowNav />
+            <button type='button' className='js-insights-swiper__btn-next swiper-nav-button --next right-[2.75rem]'>
+              <ArrowNav className='ml-0.5' />
             </button>
           </div>
         </div>

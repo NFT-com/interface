@@ -9,7 +9,9 @@ import { useThemeColors } from 'styles/theme/useThemeColors';
 export enum ButtonType {
   PRIMARY = 'PRIMARY',
   SECONDARY = 'SECONDARY',
-  TERTIARY = 'TERTIARY'
+  TERTIARY = 'TERTIARY',
+  WEB_PRIMARY = 'WEB_PRIMARY',
+  WEB_SECONDARY = 'WEB_SECONDARY'
 }
 
 export enum ButtonSize {
@@ -22,7 +24,7 @@ export enum ButtonSize {
 export interface ButtonProps {
   /** Button type */
   type: ButtonType;
-  size: ButtonSize;
+  size?: ButtonSize;
   /** Button label (optional only if icon is passed) */
   label?: string;
   /** Button action */
@@ -49,8 +51,10 @@ export function Button(props: ButtonProps) {
     tertiaryButtonBackground
   } = useThemeColors();
 
-  // TODO: use config objects instead of nested switch statements
   const sizeClasses = useCallback(() => {
+    if (ButtonType.WEB_SECONDARY === props.type || ButtonType.WEB_PRIMARY === props.type) {
+      return 'min-w-[201px] min-h-[64px] w-full minmd:w-auto p-5 rounded-full text-xl uppercase text-xl font-medium uppercase text-black drop-shadow-lg';
+    }
     switch (props.size) {
       case ButtonSize.SMALL:
         switch (props.type) {
@@ -96,11 +100,22 @@ export function Button(props: ButtonProps) {
             return '';
         }
       default:
-        return '';
+        switch (props.type) {
+          case ButtonType.PRIMARY:
+          case ButtonType.SECONDARY:
+            return 'text-xl	px-6 py-3 rounded-xl';
+          case ButtonType.TERTIARY:
+            return 'text-xl px-6 py-3 rounded-full border-[1.5px]';
+          default:
+            return '';
+        }
     }
   }, [props.size, props.type]);
 
   const sizeClassesIconOnly = useCallback(() => {
+    if (ButtonType.WEB_SECONDARY === props.type || ButtonType.WEB_PRIMARY === props.type) {
+      return 'min-w-[201px] min-h-[64px] w-full minmd:w-auto p-5 rounded-full text-xl uppercase text-xl font-medium uppercase text-black drop-shadow-lg';
+    }
     switch (props.size) {
       case ButtonSize.SMALL:
         return 'h-6 w-6 rounded-full';
@@ -111,22 +126,22 @@ export function Button(props: ButtonProps) {
       case ButtonSize.XLARGE:
         return 'h-14 w-14 rounded-full';
       default:
-        return '';
+        return 'h-10 w-10 rounded-full';
     }
-  }, [props.size]);
+  }, [props.size, props.type]);
 
   const colorClasses = useCallback(() => {
     switch (props.type) {
       case ButtonType.PRIMARY:
+      case ButtonType.WEB_PRIMARY:
         return `bg-[${primaryButtonBackground}] hover:bg-[${primaryButtonBackgroundHover}] focus:bg-[${primaryButtonBackgroundFocus}] text-[${primaryButtonText}]`;
       case ButtonType.SECONDARY:
+      case ButtonType.WEB_SECONDARY:
         return `bg-[${secondaryButtonBackground}] hover:bg-button-secondary-hover focus:bg-[${secondaryButtonBackgroundFocus}] text-white`;
       case ButtonType.TERTIARY:
         return !isNullOrEmpty(props.label)
           ? `rounded-full bg-[${tertiaryButtonBackground}] border-black hover:border-button-tertiary-hover focus:border-button-tertiary-hover text-black hover:text-button-tertiary-hover focus:text-button-tertiary-hover`
           : `rounded-full bg-[${tertiaryButtonBackground}] border-black hover:border-button-tertiary-hover focus:border-button-tertiary-hover text-black hover:text-button-tertiary-hover focus:text-button-tertiary-hover border-[1.5px]`;
-      default: // Primary button is default
-        return `bg-[${primaryButtonBackground}] hover:bg-[${primaryButtonBackgroundHover}] focus:bg-[${primaryButtonBackgroundFocus}] text-[${primaryButtonText}]`;
     }
   }, [
     primaryButtonBackground,
@@ -185,8 +200,6 @@ export function Button(props: ButtonProps) {
           default:
             return '';
         }
-      default:
-        return '';
     }
   }, [primaryButtonBackground, props.size, props.type]);
 

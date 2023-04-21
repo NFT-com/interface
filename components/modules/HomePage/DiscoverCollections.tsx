@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Scrollbar } from 'swiper';
+import AOS from 'aos';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import { useRouter } from 'next/router';
+import { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import { Button, ButtonType } from 'components/elements/Button';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
 import { useCollectionLikeCountQuery } from 'graphql/hooks/useCollectionLikeQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
@@ -10,11 +15,17 @@ import { tw } from 'utils/tw';
 
 import { HomePageV3CollectionsSection } from 'types/HomePage';
 
+import DecorTop from 'public/decor-discover.svg?svgr';
+import ArrowNav from 'public/icons/arrow-nav.svg?svgr';
+
 export interface HomePageData {
   data?: HomePageV3CollectionsSection;
 }
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function DiscoverCollections({ data }: HomePageData) {
+  const router = useRouter();
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [collections, setCollectionData] = useState(null);
   const { data: collectionLikeData } = useCollectionLikeCountQuery(collections?.map(c => c?.document?.contractAddr));
@@ -34,6 +45,36 @@ export default function DiscoverCollections({ data }: HomePageData) {
     }).then(results => {
       setCollectionData(results?.hits);
     });
+
+    AOS.init({
+      disable() {
+        const maxWidth = 900;
+        return window.innerWidth >= maxWidth;
+      },
+      duration: 700
+    });
+
+    const matchMedia = gsap.matchMedia();
+    matchMedia.add('(min-width: 900px)', () => {
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: '#anim-discover-trigger',
+            start: 'top 40%',
+            end: '+=30px',
+            toggleActions: 'play none reverse none'
+          }
+        })
+        .to(
+          '#anim-discover-content',
+          {
+            x: 0,
+            duration: 2,
+            ease: 'power2.out'
+          },
+          0
+        );
+    });
   }, [addressIds, fetchTypesenseSearch]);
 
   return (
@@ -45,7 +86,9 @@ export default function DiscoverCollections({ data }: HomePageData) {
         'after:skew-x-[-20deg] after:bg-white minlg:after:absolute minlg:after:left-[11.5rem] minlg:after:top-0 minlg:after:h-[5.5rem] minlg:after:w-[8.9rem]'
       )}
     >
-      <div className={tw('pl-5 minmd:pl-0', 'relative z-0 py-[2.5rem] minlg:pb-12 minlg:pt-[6.25rem]')}>
+      <DecorTop alt='copy' fill='white' className='absolute left-7 top-0 minlg:hidden' />
+
+      <div className={tw('pl-5 minlg:pl-0', 'relative z-0 pb-16 pt-36 minlg:pb-12 minlg:pt-[6.25rem]')}>
         <div className='relative minlg:text-center'>
           <h2
             data-aos='fade-up'
@@ -59,36 +102,45 @@ export default function DiscoverCollections({ data }: HomePageData) {
         </div>
 
         <div className='mb-12 overflow-hidden'>
-          <div id='anim-discover-content'>
+          <div
+            id='anim-discover-content'
+            data-aos='fade-left'
+            className='minlg:translate-x-full minlg:transform-gpu md:!translate-x-0'
+          >
             <Swiper
-              modules={[Scrollbar]}
+              modules={[Navigation, Scrollbar]}
               spaceBetween={16}
               breakpoints={{
                 0: {
-                  slidesPerView: 1.15
-                },
-                600: {
-                  slidesPerView: 2
+                  slidesPerView: 'auto'
                 },
                 1200: {
-                  slidesPerView: 2.5
+                  slidesPerView: 2.55
                 },
                 1600: {
                   slidesPerView: 3.5
+                },
+                1800: {
+                  slidesPerView: 4.2
                 }
+              }}
+              navigation={{
+                nextEl: '.js-discover-swiper__btn-next',
+                prevEl: '.js-discover-swiper__btn-prev',
+                disabledClass: 'swiper-button-disabled'
               }}
               autoplay={{
                 delay: 3500,
                 disableOnInteraction: false
               }}
               scrollbar={{ draggable: true }}
-              className='flex !pb-12 minxl:!pb-[4.875rem]'
+              className='flex !pb-12 !pl-[4%] minxl:!pb-[4.875rem]'
             >
               {collections &&
                 collections?.length > 0 &&
                 collections?.map((collection, index) => {
                   return (
-                    <SwiperSlide key={index} className='!h-auto'>
+                    <SwiperSlide key={index} className='!h-auto lg:!w-auto lg:!max-w-xs'>
                       <CollectionCard
                         key={index}
                         redirectTo={`/app/collection/${isOfficialCollection({
@@ -111,17 +163,33 @@ export default function DiscoverCollections({ data }: HomePageData) {
           </div>
         </div>
 
-        <div data-aos='zoom-in' data-aos-delay='100' className='text-center'>
-          <a
-            href={data?.ctaButtonLink}
-            className={tw(
-              'rounded-full bg-[#F9D54C] drop-shadow-lg transition-colors hover:bg-[#dcaf07]',
-              'inline-flex h-[4rem] items-center justify-center px-6 minxxl:h-[6rem] minxxl:px-9',
-              'text-xl font-medium uppercase text-black minxxl:text-3xl'
-            )}
-          >
-            {data?.ctaButtonText}
-          </a>
+        <div
+          data-aos='zoom-in'
+          data-aos-delay='100'
+          className='relative flex flex-col items-center justify-center text-center'
+        >
+          <div>
+            <Button
+              data-aos='zoom-out'
+              data-aos-delay='300'
+              type={ButtonType.WEB_PRIMARY}
+              label={data?.ctaButtonText}
+              stretch
+              onClick={() => router.push(`/${data?.ctaButtonLink}`)}
+            />
+          </div>
+
+          <div className='swiper__nav-buttons -order-1 pb-5 minmd:pb-0'>
+            <button
+              type='button'
+              className='js-discover-swiper__btn-prev swiper-nav-button --prev right-[calc(4%+3.875rem)]'
+            >
+              <ArrowNav className='mr-0.5' />
+            </button>
+            <button type='button' className='js-discover-swiper__btn-next swiper-nav-button --next right-[4%]'>
+              <ArrowNav className='ml-0.5' />
+            </button>
+          </div>
         </div>
       </div>
     </div>
