@@ -19,12 +19,21 @@ export default function BlurImage({
   height,
   fill,
   src,
+  sizes,
   localImage = false,
   ...props
 } : BlurImageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const blurLoader = src && !localImage ? (loader || nftComCdnLoader) : undefined;
-  const layoutProps = fill ? { fill } : { width, height };
+  const layoutProps = fill ?
+    {
+      fill,
+      sizes: sizes ?? '100vw',
+    }
+    : {
+      width,
+      height
+    };
   // Support base64 encoded images
   if (src) {
     src = getBase64Image(src as string);
@@ -42,9 +51,8 @@ export default function BlurImage({
         'duration-500 ease-in-out',
         isLoading
           ? 'blur scale-110 animate-pulse'
-          : 'blur-0 scale-100'
+          : 'blur-none scale-100'
       )}
-      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       onLoadingComplete={() => setIsLoading(false)}
       {...props}
       {...layoutProps}

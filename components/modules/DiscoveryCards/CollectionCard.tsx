@@ -60,7 +60,7 @@ export function CollectionCard(props: CollectionCardProps) {
     return convertedValue.slice(1);
   };
   return (
-    <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden">
+    <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden bg-white">
       <div className="h-44 relative ">
         <div className='absolute top-4 right-4 z-50'>
           <LikeCount
@@ -77,12 +77,13 @@ export function CollectionCard(props: CollectionCardProps) {
           variant={RoundedCornerVariant.None}
           width={600}
           height={600}
+          sizes="(max-width: 768px) 300px, 500px"
           containerClasses='w-[100%] object-cover h-[100%]'
           src={processedImageURLs[0]}
           extraClasses="hover:scale-105 transition"
         />
       </div>
-      <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-51rem bg-white">
+      <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-51rem bg-white min-h-[143px]">
         <div className="border-b-[1px] border-[#F2F2F2] pb-[11px] mb-[16px]">
           <div className="flex justify-between items-start">
             <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">
