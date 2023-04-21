@@ -52,7 +52,7 @@ export default function DynamicLinks({ data, isVisible }: HomePageData) {
               )}></div>
 
               <i className={tw(
-                'animate-text-gadient bg-[length:200%_200%]',
+                'animate-text-gradient bg-[length:200%_200%]',
                 'pr-1 pb-4 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
                 'transition-colors group-hover:text-transparent'
               )}>{tag}</i>

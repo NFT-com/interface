@@ -43,7 +43,11 @@ export function useGetNFTDetailsQuery(contractAddress: string, tokenId: string):
       contractAddress,
       tokenId
     }
-  })
+  }), {
+    dedupingInterval: 30000,
+    errorRetryCount: 1,
+    errorRetryInterval: 30000
+  }
   );
 
   return {
