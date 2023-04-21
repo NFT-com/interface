@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-node_modules
 /.pnp
 .pnp.js
 **/typechain/**
@@ -67,7 +66,6 @@ public/sitemap*
 
 # storybook
 storybook-static
-.storybook
 
 # Ignore assets/media
 public

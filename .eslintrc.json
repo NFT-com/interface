@@ -6,7 +6,6 @@
   "extends": ["airbnb-base", "next/core-web-vitals", "plugin:prettier/recommended"],
   "ignorePatterns": ["**/generated/**", "**/*.d.ts"],
   "rules": {
-    "multiline-ternary": ["error", "always-multiline"],
     "prettier/prettier": [
       "error",
       {
@@ -44,23 +43,16 @@
       "rules": {
         "@typescript-eslint/comma-dangle": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/naming-convention": "warn",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-shadow": "warn",
         "@typescript-eslint/no-unused-expressions": "off",
-        "@typescript-eslint/no-use-before-define": "warn",
+        "@typescript-eslint/no-use-before-define": "off",
         "@typescript-eslint/no-var-requires": "off",
         "array-bracket-spacing": "warn",
         "array-callback-return": "warn",
-        "array-element-newline": [
-          "error",
-          {
-            "ArrayExpression": "consistent",
-            "ArrayPattern": {
-              "minItems": 3
-            }
-          }
-        ],
-        "consistent-return": "warn",
+        "consistent-return": "off",
+        "default-case": "off",
         "function-call-argument-newline": ["warn", "consistent"],
         "import/no-anonymous-default-export": "off",
         "import/no-cycle": "off",
@@ -72,8 +64,7 @@
           }
         ],
         "import/prefer-default-export": "off",
-        // "multiline-ternary": [ "error", "always-multiline" ],
-        // "no-multi-spaces": "warn",
+        "no-await-in-loop": "off",
         "no-multiple-empty-lines": [
           "warn",
           {
@@ -87,7 +78,7 @@
             "allowDeclarations": true
           }
         ],
-        "no-nested-ternary": "warn",
+        "no-nested-ternary": "off",
         "no-param-reassign": "off",
         "no-restricted-imports": [
           "error",
@@ -95,6 +86,9 @@
             "patterns": ["..*"]
           }
         ],
+        "no-restricted-syntax": ["off", "ForOfStatement"],
+        "no-return-assign": "off",
+        "no-sequences": "off",
         "no-trailing-spaces": [
           "warn",
           {
@@ -142,7 +136,7 @@
               ],
               // Internal packages.
               ["^(|pages|components|config|constants|context|graphql|hooks|layouts|lib|state|utils)(/.*|$)"],
-              ["^(~|types)(/.*|$)"],
+              ["^(|types)(/.*|$)"],
               ["^(|public|styles)(/.*|$)"],
               // Parent imports. Put `..` last.
               ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
@@ -153,19 +147,19 @@
             ]
           }
         ],
+        "tailwindcss/no-custom-classname": "off",
         "unused-imports/no-unused-imports": "error",
-        "unused-imports/no-unused-vars": [
-          "error",
-          {
-            "argsIgnorePattern": "^_"
-          }
-        ]
+        "unused-imports/no-unused-vars": "off"
+      }
+    },
+    {
+      "files": ["*.config.js"],
+      "rules": {
+        "global-require": "off",
+        "import/no-extraneous-dependencies": "off",
+        "no-param-reassign": "off",
+        "no-return-assign": "off"
       }
     }
-  ],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  }
+  ]
 }

@@ -20,7 +20,7 @@
     "dev:local": "yarn typechain:gen & next dev",
     "doppler:gen": "echo 'export const dopplerNames = ' > ./scripts/doppler_variable_names.ts && doppler secrets --only-names --json >> ./scripts/doppler_variable_names.ts && ts-node -O '{\"module\":\"commonjs\"}' ./scripts/gen-doppler.ts",
     "doppler:pull": "doppler secrets download --no-file --format env >> .env.local",
-    "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
+    "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .prettierignore",
     "gql:gen": "graphql-codegen --config codegen.json",
     "instrument": "npx nyc instrument --compact=false ./ instrumented",
     "lint": "next lint",
@@ -193,11 +193,8 @@
     "vercel": "^28.18.5"
   },
   "lint-staged": {
-    "*": "prettier -uw",
+    "*": "prettier -uw --ignore-path .prettierignore",
     "*.css": "stylelint --cache --fix",
-    "*.{ts,tsx}": [
-      "npm run check-types",
-      "eslint --cache --fix"
-    ]
+    "*.{js,jsx,ts,tsx}": "eslint --color --fix"
   }
 }
