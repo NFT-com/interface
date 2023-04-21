@@ -250,9 +250,16 @@ export const CollectionBanner: React.FC = () => {
   const { collectionNFTInfo, collectionData } = useCollectionContext();
 
   // ! NOTE: Added fallback banner from collectionData, but image might be low res/quality.
-  const imageOverride = useMemo(() => !collectionNFTInfo?.error
-    ? (collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace('?w=500', '?w=3000') || collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url)
-    : collectionData?.collection?.bannerUrl, [collectionNFTInfo?.error, collectionNFTInfo?.data?.contract?.metadata?.banner_url, collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url, collectionData?.collection?.bannerUrl]);
+  const imageOverride = useMemo(() =>
+    collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace(
+      '?w=500',
+      '?w=3000'
+    )
+      || collectionData?.collection?.bannerUrl
+  , [
+    collectionNFTInfo?.data?.contract?.metadata?.banner_url,
+    collectionData?.collection?.bannerUrl
+  ]);
 
   return (
     <div className="mt-20">
