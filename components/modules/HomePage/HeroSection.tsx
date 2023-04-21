@@ -7,44 +7,42 @@ import dynamic from 'next/dynamic';
 const Player = dynamic(() =>
   import('@lottiefiles/react-lottie-player').then(mod => mod.Player)
 );
+import { Button, ButtonType } from 'components/elements/Button';
+
 import { contentfulLoader } from 'lib/image/loader';
+import { useRouter } from 'next/router';
 
 export interface HomePageData {
   data: HomePageV3Hero;
 }
 
 export default function HeroSection({ data }: HomePageData) {
+  const router = useRouter();
+
   return (
     <div id='anim-hero-trigger' className='minlg:h-screen'>
-      <div className='relative bg-white'>
+      <div className='bg-white relative flex flex-col-reverse minlg:block'>
         {/* Intro Text */}
-        <div
-          id='anim-hero-text'
-          className={tw(
-            'flex flex-col items-start justify-center pb-[3.75rem] pl-[5vw] pt-[10rem] minlg:py-[4vh]',
-            'minlg:h-screen minlg:w-[55%] minxl:w-[58.5%]'
-          )}
-        >
-          <h2
-            data-aos='fade-up'
-            data-aos-delay='100'
-            className={tw(
-              'text-[2.5rem] leading-[1.5] minmd:text-[5.2rem] minmd:leading-[1.15] minlg:text-[3.3rem] minxl:text-[5.2rem] minxxl:text-[6.8rem]',
-              'mb-11 font-normal tracking-tight text-black'
-            )}
-          >
+        <div id='anim-hero-text' className={tw(
+          'pt-14 pb-9 minlg:py-[4vh] px-[5vw] flex flex-col justify-center items-start',
+          'minlg:w-[55%] minxl:w-[58.5%] minlg:h-screen'
+        )}>
+          <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
+            'text-[2.5rem] minmd:text-[5.2rem] minlg:text-[3.5rem] minxl:text-[6.25rem] minxxl:text-[6.8rem] leading-[1.5] minmd:leading-[1.15]',
+            'text-black font-normal tracking-tight mb-8 minlg:mb-11'
+          )}>
             {data?.heroTextData?.titleDrop?.firstPhrase}
             <span className='inline-block rotate-[40deg]'>
               <BlurImage
                 className={tw(
-                  'anim-profile-icon -translate-y-[120vw] transform transition duration-[2s]',
-                  'inline-block w-[2.5rem] drop-shadow-md minmd:w-[3.125rem] minxxl:w-[4.5rem]',
-                  '-my-[.5rem] mx-[1.8rem] rounded-xl minxxl:mx-[2.2rem]'
+                  'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s]',
+                  'drop-shadow-md inline-block w-[2.5rem] minmd:w-[4.825rem]',
+                  'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl'
                 )}
                 width={120}
                 height={120}
                 loader={contentfulLoader}
-                src={data?.heroImagesCollection.items[0]?.url}
+                src={data?.heroImagesCollection?.items[0]?.url}
                 alt='NFT image'
               />
             </span>
@@ -53,14 +51,14 @@ export default function HeroSection({ data }: HomePageData) {
             <span className='inline-block rotate-[40deg]'>
               <BlurImage
                 className={tw(
-                  'anim-profile-icon -translate-y-[120vw] transform transition delay-200 duration-[2s]',
-                  'inline-block w-[2.5rem] drop-shadow-md minmd:w-[3.125rem] minxxl:w-[4.5rem]',
-                  '-my-[.5rem] mx-[1.8rem] rounded-xl minxxl:mx-[2.2rem]'
+                  'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
+                  'drop-shadow-md inline-block w-[2.5rem] minmd:w-[4.825rem]',
+                  'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl',
                 )}
                 width={120}
                 height={120}
                 loader={contentfulLoader}
-                src={data?.heroImagesCollection.items[1]?.url}
+                src={data?.heroImagesCollection?.items[1]?.url}
                 alt='NFT image'
               />
             </span>
@@ -73,44 +71,34 @@ export default function HeroSection({ data }: HomePageData) {
             </span>
           </h2>
 
-          <p className='mb-9 text-xl'>{data?.heroTextData.subTitle}</p>
+          <p className='mb-9 text-xl'>{data?.heroTextData?.subTitle}</p>
 
-          <a
-            data-aos='zoom-out'
-            data-aos-delay='300'
-            href={data?.heroTextData?.ctaLink}
-            className={tw(
-              'rounded-full bg-[#121212] drop-shadow-lg transition-colors hover:bg-[#414141]',
-              'inline-flex h-[4.1875rem] items-center justify-center px-6 text-center minxxl:h-[6rem] minxxl:px-9',
-              'text-xl font-medium uppercase text-white minxxl:text-3xl'
-            )}
-          >
-            {data?.heroTextData?.ctaButton}
-          </a>
+          <div>
+            <Button
+              data-aos='zoom-out'
+              data-aos-delay='300'
+              type={ButtonType.WEB_SECONDARY}
+              label={data?.heroTextData?.ctaButton}
+              stretch
+              onClick={() => router.push(`/${data?.heroTextData?.ctaLink}`)}
+            />
+          </div>
         </div>
 
         {/* Hero */}
-        <div
-          id='anim-hero'
-          data-aos='fade-up'
-          data-aos-delay='200'
-          className={tw(
-            'w-full bg-[#F9D54C] minlg:h-[calc(100vh+5px)] minlg:max-w-[45%] minxl:max-w-[41.5%]',
-            'relative z-[10] overflow-hidden minlg:absolute minlg:right-0 minlg:top-0',
-            'before:block before:pb-[127%] minmd:before:pb-[80%] minlg:before:hidden minlg:before:pb-[60%]'
-          )}
-        >
-          <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'>
-            <div
-              id='anim-hero-player'
-              className={tw(
-                'pointer-events-none',
-                'scale-x-[2.6] scale-y-[1.6]',
-                'minmd:scale-x-[2] minmd:scale-y-[1.3] minlg:scale-x-[1.2] minlg:scale-y-[0.8]',
-                'minxxl:scale-x-100 minxxl:scale-y-[.65] minhd:scale-[1.25]',
-                '-skew-x-[41deg] skew-y-[19deg]'
-              )}
-            >
+        <div id='anim-hero' data-aos="fade-up" data-aos-delay="200" className={tw(
+          'minlg:max-w-[45%] minxl:max-w-[41.5%] w-full minlg:h-[calc(100vh+5px)] bg-[#F9D54C]',
+          'relative minlg:absolute z-[10] minlg:right-0 minlg:top-0 overflow-hidden',
+          'before:block before:pb-[90%] minmd:before:pb-[80%] minlg:before:pb-[60%] minlg:before:hidden'
+        )}>
+          <div className='absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2'>
+            <div id="anim-hero-player" className={tw(
+              'pointer-events-none',
+              'scale-x-[2.6] scale-y-[1.6]',
+              'minmd:scale-x-[2] minmd:scale-y-[1.3] minlg:scale-x-[1.2] minlg:scale-y-[0.8]',
+              'minxxl:scale-x-100 minxxl:scale-y-[.65] minhd:scale-[1.25]',
+              '-skew-x-[41deg] skew-y-[19deg]'
+            )}>
               <Player
                 autoplay
                 loop

@@ -60,6 +60,17 @@ WithIcon.args = {
   icon: <PlusCircle size={32} />
 };
 
+export const WebPrimary = Template.bind({});
+WebPrimary.args = {
+  type: ButtonType.WEB_PRIMARY,
+  label: 'Get Profile'
+};
+export const WebSecondary = Template.bind({});
+WebSecondary.args = {
+  type: ButtonType.WEB_SECONDARY,
+  label: 'Get Profile'
+};
+
 export const Small = Template.bind({});
 Small.args = {
   label: 'Small',
