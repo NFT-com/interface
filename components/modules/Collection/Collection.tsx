@@ -261,7 +261,6 @@ export const CollectionBanner: React.FC = () => {
     collectionData?.collection?.bannerUrl
   ]);
 
-  console.log('%c Line:254 🍣 imageOverride', 'color:#6ec1c2', imageOverride);
   return (
     <div className="mt-20">
       <BannerWrapper
