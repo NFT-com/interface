@@ -66,3 +66,6 @@ public/sitemap*
 
 # storybook
 storybook-static
+
+# Ignore assets/media
+public
