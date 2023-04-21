@@ -32,18 +32,19 @@ import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NFTDetailProps {
   nft: PartialDeep<Nft>;
+  tokenId: string;
   onRefreshSuccess?: () => void;
 }
 
-export const NFTDetail = (props: NFTDetailProps) => {
+export const NFTDetail = ({ nft, tokenId, onRefreshSuccess }: NFTDetailProps) => {
   const router = useRouter();
 
   const defaultChainId = useDefaultChainId();
 
-  const { data: collection } = useCollectionQuery({ chainId: String(defaultChainId), contract: props?.nft?.contract });
+  const { data: collection } = useCollectionQuery({ chainId: String(defaultChainId), contract: nft?.contract });
   const { data: collectionMetadata } = useSWR(
-    () => props?.nft?.contract ?
-      ['ContractMetadata', props?.nft?.contract]
+    () => nft?.contract ?
+      ['ContractMetadata', nft?.contract]
       : null,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async ([url, contract]) => {
@@ -52,16 +53,16 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
   const collectionName = collectionMetadata?.contractMetadata?.name || collectionMetadata?.contractMetadata?.openSea?.collectionName;
 
-  const { profileData: nftProfileData } = useProfileQuery(props.nft?.contract === getAddressForChain(nftProfile, defaultChainId) ? props.nft?.metadata?.name : null);
+  const { profileData: nftProfileData } = useProfileQuery(nft?.contract === getAddressForChain(nftProfile, defaultChainId) ? nft?.metadata?.name : null);
 
-  const { profileTokens } = useNftProfileTokens(props.nft?.owner ?? props.nft?.wallet?.address);
+  const { profileTokens } = useNftProfileTokens(nft?.owner ?? nft?.wallet?.address);
   const { profileTokens: creatorTokens } = useNftProfileTokens(collection?.collection?.deployer);
   const { address: currentAddress } = useAccount();
 
-  const { data: nftLikeData, mutate: mutateNftLike } = useNftLikeQuery(props?.nft?.contract, props?.nft?.tokenId);
+  const { data: nftLikeData, mutate: mutateNftLike } = useNftLikeQuery(nft?.contract, nft?.tokenId);
 
   const { profileData } = useProfileQuery(
-    props.nft?.wallet?.preferredProfile == null ?
+    nft?.wallet?.preferredProfile == null ?
       profileTokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
       null
   );
@@ -74,7 +75,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
     collectionOwnerData?.profile?.owner?.preferredProfile?.url
   );
 
-  const profileOwnerToShow: PartialDeep<Profile> = props.nft?.wallet?.preferredProfile ?? profileData?.profile;
+  const profileOwnerToShow: PartialDeep<Profile> = nft?.wallet?.preferredProfile ?? profileData?.profile;
   const collectionOwnerToShow: PartialDeep<Profile> = collectionPreferredOwnerData?.profile ?? null;
 
   const { refreshNft, loading, success } = useRefreshNftMutation();
@@ -82,16 +83,16 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
   const refreshNftCallback = useCallback(() => {
     (async () => {
-      const result = await refreshNft(props.nft?.id);
-      await refreshNftOrders(props.nft?.id);
+      const result = await refreshNft(nft?.id);
+      await refreshNftOrders(nft?.id);
       if (result) {
-        props.onRefreshSuccess && props.onRefreshSuccess();
+        onRefreshSuccess && onRefreshSuccess();
       }
     })();
-  }, [props, refreshNft, refreshNftOrders]);
+  }, [nft, onRefreshSuccess, refreshNft, refreshNftOrders]);
 
   return (
-    <div className="flex flex-col w-full max-w-nftcom" id="NFTDetailContainer" key={props.nft?.id}>
+    <div className="flex flex-col w-full max-w-nftcom" id="NFTDetailContainer" key={nft?.id}>
       <div className={tw(
         'flex minmd:items-center w-full mt-8 py-4 px-4 justify-between',
       )}>
@@ -109,7 +110,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
             </div>
           </Link>
           <div className='flex items-center'>
-            {isNullOrEmpty(props.nft?.metadata?.name) ?
+            {isNullOrEmpty(nft?.metadata?.name) && isNullOrEmpty(collectionMetadata?.contractMetadata?.name) ?
               (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
                 <div className="w-full">
                   <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4"></div>
@@ -119,8 +120,8 @@ export const NFTDetail = (props: NFTDetailProps) => {
               )
               : (
                 <>
-                  <div className='whitespace-nowrap text-ellipsis overflow-hidden font-noi-grotesk font-semibold text-[28px] leading-9 tracking-[-2px]'>
-                    {props.nft?.metadata?.name}
+                  <div className='whitespace-nowrap text-ellipsis overflow-hidden font-noi-grotesk font-semibold text-[28px] leading-9 capitalize truncate'>
+                    {nft?.metadata?.name ?? `${collectionMetadata?.contractMetadata?.name} #${tokenId}`}
                   </div>
                   {nftProfileData?.profile?.isGKMinted &&
                     <div className='h-5 w-5 minlg:h-6 minlg:w-6 ml-2'>
@@ -134,7 +135,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                       count={nftLikeData?.likeCount}
                       isLiked={nftLikeData?.isLikedBy}
                       likeData={{
-                        id: props?.nft?.id,
+                        id: nft?.id,
                         type: LikeableType.Nft
                       }}
                     />
@@ -221,8 +222,8 @@ export const NFTDetail = (props: NFTDetailProps) => {
           </div>
 
           <div className='flex items-center'>
-            {isNullOrEmpty(props.nft?.owner) && isNullOrEmpty(props.nft?.wallet?.address) ?
-              props?.nft?.type === NftType.Erc1155 ?
+            {isNullOrEmpty(nft?.owner) && isNullOrEmpty(nft?.wallet?.address) ?
+              nft?.type === NftType.Erc1155 ?
                 <div className='w-9 h-9 rounded-full'>
                   <MultipleOwners className='rounded-full shadow-lg' />
                 </div>
@@ -262,15 +263,15 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     >
                       <span className="text-ellipsis overflow-hidden text-base font-medium leading-5 font-noi-grotesk text-link">
                         {!profileOwnerToShow?.url == null ?
-                          shortenAddress(props.nft?.owner ?? props.nft?.wallet?.address, 0) :
+                          shortenAddress(nft?.owner ?? nft?.wallet?.address, 0) :
                           profileOwnerToShow?.url
                         }
                       </span>
                     </div> :
-                    <Link href={getEtherscanLink(Number(defaultChainId), props.nft?.owner ?? props.nft?.wallet?.address, 'address')}>
+                    <Link href={getEtherscanLink(Number(defaultChainId), nft?.owner ?? nft?.wallet?.address, 'address')}>
                       <span className="text-[#1F2127] text-base cursor-pointer hover:underline font-medium leading-5 font-noi-grotesk pl-3">
-                        {!isNullOrEmpty(props.nft?.owner) || !isNullOrEmpty(props.nft?.wallet?.address) ?
-                          shortenAddress(props.nft?.owner ?? props.nft?.wallet?.address, isMobile ? 4 : 6) ?? 'Unknown' :
+                        {!isNullOrEmpty(nft?.owner) || !isNullOrEmpty(nft?.wallet?.address) ?
+                          shortenAddress(nft?.owner ?? nft?.wallet?.address, isMobile ? 4 : 6) ?? 'Unknown' :
                           <div className='bg-[#E6E6E6] h-3 w-20 rounded-full animate-pulse'>
                           </div>
                         }
@@ -284,12 +285,12 @@ export const NFTDetail = (props: NFTDetailProps) => {
       </div>
       {
         (
-          (currentAddress === props.nft?.wallet?.address && !isNullOrEmpty(currentAddress)) ||
-          (currentAddress !== props.nft?.wallet?.address && !isNullOrEmpty(props.nft?.wallet?.address) && !isNullOrEmpty(props.nft?.memo)))
+          (currentAddress === nft?.wallet?.address && !isNullOrEmpty(currentAddress)) ||
+          (currentAddress !== nft?.wallet?.address && !isNullOrEmpty(nft?.wallet?.address) && !isNullOrEmpty(nft?.memo)))
         &&
         <div className="flex minxl:basis-1/2">
-          <NFTDetailContextProvider nft={props.nft} >
-            <NftMemo nft={props.nft} />
+          <NFTDetailContextProvider nft={nft} >
+            <NftMemo nft={nft} />
           </NFTDetailContextProvider>
         </div>
       }
