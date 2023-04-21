@@ -18,6 +18,7 @@ module.exports = {
         disallow: ['/*'],
         allow: [
           '/$',
+          '/app/collection/official/*',
           '/app/discover',
           '/app/discover/*',
           '/articles',
