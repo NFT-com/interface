@@ -54,6 +54,7 @@ const DynamicNFTActivity = dynamic<React.ComponentProps<typeof StaticNFTActivity
 export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const [selectedTab, setSelectedTab] = useState('Activity');
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[6]);
+  //TODO: refactor useGetSales to include useSWR hook and data formatting logic below
   const { getSales } = useGetSales();
 
   const { data: nftData } = useSWR(
