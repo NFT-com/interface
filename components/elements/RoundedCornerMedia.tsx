@@ -1,5 +1,6 @@
 import { useIsomorphicLayoutEffect } from 'hooks/utils';
-import { isBase64, isNullOrEmpty } from 'utils/format';
+import { isNullOrEmpty } from 'utils/format';
+import { isBase64 } from 'utils/image';
 import { cl } from 'utils/tw';
 
 import { generateSrcSet } from 'lib/image/loader';

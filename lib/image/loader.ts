@@ -1,5 +1,4 @@
-import { isBase64 } from 'utils/format';
-import { decodeBase64 } from 'utils/image';
+import { decodeBase64, isBase64 } from 'utils/image';
 import { processIPFSURL } from 'utils/ipfs';
 import { getBaseUrl } from 'utils/isEnv';
 

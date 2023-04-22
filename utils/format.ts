@@ -165,13 +165,6 @@ export const sliceString = (description: string, maxCount: number, isStringCut: 
 };
 
 /**
- * Checks if a given URL is a base64 encoded string.
-* @param {string} url - The URL to check.
-* @returns {boolean} - True if the URL is a base64 encoded string, false otherwise.
-*/
-export const isBase64 = (url: string) => url.startsWith('data:') && url.includes('base64');
-
-/**
  * Returns a string representation of the given chain ID.
  * @param {Maybe<number | string>} chainId - The chain ID to convert to a string.
  * @returns {Maybe<string>} - The string representation of the chain ID, or null if the input is null or undefined.
@@ -179,3 +172,10 @@ export const isBase64 = (url: string) => url.startsWith('data:') && url.includes
 export function getChainIdString(chainId: Maybe<number | string>): Maybe<string> {
   return (chainId == null ? null : String(chainId));
 }
+
+/**
+ * Checks if the given parameter is a string.
+ * @param {any} str - the parameter to check
+ * @returns {boolean} - true if the parameter is a string, false otherwise.
+ */
+export const isString = (str: any) => typeof str === 'string' || str instanceof String;
