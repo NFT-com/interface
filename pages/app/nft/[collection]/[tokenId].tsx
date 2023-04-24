@@ -7,7 +7,6 @@ import NotFoundPage from 'pages/404';
 import { isNullOrEmpty } from 'utils/format';
 import { isValidContractSimple } from 'utils/helpers';
 
-import { BigNumber } from 'ethers';
 import { getNftPage } from 'lib/graphql-ssr/nft';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import dynamic from 'next/dynamic';
@@ -63,7 +62,7 @@ export default function NftPage({ fallback }: InferGetServerSidePropsType<typeof
     <ClientOnly>
       <NFTDetailPage
         collection={collection as string}
-        tokenId={BigNumber.from(tokenId).toHexString()}
+        tokenId={tokenId as string}
       />
     </ClientOnly>
   </SWRConfig>;

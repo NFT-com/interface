@@ -3,7 +3,7 @@ import { ContractSalesStatistics } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/format';
 
-import useSWR, { mutate } from 'swr';
+import useSWRImmutable, { mutate } from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface ContractSalesStatisticsData {
@@ -15,23 +15,25 @@ export interface ContractSalesStatisticsData {
 export function useGetContractSalesStatisticsQuery(contractAddress: string): ContractSalesStatisticsData {
   const sdk = useGraphQLSDK();
   const { chain } = useNetwork();
-
-  const keyString = 'GetContractSalesStatisticsQuery ' + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + contractAddress;
-
-  const { data } = useSWR(keyString, async () => {
-    if(chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') {
-      return null;
-    }
-    if(isNullOrEmpty(contractAddress)) {
-      return null;
-    }
-
-    const result = await sdk.GetContractSalesStatistics({
-      input: {
+  const shouldFetch = !isNullOrEmpty(contractAddress);
+  const keyString = () => shouldFetch
+    ? {
+      query: 'GetContractSalesStatisticsQuery',
+      args: {
+        chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
         contractAddress
       }
-    });
-    return result;
+    }
+    : null;
+
+  const { data } = useSWRImmutable(keyString, async ({ args: { contractAddress } }) => await sdk.GetContractSalesStatistics({
+    input: {
+      contractAddress
+    }
+  }), {
+    dedupingInterval: 30000,
+    errorRetryCount: 1,
+    errorRetryInterval: 30000
   });
 
   return {

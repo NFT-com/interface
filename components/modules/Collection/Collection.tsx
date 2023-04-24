@@ -95,7 +95,7 @@ export function Collection(props: CollectionProps) {
   // Data Fetching
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const collectionSalesHistory = useGetContractSalesStatisticsQuery(collectionContract);
-  const collectionNFTInfo = useGetNFTDetailsQuery(collectionContract, collectionNfts[0]?.document?.tokenId ?? '1'); // set fallback to 1st token in collection
+  const collectionNFTInfo = useGetNFTDetailsQuery(collectionContract, '1'); // set fallback to 1st token in collection
   const { data: collectionData, mutate: mutateCollectionData } = useCollectionQuery(
     propsGuard.type === 'contract' && !slug ?
       {
@@ -250,10 +250,18 @@ export const CollectionBanner: React.FC = () => {
   const { collectionNFTInfo, collectionData } = useCollectionContext();
 
   // ! NOTE: Added fallback banner from collectionData, but image might be low res/quality.
-  const imageOverride = useMemo(() => !collectionNFTInfo?.error
-    ? (collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace('?w=500', '?w=3000') || collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url)
-    : collectionData?.collection?.bannerUrl, [collectionNFTInfo?.error, collectionNFTInfo?.data?.contract?.metadata?.banner_url, collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url, collectionData?.collection?.bannerUrl]);
+  const imageOverride = useMemo(() =>
+    collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace(
+      '?w=500',
+      '?w=3000'
+    )
+    || collectionData?.collection?.bannerUrl
+  , [
+    collectionNFTInfo?.data?.contract?.metadata?.banner_url,
+    collectionData?.collection?.bannerUrl
+  ]);
 
+  console.log('%c Line:254 🍣 imageOverride', 'color:#6ec1c2', imageOverride);
   return (
     <div className="mt-20">
       <BannerWrapper

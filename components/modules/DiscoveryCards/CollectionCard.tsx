@@ -60,7 +60,7 @@ export function CollectionCard(props: CollectionCardProps) {
     return convertedValue.slice(1);
   };
   return (
-    <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden bg-white">
+    <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden bg-white min-w-[18.8rem]">
       <div className="h-44 relative ">
         <div className='absolute top-4 right-4 z-50'>
           <LikeCount
@@ -84,20 +84,20 @@ export function CollectionCard(props: CollectionCardProps) {
         />
       </div>
       <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-51rem bg-white min-h-[143px]">
-        <div className="border-b-[1px] border-[#F2F2F2] pb-[11px] mb-[16px]">
+        <div className="border-b border-[#F2F2F2] pb-[11px] mb-[16px]">
           <div className="flex justify-between items-start">
-            <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">
+            <span className="pr-[20px] text-xl leading-7 text-black font-semibold">
               {props?.contractName}
               {props.isOfficial && <VerifiedIcon className='inline ml-3'/>}
             </span>
           </div>
         </div>
-        <div onClick={(event) => event.preventDefault()} className="flex flex-row leading-[23.2px] text-[#959595] font-[400 w-full]">
+        <div onClick={(event) => event.preventDefault()} className="flex flex-row leading-[23.2px] text-hero-gray font-[400 w-full]">
           {
             props.floorPrice && props.floorPrice !== 0
               ? (
                 <div className='flex flex-col min-w-[45%] '>
-                  <span className='flex items-center justify-start text-xl text-[#000] font-[500] mr-12 w-full'>
+                  <span className='flex items-center justify-start text-xl text-black font-medium mr-12 w-full'>
                     <VolumeIcon className='mr-2'/>
                     {checkMinPrice(props.floorPrice)}
                   </span>
@@ -110,7 +110,7 @@ export function CollectionCard(props: CollectionCardProps) {
             props.totalVolume && props.totalVolume !== 0
               ? (
                 <div className='flex flex-col '>
-                  <span className='text-xl text-[#000] font-[500]'>{checkMinPrice(props.totalVolume)}</span>
+                  <span className='text-xl text-black font-medium'>{checkMinPrice(props.totalVolume)}</span>
                   <span>Total Volume</span>
                 </div>
               )
