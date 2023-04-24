@@ -8,7 +8,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
 import router from 'next/router';
 import previewCollection from 'public/collection-preview-image.webp';
-import likeButton from 'public/icons/like-button.svg?svgr';
+import likeButton from 'public/icons/like-button.svg';
 import previewNft from 'public/nft-preview-image.webp';
 import previewProfile from 'public/profile-preview-image.webp';
 import React from 'react';
@@ -52,7 +52,7 @@ export default function NonAuthLikeModal(){
           ? (
             <div className='text-[44px] flex items-center justify-between -mt-[3rem] mb-10'>
               <span className='text-[#FAC213]'>/</span>{sliceString(profileName, 14, false)}
-              <Image src={likeButton} className='w-[40px] ml-4' alt={`${likedType} Preview Image`} />
+              <Image src={likeButton} className='w-[40px] ml-4' alt={`${likedType} Preview Image`} />p
             </div>
           )
           : null}
