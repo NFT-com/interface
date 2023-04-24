@@ -1,5 +1,12 @@
-import { isBase64 } from './format';
+import { isString } from './format';
 import { isClient } from './ssr';
+
+/**
+ * Checks if a given URL is a base64 encoded string.
+* @param {string} url - The URL to check.
+* @returns {boolean} - True if the URL is a base64 encoded string, false otherwise.
+*/
+export const isBase64 = (url: string) => isString(url) && url.startsWith('data:') && url.includes('base64');
 
 /**
  * Generates a custom fallback SVG image with the specified width, height, and color.
