@@ -1,8 +1,7 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { MyNfTsQuery, Nft, PageInfo } from 'graphql/generated/types';
+import { Nft, PageInfo } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/format';
 import { profileSaveCounter } from 'utils/helpers';
 
 import { useAtom } from 'jotai';
@@ -19,34 +18,67 @@ export interface NftsData {
   mutate: () => void,
 }
 
-export function useMyNFTsQuery(first: number, profileId: string, beforeCursor?: string, query?: string, invalidateCache?: boolean): NftsData {
+export interface NFTsQueryInput {
+  first: number;
+  profileId: string;
+  beforeCursor?: string;
+  query?: string;
+  invalidateCache?: boolean;
+}
+
+export function useMyNFTsQuery({
+  first,
+  profileId,
+  beforeCursor,
+  query,
+  invalidateCache
+}: NFTsQueryInput): NftsData {
   const sdk = useGraphQLSDK();
   const { signed } = useContext(GraphQLContext);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
-  const [savedCount,] = useAtom(profileSaveCounter);
-  const keyString = 'MyNFTsQuery ' + currentAddress + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + signed + first + profileId + beforeCursor + savedCount + query;
+  const chainId = String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID));
+  const [savedCount] = useAtom(profileSaveCounter);
+  // const shouldFetch = !([Boolean(first), isNullOrEmpty(profileId)].includes(true));
 
-  const { data } = useSWR(keyString, async () => {
-    if (!currentAddress || isNullOrEmpty(profileId)) {
-      return { myNFTs: { items: [], totalItems: 0, loading: false, pageInfo: {} } };
-    }
-    const result: MyNfTsQuery = await sdk.MyNFTs({
+  const args = {
+    currentAddress,
+    chainId,
+    signed,
+    first,
+    profileId,
+    beforeCursor,
+    savedCount,
+    query,
+    invalidateCache
+  };
+  const keyString = { query: 'MyNFTsQuery ', args };
+
+  const { data, isLoading } = useSWR(keyString, async (
+    {
+      args: {
+        first,
+        beforeCursor,
+        profileId,
+        invalidateCache,
+        query
+      }
+    }) =>
+    await sdk.MyNFTs({
       input: {
-        pageInput: { first: first, beforeCursor: beforeCursor },
-        profileId: profileId,
-        invalidateCache: invalidateCache,
+        pageInput: { first, beforeCursor },
+        profileId,
+        invalidateCache,
         ...(query && { query })
       }
-    });
-    return result;
-  });
+    })
+  );
 
   return {
     data: data?.myNFTs?.items ?? [],
     pageInfo: data?.myNFTs.pageInfo,
     totalItems: data?.myNFTs?.totalItems ?? 0,
-    loading: data == null,
+    loading: isLoading,
     mutate: () => {
       mutate(keyString);
     },

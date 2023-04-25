@@ -31,8 +31,8 @@ export interface NFTCardDescriptionProps {
 }
 
 export function NFTCardDescription(props: NFTCardDescriptionProps) {
-  const defaultChainId = useDefaultChainId();
-  const { profileData: nftProfileData } = useProfileQuery(!props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts is passed by setting null
+  // const defaultChainId = useDefaultChainId();
+  // const { profileData: nftProfileData } = useProfileQuery(!props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts is passed by setting null
 
   const checkEndDate = () => {
     if(props?.bestListing){
@@ -83,7 +83,7 @@ export function NFTCardDescription(props: NFTCardDescriptionProps) {
         <div className='flex w-full justify-between'>
           <div className="p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden flex mr-5">
             <p className='whitespace-nowrap text-ellipsis overflow-hidden'>{props.name}</p>
-            {(props.nft?.isGKMinted ?? nftProfileData?.profile?.isGKMinted) &&
+            {props.nft?.isGKMinted &&
               <div className='h-4 w-4 minlg:h-6 minlg:w-6 ml-2 min-w-[24px] flex items-center'>
                 <GK />
               </div>

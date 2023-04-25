@@ -6,10 +6,8 @@ import { isNullOrEmpty } from 'utils/format';
 import { profileSaveCounter } from 'utils/helpers';
 
 import { useAtom } from 'jotai';
-import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
-
 export interface ProfileNFTsQueryData {
   nfts: PartialDeep<Nft>[];
   pageInfo: PageInfo;
@@ -18,54 +16,67 @@ export interface ProfileNFTsQueryData {
   mutate: () => void;
 }
 
+export interface ProfileNFTsQueryInput {
+  profileId: string;
+  chainId: Maybe<string>;
+  first: number;
+  beforeCursor?: string;
+  query?: string;
+}
+
 export function useProfileNFTsQuery(
-  profileId: string,
-  chainId: Maybe<string>,
-  first: number,
-  beforeCursor?: string,
-  query?: string
+  {
+    profileId,
+    chainId,
+    first,
+    beforeCursor,
+    query
+  }: ProfileNFTsQueryInput
 ): ProfileNFTsQueryData {
   const sdk = useGraphQLSDK();
   const [savedCount,] = useAtom(profileSaveCounter);
-  const [loading, setLoading] = useState(false);
   const { currentProfileId } = useUser();
+  const inputChainId = chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
 
-  const keyString = 'ProfileNFTsQuery' +
-    profileId +
-    first +
-    beforeCursor +
-    savedCount +
-    query +
-    currentProfileId;
+  const shouldFetch = !([!first, isNullOrEmpty(profileId)].includes(true));
 
-  const { data } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(profileId)) {
-      return null;
-    }
-    setLoading(true);
-    const result = await sdk.ProfileNFTs({
-      input: {
+  const args = {
+    chainId: inputChainId,
+    first,
+    profileId,
+    beforeCursor,
+    savedCount,
+    query,
+    currentProfileId
+  };
+  const keyString = () => shouldFetch ? { query: 'ProfileNFTsQuery ', args } : null;
+
+  const { data, isLoading } = useSWR(keyString, async (
+    {
+      args: {
+        first,
+        beforeCursor,
         profileId,
-        chainId: chainId ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
-        pageInput: { first: first, beforeCursor: beforeCursor },
+        query
+      }
+    }) =>
+    await sdk.ProfileNFTs({
+      input: {
+        pageInput: { first, beforeCursor },
+        profileId,
         query
       },
-      likedById: currentProfileId
-    });
-    setLoading(false);
-    return result;
-  }, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    refreshInterval: 0,
-  });
+      likedById: currentProfileId,
+    })
+  );
+
   return {
     nfts: data?.updateNFTsForProfile.items,
     pageInfo: data?.updateNFTsForProfile.pageInfo,
     totalItems: data?.updateNFTsForProfile.totalItems,
-    loading: loading,
+    loading: isLoading,
     mutate: () => {
-      mutate(keyString);
+      mutate(keyString());
     },
   };
 }
