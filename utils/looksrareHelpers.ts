@@ -7,8 +7,9 @@ import { getBaseUrl } from 'utils/helpers';
 
 import { libraryCall, looksrareLib } from './marketplaceHelpers';
 
+import { Provider } from '@ethersproject/providers';
 import { Addresses, addressesByNetwork, MakerOrder } from '@looksrare/sdk';
-import { ChainId, CollectionType, LooksRare, Maker, StrategyType } from '@looksrare/sdk-v2';
+import { ChainId, CollectionType, LooksRare, Maker, Signer, StrategyType } from '@looksrare/sdk-v2';
 import { FetchBalanceResult } from '@wagmi/core';
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
@@ -60,7 +61,7 @@ export async function createLooksrareV2ParametersForNFTListing(
   nonce: number,
   duration: BigNumberish,
   signer: any,
-  provider: any
+  provider: Provider
 ): Promise<Maker> {
   const lr = new LooksRare(ChainId.MAINNET, provider, signer);
   const { maker, isTransferManagerApproved } = await lr.createMakerAsk({
