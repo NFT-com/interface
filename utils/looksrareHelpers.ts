@@ -9,7 +9,7 @@ import { libraryCall, looksrareLib } from './marketplaceHelpers';
 
 import { Provider } from '@ethersproject/providers';
 import { Addresses, addressesByNetwork, MakerOrder } from '@looksrare/sdk';
-import { ChainId, CollectionType, LooksRare, Maker, Signer, StrategyType } from '@looksrare/sdk-v2';
+import { ChainId, CollectionType, LooksRare, Maker, StrategyType } from '@looksrare/sdk-v2';
 import { FetchBalanceResult } from '@wagmi/core';
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
