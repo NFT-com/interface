@@ -1,7 +1,7 @@
 import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { PriceInput } from 'components/elements/PriceInput';
-import { LooksrareProtocolData, NftcomProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, LooksrareV2ProtocolData, NftcomProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
@@ -215,23 +215,23 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
   const LooksRarePriceInput = () => {
     return <PriceInput
-      key={'LooksrarePriceInput'}
+      key={'LooksRarePriceInput'}
       initial={
-        getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice == null ?
+        getTarget(props.listing, ExternalProtocol.LooksRareV2)?.startingPrice == null ?
           '' :
-          ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice ?? 0))
+          ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.LooksRareV2)?.startingPrice ?? 0))
       }
-      currencyAddress={getAddress('weth', defaultChainId)}
-      currencyOptions={['WETH']}
+      currencyAddress={supportedCurrencyData['ETH'].contract}
+      currencyOptions={['ETH']}
       onCurrencyChange={null}
       onPriceChange={(val: BigNumber) => {
         setPrice(props.listing, val, ExternalProtocol.LooksRareV2);
         props.onPriceChange();
       }}
       error={
-        props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && target.startingPrice == null) != null ||
-    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && BigNumber.from(target.startingPrice).eq(0)) != null ||
-    (parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice))
+        props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRareV2 && target.startingPrice == null) != null ||
+    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRareV2 && BigNumber.from(target.startingPrice).eq(0)) != null ||
+    (parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareV2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRareV2)?.startingPrice))
       }
     />;
   };
