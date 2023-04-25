@@ -89,7 +89,7 @@ export function getTotalMarketplaceFeesUSD(
   hasGk: boolean
 ): number {
   return stagedPurchases?.reduce((cartTotal, stagedPurchase) => {
-    if (stagedPurchase.protocol === ExternalProtocol.LooksRare) {
+    if (stagedPurchase.protocol === ExternalProtocol.LooksRare || stagedPurchase.protocol === ExternalProtocol.LooksRareV2) {
       const fee = BigNumber.from(
         looksrareProtocolFeeBps == null
           ? 0
