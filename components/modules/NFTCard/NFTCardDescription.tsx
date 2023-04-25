@@ -31,9 +31,6 @@ export interface NFTCardDescriptionProps {
 }
 
 export function NFTCardDescription(props: NFTCardDescriptionProps) {
-  // const defaultChainId = useDefaultChainId();
-  // const { profileData: nftProfileData } = useProfileQuery(!props?.nft || props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null); // skip query if nfts is passed by setting null
-
   const checkEndDate = () => {
     if(props?.bestListing){
       const endDate = moment.unix(getListingEndDate(props?.bestListing, props?.bestListing.order.protocol as ExternalProtocol));
