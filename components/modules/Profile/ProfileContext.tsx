@@ -198,7 +198,7 @@ export function ProfileContextProvider(
   /**
    * Profile v2 instant update state
    */
-  const [currentLayoutType, setCurrentLayoutType] = useState<ProfileLayoutType>(profileData?.profile?.layoutType);
+  const [currentLayoutType, setCurrentLayoutType] = useState<ProfileLayoutType>(ProfileLayoutType.Default);
   const [currentNftsDescriptionsVisible, setCurrentNftsDescriptionsVisible] = useState<boolean>(profileData?.profile?.nftsDescriptionsVisible);
 
   /**
@@ -213,7 +213,7 @@ export function ProfileContextProvider(
   const [draftHeaderImg, setDraftHeaderImg] = useState({ preview: '', raw: null });
   const [draftDisplayType, setDraftDisplayType] = useState(null);
   const [selectedCollection, setSelectedCollection] = useState<string>(null);
-  const [draftLayoutType, setDraftLayoutType] = useState<ProfileLayoutType>(profileData?.profile?.layoutType ?? ProfileLayoutType.Default);
+  const [draftLayoutType, setDraftLayoutType] = useState<ProfileLayoutType>(ProfileLayoutType.Default);
   const [draftDeployedContractsVisible, setDraftDeployedContractsVisible] = useState<boolean>(profileData?.profile?.deployedContractsVisible);
 
   useEffect(() => {
@@ -231,7 +231,7 @@ export function ProfileContextProvider(
       setDraftDeployedContractsVisible(profileData?.profile?.deployedContractsVisible);
     }
     if(currentLayoutType == null){
-      setCurrentLayoutType(profileData?.profile?.layoutType);
+      setCurrentLayoutType(ProfileLayoutType.Default);
     }
     if(currentNftsDescriptionsVisible == null){
       setCurrentNftsDescriptionsVisible(profileData?.profile?.nftsDescriptionsVisible);
@@ -246,8 +246,7 @@ export function ProfileContextProvider(
     profileData?.profile?.deployedContractsVisible,
     profileData?.profile?.description,
     profileData?.profile?.gkIconVisible,
-    profileData?.profile?.nftsDescriptionsVisible,
-    profileData?.profile?.layoutType
+    profileData?.profile?.nftsDescriptionsVisible
   ]);
 
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
@@ -417,7 +416,7 @@ export function ProfileContextProvider(
     setDraftNftsDescriptionsVisible(draftNftsDescriptionsVisible);
     setDraftDeployedContractsVisible(profileData?.profile?.deployedContractsVisible);
     setEditMode(false);
-    setDraftLayoutType(null);
+    setDraftLayoutType(ProfileLayoutType.Default);
     setPubliclyVisibleNfts(null);
     setEditModeNfts(null);
   }, [
