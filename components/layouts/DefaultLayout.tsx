@@ -2,7 +2,7 @@ import ClientOnly from 'components/elements/ClientOnly';
 import { Footer } from 'components/elements/Footer/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';
-import { NonAuthLikeModal } from 'components/elements/nonAuthLikeModal';
+import NonAuthLikeModal from 'components/elements/nonAuthLikeModal';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { DiscoveryNavigation } from 'components/modules/DiscoveryNavigation/DiscoveryNavigation';
 import EmailCaptureModal from 'components/modules/ProfileFactory/EmailCaptureModal';
@@ -58,33 +58,59 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
           </ClientOnly>
         }
         {!hideSearch &&
-          <div className='mt-24 mb-8 block minlg:hidden'>
-            <SearchContent isHeader mobileSearch mobileSidebar={false} />
-          </div>
+          (
+            <ClientOnly>
+              <div className='mt-24 mb-8 block minlg:hidden'>
+                <SearchContent isHeader mobileSearch mobileSidebar={false} />
+              </div>
+            </ClientOnly>)
         }
-        {showDNavigation && <DiscoveryNavigation />}
+        {showDNavigation && (
+          <ClientOnly>
+            <DiscoveryNavigation />
+          </ClientOnly>
+        )}
 
         {children}
 
-        {profileSelectModal && signed && <DynamicProfileSelectModal />}
+        {profileSelectModal && signed && (
+          <ClientOnly>
+            <DynamicProfileSelectModal />
+          </ClientOnly>
+        )}
 
-        {emailCaptureModal && <DynamicEmailCaptureModal />}
+        {emailCaptureModal && (
+          <ClientOnly>
+            <DynamicEmailCaptureModal />
+          </ClientOnly>
+        )}
+
         {signOutDialogOpen &&
-          <SignOutModal
-            visible={signOutDialogOpen}
-            onClose={() => {
-              setSignOutDialogOpen(false);
-              changeWallet && openConnectModal();
-              setChangeWallet(false);
-              setProfileSelectModalOpen(false);
-              setCurrentProfileUrl('');
-            }}
-          />
+          (
+            <ClientOnly>
+              <SignOutModal
+                visible={signOutDialogOpen}
+                onClose={() => {
+                  setSignOutDialogOpen(false);
+                  changeWallet && openConnectModal();
+                  setChangeWallet(false);
+                  setProfileSelectModalOpen(false);
+                  setCurrentProfileUrl('');
+                }}
+              />
+            </ClientOnly>
+          )
         }
 
-        {!hideFooter && <Footer />}
+        {!hideFooter && (
+          <ClientOnly>
+            <Footer />
+          </ClientOnly>
+        )}
       </div>
-      <NonAuthLikeModal />
+      <ClientOnly>
+        <NonAuthLikeModal />
+      </ClientOnly>
     </div>
   );
 }

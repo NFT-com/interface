@@ -14,7 +14,7 @@ import { useNotifications } from './useNotifications';
 import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import NoActivityIcon from 'public/no_activity.svg?svgr';
+import NoActivityIcon from 'public/icons/no_activity.svg?svgr';
 import { useCallback, useEffect } from 'react';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
 import { useAccount } from 'wagmi';

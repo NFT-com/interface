@@ -9,7 +9,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import Link from 'next/link';
 import { CheckCircle } from 'phosphor-react';
 import { X } from 'phosphor-react';
-import KeyIcon from 'public/mint-key.svg?svgr';
+import KeyIcon from 'public/icons/mint-key.svg?svgr';
 import { Fragment } from 'react';
 import { useAccount } from 'wagmi';
 

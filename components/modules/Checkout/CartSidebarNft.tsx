@@ -3,7 +3,7 @@ import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrate
 import { useGetCreatorFee } from 'hooks/useGetCreatorFee';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { processIPFSURL } from 'utils/helpers';
+import { processIPFSURL } from 'utils/ipfs';
 import { tw } from 'utils/tw';
 
 import { StagedListing } from './NFTListingsContext';
@@ -60,7 +60,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
     if (loading) {
       return 'loading...';
     }
-    
+
     // show single royalty fee when buying since marketplace is chosen already
     if (props.selectedTab === 'Buy') {
       const stagedPurchase = props.item as StagedPurchase;

@@ -11,7 +11,7 @@ import { getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
-import NoActivityIcon from 'public/no_activity.svg?svgr';
+import NoActivityIcon from 'public/icons/no_activity.svg?svgr';
 import React, { useEffect, useRef, useState } from 'react';
 
 function usePrevious(value) {
@@ -22,7 +22,7 @@ function usePrevious(value) {
   return ref.current;
 }
 
-export default function CollectionsPage() {
+export default function DiscoverNftsPage() {
   const [page, setPage] = useState(1);
   const { sideNavOpen, setSideNavOpen, setSearchModalOpen, nftsResultsFilterBy, setClearedFilters, setIsDiscoverCollections, isDiscoverCollections } = useSearchModal();
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
@@ -183,7 +183,7 @@ export default function CollectionsPage() {
   );
 }
 
-CollectionsPage.getLayout = function getLayout(page) {
+DiscoverNftsPage.getLayout = function getLayout(page) {
   return (
     <DefaultLayout showDNavigation={true}>
       {page}

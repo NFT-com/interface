@@ -8,7 +8,7 @@ import { tw } from 'utils/tw';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
-import ETHIcon from 'public/eth_icon.svg?svgr';
+import ETHIcon from 'public/icons/eth_icon.svg?svgr';
 import { PropsWithChildren, useCallback, useRef, useState } from 'react';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
 

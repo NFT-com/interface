@@ -1,12 +1,11 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
 import { Image } from 'phosphor-react';
-import GK from 'public/Badge_Key.svg?svgr';
-import VerifiedIcon from 'public/verifiedIcon.svg?svgr';
+import GK from 'public/icons/Badge_Key.svg?svgr';
+import VerifiedIcon from 'public/icons/verifiedIcon.svg?svgr';
 
 interface ResultsDropDownDisplayProps {
   isHeader?: any;
@@ -94,7 +93,7 @@ export const ResultsDropDownDisplay = ({ isHeader, searchResults, resultTitleOnC
                             height={600}
                             containerClasses='w-[100%] h-[100%]'
                             extraClasses='hover:scale-105 transition'
-                            src={name && name[0] === 'collections' ? hit.document.logoUrl : processIPFSURL(hit?.document?.imageURL)}
+                            src={name && name[0] === 'collections' ? hit.document.logoUrl : hit?.document?.imageURL}
                           />
                         </div>
                         : <div className="min-w-[48px] w-[48px] h-[48px] rounded-[50%] mr-2 bg-[#F2F2F2] flex justify-center items-center"><Image alt="preloader" color={'#B2B2B2'} size={32} /></div>}
@@ -120,7 +119,7 @@ export const ResultsDropDownDisplay = ({ isHeader, searchResults, resultTitleOnC
   return (
     <div
       className={tw(
-        isHeader ? 'absolute left-0 max-w-[27rem]' : '',
+        isHeader ? 'absolute left-0 max-w-[27rem] z-[51]' : '',
         'flex flex-col w-full font-noi-grotesk',
         extraClasses)}>
       {searchResults.length > 0 && <>

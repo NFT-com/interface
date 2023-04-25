@@ -5,7 +5,7 @@ import {
   convertValue,
 } from 'utils/format';
 
-import VolumeIcon from 'public/volumeIcon.svg?svgr';
+import VolumeIcon from 'public/icons/volumeIcon.svg?svgr';
 import { PartialDeep } from 'type-fest';
 
 export type DetailedNft = Nft & { hidden?: boolean };
@@ -145,8 +145,9 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
           <div className="w-14 ml-2 rounded-[16px] overflow-hidden">
             <RoundedCornerMedia
               variant={RoundedCornerVariant.None}
-              width={600}
-              height={600}
+              width={80}
+              height={80}
+              sizes='80px'
               containerClasses='w-[100%] object-cover h-[100%]'
               src={props?.logoUrl}
               extraClasses="hover:scale-105 transition"
@@ -210,8 +211,9 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
             <div className="w-20  rounded-[16px] overflow-hidden">
               <RoundedCornerMedia
                 variant={RoundedCornerVariant.None}
-                width={600}
-                height={600}
+                width={80}
+                height={80}
+                sizes="80px"
                 containerClasses='w-[100%] object-cover h-[100%]'
                 src={props?.logoUrl}
                 extraClasses="hover:scale-105 transition"

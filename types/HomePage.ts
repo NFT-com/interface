@@ -26,7 +26,10 @@ export type HomePageV3WhatWeCanDo = {
   },
   whatWeCanDoImage: {
     url: string,
-  }
+  },
+  whatWeCanDoBg?: {
+    url: string,
+  },
 }
 export type HomePageV3SectionDynamicLinks = {
   sectionDynamicLinks: string[];
@@ -94,6 +97,9 @@ export type HomePageV3 = {
     }
   },
   whatWeCanDoImage: {
+    url: string,
+  },
+  whatWeCanDoBg?: {
     url: string,
   },
   sectionDynamicLinks: string[],

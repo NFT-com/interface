@@ -6,7 +6,8 @@ import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchan
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, filterNulls,isNull, } from 'utils/format';
-import { getBaseUrl, sameAddress } from 'utils/helpers';
+import { sameAddress } from 'utils/helpers';
+import { getBaseUrl } from 'utils/isEnv';
 import { getLooksrareHex } from 'utils/looksrareHelpers';
 import { getNftcomHex } from 'utils/nativeMarketplaceHelpers';
 import { getSeaportHex } from 'utils/seaportHelpers';

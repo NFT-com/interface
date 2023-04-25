@@ -155,7 +155,7 @@ module.exports = {
           '0%, 100%': { borderColor: 'rgba(0, 164, 255, 1)' },
           '50%': { borderColor: 'rgba(0, 164, 255, 0)' },
         },
-        textGadient: {
+        textGradient: {
           '0%': { backgroundPosition: 'left' },
           '50%': { backgroundPosition: 'right' },
           '100%': { backgroundPosition: 'left' }
@@ -164,7 +164,7 @@ module.exports = {
       animation: {
         'spin-slow': 'spin 2s linear infinite',
         'pulse-border': 'pulseBorder 2s linear infinite',
-        'text-gadient': 'textGadient 2s ease-in-out infinite',
+        'text-gradient': 'textGradient 2s ease-in-out infinite',
       },
       padding: {
         '30px': '30px',

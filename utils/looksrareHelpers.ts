@@ -3,7 +3,7 @@ import { IExecutionStrategy, LooksRareExchange, RoyaltyFeeManager, RoyaltyFeeReg
 import { LooksRareProtocol } from 'constants/typechain/looksrareV2';
 import { LooksrareProtocolData, LooksrareV2ProtocolData, Nft, NftType } from 'graphql/generated/types';
 import { AggregatorResponse } from 'types';
-import { getBaseUrl } from 'utils/helpers';
+import { getBaseUrl } from 'utils/isEnv';
 
 import { libraryCall, looksrareLib } from './marketplaceHelpers';
 

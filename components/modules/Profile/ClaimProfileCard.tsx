@@ -1,7 +1,7 @@
 import { Button, ButtonSize, ButtonType } from 'components/elements/Button';
 
 import Link from 'next/link';
-import ClaimProfileIcon from 'public/claim_profile_icon.svg?svgr';
+import ClaimProfileIcon from 'public/icons/claim_profile_icon.svg?svgr';
 
 export function ClaimProfileCard() {
   return (

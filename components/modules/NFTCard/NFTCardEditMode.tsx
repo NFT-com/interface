@@ -1,8 +1,8 @@
 import { tw } from 'utils/tw';
 
-import Hidden from 'public/Hidden.svg?svgr';
-import Reorder from 'public/Reorder.svg?svgr';
-import Visible from 'public/Visible.svg?svgr';
+import Hidden from 'public/icons/Hidden.svg?svgr';
+import Reorder from 'public/icons/Reorder.svg?svgr';
+import Visible from 'public/icons/Visible.svg?svgr';
 import { MouseEvent } from 'react';
 
 export interface NFTCardEditModeProps {
@@ -48,4 +48,3 @@ export function NFTCardEditMode(props: NFTCardEditModeProps) {
     </>
   );
 }
-

@@ -41,3 +41,11 @@ export const isNotEnv = (env: DeploymentEnv | DeploymentEnv[]) => !isEnv(env);
 export const getBaseUrl = (override = '') => {
   return override || getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
 };
+
+/**
+ * Returns the URL of the GraphQL API.
+ * @returns {string} The URL of the GraphQL API.
+ */
+export function getAPIURL() {
+  return getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL);
+}

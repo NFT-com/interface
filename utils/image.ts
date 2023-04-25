@@ -1,5 +1,12 @@
-import { isBase64 } from './format';
+import { isString } from './format';
 import { isClient } from './ssr';
+
+/**
+ * Checks if a given URL is a base64 encoded string.
+* @param {string} url - The URL to check.
+* @returns {boolean} - True if the URL is a base64 encoded string, false otherwise.
+*/
+export const isBase64 = (url: string) => isString(url) && url.startsWith('data:') && url.includes('base64');
 
 /**
  * Generates a custom fallback SVG image with the specified width, height, and color.
@@ -45,11 +52,9 @@ export const decodeBase64 = (str: string) => {
   if (str.startsWith('data:application/json;base64,')) {
     const base64Data = str.slice(29);
     const decodedData = JSON.parse(Buffer.from(base64Data, 'base64').toString('utf-8'));
-    return decodedData;
-  } else {
-    // Normal b64 decode
-    return Buffer.from(str, 'base64').toString('utf-8');
+    return decodedData?.image_data || decodedData?.image || decodedData;
   }
+  return str;
 };
 
 /**
@@ -58,7 +63,7 @@ export const decodeBase64 = (str: string) => {
  * @param {string} src - the source string to check
  * @returns {string} - the image data if the source is a base64 encoded image, otherwise the original source string
  */
-export const getBase64Image = (src: string) => isBase64(src) ? decodeBase64(src)?.image_data : src;
+export const getBase64Image = (src: string) => isBase64(src) ? decodeBase64(src) : src;
 
 /**
  * The default URL for the blurred image placeholder. It is a base64 encoded SVG image

@@ -8,8 +8,8 @@ import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCur
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
-import { processIPFSURL } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
+import { processIPFSURL } from 'utils/ipfs';
 import { getLowestPriceListing } from 'utils/listingUtils';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
@@ -18,9 +18,9 @@ import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 
 import { BigNumber, ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import RemoveIcon from 'public/close-circle-icon-gray.svg?svgr';
-import InfoIcon from 'public/gray-info-icon.svg?svgr';
-import DeleteRowIcon from 'public/trash-icon.svg?svgr';
+import RemoveIcon from 'public/icons/close-circle-icon-gray.svg?svgr';
+import InfoIcon from 'public/icons/gray-info-icon.svg?svgr';
+import DeleteRowIcon from 'public/icons/trash-icon.svg?svgr';
 import { useContext, useMemo, useRef } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';

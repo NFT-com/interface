@@ -18,6 +18,7 @@ import { NFTDetailFeaturedBy } from './NFTDetailFeaturedBy';
 import { NFTDetailMoreFromCollection } from './NFTDetailMoreFromCollection';
 import { Properties } from './Properties';
 
+import { BigNumber } from 'ethers';
 import { useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 import { useAccount } from 'wagmi';
@@ -27,13 +28,13 @@ export interface NFTDetailPageProps {
   tokenId: string;
 }
 
-export function NFTDetailPage(props: NFTDetailPageProps) {
+export function NFTDetailPage({ collection, tokenId }: NFTDetailPageProps) {
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
-
-  const { data: nft, mutate: mutateNft } = useNftQuery(props.collection, props.tokenId);
-  const { data: collection } = useSWR(
-    () => props.collection ? ['ContractMetadata', props.collection] : null,
+  const hexTokenId = BigNumber.from(tokenId).toHexString();
+  const { data: nft, mutate: mutateNft } = useNftQuery(collection, hexTokenId);
+  const { data: collectionData } = useSWR(
+    () => collection ? ['ContractMetadata', collection] : null,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async ([url, contract]) => {
       return await getContractMetadata(contract, defaultChainId);
@@ -89,13 +90,13 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           )}>
             {(defaultChainId === '1') &&
               <div className="w-full md:px-4 pt-4 pb-6">
-                <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
+                <ExternalListings nft={nft} collectionName={collectionData?.contractMetadata?.name} />
                 <NFTAnalyticsContainer data={nft} />
               </div>
             }
           </div>
           <div className='flex w-full items-center p-4 pb-0 justify-start'>
-            <div className='justify-start'>
+            <div className='justify-start w-full'>
               <Tabs
                 tabOptions={tabs}
                 customTabWidth={'w-max'}
@@ -127,7 +128,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         <div className='flex minxl:w-1/2 w-full minxl:flex-col'>
           <NFTDetail nft={nft} onRefreshSuccess={() => {
             mutateNft();
-          }} key={nft?.id} />
+          }} key={nft?.id} tokenId={tokenId}/>
           <div className="hidden minxl:block minxl:pt-5">
             <DetailTabsComponent />
           </div>
@@ -135,7 +136,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         {(showListings || (nft?.wallet?.address ?? nft?.owner) === currentAddress || (!isNullOrEmpty(nft?.owner) && !isNullOrEmpty(nft?.wallet?.address))) ?
           <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4 minxl:pt-12'>
             <div className="lg:hidden flex minxl:flex-row w-full items-start">
-              <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
+              <ExternalListings nft={nft} collectionName={collectionData?.contractMetadata?.name} />
             </div>
             <div className="w-full hidden minxl:flex minxl:items-end">
               <NFTAnalyticsContainer data={nft} />
@@ -155,7 +156,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
       </div>
       <NFTDetailMoreFromCollection
         hideTokenId={nft?.tokenId}
-        collectionName={nft?.contract?.toLowerCase() === '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'.toLowerCase() ? 'ENS: Ethereum Name Service' : collection?.contractMetadata?.name}
+        collectionName={nft?.contract?.toLowerCase() === '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'.toLowerCase() ? 'ENS: Ethereum Name Service' : collectionData?.contractMetadata?.name}
         contract={nft?.contract}
       />
       <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">

@@ -156,6 +156,9 @@ export const HOME_PAGE_FIELDS_V3 = `
     whatWeCanDoImage{
       url
     }
+    whatWeCanDoBg{
+      url
+    }
     sectionDynamicLinks
     buildProfileSection
     goToBlogButton

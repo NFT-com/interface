@@ -94,7 +94,7 @@ export default function MyApp({
           site_name: 'NFT.com',
           images: [
             {
-              url: 'https://www.nft.com/site-meta-image.png',
+              url: 'https://www.nft.com/site-meta-image.webp',
               width: 1200,
               height: 627,
               alt: 'NFT.com | The Social NFT Marketplace',

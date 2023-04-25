@@ -6,11 +6,12 @@ import { tw } from 'utils/tw';
 
 import OnboardingModalItem from './OnboardingModalItem';
 
+import dynamic from 'next/dynamic';
 import { X } from 'phosphor-react';
 import { CaretDown, CaretUp } from 'phosphor-react';
-// TODO: optimize image down from 2MB
-import NftGoldLogo from 'public/nft_gold_logo.svg?svgr';
 import { useEffect, useMemo, useState } from 'react';
+
+const BlurImage = dynamic(import('components/elements/BlurImage'));
 
 export interface OnboardingModalProps {
   profileURI: string;
@@ -95,7 +96,7 @@ export default function OnboardingModal({ profileURI, onClose } : OnboardingModa
                   </h3>
                   {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_POINTS_ENABLED) && <div className='bg-[#FFF4CA] rounded-full flex items-center py-1 pl-1 pr-4'>
                     <div className='h-[24px] w-[24px] minmd:h-[34px] minmd:w-[34px] mr-[5px]'>
-                      <NftGoldLogo />
+                      <BlurImage alt="default profile photo" src="/assets/nft_profile_default.webp" fill localImage />
                     </div>
 
                     {profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5}/<span className='text-[#6A6A6A]'>{totalPoints || '-'}</span>

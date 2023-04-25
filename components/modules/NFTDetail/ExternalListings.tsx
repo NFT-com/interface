@@ -24,12 +24,12 @@ import { EditListingsModal } from './EditListingsModal';
 import { SelectListingModal } from './SelectListingModal';
 
 import { BigNumber, ethers } from 'ethers';
-import ETH from 'public/eth.svg?svgr';
-import LooksrareIcon from 'public/looksrare-icon.svg?svgr';
+import ETH from 'public/icons/eth.svg?svgr';
+import LooksrareIcon from 'public/icons/looksrare-icon.svg?svgr';
+import OpenseaIcon from 'public/icons/opensea-icon.svg?svgr';
+import USDC from 'public/icons/usdc.svg?svgr';
+import X2Y2Icon from 'public/icons/x2y2-icon.svg?svgr';
 import NFTLogo from 'public/nft_logo_yellow.webp';
-import OpenseaIcon from 'public/opensea-icon.svg?svgr';
-import USDC from 'public/usdc.svg?svgr';
-import X2Y2Icon from 'public/x2y2-icon.svg?svgr';
 import { MouseEvent, useCallback, useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';

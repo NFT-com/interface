@@ -2,10 +2,11 @@ import { Doppler, getEnvBool } from 'utils/env';
 
 import OnboardingSecondaryModal from './OnboardingSecondaryModal';
 
+import dynamic from 'next/dynamic';
 import { CheckCircle } from 'phosphor-react';
-// TODO: optimize image down from 2MB
-import NftGoldLogo from 'public/nft_gold_logo.svg?svgr';
 import { useState } from 'react';
+
+const BlurImage = dynamic(import('components/elements/BlurImage'));
 
 type OnboardingItemProps = {
   isCompleted: boolean;
@@ -37,7 +38,7 @@ export default function OnboardingModalItem({ items } : OnboardingModalItemProps
               {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_POINTS_ENABLED) && <div className='flex items-center'>
                 <p className='w-2'>{item.coins}</p>
                 <div className='h-[25px] w-[25px] ml-2'>
-                  <NftGoldLogo />
+                  <BlurImage alt="default profile photo" src="/assets/nft_profile_default.webp" fill localImage/>
                 </div>
               </div>}
             </div>
@@ -56,7 +57,7 @@ export default function OnboardingModalItem({ items } : OnboardingModalItemProps
               {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_POINTS_ENABLED) && <div className='flex items-center bg-gradient-to-r bg-clip-text text-transparent from-[#FAC213] to-[#FF9B37]'>
                 <p className='w-2'>{item.coins}</p>
                 <div className='h-[25px] w-[25px] ml-2'>
-                  <NftGoldLogo />
+                  <BlurImage alt="default profile photo" src="/assets/nft_profile_default.webp" fill localImage/>
                 </div>
               </div>}
             </div>
