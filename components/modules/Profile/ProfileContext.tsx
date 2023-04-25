@@ -213,7 +213,7 @@ export function ProfileContextProvider(
   const [draftHeaderImg, setDraftHeaderImg] = useState({ preview: '', raw: null });
   const [draftDisplayType, setDraftDisplayType] = useState(null);
   const [selectedCollection, setSelectedCollection] = useState<string>(null);
-  const [draftLayoutType, setDraftLayoutType] = useState<ProfileLayoutType>(null);
+  const [draftLayoutType, setDraftLayoutType] = useState<ProfileLayoutType>(profileData?.profile?.layoutType ?? ProfileLayoutType.Default);
   const [draftDeployedContractsVisible, setDraftDeployedContractsVisible] = useState<boolean>(profileData?.profile?.deployedContractsVisible);
 
   useEffect(() => {

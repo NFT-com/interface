@@ -52,7 +52,7 @@ export default function NonAuthLikeModal(){
           ? (
             <div className='text-[44px] flex items-center justify-between -mt-[3rem] mb-10'>
               <span className='text-[#FAC213]'>/</span>{sliceString(profileName, 14, false)}
-              <Image src={likeButton} className='w-[40px] ml-4' alt={`${likedType} Preview Image`} />p
+              <Image src={likeButton} className='w-[40px] ml-4' alt={`${likedType} Preview Image`} />
             </div>
           )
           : null}
