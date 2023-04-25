@@ -10,7 +10,7 @@ import { getMarketplaceAssetInput, onchainAuctionTypeToGqlAuctionType, unhashedM
 import { getOrderHash } from 'utils/signatureUtils';
 import { encodeOrder } from 'utils/X2Y2Helpers';
 
-import { MakerOrderWithSignature } from '@looksrare/sdk';
+import { Maker } from '@looksrare/sdk-v2';
 import * as Sentry from '@sentry/nextjs';
 import { X2Y2Order } from '@x2y2-io/sdk/dist/types';
 import { BigNumber } from 'ethers';
@@ -23,7 +23,8 @@ export interface ListNftResult {
     parameters: SeaportOrderComponents
   ) => Promise<boolean>,
   listNftLooksrare: (
-    order: MakerOrderWithSignature
+    order: Maker,
+    signature: Signature
   ) => Promise<boolean>,
   listNftX2Y2: (
     order: X2Y2Order,
@@ -69,11 +70,11 @@ export function useListNFTMutations(): ListNftResult {
   );
 
   const listNftLooksrare = useCallback(
-    async (order: MakerOrderWithSignature) => {
+    async (order: Maker, signature: Signature) => {
       try {
         const result = await sdk.ListNftLooksrare({
           input: {
-            looksrareOrder: JSON.stringify(order),
+            looksrareOrder: JSON.stringify({ ...order, signature }),
             chainId: defaultChainId
           }
         });

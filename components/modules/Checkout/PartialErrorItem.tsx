@@ -29,10 +29,7 @@ export function PartialErrorItem({ listing, target } : PartialErrorItemProps) {
 
   const getNeedsApprovals = useCallback(() => {
     return [listing]?.some(stagedListing =>
-      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.LooksRare) != null &&
-        (stagedListing?.nft?.type == NftType.Erc721 ?
-          !stagedListing?.isApprovedForLooksrare :
-          !stagedListing?.isApprovedForLooksrare1155)) ||
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.LooksRareV2) != null && !stagedListing?.isApprovedForLooksrare) ||
       (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Seaport) != null && !stagedListing?.isApprovedForSeaport) ||
       (stagedListing.targets.find(target => target.protocol === ExternalProtocol.X2Y2) != null &&
         (stagedListing?.nft?.type == NftType.Erc721 ?
@@ -89,20 +86,19 @@ export function PartialErrorItem({ listing, target } : PartialErrorItemProps) {
                         const stagedListing = uniqueCollections[i];
                         for (let j = 0; j < uniqueCollections[i].targets.length; j++) {
                           const protocol = uniqueCollections[i].targets[j].protocol;
-                          const approved = protocol === ExternalProtocol.LooksRare ?
-                            stagedListing?.nft.type === NftType.Erc721 ?
+                          const approved =
+                            protocol === ExternalProtocol.LooksRareV2 ?
                               stagedListing?.isApprovedForLooksrare :
-                              stagedListing?.isApprovedForLooksrare1155 :
-                            protocol === ExternalProtocol.X2Y2 ?
-                              stagedListing?.nft?.type === NftType.Erc721 ?
-                                stagedListing?.isApprovedForX2Y2 :
-                                stagedListing?.isApprovedForX2Y21155 :
-                              protocol === ExternalProtocol.NFTCOM
-                                ? stagedListing?.isApprovedForNFTCOM :
-                                stagedListing?.isApprovedForSeaport;
+                              protocol === ExternalProtocol.X2Y2 ?
+                                stagedListing?.nft?.type === NftType.Erc721 ?
+                                  stagedListing?.isApprovedForX2Y2 :
+                                  stagedListing?.isApprovedForX2Y21155 :
+                                protocol === ExternalProtocol.NFTCOM
+                                  ? stagedListing?.isApprovedForNFTCOM :
+                                  stagedListing?.isApprovedForSeaport;
 
-                          if (!approved && protocol === ExternalProtocol.LooksRare) {
-                            const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
+                          if (!approved && protocol === ExternalProtocol.LooksRareV2) {
+                            const result = await approveCollection(stagedListing, ExternalProtocol.LooksRareV2)
                               .then(result => {
                                 if (!result) {
                                   setResubmitting(false);

@@ -102,6 +102,7 @@ export default function AssetsPages() {
                 const openseaAllowedByContract = new Map<string, boolean>();
                 const looksrareAllowedByContract = new Map<string, boolean>();
                 const looksrareAllowedByContract1155 = new Map<string, boolean>();
+                const looksrareV2AllowedByContract = new Map<string, boolean>();
                 const X2Y2AllowedByContract = new Map<string, boolean>();
                 const X2Y2AllowedByContract1155 = new Map<string, boolean>();
                 const NFTCOMAllowedByContract = new Map<string, boolean>();
@@ -118,6 +119,10 @@ export default function AssetsPages() {
                   if (!looksrareAllowedByContract1155.has(nft.contract)) {
                     const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.LooksRare1155);
                     looksrareAllowedByContract1155.set(nft.contract, allowed);
+                  }
+                  if (!looksrareV2AllowedByContract.has(nft.contract)) {
+                    const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.LooksRareV2);
+                    looksrareV2AllowedByContract.set(nft.contract, allowed);
                   }
                   if (!X2Y2AllowedByContract.has(nft.contract)) {
                     const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.X2Y2);
@@ -136,9 +141,8 @@ export default function AssetsPages() {
                   nft: nft,
                   collectionName: nft?.collection?.name,
                   isApprovedForSeaport: openseaAllowedByContract.get(nft?.contract),
-                  isApprovedForLooksrare: looksrareAllowedByContract1155.get(nft?.contract),
+                  isApprovedForLooksrare: looksrareV2AllowedByContract.get(nft?.contract),
                   isApprovedForX2Y2: X2Y2AllowedByContract.get(nft?.contract),
-                  isApprovedForLooksrare1155: looksrareAllowedByContract.get(nft?.contract),
                   isApprovedForX2Y21155: X2Y2AllowedByContract1155.get(nft?.contract),
                   isApprovedForNFTCOM: NFTCOMAllowedByContract.get(nft?.contract),
                   targets: [

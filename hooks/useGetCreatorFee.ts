@@ -1,6 +1,6 @@
 import { StagedListing } from 'components/modules/Checkout/NFTListingsContext';
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
-import { LooksrareProtocolData, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, LooksrareV2ProtocolData, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnv } from 'utils/env';
@@ -49,7 +49,19 @@ const getCreatorFeeFromListing = (
         .div(10000);
       const royalty = minAskAmount.sub(marketplaceFeeAmount);
       return { royalty: Number(new BN(royalty.toHexString()).shiftedBy(-18)), marketplace: item.protocol };
-    } else if (item.protocol === ExternalProtocol.Seaport) {
+    }
+    else if (item.protocol === ExternalProtocol.LooksRareV2) {
+      const protocolData = item?.protocolData as LooksrareV2ProtocolData;
+      const minAskAmount = BigNumber.from(0)
+        .mul(BigNumber.from(protocolData?.price ?? 0))
+        .div(10000);
+      const marketplaceFeeAmount = BigNumber.from(0)
+        .mul(BigNumber.from(protocolData?.price ?? 0))
+        .div(10000);
+      const royalty = minAskAmount.sub(marketplaceFeeAmount);
+      return { royalty: Number(new BN(royalty.toHexString()).shiftedBy(-18)), marketplace: item.protocol };
+    }
+    else if (item.protocol === ExternalProtocol.Seaport) {
       const protocolData = item?.protocolData as SeaportProtocolData;
       const royalty = BigNumber.from(protocolData?.parameters?.consideration.length === 3 ?
         protocolData?.parameters?.consideration[2].startAmount :
@@ -129,7 +141,7 @@ export function useGetCreatorFee(
     royalty['nftcom'] = (Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0) / 100) || 0; // divide 100 to get percent (10000 = 100%)
 
     switch (calculatedFee.marketplace) {
-    case ExternalProtocol.LooksRare:
+    case ExternalProtocol.LooksRareV2:
       royalty['looksrare'] = royalty['looksrare'] || calculatedFee.royalty;
       break;
     case ExternalProtocol.Seaport:
@@ -151,7 +163,6 @@ export function useGetCreatorFee(
     // get min and max royalty
     const min = Math.min(...Object.values(royalty));
     const max = Math.max(...Object.values(royalty));
-
     return { min, max, royalty };
   });
 

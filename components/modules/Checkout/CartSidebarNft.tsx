@@ -69,6 +69,8 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
         return `${creatorFee?.royalty?.seaport ? Number(creatorFee?.royalty?.seaport).toFixed(2) : 0}%`;
       case 'LooksRare':
         return `${creatorFee?.royalty?.looksrare ? Number(creatorFee?.royalty?.looksrare).toFixed(2) : 0}%`;
+      case 'LooksRareV2':
+        return `${creatorFee?.royalty?.looksrare ? Number(creatorFee?.royalty?.looksrare).toFixed(2) : 0}%`;
       case 'X2Y2':
         return `${creatorFee?.royalty?.x2y2 ? Number(creatorFee?.royalty?.x2y2).toFixed(2) : 0}%`;
       case 'NFTCOM':

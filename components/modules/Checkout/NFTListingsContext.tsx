@@ -5,9 +5,6 @@ import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivity
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { get721Contract } from 'hooks/contracts/get721Contract';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { useLooksrareRoyaltyFeeManagerContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeManagerContract';
-import { useLooksrareRoyaltyFeeRegistryContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeRegistryContract';
-import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
@@ -18,7 +15,7 @@ import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCur
 import { ExternalProtocol, Fee, SeaportOrderParameters } from 'types';
 import { filterNulls, isNullOrEmpty } from 'utils/format';
 import { getLowestPriceListing } from 'utils/listingUtils';
-import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
+import { createLooksrareV2ParametersForNFTListing } from 'utils/looksrareHelpers';
 import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelpers';
 import { convertDurationToSec, convertDurationToSecForNumbersOnly, filterValidListings, SaleDuration } from 'utils/marketplaceUtils';
 import { createNativeParametersForNFTListing, onchainAuctionTypeToGqlAuctionType, UnsignedOrder } from 'utils/nativeMarketplaceHelpers';
@@ -28,7 +25,7 @@ import { createX2Y2ParametersForNFTListing } from 'utils/X2Y2Helpers';
 import { CartSidebarTab, NFTCartSidebar } from './NFTCartSidebar';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 
-import { MakerOrder } from '@looksrare/sdk';
+import { Maker } from '@looksrare/sdk-v2';
 import { X2Y2Order } from '@x2y2-io/sdk/dist/types';
 import { BigNumber, BigNumberish } from 'ethers';
 import moment from 'moment';
@@ -48,7 +45,7 @@ export type ListingTarget = {
   buyNowPrice: BigNumberish;
   reservePrice: BigNumberish;
   // these are set when finalizing, before triggering the wallet requests
-  looksrareOrder: MakerOrder; // looksrare
+  looksrareOrder: Maker // looksrare v2
   seaportParameters: SeaportOrderParameters; // seaport
   X2Y2Order: X2Y2Order; // X2Y2
   NFTCOMOrder: UnsignedOrder; //native marketplace
@@ -79,7 +76,6 @@ export type StagedListing = {
   // approval-related data
   isApprovedForSeaport: boolean;
   isApprovedForLooksrare: boolean;
-  isApprovedForLooksrare1155: boolean;
   isApprovedForX2Y2: boolean;
   isApprovedForX2Y21155: boolean;
   isApprovedForNFTCOM: boolean;
@@ -193,10 +189,7 @@ export default function NFTListingsContextProvider(
   const [decreasingPriceError, setDecreasingPriceError] = useState(false);
   const [englishAuctionError, setEnglishAuctionError] = useState(false);
 
-  const signOrderForLooksrare = useSignLooksrareOrder();
-  const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
-  const looksrareStrategy = useLooksrareStrategyContract(provider);
-  const looksrareRoyaltyFeeManager = useLooksrareRoyaltyFeeManagerContractContract(provider);
+  const signOrderForLooksrare = useSignLooksrareOrder(signer, provider);
 
   const seaportCounter = useSeaportCounter(currentAddress);
   const signOrderForSeaport = useSignSeaportOrder();
@@ -250,13 +243,13 @@ export default function NFTListingsContextProvider(
   const allListingsConfigured = useCallback(() => {
     const unconfiguredNft = toList.find((stagedNft: StagedListing) => {
       const lowestX2Y2Listing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.X2Y2);
-      const lowestLooksrareListing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.LooksRare);
+      const lowestLooksrareListing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.LooksRareV2);
       const lowestNftcomListing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.NFTCOM);
       if (stagedNft?.nft == null || isNullOrEmpty(stagedNft?.targets)) {
         return true; // no targets or NFT to list?
       }
       const hasX2Y2LowerListing = (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2) && stagedNft?.startingPrice)) ||(parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice));
-      const hasLooksrareLowerListing = (parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare) && stagedNft?.startingPrice)) ||(parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice));
+      const hasLooksrareLowerListing = (parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.LooksRareV2) && stagedNft?.startingPrice)) ||(parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.LooksRareV2)?.startingPrice));
       const hasNftcomLowerListing = (parseInt((lowestNftcomListing?.order?.protocolData as NftcomProtocolData)?.takeAsset[0].value) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM) && stagedNft?.startingPrice)) ||(parseInt((lowestNftcomListing?.order?.protocolData as NftcomProtocolData)?.takeAsset[0].value) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM)?.startingPrice));
 
       if(hasX2Y2LowerListing || hasLooksrareLowerListing || hasNftcomLowerListing) {
@@ -604,19 +597,14 @@ export default function NFTListingsContextProvider(
     }
     const preparedListings = await Promise.all(toList.map(async (stagedNft) => {
       const preparedTargets: ListingTarget[] = await Promise.all(stagedNft.targets?.map(async (target: ListingTarget) => {
-        if (target.protocol === ExternalProtocol.LooksRare) {
-          const order: MakerOrder = await createLooksrareParametersForNFTListing(
-            currentAddress, // offerer
+        if (target.protocol === ExternalProtocol.LooksRareV2) {
+          const order: Maker = await createLooksrareV2ParametersForNFTListing(
             stagedNft.nft,
             stagedNft.startingPrice ?? target.startingPrice,
-            supportedCurrencyData['WETH'].contract,
-            Number(defaultChainId),
             nonce,
-            looksrareStrategy,
-            looksrareRoyaltyFeeRegistry,
             target.duration ?? stagedNft.duration,
-            looksrareRoyaltyFeeManager
-            // listing.takerAddress
+            signer,
+            provider
           );
           return {
             ...target,
@@ -676,19 +664,20 @@ export default function NFTListingsContextProvider(
       };
     }));
     setToList(preparedListings);
-  }, [toList, currentAddress, supportedCurrencyData, defaultChainId, looksrareStrategy, looksrareRoyaltyFeeRegistry, looksrareRoyaltyFeeManager, noExpirationNFTCOM, marketplace, getByContractAddress]);
+  }, [toList, currentAddress, signer, provider, noExpirationNFTCOM, marketplace, getByContractAddress]);
 
   const listAll: (itemsToList: StagedListing[], marketplace?: ExternalProtocol) => Promise<ListAllResult> = useCallback(async (itemsToList, marketplace) => {
     setSubmitting(true);
     const results = await Promise.all(itemsToList.map(async (listing: StagedListing) => {
       const results = await Promise.all(listing.targets?.map(async (target: ListingTarget) => {
-        if (isNullOrEmpty(marketplace) ? target.protocol === ExternalProtocol.LooksRare : target.protocol === ExternalProtocol.LooksRare && marketplace === ExternalProtocol.LooksRare) {
+        if (isNullOrEmpty(marketplace) ? target.protocol === ExternalProtocol.LooksRareV2 : target.protocol === ExternalProtocol.LooksRareV2 && marketplace === ExternalProtocol.LooksRareV2) {
           const signature = await signOrderForLooksrare(target.looksrareOrder).catch(() => null);
           if (isNullOrEmpty(signature)) {
             setHasListingError(listing, true, ExternalProtocol.LooksRare);
             return ListAllResult.SignatureRejected;
           }
-          const result = await listNftLooksrare({ ...target.looksrareOrder, signature });
+          const result = await listNftLooksrare(target.looksrareOrder, signature);
+          console.log('🚀 ~ file: NFTListingsContext.tsx:688 ~ results ~ result:', result);
           if (!result) {
             setHasListingError(listing, true, ExternalProtocol.LooksRare);
             return ListAllResult.ApiError;
@@ -787,28 +776,26 @@ export default function NFTListingsContextProvider(
     }
     const tx = await collection
       .connect(signer)
-      .setApprovalForAll(target === ExternalProtocol.LooksRare ?
-        listing?.nft?.type == NftType.Erc721 ?
-          TransferProxyTarget.LooksRare :
-          TransferProxyTarget.LooksRare1155 :
-        target === ExternalProtocol.X2Y2 ?
-          listing?.nft?.type == NftType.Erc721 ?
-            TransferProxyTarget.X2Y2 :
-            TransferProxyTarget.X2Y21155 :
-          target === ExternalProtocol.NFTCOM?
-            TransferProxyTarget.NFTCOM :
-            TransferProxyTarget.Opensea,
-      true);
+      .setApprovalForAll(
+        target === ExternalProtocol.LooksRareV2
+          ? TransferProxyTarget.LooksRareV2 :
+          target === ExternalProtocol.X2Y2 ?
+            listing?.nft?.type == NftType.Erc721 ?
+              TransferProxyTarget.X2Y2 :
+              TransferProxyTarget.X2Y21155 :
+            target === ExternalProtocol.NFTCOM?
+              TransferProxyTarget.NFTCOM :
+              TransferProxyTarget.Opensea,
+        true);
     if (tx) {
+      console.log('🚀 ~ file: NFTListingsContext.tsx:800 ~ approveCollection ~ tx:', tx);
       return await tx.wait(1).then(() => {
         const newToList = toList.slice().map(l => {
           if (listing?.nft?.id === l.nft?.id) {
             return {
               ...listing,
-              ...(target === ExternalProtocol.LooksRare ?
-                listing?.nft?.type == NftType.Erc721 ?
-                  { isApprovedForLooksrare: true } :
-                  { isApprovedForLooksrare1155: true } :
+              ...(target === ExternalProtocol.LooksRareV2 ?
+                { isApprovedForLooksrare: true } :
                 {}),
               ...(target === ExternalProtocol.Seaport ? { isApprovedForSeaport: true } : {}),
               ...(target === ExternalProtocol.X2Y2 ?

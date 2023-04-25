@@ -112,7 +112,7 @@ export function ListingCheckout() {
     return nft?.targets?.find(target => target?.protocol === ExternalProtocol.Seaport) != null;
   }) != null;
   const looksrareAtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
-    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.LooksRare) != null;
+    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.LooksRareV2) != null;
   }) != null;
   const X2Y2AtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
     return nft?.targets?.find(target => target?.protocol === ExternalProtocol.X2Y2) != null;
@@ -267,7 +267,7 @@ export function ListingCheckout() {
             </div>
             <div
               onClick={() => {
-                toggleTargetMarketplace(ExternalProtocol.LooksRare);
+                toggleTargetMarketplace(ExternalProtocol.LooksRareV2);
                 setShowSummary(false);
               }}
               className={tw(

@@ -31,7 +31,7 @@ export async function getOpenseaCollection(
 
 export async function getLooksrareNonce(address: string): Promise<number> {
   const url = new URL(getBaseUrl() + 'api/looksrare');
-  url.searchParams.set('action', 'getNonce');
+  url.searchParams.set('action', 'getNonceV2');
   url.searchParams.set('address', address);
   const result = await fetch(url.toString()).then(res => res.json());
   return BigNumber.from(result?.['data'] ?? 0).toNumber();

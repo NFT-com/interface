@@ -1,7 +1,7 @@
 import { ListingTarget, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
-import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { AuctionType, LooksrareProtocolData, LooksrareV2ProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { PurchaseErrorResponse } from 'hooks/useNFTPurchaseError';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
@@ -125,6 +125,17 @@ export function getTotalRoyaltiesUSD(
       const royalty = minAskAmount.sub(marketplaceFeeAmount);
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
+    } else if (stagedPurchase.protocol === ExternalProtocol.LooksRareV2) {
+      const protocolData = stagedPurchase?.protocolData as LooksrareV2ProtocolData;
+      const minAskAmount = BigNumber.from(0)
+        .mul(BigNumber.from(protocolData?.price ?? 0))
+        .div(10000);
+      const marketplaceFeeAmount = BigNumber.from(0)
+        .mul(BigNumber.from(protocolData?.price ?? 0))
+        .div(10000);
+      const royalty = minAskAmount.sub(marketplaceFeeAmount);
+      const currencyData = getByContractAddress(stagedPurchase.currency);
+      return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
     } else if (stagedPurchase.protocol === ExternalProtocol.Seaport) {
       const protocolData = stagedPurchase?.protocolData as SeaportProtocolData;
       const royalty = BigNumber.from(protocolData?.parameters?.consideration.length === 3 ?
@@ -169,6 +180,15 @@ export function getMaxMarketplaceFeesUSD(
           fee,
           currencyData.decimals ?? 18
         ))) ?? 0;
+      } else if (target.protocol === ExternalProtocol.LooksRareV2) {
+        // Looksrare fee is fetched from the smart contract.
+        const fee = BigNumber.from(looksrareProtocolFeeBps == null
+          ? 0
+          : multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, looksrareProtocolFeeBps));
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          fee,
+          currencyData.decimals ?? 18
+        ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.NFTCOM) {
         if(hasGk) {
           return 0;
@@ -194,7 +214,6 @@ export function getMaxMarketplaceFeesUSD(
 
 export function getMaxRoyaltyFeesUSD(
   stagedListings: StagedListing[],
-  looksrareProtocolFeeBps: BigNumberish,
   getByContractAddress: (contract: string) => NFTSupportedCurrency,
   toListNftComRoyaltyFees: number[],
   x2y2Fees: number[]
@@ -202,18 +221,8 @@ export function getMaxRoyaltyFeesUSD(
   return stagedListings?.reduce((cartTotal, stagedListing) => {
     const royaltiesByMarketplace = stagedListing?.targets.map((target: ListingTarget, index: number) => {
       const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
-      if (target.protocol === ExternalProtocol.LooksRare) {
-        const minAskAmount = BigNumber.from(target?.looksrareOrder?.minPercentageToAsk ?? 0)
-          .div(10000)
-          .mul(BigNumber.from(target?.looksrareOrder?.price ?? 0));
-        const marketplaceFeeAmount = BigNumber.from(looksrareProtocolFeeBps ?? 0)
-          .div(10000)
-          .mul(BigNumber.from(target?.looksrareOrder?.price ?? 0));
-        const royalty = minAskAmount.sub(marketplaceFeeAmount);
-        return currencyData?.usd(Number(ethers.utils.formatUnits(
-          royalty,
-          currencyData.decimals ?? 18
-        ))) ?? 0;
+      if (target.protocol === ExternalProtocol.LooksRareV2) {
+        return 0;
       } else if (target.protocol === ExternalProtocol.Seaport) {
         const royalty = BigNumber.from(target?.seaportParameters?.consideration.length === 3 ?
           target?.seaportParameters?.consideration[2].startAmount :
@@ -261,6 +270,9 @@ export function getProtocolDisplayName(protocolName: ExternalProtocol): string {
   }
   if(protocolName === ExternalProtocol.Seaport){
     return 'Opensea';
+  }
+  if(protocolName === ExternalProtocol.LooksRareV2){
+    return 'LooksRare';
   }
   return protocolName;
 }
