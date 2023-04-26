@@ -83,11 +83,15 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
   const {
     mutate: mutatePublicProfileNfts,
-  } = useProfileNFTsQuery(profileData?.profile?.id,String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),8);
+  } = useProfileNFTsQuery({
+    profileId: profileData?.profile?.id,
+    chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    first: 8
+  });
 
   const {
     mutate: mutateAllOwnerNfts,
-  } = useMyNFTsQuery(8, profileData?.profile?.id, '', null, true);
+  } = useMyNFTsQuery({ first: 8, profileId: profileData?.profile?.id, query: '', invalidateCache: true });
 
   const nftsToBuy = buyNowActive ? toBuyNow : toBuy;
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();

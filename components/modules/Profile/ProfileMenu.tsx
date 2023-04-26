@@ -51,14 +51,6 @@ export function ProfileMenu({ profileURI }: ProfileMenuProps) {
   });
 
   const {
-    mutate: mutatePublicProfileNfts,
-  } = useProfileNFTsQuery(profileData?.profile?.id, String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), 8);
-
-  const {
-    mutate: mutateAllOwnerNfts,
-  } = useMyNFTsQuery(8, profileData?.profile?.id, '', null, true);
-
-  const {
     setEditMode,
     setLayoutType,
     setDescriptionsVisible,
@@ -72,8 +64,21 @@ export function ProfileMenu({ profileURI }: ProfileMenuProps) {
     clearDrafts,
     draftNftsDescriptionsVisible,
     setDraftNftsDescriptionsVisible,
-    userIsAdmin
+    userIsAdmin,
+    publicProfileLoadCount
   } = useProfileContext();
+
+  const {
+    mutate: mutatePublicProfileNfts,
+  } = useProfileNFTsQuery({
+    profileId: profileData?.profile?.id,
+    chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    first: publicProfileLoadCount
+  });
+
+  const {
+    mutate: mutateAllOwnerNfts,
+  } = useMyNFTsQuery({ first: 8, profileId: profileData?.profile?.id, query: '', invalidateCache: true });
 
   const setLayout = useCallback((type: ProfileLayoutType) => {
     setSelectedLayout(type);

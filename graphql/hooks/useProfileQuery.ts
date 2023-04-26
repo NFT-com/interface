@@ -3,7 +3,7 @@ import { ProfileQuery } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
 import { getChainIdString, isNullOrEmpty } from 'utils/format';
 
-import useSWR, { mutate,SWRConfiguration } from 'swr';
+import useSWRImmutable, { mutate,SWRConfiguration } from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface ProfileData {
@@ -19,9 +19,9 @@ export function useProfileQuery(
   const sdk = useGraphQLSDK();
   const { chain } = useNetwork();
 
-  const keyString = 'ProfileQuery ' + url + chain?.id;
+  const keyString = () => !isNullOrEmpty(url) ? { query: 'ProfileQuery', args: { url, chainId: chain?.id } } : null;
 
-  const { data, error } = useSWR(keyString, async () => {
+  const { data, error } = useSWRImmutable(keyString, async () => {
     if (isNullOrEmpty(url)) {
       return null;
     }

@@ -97,6 +97,14 @@ export function getChainIdString(chainId: Maybe<number | string>): Maybe<string>
   return (chainId == null ? null : String(chainId));
 }
 
+
+/**
+ * Calculates the number of items to display per page based on the screen width and whether or not the side navigation is open.
+ * @param {string} index - the index of the page being displayed
+ * @param {number} screenWidth - the width of the screen in pixels
+ * @param {boolean} [sideNavOpen] - whether or not the side navigation is open
+ * @returns {number} - the number of items to display per page
+ */
 export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boolean): number {
   let perPage;
 
@@ -111,11 +119,6 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen?: boo
       perPage = 2;
     }
   } else if (index === 'discover') {
-    /**
- * Returns a string representation of the given chain ID.
- * @param {Maybe<number | string>} chainId - The chain ID to convert to a string.
- * @returns {Maybe<string>} - The string representation of the chain ID, or null if the input is null or undefined.
- */
     if (screenWidth >= 1200) {
       perPage = sideNavOpen ? 9 : 8;
     } else if (screenWidth >= 900) {

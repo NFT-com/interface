@@ -1,9 +1,10 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Maybe, OrderingUpdatesInput } from 'graphql/generated/types';
+import { OrderingUpdatesInput, ProfileNftOrderingUpdatesMutation } from 'graphql/generated/types';
 
-import { useCallback, useState } from 'react';
+import useSWRMutation from 'swr/mutation';
 
 export interface OrderingUpdateResult {
+  data: ProfileNftOrderingUpdatesMutation,
   loading: boolean;
   error: string | null;
   updateOrder: (input: OrderingUpdatesInput) => Promise<boolean>;
@@ -11,29 +12,20 @@ export interface OrderingUpdateResult {
 
 export function useProfileOrderingUpdateMutation(): OrderingUpdateResult {
   const sdk = useGraphQLSDK();
+  const mutateNftOrder = async (url: string, { arg }: {arg: OrderingUpdatesInput}) => await sdk.ProfileNftOrderingUpdates({ input: arg });
 
-  const [error, setError] = useState<Maybe<string>>(null);
-  const [loading, setLoading] = useState(false);
-
-  const updateOrder = useCallback(
-    async (input: OrderingUpdatesInput) => {
-      setLoading(true);
-      try {
-        await sdk.ProfileNftOrderingUpdates({ input: input });
-        setLoading(false);
-        return true;
-      } catch (err) {
-        setLoading(false);
-        setError('Mutation failed. Please try again.');
-        return false;
-      }
-    },
-    [sdk]
-  );
+  const { data, error, isMutating, trigger } = useSWRMutation('ProfileNftOrderingUpdateMutation', mutateNftOrder);
 
   return {
-    loading,
+    data: data,
     error,
-    updateOrder,
+    loading: isMutating,
+    updateOrder: async (args: OrderingUpdatesInput) => {
+      const result = await trigger(args);
+      if (result) {
+        return true;
+      }
+      return false;
+    },
   };
 }
