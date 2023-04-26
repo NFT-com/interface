@@ -51,6 +51,7 @@ export function NftGrid(props: NftGridProps) {
 
   const savedLayoutType = 'Default';
 
+  console.log('%c Line:54 🍩 joey', 'color:#465975', items);
   return <div
     className={tw(
       'grid w-full',
