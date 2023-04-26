@@ -62,7 +62,7 @@ export function MintedProfile(props: MintedProfileProps) {
     userIsAdmin,
     publiclyVisibleNftsNoEdit,
     loading,
-    debouncedSearchQuery
+    debouncedSearchQuery,
   } = useContext(ProfileContext);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
