@@ -4,7 +4,7 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { NULL_ADDRESS } from 'constants/addresses';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { AuctionType, LooksrareProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { AuctionType, LooksrareProtocolData, LooksrareV2ProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
@@ -64,15 +64,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   } = useNftCollectionAllowance(
     props.nft?.contract,
     currentAddress,
-    TransferProxyTarget.LooksRare
-  );
-
-  const {
-    allowedAll: looksRareAllowed1155,
-  } = useNftCollectionAllowance(
-    props.nft?.contract,
-    currentAddress,
-    TransferProxyTarget.LooksRare1155
+    TransferProxyTarget.LooksRareV2
   );
 
   const {
@@ -109,7 +101,7 @@ export function ExternalListings(props: ExternalListingsProps) {
       <span className='sm:hidden'>Current price on</span>
       <div className='flex items-center'>
         {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='ml-1.5 mr-1 sm:ml-0 h-7 w-7 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
-        {listing?.order?.protocol === ExternalProtocol.LooksRare &&
+        {listing?.order?.protocol === ExternalProtocol.LooksRare || listing?.order?.protocol === ExternalProtocol.LooksRareV2 &&
           <LooksrareIcon
             onClick={(e: MouseEvent<any>) => {
               e.preventDefault();
@@ -203,9 +195,11 @@ export function ExternalListings(props: ExternalListingsProps) {
               listing?.order?.protocolData as SeaportProtocolData
               : listing?.order?.protocol === ExternalProtocol.LooksRare ?
                 listing?.order?.protocolData as LooksrareProtocolData :
-                listing?.order?.protocol === ExternalProtocol.NFTCOM ?
-                  listing?.order?.protocolData as NftcomProtocolData :
-                  listing?.order?.protocolData as X2Y2ProtocolData
+                listing?.order?.protocol === ExternalProtocol.LooksRareV2 ?
+                  listing?.order?.protocolData as LooksrareV2ProtocolData :
+                  listing?.order?.protocol === ExternalProtocol.NFTCOM ?
+                    listing?.order?.protocolData as NftcomProtocolData :
+                    listing?.order?.protocolData as X2Y2ProtocolData
           });
           toggleCartSidebar('Buy');
         }}
@@ -237,7 +231,6 @@ export function ExternalListings(props: ExternalListingsProps) {
                   collectionName: props.collectionName,
                   isApprovedForSeaport: openseaAllowed,
                   isApprovedForLooksrare: looksRareAllowed,
-                  isApprovedForLooksrare1155: looksRareAllowed1155,
                   isApprovedForX2Y2: X2Y2Allowed,
                   isApprovedForX2Y21155: X2Y2Allowed1155,
                   isApprovedForNFTCOM: NFTCOMAllowed,
@@ -275,7 +268,8 @@ export function ExternalListings(props: ExternalListingsProps) {
           getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
           getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare),
           getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.X2Y2),
-          getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.NFTCOM)
+          getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.NFTCOM),
+          getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRareV2)
         ]?.filter( Boolean )}
         nft={props.nft}
         collectionName={props.collectionName}
@@ -291,7 +285,8 @@ export function ExternalListings(props: ExternalListingsProps) {
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare),
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.X2Y2),
-        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.NFTCOM)
+        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.NFTCOM),
+        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRareV2)
       ]?.filter( Boolean )?.map((listing, index) => {
         return listing && <div key={index} className={tw(
           'grid grid-cols-2 gap-5 justify-between flex-col bg-white rounded-[18px] shadow-xl border border-gray-200 mb-5 w-full max-w-nftcom h-fit  relative font-noi-grotesk',

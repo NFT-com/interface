@@ -1,7 +1,7 @@
 import CustomTooltip from 'components/elements/CustomTooltip';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { PriceInput } from 'components/elements/PriceInput';
-import { LooksrareProtocolData, NftcomProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, LooksrareV2ProtocolData, NftcomProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
@@ -65,7 +65,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
   // const rowHeightClass = expanded ? 'h-48' : 'h-24';
   const seaportEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.Seaport) != null, [getTarget, props.listing]);
-  const looksrareEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.LooksRare) != null, [getTarget, props.listing]);
+  const looksrareEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.LooksRareV2) != null, [getTarget, props.listing]);
   const X2Y2Enabled = useMemo(() => getTarget(props.listing, ExternalProtocol.X2Y2) != null, [getTarget, props.listing]);
   const NFTCOMEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.NFTCOM) != null, [getTarget, props.listing]);
 
@@ -118,11 +118,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         customIconClass: '-ml-[2px]',
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.LooksRare;
-          toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing, selectedOptionForDropdown.current);
-          if (dropDownNumber === 0) selectedOptionDropdown0.current = ExternalProtocol.LooksRare;
-          if (dropDownNumber === 1) selectedOptionDropdown1.current = ExternalProtocol.LooksRare;
-          if (dropDownNumber === 2) selectedOptionDropdown2.current = ExternalProtocol.LooksRare;
-          if (dropDownNumber === 3) selectedOptionDropdown3.current = ExternalProtocol.LooksRare;
+          toggleTargetMarketplace(ExternalProtocol.LooksRareV2, props.listing, selectedOptionForDropdown.current);
+          if (dropDownNumber === 0) selectedOptionDropdown0.current = ExternalProtocol.LooksRareV2;
+          if (dropDownNumber === 1) selectedOptionDropdown1.current = ExternalProtocol.LooksRareV2;
+          if (dropDownNumber === 2) selectedOptionDropdown2.current = ExternalProtocol.LooksRareV2;
+          if (dropDownNumber === 3) selectedOptionDropdown3.current = ExternalProtocol.LooksRareV2;
         },
         disabled: looksrareEnabled
       },
@@ -215,23 +215,23 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
   const LooksRarePriceInput = () => {
     return <PriceInput
-      key={'LooksrarePriceInput'}
+      key={'LooksRarePriceInput'}
       initial={
-        getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice == null ?
+        getTarget(props.listing, ExternalProtocol.LooksRareV2)?.startingPrice == null ?
           '' :
-          ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice ?? 0))
+          ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.LooksRareV2)?.startingPrice ?? 0))
       }
-      currencyAddress={getAddress('weth', defaultChainId)}
-      currencyOptions={['WETH']}
+      currencyAddress={supportedCurrencyData['ETH'].contract}
+      currencyOptions={['ETH']}
       onCurrencyChange={null}
       onPriceChange={(val: BigNumber) => {
-        setPrice(props.listing, val, ExternalProtocol.LooksRare);
+        setPrice(props.listing, val, ExternalProtocol.LooksRareV2);
         props.onPriceChange();
       }}
       error={
-        props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && target.startingPrice == null) != null ||
-    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && BigNumber.from(target.startingPrice).eq(0)) != null ||
-    (parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice))
+        props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRareV2 && target.startingPrice == null) != null ||
+    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRareV2 && BigNumber.from(target.startingPrice).eq(0)) != null ||
+    (parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareV2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRareV2)?.startingPrice))
       }
     />;
   };
@@ -463,7 +463,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                       alt="Delete market place"
                       layout="fill"
                       onClick={() => {
-                        toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
+                        toggleTargetMarketplace(ExternalProtocol.LooksRareV2, props.listing);
                       }}
                     />
                   </div>
@@ -476,7 +476,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                     alt="Delete market place"
                     layout="fill"
                     onClick={() => {
-                      toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
+                      toggleTargetMarketplace(ExternalProtocol.LooksRareV2, props.listing);
                     }}
                   />
                 </div>

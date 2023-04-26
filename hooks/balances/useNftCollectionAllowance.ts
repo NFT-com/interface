@@ -7,6 +7,7 @@ import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 export enum TransferProxyTarget {
   LooksRare = '0xf42aa99F011A1fA7CDA90E5E98b277E306BcA83e',
   LooksRare1155 = '0xFED24eC7E22f573c2e08AEF55aA6797Ca2b3A051',
+  LooksRareV2 = '0x000000000060C4Ca14CfC4325359062ace33Fe3D',
   Opensea = '0x1e0049783f008a0085193e00003d00cd54003c71',
   X2Y2 = '0xF849de01B080aDC3A814FaBE1E2087475cF2E354',
   X2Y21155 = '0x024aC22ACdB367a3ae52A3D94aC6649fdc1f0779',

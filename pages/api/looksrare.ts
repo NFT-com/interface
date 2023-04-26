@@ -32,6 +32,30 @@ const looksrareHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(500).json({ message: 'Failed to get nonce', error: e });
     }
     break;
+  case 'getNonceV2':
+    try {
+      const address = req.query['address'];
+      if (isNullOrEmpty(address)) {
+        res.status(400).json({ message: 'getNonceV2: missing required param "address' });
+        return;
+      }
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Looks-Api-Key': process.env.LOOKSRARE_API_KEY,
+        }
+      };
+      const result = await fetch(
+        'https://api.looksrare.org/api/v2/orders/nonce?address=' + address,
+        options
+      ).then(res => res.json());
+      res.status(200).json(result);
+    } catch (e) {
+      res.status(500).json({ message: 'Failed to get nonce', error: e });
+    }
+    break;
   case 'getOrders':
     try {
       const contract = req.query['contract'];

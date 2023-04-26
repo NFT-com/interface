@@ -24,10 +24,8 @@ export function useSaveUserActionForBuyNFTsMutation(): SaveUserActionForBuyNFTsR
       try {
         await sdk.SaveUserActionForBuyNFTs({
           profileUrl,
-        }).then((res) => console.log('ressy=>', res));
-
+        });
         setLoading(false);
-
         return true;
       } catch (err) {
         setLoading(false);

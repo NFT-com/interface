@@ -64,6 +64,33 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput, $likedById: ID!) {
                         r
                         s
                     }
+                    ... on LooksrareV2ProtocolData {
+                      idV2: id
+                      hash
+                      quoteType
+                      globalNonce
+                      subsetNonce
+                      orderNonce
+                      collection
+                      currency
+                      signer
+                      strategyId
+                      collectionType
+                      startTimeV2: startTime
+                      endTimeV2: endTime
+                      price
+                      additionalParameters
+                      signature
+                      createdAt
+                      merkleRoot
+                      merkleProof {
+                        position
+                        value
+                      }
+                      amounts
+                      itemIds
+                      status
+                    }
                     ... on X2Y2ProtocolData {
                         side
                         type
@@ -195,6 +222,33 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput, $likedById: ID!) {
                     v
                     r
                     s
+                }
+                ... on TxLooksrareV2ProtocolData {
+                    id
+                    hash
+                    quoteType
+                    globalNonce
+                    subsetNonce
+                    orderNonce
+                    collection
+                    currency
+                    signer
+                    strategyId
+                    collectionType
+                    startTimeV2: startTime
+                    endTimeV2: endTime
+                    price
+                    additionalParameters
+                    signature
+                    createdAt
+                    merkleRoot
+                    merkleProof {
+                        position
+                        value
+                    }
+                    amounts
+                    itemIds
+                    status
                 }
                 ... on TxX2Y2ProtocolData {
                     amount

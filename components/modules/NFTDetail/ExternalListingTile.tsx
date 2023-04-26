@@ -3,7 +3,7 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { ActivityStatus, AuctionType, LooksrareProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { ActivityStatus, AuctionType, LooksrareProtocolData, LooksrareV2ProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
@@ -96,19 +96,11 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   );
 
   const {
-    allowedAll: looksRareAllowed1155,
-  } = useNftCollectionAllowance(
-    props.nft?.contract,
-    currentAddress,
-    TransferProxyTarget.LooksRare1155
-  );
-
-  const {
     allowedAll: looksRareAllowed,
   } = useNftCollectionAllowance(
     props.nft?.contract,
     currentAddress,
-    TransferProxyTarget.LooksRare
+    TransferProxyTarget.LooksRareV2
   );
 
   const {
@@ -159,7 +151,6 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             collectionName: props.collectionName,
             isApprovedForSeaport: openseaAllowed,
             isApprovedForLooksrare: looksRareAllowed,
-            isApprovedForLooksrare1155: looksRareAllowed1155,
             isApprovedForX2Y2: X2Y2Allowed,
             isApprovedForX2Y21155: X2Y2Allowed1155,
             isApprovedForNFTCOM: NFTCOMAllowed,
@@ -280,7 +271,9 @@ function ExternalListingTile(props: ExternalListingTileProps) {
               listing?.order?.protocolData as SeaportProtocolData :
               listingProtocol === ExternalProtocol.X2Y2 ?
                 listing?.order?.protocolData as X2Y2ProtocolData :
-                listing?.order?.protocolData as LooksrareProtocolData
+                listingProtocol === ExternalProtocol.LooksRare ?
+                  listing?.order?.protocolData as LooksrareProtocolData :
+                  listing?.order?.protocolData as LooksrareV2ProtocolData
           });
           props.onClose();
           toggleCartSidebar('Buy');
@@ -289,7 +282,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
       />;
     }
     }
-  }, [listing, stageListing, props, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, NftcomExchange, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, getERC20ProtocolApprovalAddress, currentDate, stagePurchase, toggleCartSidebar]);
+  }, [listing, stageListing, props, openseaAllowed, looksRareAllowed, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, NftcomExchange, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, getERC20ProtocolApprovalAddress, currentDate, stagePurchase, toggleCartSidebar]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport, ExternalProtocol.X2Y2, ExternalProtocol.NFTCOM].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.

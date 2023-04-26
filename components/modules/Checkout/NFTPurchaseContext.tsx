@@ -1,5 +1,5 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, Nft, NftcomProtocolData, NftType, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, LooksrareV2ProtocolData, Nft, NftcomProtocolData, NftType, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useGetSeaportSignature } from 'graphql/hooks/useGetSeaportSignature';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
@@ -38,7 +38,7 @@ export type StagedPurchase = {
    */
   isERC20ApprovedForProtocol: boolean;
   orderHash?: string;
-  protocolData: SeaportProtocolData | LooksrareProtocolData | X2Y2ProtocolData | NftcomProtocolData;
+  protocolData: SeaportProtocolData | LooksrareProtocolData | X2Y2ProtocolData | NftcomProtocolData | LooksrareV2ProtocolData;
   takerAddress: string;
   makerAddress: string;
   nonce: number;
@@ -242,7 +242,7 @@ export default function NFTPurchaseContextProvider(
     };
     const tradeDetails = filterNulls([
       // Looksrare orders are given individually
-      ...(toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.LooksRare)?.map(looksrarePurchase => {
+      ...(toBuy?.filter(purchase => (purchase?.protocol === ExternalProtocol.LooksRare))?.map(looksrarePurchase => {
         return getLooksrareHex(
           aggregator.address,
           looksrarePurchase?.protocolData as LooksrareProtocolData,

@@ -1,5 +1,5 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { AuctionType, LooksrareProtocolData, LooksrareV2ProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { ExternalProtocol } from 'types';
 import { isNullOrEmpty } from 'utils/format';
 
@@ -15,6 +15,10 @@ export const getListingPrice = (listing: PartialDeep<TxActivity>, currentTimesta
   switch(listing?.order?.protocol) {
   case (ExternalProtocol.LooksRare): {
     const order = listing?.order?.protocolData as LooksrareProtocolData;
+    return BigNumber.from(order?.price ?? 0);
+  }
+  case (ExternalProtocol.LooksRareV2): {
+    const order = listing?.order?.protocolData as LooksrareV2ProtocolData;
     return BigNumber.from(order?.price ?? 0);
   }
   case (ExternalProtocol.Seaport): {
@@ -71,6 +75,10 @@ export const getListingCurrencyAddress = (listing: PartialDeep<TxActivity>) => {
     const order = listing?.order?.protocolData as LooksrareProtocolData;
     return order?.currencyAddress ?? order?.['currency'];
   }
+  case (ExternalProtocol.LooksRareV2): {
+    const order = listing?.order?.protocolData as LooksrareV2ProtocolData;
+    return order?.currency ?? order?.['currency'];
+  }
   case (ExternalProtocol.Seaport): {
     const order = listing?.order?.protocolData as SeaportProtocolData;
     return order?.parameters?.consideration?.[0]?.token;
@@ -116,6 +124,8 @@ export const getListingEndDate = (
     return (protocolData as NftcomProtocolData)?.end;
   case(ExternalProtocol.LooksRare):
     return Number((protocolData as LooksrareProtocolData)?.endTime);
+  case(ExternalProtocol.LooksRareV2):
+    return Number((protocolData as LooksrareV2ProtocolData & {endTimeV2: number})?.endTimeV2);
   case(ExternalProtocol.Seaport):
     return Number((protocolData as SeaportProtocolData)?.parameters?.endTime);
   case(ExternalProtocol.X2Y2):

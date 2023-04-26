@@ -1,5 +1,6 @@
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
+import { useLooksrareProtocolContract } from 'hooks/contracts/useLooksrareProtocolContract';
 import { useNftcomExchangeContract } from 'hooks/contracts/useNftcomExchangeContract';
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
 import { useX2Y2ExchangeContract } from 'hooks/contracts/useX2Y2ExchangeContract';
@@ -8,8 +9,8 @@ import { ExternalProtocol } from 'types';
 import { nftcomBuyNow } from 'utils/nativeMarketplaceHelpers';
 
 import { isNullOrEmpty } from './format';
-import { getBaseUrl } from './isEnv';
-import { looksrareBuyNow } from './looksrareHelpers';
+import { getBaseUrl } from './helpers';
+import { looksrareBuyNow, looksrareV2BuyNow } from './looksrareHelpers';
 import { seaportBuyNow } from './seaportHelpers';
 import { X2Y2BuyNow } from './X2Y2Helpers';
 
@@ -30,7 +31,7 @@ export async function getOpenseaCollection(
 
 export async function getLooksrareNonce(address: string): Promise<number> {
   const url = new URL(getBaseUrl() + 'api/looksrare');
-  url.searchParams.set('action', 'getNonce');
+  url.searchParams.set('action', 'getNonceV2');
   url.searchParams.set('address', address);
   const result = await fetch(url.toString()).then(res => res.json());
   return BigNumber.from(result?.['data'] ?? 0).toNumber();
@@ -93,6 +94,7 @@ export type BuyNowInterface = {
 export function useBuyNow(signer: Signer): BuyNowInterface {
   const { address: currentAddress } = useAccount();
   const looksrareExchange = useLooksrareExchangeContract(signer);
+  const looksrareProtocol = useLooksrareProtocolContract(signer);
   const NftcomExchange = useNftcomExchangeContract(signer);
   const X2Y2Exchange = useX2Y2ExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
@@ -107,6 +109,8 @@ export function useBuyNow(signer: Signer): BuyNowInterface {
       switch(order.protocol){
       case ExternalProtocol.LooksRare:
         return await looksrareBuyNow(order, looksrareExchange, executorAddress, ethBalance);
+      case ExternalProtocol.LooksRareV2:
+        return await looksrareV2BuyNow(order, looksrareProtocol, executorAddress, ethBalance);
       case ExternalProtocol.NFTCOM:
         return await nftcomBuyNow(order, NftcomExchange, executorAddress, defaultChainId);
       case ExternalProtocol.X2Y2:
@@ -120,7 +124,7 @@ export function useBuyNow(signer: Signer): BuyNowInterface {
       console.log(`error in buyNow: ${err}`);
       return false;
     }
-  }, [NftcomExchange, X2Y2Exchange, defaultChainId, ethBalance, looksrareExchange, seaportExchange]);
+  }, [NftcomExchange, X2Y2Exchange, defaultChainId, ethBalance, looksrareExchange, looksrareProtocol, seaportExchange]);
 
   return {
     buyNow

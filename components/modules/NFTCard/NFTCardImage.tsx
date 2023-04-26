@@ -4,7 +4,7 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { DetailedNft } from 'components/modules/DiscoveryCards/CollectionCard';
 import { getAddressForChain, nftAggregator, } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, LooksrareV2ProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
@@ -66,6 +66,23 @@ export function NFTCardImage(props: NFTCardImageProps) {
         />
       );
     case ExternalProtocol.LooksRare:
+      return (
+        <LooksrareIcon
+          onClick={(e: MouseEvent<any>) => {
+            e.preventDefault();
+            window.open(
+              getLooksrareAssetPageUrl(props.contractAddr, BigNumber.from(props.tokenId).toString()),
+              '_blank'
+            );
+            e.stopPropagation();
+          }}
+          className='h-[25px] w-[25px] relative shrink-0 grayscale'
+          alt="Looksrare logo redirect"
+          layout="fill"
+          key='looksrare-icon'
+        />
+      );
+    case ExternalProtocol.LooksRareV2:
       return (
         <LooksrareIcon
           onClick={(e: MouseEvent<any>) => {
@@ -149,7 +166,9 @@ export function NFTCardImage(props: NFTCardImageProps) {
                         props?.bestListing?.order?.protocolData as SeaportProtocolData :
                         props?.bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
                           props?.bestListing?.order?.protocolData as X2Y2ProtocolData :
-                          props?.bestListing?.order?.protocolData as LooksrareProtocolData
+                          props?.bestListing?.order?.protocol === ExternalProtocol.LooksRare ?
+                            props?.bestListing?.order?.protocolData as LooksrareProtocolData:
+                            props?.bestListing?.order?.protocolData as LooksrareV2ProtocolData
                     });
                     toggleCartSidebar('Buy');
                   }}

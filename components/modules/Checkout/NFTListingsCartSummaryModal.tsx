@@ -96,8 +96,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   }, [toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length, NFTCOMProfileFee, NFTCOMProtocolFee, hasGk]);
 
   const getMaxRoyaltyFees: () => number = useCallback(() => {
-    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, toListNftComRoyaltyFees, x2y2Fees);
-  }, [toList, looksrareProtocolFeeBps, getByContractAddress, toListNftComRoyaltyFees, x2y2Fees]);
+    return getMaxRoyaltyFeesUSD(toList, getByContractAddress, toListNftComRoyaltyFees, x2y2Fees);
+  }, [toList, getByContractAddress, toListNftComRoyaltyFees, x2y2Fees]);
 
   const getTotalListings = useCallback(() => {
     return toList?.reduce((total, stagedListing) => {
@@ -122,10 +122,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
 
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
-      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.LooksRare) != null &&
-        (stagedListing?.nft?.type == NftType.Erc721 ?
-          !stagedListing?.isApprovedForLooksrare :
-          !stagedListing?.isApprovedForLooksrare1155)) ||
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.LooksRareV2) != null && !stagedListing?.isApprovedForLooksrare) ||
       (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Seaport) != null && !stagedListing?.isApprovedForSeaport) ||
       (stagedListing.targets.find(target => target.protocol === ExternalProtocol.X2Y2) != null &&
         (stagedListing?.nft?.type == NftType.Erc721 ?
@@ -194,17 +191,16 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                   (first, second) => first.nft?.contract === second.nft?.contract
                 )?.map((stagedListing) => {
                   return stagedListing.targets.map((target: ListingTarget) => {
-                    const approved = target.protocol === ExternalProtocol.LooksRare ?
-                      stagedListing?.nft?.type == NftType.Erc721 ?
-                        stagedListing?.isApprovedForLooksrare :
-                        stagedListing?.isApprovedForLooksrare1155 :
+                    const approved =
                       target.protocol === ExternalProtocol.X2Y2 ?
                         stagedListing?.nft?.type == NftType.Erc721 ?
                           stagedListing?.isApprovedForX2Y2 :
                           stagedListing?.isApprovedForX2Y21155 :
                         target.protocol === ExternalProtocol.NFTCOM
                           ? stagedListing?.isApprovedForNFTCOM :
-                          stagedListing?.isApprovedForSeaport;
+                          target.protocol === ExternalProtocol.Seaport ?
+                            stagedListing?.isApprovedForSeaport :
+                            stagedListing?.isApprovedForLooksrare;
                     return {
                       label: 'Approve ' + (!isNullOrEmpty(stagedListing?.collectionName) ? stagedListing?.collectionName : 'Collection') + ' for ' + getProtocolDisplayName(target.protocol),
                       startIcon: target.protocol === ExternalProtocol.Seaport ?
@@ -213,7 +209,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                           alt="Opensea logo"
                           layout="fill"
                         /> :
-                        target.protocol === ExternalProtocol.LooksRare ?
+                        target.protocol === ExternalProtocol.LooksRareV2 ?
                           <LooksrareIcon
                             className={'h-8 w-8 shrink-0 grow-0 aspect-square'}
                             alt="Looksrare logo"
@@ -367,20 +363,20 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                       const stagedListing = uniqueCollections[i];
                       for (let j = 0; j < uniqueCollections[i].targets.length; j++) {
                         const protocol = uniqueCollections[i].targets[j].protocol;
-                        const approved = protocol === ExternalProtocol.LooksRare ?
-                          stagedListing?.nft.type === NftType.Erc721 ?
+                        const approved =
+                          protocol === ExternalProtocol.LooksRareV2 ?
                             stagedListing?.isApprovedForLooksrare :
-                            stagedListing?.isApprovedForLooksrare1155 :
-                          protocol === ExternalProtocol.X2Y2 ?
-                            stagedListing?.nft?.type === NftType.Erc721 ?
-                              stagedListing?.isApprovedForX2Y2 :
-                              stagedListing?.isApprovedForX2Y21155 :
-                            protocol === ExternalProtocol.NFTCOM
-                              ? stagedListing?.isApprovedForNFTCOM :
-                              stagedListing?.isApprovedForSeaport;
+                            protocol === ExternalProtocol.X2Y2 ?
+                              stagedListing?.nft?.type === NftType.Erc721 ?
+                                stagedListing?.isApprovedForX2Y2 :
+                                stagedListing?.isApprovedForX2Y21155 :
+                              protocol === ExternalProtocol.NFTCOM
+                                ? stagedListing?.isApprovedForNFTCOM :
+                                stagedListing?.isApprovedForSeaport;
 
-                        if (!approved && protocol === ExternalProtocol.LooksRare) {
-                          const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
+                        if (!approved && protocol === ExternalProtocol.LooksRareV2) {
+                          console.log('here here');
+                          const result = await approveCollection(stagedListing, ExternalProtocol.LooksRareV2)
                             .then(result => {
                               if (!result) {
                                 setError('ApprovalError');
