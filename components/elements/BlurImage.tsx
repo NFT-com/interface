@@ -47,11 +47,11 @@ export default function BlurImage({
       src={src ?? defaultBlurPlaceholderUrl}
       blurDataURL={defaultBlurPlaceholderUrl}
       className={cl(
-        className,
         'duration-500 ease-in-out',
         isLoading
           ? 'blur scale-110 animate-pulse'
-          : 'blur-none scale-100'
+          : 'blur-none scale-100',
+        className,
       )}
       onLoadingComplete={() => setIsLoading(false)}
       {...props}

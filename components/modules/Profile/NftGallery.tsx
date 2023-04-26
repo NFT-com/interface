@@ -6,9 +6,9 @@ import { useScrollToBottom } from 'graphql/hooks/useScrollToBottom';
 import { tw } from 'utils/tw';
 
 import { NftGrid } from './NftGrid';
-import { ProfileContext } from './ProfileContext';
+import { useProfileContext } from './ProfileContext';
 
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import useSWR from 'swr';
 export interface NftGalleryProps {
   profileURI: string;
@@ -31,7 +31,7 @@ export function NftGallery(props: NftGalleryProps) {
     loadMoreNfts,
     loadMoreNftsEditMode,
     draftLayoutType
-  } = useContext(ProfileContext);
+  } = useProfileContext();
   const { closeToBottom, currentScrollPosition } = useScrollToBottom();
 
   useSWR(closeToBottom.toString() + currentScrollPosition, async () => {

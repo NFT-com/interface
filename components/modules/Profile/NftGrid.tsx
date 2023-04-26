@@ -9,7 +9,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { tw } from 'utils/tw';
 
 import { ClaimProfileCard } from './ClaimProfileCard';
-import { ProfileContext } from './ProfileContext';
+import { useProfileContext } from './ProfileContext';
 
 import { BigNumber } from 'ethers';
 import { useContext } from 'react';
@@ -28,7 +28,7 @@ export function NftGrid(props: NftGridProps) {
     editMode,
     draftNftsDescriptionsVisible,
     draftLayoutType,
-  } = useContext(ProfileContext);
+  } = useProfileContext();
   const { items, moveItem } = useContext(GridContext);
   const { user } = useUser();
   const defaultChainId = useDefaultChainId();
@@ -51,6 +51,7 @@ export function NftGrid(props: NftGridProps) {
 
   const savedLayoutType = 'Default';
 
+  console.log('%c Line:54 🍩 joey', 'color:#465975', items);
   return <div
     className={tw(
       'grid w-full',

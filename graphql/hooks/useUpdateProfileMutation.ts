@@ -1,9 +1,10 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Maybe, UpdateProfileInput } from 'graphql/generated/types';
+import { ProfileLayoutType, UpdateProfileInput, UpdateProfileMutation } from 'graphql/generated/types';
 
-import { useCallback, useState } from 'react';
+import useSWRMutation from 'swr/mutation';
 
 export interface UpdateProfileResult {
+  data: UpdateProfileMutation;
   updating: boolean;
   error: string | null;
   updateProfile: (input: UpdateProfileInput) => Promise<boolean>;
@@ -14,33 +15,20 @@ export interface UpdateProfileResult {
  */
 export function useUpdateProfileMutation(): UpdateProfileResult {
   const sdk = useGraphQLSDK();
+  const mutateProfile = async (url: string, { arg }: {arg: UpdateProfileInput}) => await sdk.UpdateProfile({ input: arg?.layoutType !== null ? arg : { ...arg, layoutType: ProfileLayoutType.Default } });
 
-  const [error, setError] = useState<Maybe<string>>(null);
-  const [loading, setLoading] = useState(false);
-
-  const updateProfile = useCallback(
-    async (input: UpdateProfileInput) => {
-      setLoading(true);
-      try {
-        await sdk.UpdateProfile({
-          input: input,
-        });
-
-        setLoading(false);
-
-        return true;
-      } catch (err) {
-        setLoading(false);
-        setError('Profile update failed. Please try again.');
-        return false;
-      }
-    },
-    [sdk]
-  );
+  const { data, error, isMutating, trigger } = useSWRMutation('ProfileUpdateMutation', mutateProfile);
 
   return {
-    updating: loading,
-    error: error,
-    updateProfile: updateProfile,
+    data: data,
+    error,
+    updating: isMutating,
+    updateProfile: async (args: UpdateProfileInput)=> {
+      const result = await trigger(args);
+      if (result) {
+        return true;
+      }
+      return false;
+    },
   };
 }

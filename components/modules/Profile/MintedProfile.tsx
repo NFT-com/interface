@@ -31,7 +31,7 @@ import { BigNumber } from 'ethers';
 import dynamic from 'next/dynamic';
 import cameraIcon from 'public/camera.webp';
 import CameraIconEdit from 'public/icons/camera_icon.svg?svgr';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import useSWR from 'swr';
@@ -72,6 +72,7 @@ export function MintedProfile(props: MintedProfileProps) {
   const { data: profileCustomizationStatus } = useIsProfileCustomized(user?.currentProfileUrl, defaultChainId.toString());
   const { nftResolver } = useAllContracts();
   const isOwnerAndSignedIn = useIsOwnerAndSignedIn(profileURI);
+  const showNftGrid = useMemo(() => (userIsAdmin && editMode && !loading) || (!loading && publiclyVisibleNftsNoEdit && publiclyVisibleNftsNoEdit?.length > 0), [userIsAdmin, editMode, loading, publiclyVisibleNftsNoEdit]);
 
   const [hideModal, setHideModal] = useState(false);
 
@@ -153,9 +154,11 @@ export function MintedProfile(props: MintedProfileProps) {
 
   return (
     <>
-      <ProfileScrollContextProvider>
-        <div className='w-full group'>
-          <BannerWrapper
+      <div className={cl(
+        'w-full group',
+        'min-h-screen')}>
+        <ProfileScrollContextProvider>
+          <div className='w-full group'>          <BannerWrapper
             alt={`${profileData?.profile?.url} profile banner image`}
             draft={!isNullOrEmpty(draftHeaderImg?.preview)}
             imageOverride={
@@ -207,193 +210,194 @@ export function MintedProfile(props: MintedProfileProps) {
               </Dropzone>
             </div>
           </BannerWrapper>
-        </div>
-        <div className={cl(
-          'flex-col',
-          'max-w-[1400px] min-w-[60%] minxl:w-full',
-          isMobile ? 'mx-2' : 'mx-2 minmd:mx-8 minxl:mx-auto',
-        )}>
-          <div
-            className={cl(
-              'flex justify-start items-start',
-              'flex-col'
-            )}
-            style={{
-              zIndex: 103,
-            }}
-          >
-            <div className="block minmd:flex items-end">
-              <Dropzone
-                accept={'image/*'['.*']}
-                disabled={!userIsAdmin && !editMode || !editMode}
-                onDrop={files => {
-                  if (userIsAdmin) onDropProfile(files);
-                }}
-              >
-                {({ getRootProps, getInputProps }) => (
-                  <div {...getRootProps()} className={cl(
-                    'relative outline-none',
-                    userIsAdmin ? '' : 'cursor-default',
-                    'w-[88px] h-[88px] minlg:w-[120px] minlg:h-[120px] minlg:ml-20',
-                  )}>
-                    <input {...getInputProps()} />
-                    {saving && <div
-                      style={{ zIndex: 102 }}
-                      className={cl(
-                        'bg-white/10 mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md',
-                        'rounded-full absolute flex ',
-                        'items-center justify-center h-full w-full',
-                      )}
-                    >
-                      <Loader />
-                    </div>}
-
-                    <div
-                      className={cl(
-                        'object-center',
-                        'h-full w-full group',
-                        'shrink-0 aspect-square',
-                        editMode && 'hover:cursor-pointer',
-                        isOwnerAndSignedIn && editMode ? 'hover:cursor-pointer' : '',
-                        'box-border border-[5px] border-white rounded-full',
-                        'mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md'
-                      )}
-                    >
-                      {editMode && !saving && isOwnerAndSignedIn && <div
-                        style={{ zIndex: 102, }}
+          </div>
+          <div className={cl(
+            'flex-col',
+            'max-w-[1400px] min-w-[60%] minxl:w-full',
+            isMobile ? 'mx-2' : 'mx-2 minmd:mx-8 minxl:mx-auto',
+          )}>
+            <div
+              className={cl(
+                'flex justify-start items-start',
+                'flex-col'
+              )}
+              style={{
+                zIndex: 103,
+              }}
+            >
+              <div className="block minmd:flex items-end">
+                <Dropzone
+                  accept={'image/*'['.*']}
+                  disabled={!userIsAdmin && !editMode || !editMode}
+                  onDrop={files => {
+                    if (userIsAdmin) onDropProfile(files);
+                  }}
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <div {...getRootProps()} className={cl(
+                      'relative outline-none',
+                      userIsAdmin ? '' : 'cursor-default',
+                      'w-[88px] h-[88px] minlg:w-[120px] minlg:h-[120px] minlg:ml-20',
+                    )}>
+                      <input {...getInputProps()} />
+                      {saving && <div
+                        style={{ zIndex: 102 }}
                         className={cl(
-                          'absolute -top-[5px] -bottom-[5px] -right-[5px] -left-[5px] rounded-full'
+                          'bg-white/10 mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md',
+                          'rounded-full absolute flex ',
+                          'items-center justify-center h-full w-full',
                         )}
                       >
-                        <div className='bg-black opacity-50 absolute top-0 bottom-0 right-0 left-0 rounded-full'></div>
-                        <div className='w-[28px] h-[28px] absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
-                          <CustomTooltip
-                            orientation='top'
-                            tooltipComponent={
-                              <div
-                                className="rounded-xl w-max"
-                              >
-                                <p>Update your profile image</p>
-                              </div>
-                            }
-                          >
-                            <CameraIconEdit />
-                          </CustomTooltip>
-                        </div>
+                        <Loader />
                       </div>}
 
-                      <BlurImage
-                        src={
-                          !isNullOrEmpty(draftProfileImg?.preview)
-                            ? draftProfileImg?.preview
-                            : profileData?.profile?.photoURL ??
+                      <div
+                        className={cl(
+                          'object-center',
+                          'h-full w-full group',
+                          'shrink-0 aspect-square',
+                          editMode && 'hover:cursor-pointer',
+                          isOwnerAndSignedIn && editMode ? 'hover:cursor-pointer' : '',
+                          'box-border border-[5px] border-white rounded-full',
+                          'mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md'
+                        )}
+                      >
+                        {editMode && !saving && isOwnerAndSignedIn && <div
+                          style={{ zIndex: 102, }}
+                          className={cl(
+                            'absolute -top-[5px] -bottom-[5px] -right-[5px] -left-[5px] rounded-full'
+                          )}
+                        >
+                          <div className='bg-black opacity-50 absolute top-0 bottom-0 right-0 left-0 rounded-full'></div>
+                          <div className='w-[28px] h-[28px] absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
+                            <CustomTooltip
+                              orientation='top'
+                              tooltipComponent={
+                                <div
+                                  className="rounded-xl w-max"
+                                >
+                                  <p>Update your profile image</p>
+                                </div>
+                              }
+                            >
+                              <CameraIconEdit />
+                            </CustomTooltip>
+                          </div>
+                        </div>}
+
+                        <BlurImage
+                          src={
+                            !isNullOrEmpty(draftProfileImg?.preview)
+                              ? draftProfileImg?.preview
+                              : profileData?.profile?.photoURL ??
                             (!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
                               ? 'https://cdn.nft.com/profile-image-default.svg' :
                               cameraIcon.src)
-                        }
-                        priority
-                        fill
-                        alt="profilePicture"
-                        draggable={false}
-                        className={cl(
-                          'rounded-full object-cover',
-                        )}
-                        style={{ zIndex: 101, overflow: 'hidden' }}
-                      />
+                          }
+                          priority
+                          fill
+                          alt="profilePicture"
+                          draggable={false}
+                          className={cl(
+                            'rounded-full object-cover',
+                          )}
+                          style={{ zIndex: 101, overflow: 'hidden' }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                )}
-              </Dropzone>
+                  )}
+                </Dropzone>
+              </div>
+              <MintedProfileInfo
+                userIsAdmin={userIsAdmin}
+                profileURI={profileURI}
+              />
             </div>
-            <MintedProfileInfo
-              userIsAdmin={userIsAdmin}
-              profileURI={profileURI}
-            />
-          </div>
-          <div
-            className={cl(
-              'h-full',
-              'mt-5 minmd:mt-0',
-              'mt-6',
-              'w-full justify-start space-y-4 flex flex-col',
-              'flex'
-            )}
-          >
-            {user?.currentProfileUrl === props.profileURI && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
+            <div
+              className={cl(
+                'h-full',
+                'mt-5 minmd:mt-0',
+                'mt-6',
+                'w-full justify-start space-y-4 flex flex-col',
+                'flex'
+              )}
+            >
+              {user?.currentProfileUrl === props.profileURI && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
               <div className='block minlg:hidden mt-2 px-2'>
                 <ClaimProfileCard />
               </div>
-            }
+              }
 
-            {
-              (userIsAdmin && editMode) || (publiclyVisibleNftsNoEdit?.length > 0) ?
-                <MintedProfileGallery
-                  profileURI={profileURI}
-                  ownedGKTokens={ownedGKTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber())}
-                /> :
-                loading
-                  ?
-                  <div className='min-h-[25rem] text-primary-txt flex flex-col items-center justify-center'>
-                    <div className="mb-2">Loading...</div>
-                    <Loader />
-                  </div>
-                  :
-                  <>
-                    <div className={cl(
-                      'text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col mt-4',
-                      addressOwner !== currentAddress ? 'cursor-pointer ' : ''
-                    )}
-                    >
-                      <div className="mx-auto text-base minlg:text-lg minxl:text-xl w-3/5 text-center minlg:text-left font-bold">
-                        {isNullOrEmpty(debouncedSearchQuery) && <div
-                          onClick={() => {
-                            if (addressOwner !== currentAddress) {
-                              window.open(
-                                getEtherscanLink(chain?.id, addressOwner, 'address'),
-                                '_blank'
-                              );
-                            }
-                          }}
-                          className="text-sm minxl:text-lg text-center font-bold"
-                        >
-                          {addressOwner === currentAddress ? 'You own this profile.' : 'This profile is owned by ' + shortenAddress(addressOwner)}
+              {
+                showNftGrid ?
+                  <MintedProfileGallery
+                    profileURI={profileURI}
+                    ownedGKTokens={ownedGKTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber())}
+                  /> :
+                  loading
+                    ?
+                    <div className='min-h-[25rem] text-primary-txt flex flex-col items-center justify-center'>
+                      <div className="mb-2">Loading...</div>
+                      <Loader />
+                    </div>
+                    :
+                    <>
+                      <div className={cl(
+                        'text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col mt-4',
+                        addressOwner !== currentAddress ? 'cursor-pointer ' : ''
+                      )}
+                      >
+                        <div className="mx-auto text-base minlg:text-lg minxl:text-xl w-3/5 text-center minlg:text-left font-bold">
+                          {isNullOrEmpty(debouncedSearchQuery) && <div
+                            onClick={() => {
+                              if (addressOwner !== currentAddress) {
+                                window.open(
+                                  getEtherscanLink(chain?.id, addressOwner, 'address'),
+                                  '_blank'
+                                );
+                              }
+                            }}
+                            className="text-sm minxl:text-lg text-center font-bold"
+                          >
+                            {addressOwner === currentAddress ? 'You own this profile.' : 'This profile is owned by ' + shortenAddress(addressOwner)}
+                          </div>
+                          }
                         </div>
-                        }
-                      </div>
 
-                      <div className="mx-auto text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col">
-                        {isNullOrEmpty(debouncedSearchQuery) ?
-                          <div className="text-sm minxl:text-lg mb-8 minlg:mb-0 mt-8 w-full text-center">
-                            {addressOwner === currentAddress ?
-                              <p className='mx-8'>
+                        <div className="mx-auto text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col">
+                          {isNullOrEmpty(debouncedSearchQuery) ?
+                            <div className="text-sm minxl:text-lg mb-8 minlg:mb-0 mt-8 w-full text-center">
+                              {addressOwner === currentAddress ?
+                                <p className='mx-8'>
                                 As we roll out new features, you can return here for the latest NFT.com news, discover{' '}
                                 other minted Genesis Keys and profiles in our community, and more.{' '}
                                 We have so much in store!
-                              </p>
-                              :
-                              <p className='mx-8'>
+                                </p>
+                                :
+                                <p className='mx-8'>
                                 Do you want your own NFT.com Profile?<br />
                                 Learn how to claim a profile for your own by visiting either NFT.com or our Support knowledge base.
-                              </p>
-                            }
-                          </div> :
-                          <div className="text-sm minxl:text-lg mb-8 minlg:mb-0 mt-8 w-full text-center">
-                            <p className='mx-8'>No NFTs found, please try again.</p>
+                                </p>
+                              }
+                            </div> :
+                            <div className="text-sm minxl:text-lg mb-8 minlg:mb-0 mt-8 w-full text-center">
+                              <p className='mx-8'>No NFTs found, please try again.</p>
+                            </div>
+                          }
+                          <div className="mt-10 minxl:mt-24 w-full flex justify-center mb-24 px-4 minmd:px-0">
+                            <LinksToSection isAddressOwner={addressOwner === currentAddress} />
                           </div>
-                        }
-                        <div className="mt-10 minxl:mt-24 w-full flex justify-center mb-24 px-4 minmd:px-0">
-                          <LinksToSection isAddressOwner={addressOwner === currentAddress} />
                         </div>
                       </div>
-                    </div>
-                  </>
-            }
+                    </>
+              }
+            </div>
           </div>
-        </div>
-      </ProfileScrollContextProvider>
-      {addressOwner === currentAddress && user.currentProfileUrl === profileURI && !editMode && !profileData?.profile?.hideCustomization && !hideModal &&
+        </ProfileScrollContextProvider>
+        {addressOwner === currentAddress && user.currentProfileUrl === profileURI && !editMode && !profileData?.profile?.hideCustomization && !hideModal &&
         <OnboardingModal profileURI={profileURI} onClose={onHideCustomization} />
-      }
+        }
+      </div>
     </>
   );
 }

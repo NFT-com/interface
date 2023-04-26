@@ -3,7 +3,7 @@ import { ProfileContext } from 'components/modules/Profile/ProfileContext';
 
 import { DndScrollWrapper } from './DndScrollWrapper';
 
-import React, { createContext, PropsWithChildren, useCallback, useContext } from 'react';
+import React, { createContext, PropsWithChildren, useCallback, useContext, useMemo } from 'react';
 
 function move(array: any[], oldIndex: number, newIndex: number) {
   if (newIndex >= array.length) {
@@ -34,29 +34,31 @@ export interface GridContextProviderProps {
 }
 
 export function GridContextProvider(
-  props: PropsWithChildren<GridContextProviderProps>
+  {
+    children,
+    items
+  }: PropsWithChildren<GridContextProviderProps>
 ) {
   const { setAllItemsOrder } = useContext(ProfileContext);
 
   const moveItem = useCallback((sourceId: string, destinationId: string) => {
-    const sourceIndex = props.items.findIndex(item => item.id === sourceId);
-    const destinationIndex = props.items.findIndex(item => item.id === destinationId);
+    const sourceIndex = items.findIndex(item => item.id === sourceId);
+    const destinationIndex = items.findIndex(item => item.id === destinationId);
 
     if (sourceIndex === -1 || destinationIndex === -1) {
       return;
     }
     const offset = destinationIndex - sourceIndex;
-    const newItems = moveElement(props.items, sourceIndex, offset);
+    const newItems = moveElement(items, sourceIndex, offset);
 
     setAllItemsOrder(newItems);
-  }, [props.items, setAllItemsOrder]);
+  }, [items, setAllItemsOrder]);
 
-  return <GridContext.Provider value={{
-    items: props.items,
-    moveItem
-  }}>
+  const value = useMemo(() => ({ items: items, moveItem }), [items, moveItem]);
+
+  return <GridContext.Provider value={value}>
     <DndScrollWrapper>
-      {props.children}
+      {children}
     </DndScrollWrapper>
   </GridContext.Provider>;
 }
