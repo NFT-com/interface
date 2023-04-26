@@ -309,7 +309,7 @@ export function ProfileContextProvider(
         allOwnerNftsWithHiddenValue.forEach(nft => nft.hidden = false);
       }
 
-      const hideAllNfts = !showAllNFTsValue && hideAllNFTsValue && allOwnerNftsWithHiddenValue;
+      const hideAllNfts = !showAllNFTsValue && hideAllNFTsValue && allOwnerNftsWithHiddenValue && allOwnerNftsWithHiddenValue.length > 0;
       if(hideAllNfts) {
         allOwnerNftsWithHiddenValue.forEach(nft => nft.hidden = true);
       }
