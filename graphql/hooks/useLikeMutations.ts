@@ -1,6 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { LikeableType, Maybe } from 'graphql/generated/types';
-import { useNonProfileModal } from 'hooks/state/useNonProfileModal';
+import { modalTypeEnum, useNonProfileModal } from 'hooks/state/useNonProfileModal';
 import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -23,7 +23,7 @@ export interface LikeMutationResult {
 }
 
 export function useSetLikeMutation(likedId: string, likedType: LikeableType, profileName?: string): LikeMutationResult {
-  const { setLikeData } = useNonProfileModal();
+  const { setNonProfileData } = useNonProfileModal();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { setProfileSelectModalOpen } = useProfileSelectModal();
   const { forceReload } = useNonProfileModal();
@@ -60,7 +60,7 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         if(myOwnedProfileTokens && myOwnedProfileTokens.length){
           setProfileSelectModalOpen(true);
         }else{
-          setLikeData(true, likeObject);
+          setNonProfileData(true, modalTypeEnum.Like, likeObject);
         }
         localStorage.setItem('nonAuthLikeObject', JSON.stringify(likeObject));
         return;
@@ -103,7 +103,7 @@ export function useSetLikeMutation(likedId: string, likedType: LikeableType, pro
         return null;
       }
     },
-    [currentAddress, currentProfileId, forceReload, isConnected, likedId, likedType, myOwnedProfileTokens, profileName, router.pathname, sdk, setLikeData, setProfileSelectModalOpen, user.currentProfileUrl]
+    [currentAddress, currentProfileId, forceReload, isConnected, likedId, likedType, myOwnedProfileTokens, profileName, router.pathname, sdk, setNonProfileData, setProfileSelectModalOpen, user.currentProfileUrl]
   );
 
   const unsetLike = useCallback(

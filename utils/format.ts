@@ -169,7 +169,7 @@ export const sliceString = (description: string, maxCount: number, isStringCut: 
 * @param {string} url - The URL to check.
 * @returns {boolean} - True if the URL is a base64 encoded string, false otherwise.
 */
-export const isBase64 = (url: string) => url.startsWith('data:') && url.includes('base64');
+export const isBase64 = (url: string) => url?.startsWith('data:') && url.includes('base64');
 
 /**
  * Returns a string representation of the given chain ID.

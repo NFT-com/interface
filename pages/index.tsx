@@ -23,8 +23,8 @@ import { NextSeo } from 'next-seo';
 import React, { useEffect } from 'react';
 import { usePageVisibility } from 'react-page-visibility';
 
-const NonAuthLikeModal = dynamic(
-  import('components/elements/nonAuthLikeModal')
+const NonProfileModal = dynamic(
+  import('components/elements/NonProfileModal/NonProfileModal')
 );
 const BlogSection = dynamic(import('components/modules/HomePage/BlogSection'));
 const BuildProfile = dynamic(
@@ -212,7 +212,7 @@ const Index: NextPageWithLayout = ({
 
         {preview && <DynamicPreviewBanner />}
 
-        <NonAuthLikeModal />
+        <NonProfileModal />
       </>
     );
   } else {

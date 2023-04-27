@@ -12,6 +12,8 @@ import { ProfileMenu } from './ProfileMenu';
 
 import GK from 'public/icons/Badge_Key.svg?svgr';
 import { useContext } from 'react';
+import { Doppler, getEnvBool } from '../../../utils/env';
+import CommentsButton from '../../elements/CommentButton';
 
 export interface MintedProfileInfoProps {
   profileURI: string;
@@ -21,6 +23,7 @@ export interface MintedProfileInfoProps {
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { user } = useUser();
+  console.log('profileURI',profileURI)
   const { profileData } = useProfileQuery(profileURI);
   const { nftProfile } = useAllContracts();
   const { data: profileLikeData, mutate: mutateProfileLikeData } = useNftLikeQuery(nftProfile.address, profileData?.profile?.tokenId);
@@ -75,6 +78,18 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
                 profileName: profileData?.profile?.url
               }}
             />
+            {
+              getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && (
+                <div className='ml-3'>
+                  <CommentsButton
+                    commentData={{
+                      isOwnedByMe: isOwnerAndSignedIn,
+                      entityId: profileData?.profile?.id,
+                      name: profileData?.profile?.url
+                    }}/>
+                </div>
+              )
+            }
           </div>
         </div>
 

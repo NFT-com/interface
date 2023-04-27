@@ -1,0 +1,16 @@
+query GetComments($input: CommentsInput!) {
+  comments(input: $input) {
+    items {
+      authorId
+      content
+      entityId
+      entityType
+      id
+      author {
+        url
+        photoURL
+      }
+    }
+    totalItems
+  }
+}

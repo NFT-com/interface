@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import CommentsButton from 'components/elements/CommentButton';
 import LikeCount from 'components/elements/LikeCount';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
@@ -13,6 +14,7 @@ import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMu
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getContractMetadata } from 'utils/alchemyNFT';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/format';
 import { getEtherscanLink, isOfficialCollection,shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -50,7 +52,6 @@ export const NFTDetail = ({ nft, tokenId, onRefreshSuccess }: NFTDetailProps) =>
     async ([url, contract]) => {
       return await getContractMetadata(contract, defaultChainId);
     });
-
   const collectionName = collectionMetadata?.contractMetadata?.name || collectionMetadata?.contractMetadata?.openSea?.collectionName;
 
   const { profileData: nftProfileData } = useProfileQuery(nft?.contract === getAddressForChain(nftProfile, defaultChainId) ? nft?.metadata?.name : null);
@@ -140,6 +141,18 @@ export const NFTDetail = ({ nft, tokenId, onRefreshSuccess }: NFTDetailProps) =>
                       }}
                     />
                   </div>
+                  {
+                    getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && (
+                      <div className='ml-3'>
+                        <CommentsButton
+                          commentData={{
+                            entityId: nft?.id,
+                            name: nft?.metadata?.name ?? `${collectionMetadata?.contractMetadata?.name} #${tokenId}`,
+                            isOwnedByMe: nft.isOwnedByMe
+                          }}/>
+                      </div>
+                    )
+                  }
                 </>
               )
             }

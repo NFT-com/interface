@@ -37,6 +37,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import useSWR from 'swr';
+import CommentsButton from '../../elements/CommentButton';
 
 const BlurImage = dynamic(import('components/elements/BlurImage'));
 
@@ -301,6 +302,18 @@ export const CollectionHeader: React.FC<CollectionHeaderProps> = ({ children }) 
               }}
             />
           </div>
+          {
+            getEnvBool(Doppler.NEXT_PUBLIC_SOCIAL_ENABLED) && (
+              <div className='ml-3'>
+                <CommentsButton
+                  commentData={{
+                    isOwnedByMe: false,
+                    entityId: collectionData?.collection?.id,
+                    name: collectionData?.collection?.name || collectionName
+                  }}/>
+              </div>
+            )
+          }
         </div>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
           <div className='flex'>
@@ -385,7 +398,6 @@ export const CollectionDescription: React.FC = () => {
       );
     }
   };
-
   return (
     <>
       {collectionData?.collection?.description && collectionData?.collection?.description !== 'placeholder collection description text' &&
