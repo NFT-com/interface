@@ -23,7 +23,7 @@ import { useAccount } from 'wagmi';
 export default function MintProfilesPage() {
   const { openConnectModal } = useConnectModal();
   const { address: currentAddress } = useAccount();
-  const [mintType, setMintType] = useState('paid');
+  const [mintType, setMintType] = useState('Genesis Key');
   const hasGk = useHasGk();
 
   useMaybeCreateUser();
@@ -35,10 +35,10 @@ export default function MintProfilesPage() {
   }, [currentAddress, openConnectModal]);
 
   const tabs = [
-    {
-      label: 'Paid',
-      content: <MintPaidProfileCard type='mint' />
-    },
+    // {
+    //   label: 'Paid',
+    //   content: <MintPaidProfileCard type='mint' />
+    // },
     {
       label: 'Genesis Key',
       content: <MintGKProfileCard />
