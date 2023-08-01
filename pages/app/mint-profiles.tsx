@@ -24,7 +24,7 @@ export default function MintProfilesPage() {
   const { openConnectModal } = useConnectModal();
   const { address: currentAddress } = useAccount();
   const [mintType, setMintType] = useState('Genesis Key');
-  const hasGk = useHasGk();
+  const hasGk = true; // useHasGk();
 
   useMaybeCreateUser();
 
