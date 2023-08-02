@@ -4,9 +4,7 @@ import 'swiper/css/scrollbar';
 
 import DefaultSEO from 'config/next-seo.config';
 import LoaderPageFallback from 'components/elements/Loader/LoaderPageFallback';
-import contentfulBackupData from 'constants/contentful_backup_data.json';
 import { HomePageV2, HomePageV3 } from 'types/HomePage';
-import { Doppler, getEnvBool } from 'utils/env';
 
 import { NextPageWithLayout } from './_app';
 
@@ -15,7 +13,6 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { getCollection } from 'lib/contentful/api';
 import {
-  HOME_PAGE_FIELDS_V2,
   HOME_PAGE_FIELDS_V3
 } from 'lib/contentful/schemas';
 import dynamic from 'next/dynamic';
@@ -41,10 +38,6 @@ const SocialSection = dynamic(
   import('components/modules/HomePage/SocialSection')
 );
 const WhatWeCanDo = dynamic(import('components/modules/HomePage/WhatWeCanDo'));
-const HomePageV2Layout = dynamic(
-  import('components/modules/HomePageV2/HomePageV2'),
-  { loading: () => <LoaderPageFallback /> }
-);
 const HomeLayout = dynamic(import('components/layouts/HomeLayout'), {
   loading: () => <LoaderPageFallback />
 });
@@ -62,7 +55,6 @@ type HomePageProps = {
 
 const Index: NextPageWithLayout = ({
   preview,
-  data_v2,
   homePageDataV3
 }: HomePageProps) => {
   const isVisible = usePageVisibility();
@@ -160,64 +152,61 @@ const Index: NextPageWithLayout = ({
       });
     });
   }, []);
-  if (getEnvBool(Doppler.NEXT_PUBLIC_HP_V3_ENABLED)) {
-    return (
-      <>
-        <NextSeo
-          {...DefaultSEO}
-          title='NFT.com | The Social NFT Marketplace'
-          description='Join NFT.com to display, trade, and engage with your NFTs.'
-          openGraph={{
-            url: 'https://www.nft.com',
-            title: 'NFT.com | The Social NFT Marketplace',
-            description:
+
+  return (
+    <>
+      <NextSeo
+        {...DefaultSEO}
+        title='NFT.com | The Social NFT Marketplace'
+        description='Join NFT.com to display, trade, and engage with your NFTs.'
+        openGraph={{
+          url: 'https://www.nft.com',
+          title: 'NFT.com | The Social NFT Marketplace',
+          description:
               'Join NFT.com to display, trade, and engage with your NFTs.',
-            site_name: 'NFT.com'
-          }}
-        />
-        <main id='anim-main-trigger' className='font-noi-grotesk not-italic HomePageContainer'>
-          <HeroSection data={{
-            dynamicUrls: homePageDataV3?.dynamicUrls,
-            heroTextData: homePageDataV3?.heroTextData,
-            heroImagesCollection: homePageDataV3?.heroImagesCollection
-          }}/>
+          site_name: 'NFT.com'
+        }}
+      />
+      <main id='anim-main-trigger' className='font-noi-grotesk not-italic HomePageContainer'>
+        <HeroSection data={{
+          dynamicUrls: homePageDataV3?.dynamicUrls,
+          heroTextData: homePageDataV3?.heroTextData,
+          heroImagesCollection: homePageDataV3?.heroImagesCollection
+        }}/>
 
-          <WhatWeCanDo data={{
-            whatWeCanDoTitle: {
-              gradientTitle: homePageDataV3?.whatWeCanDoTitle?.gradientTitle
-            },
-            whatWeCanDoImage: {
-              url: homePageDataV3?.whatWeCanDoImage?.url
-            },
-            whatWeCanDoBg: {
-              url: homePageDataV3?.whatWeCanDoBg?.url
-            }
-          }}/>
+        <WhatWeCanDo data={{
+          whatWeCanDoTitle: {
+            gradientTitle: homePageDataV3?.whatWeCanDoTitle?.gradientTitle
+          },
+          whatWeCanDoImage: {
+            url: homePageDataV3?.whatWeCanDoImage?.url
+          },
+          whatWeCanDoBg: {
+            url: homePageDataV3?.whatWeCanDoBg?.url
+          }
+        }}/>
 
-          <DynamicLinks data={{
-            sectionDynamicLinks: homePageDataV3.sectionDynamicLinks
-          }} isVisible={isVisible}/>
+        <DynamicLinks data={{
+          sectionDynamicLinks: homePageDataV3.sectionDynamicLinks
+        }} isVisible={isVisible}/>
 
-          <DiscoverCollections data={homePageDataV3.collectionsSection}/>
+        <DiscoverCollections data={homePageDataV3.collectionsSection}/>
 
-          <SocialSection data={homePageDataV3?.textAndImageCollection}/>
+        <SocialSection data={homePageDataV3?.textAndImageCollection}/>
 
-          <BlogSection
-            blogSectionTitle={homePageDataV3.blogSectionTitle}
-            goToBlogButton={homePageDataV3.goToBlogButton}
-            data={homePageDataV3.blogCollection}/>
+        <BlogSection
+          blogSectionTitle={homePageDataV3.blogSectionTitle}
+          goToBlogButton={homePageDataV3.goToBlogButton}
+          data={homePageDataV3.blogCollection}/>
 
-          <BuildProfile data={homePageDataV3?.buildProfileSection}/>
-        </main>
+        <BuildProfile data={homePageDataV3?.buildProfileSection}/>
+      </main>
 
-        {preview && <DynamicPreviewBanner />}
+      {preview && <DynamicPreviewBanner />}
 
-        <NonAuthLikeModal />
-      </>
-    );
-  } else {
-    return <HomePageV2Layout preview={preview} data_v2={data_v2} />;
-  }
+      <NonAuthLikeModal />
+    </>
+  );
 };
 
 Index.getLayout = function getLayout(page) {
@@ -225,12 +214,6 @@ Index.getLayout = function getLayout(page) {
 };
 
 export async function getStaticProps({ preview = false }) {
-  const homeDataV2 = await getCollection(
-    false,
-    10,
-    'homepageV2Collection',
-    HOME_PAGE_FIELDS_V2
-  );
   const homeDataV3 = await getCollection(
     false,
     10,
@@ -240,7 +223,6 @@ export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      data_v2: homeDataV2[0] ?? contentfulBackupData[0],
       homePageDataV3: homeDataV3 && homeDataV3[0]
     }
   };
