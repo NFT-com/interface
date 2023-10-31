@@ -135,7 +135,7 @@ export const FooterLarge = () => {
       links: [
         {
           name: 'Discord',
-          link: 'https://discord.gg/nftdotcom',
+          link: 'https://nft.com',
           newTab: true,
         },
         {
