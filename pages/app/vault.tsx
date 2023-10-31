@@ -164,7 +164,7 @@ export default function RoadmapPage() {
                 <a className="social-icon p-4" href="https://twitter.com/nftcomofficial" target="_blank" rel="noreferrer">
                   <TwitterIcon />
                 </a>
-                <a className="ml-4 social-icon p-4" href="https://discord.gg/nftdotcom" target="_blank" rel="noreferrer">
+                <a className="ml-4 social-icon p-4" href="https://nft.com/discord" target="_blank" rel="noreferrer">
                   <DiscordIcon />
                 </a>
               </div>
