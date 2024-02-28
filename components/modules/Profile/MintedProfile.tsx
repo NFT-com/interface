@@ -80,7 +80,7 @@ export function MintedProfile(props: MintedProfileProps) {
     if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
       return null;
     }
-    if (Doppler.NEXT_PUBLIC_OFFCHAIN_ASSOCIATION_ENABLED && profileData?.profile?.associatedContract) {
+    if (profileData?.profile?.associatedContract) {
       return { cid: parseInt(defaultChainId), chainAddr: profileData.profile.associatedContract };
     }
     return await nftResolver.associatedContract(profileURI).catch(() => null);
@@ -128,8 +128,7 @@ export function MintedProfile(props: MintedProfileProps) {
   };
   if (
     associatedContract?.chainAddr?.length &&
-    (Doppler.NEXT_PUBLIC_OFFCHAIN_ASSOCIATION_ENABLED ||
-    (associatedAddresses?.find(addr => sameAddress(addr?.chainAddr, associatedCollectionWithDeployer?.deployer)) || sameAddress(profileData?.profile?.owner?.address, associatedCollectionWithDeployer?.deployer)))
+      (associatedAddresses?.find(addr => sameAddress(addr?.chainAddr, associatedCollectionWithDeployer?.deployer)) || sameAddress(profileData?.profile?.owner?.address, associatedCollectionWithDeployer?.deployer))
   ) {
     return <div className='w-full h-max'>
       <Collection contract={associatedContract?.chainAddr}>
